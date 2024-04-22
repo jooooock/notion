@@ -6,7 +6,8 @@
   "author": "Jock",
   "license": "MIT",
   "scripts": {
-    "dev": "electron src"
+    "dev": "electron src",
+    "debug": "electron --inspect-brk src"
   },
   "dependencies": {
     "@electron/remote": "2.0.11",

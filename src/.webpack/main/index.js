@@ -1,10 +1,11 @@
 (() => {
     const __modules = {
-        11239: (e, t, r) => {
+        // config.json
+        11239: (module, exports, require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const n = r(68272);
-            t.default = n
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            exports.default = require(68272)
         },
         60522: (e, t) => {
             "use strict";
@@ -249,7 +250,7 @@
             const n = r(39023), o = r(40041), a = (0, n.promisify)(o.zip);
             t.default = a
         },
-        21852: function (e, t, r) {
+        21852: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -262,36 +263,69 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.AppController_TEST_ONLY = t.appController = void 0;
-            const s = i(r(76982)), l = r(4482), c = i(r(47419)), u = r(43277), d = r(83704), p = r(28902),
-                h = a(r(6600)), f = a(r(60411)), m = i(r(11239)), g = r(55870), b = a(r(68115)), v = r(26605),
-                y = r(88493), w = r(29902), _ = r(26760), k = r(73553), T = r(30506), E = r(28192), S = r(69340),
-                C = r(54417), O = r(772), M = r(84087), I = r(1147), A = c.default.scope("AppController");
 
-            class P {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.AppController_TEST_ONLY = exports.appController = void 0;
+
+            const s = i(require(76982)),
+                l = require(4482),
+                c = i(require(47419)),
+                u = require(43277),
+                d = require(83704),
+                p = require(28902),
+                h = a(require(6600)),
+                f = a(require(60411)),
+                m = i(require(11239)),
+                g = require(55870),
+                b = a(require(68115)),
+                v = require(26605),
+                y = require(88493),
+                w = require(29902),
+                _ = require(26760),
+                k = require(73553),
+                T = require(30506),
+                E = require(28192),
+                S = require(69340),
+                C = require(54417),
+                O = require(772),
+                M = require(84087),
+                I = require(1147),
+                A = c.default.scope("AppController");
+
+            class AppController {
                 constructor() {
-                    this.windowControllers = new Array, this.isQuitting = !1, this.previousRestorationState = S.Store.getState().history.appRestorationState, this.appStateUnsubscribe = (0, S.subscribeToSelector)(S.selectAppState, ((e, t) => this.handleAppStateChange(e, t))), this.historyStateUnsubscribe = (0, S.subscribeToSelector)((e => (0, S.selectHistory)(e)), (e => {
+                    this.windowControllers = new Array()
+                    this.isQuitting = !1
+                    this.previousRestorationState = S.Store.getState().history.appRestorationState
+                    this.appStateUnsubscribe = S.subscribeToSelector(S.selectAppState, (e, t) => this.handleAppStateChange(e, t))
+                    this.historyStateUnsubscribe = S.subscribeToSelector((e => S.selectHistory(e)), (e => {
                         T.appStatePersister.set("history", e)
-                    })), this.focusedWindowStateUnsubscribe = (0, S.subscribeToSelector)((e => (0, S.selectFocusedWindowDisplayState)(e)), (e => {
+                    }))
+                    this.focusedWindowStateUnsubscribe = S.subscribeToSelector(e => S.selectFocusedWindowDisplayState(e), e => {
                         e && S.Store.dispatch((0, E.updateLastFocusedWindowDisplayState)(e))
-                    }), {wait: 3e4}), this.appRestorationStateUnsubscribe = (0, S.subscribeToSelector)((e => ({
+                    }, {wait: 3e4})
+                    this.appRestorationStateUnsubscribe = S.subscribeToSelector(e => ({
                         tabs: e.tabs,
                         windows: e.windows
-                    })), (e => {
+                    }), e => {
                         this.handleAppRestorationStateChange(e)
-                    }), {wait: 3e4})
+                    }, {wait: 3e4})
                 }
 
                 async onAppReady() {
@@ -627,12 +661,13 @@
                 }
 
                 updateMediaIndicator(e, r) {
-                    const n = t.appController.getTabControllerForWebContents(e);
+                    const n = exports.appController.getTabControllerForWebContents(e);
                     n && S.Store.dispatch((0, C.updateTabIsMediaInputActive)({tabId: n.tabId, isMediaInputActive: r}))
                 }
             }
 
-            t.appController = new P, t.AppController_TEST_ONLY = P
+            exports.appController = new AppController()
+            exports.AppController_TEST_ONLY = AppController
         },
         87309: function (e, t, r) {
             "use strict";
@@ -2637,7 +2672,7 @@
                 }
             }
         },
-        94774: function (e, t, r) {
+        94774: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -2650,41 +2685,61 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.assetCache = void 0;
-            const s = i(r(4482)), l = r(37318), c = i(r(11239)), u = r(21852), d = r(87309), p = a(r(10454));
-            t.assetCache = new d.AssetCache({
-                baseUrl: c.default.domainBaseUrl,
-                baseDir: s.default.app.getPath("userData"),
-                tempDir: s.default.app.getPath("temp")
-            }), t.assetCache.events.addListener("error", (e => {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const __electron = i(require(4482)),
+                l = require(37318),
+                __config = i(require(11239)),
+                u = require(21852),
+                m87309 = require(87309),
+                p = a(require(10454));
+
+            exports.assetCache = new m87309.AssetCache({
+                baseUrl: __config.default.domainBaseUrl,
+                baseDir: __electron.default.app.getPath("userData"),
+                tempDir: __electron.default.app.getPath("temp")
+            })
+            exports.assetCache.events.addListener("error", e => {
                 u.appController.sendMainToAllNotionInstances("notion:app-update-error", (0, l.cleanObjectForSerialization)(e))
-            })), t.assetCache.events.addListener("checking-for-update", (() => {
+            })
+            exports.assetCache.events.addListener("checking-for-update", () => {
                 u.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
-            })), t.assetCache.events.addListener("update-available", (e => {
+            })
+            exports.assetCache.events.addListener("update-available", e => {
                 u.appController.sendMainToAllNotionInstances("notion:app-update-available", e)
-            })), t.assetCache.events.addListener("update-not-available", (() => {
+            })
+            exports.assetCache.events.addListener("update-not-available", () => {
                 u.appController.sendMainToAllNotionInstances("notion:app-update-not-available")
-            })), t.assetCache.events.addListener("download-progress", (e => {
+            })
+            exports.assetCache.events.addListener("download-progress", e => {
                 u.appController.sendMainToAllNotionInstances("notion:app-update-progress", e)
-            })), t.assetCache.events.addListener("update-downloaded", (e => {
+            })
+            exports.assetCache.events.addListener("update-downloaded", e => {
                 u.appController.sendMainToAllNotionInstances("notion:app-update-ready", e)
-            })), t.assetCache.events.addListener("update-finished", (e => {
+            })
+            exports.assetCache.events.addListener("update-finished", e => {
                 u.appController.sendMainToAllNotionInstances("notion:app-update-finished", e)
-            })), p.handleEventFromRenderer.addListener("notion:check-for-app-updates", (() => {
-                t.assetCache.checkForUpdates()
-            }))
+            })
+
+            p.handleEventFromRenderer.addListener("notion:check-for-app-updates", () => {
+                exports.assetCache.checkForUpdates()
+            })
         },
         43579: function (e, t, r) {
             "use strict";
@@ -2958,45 +3013,60 @@
                 r.set({...t, url: l.default.domainBaseUrl, expirationDate: t.expires})
             }))
         },
-        84041: function (e, t, r) {
+
+        // 处理 crash reporter
+        84041: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const s = r(4482), l = i(r(11239)), c = a(r(10454));
-            s.crashReporter.start({
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            const __electron = require(4482),
+                __config = i(require(11239)),
+                m10454 = a(require(10454));
+            __electron.crashReporter.start({
                 productName: "Notion",
                 companyName: "Notion",
-                submitURL: `${l.default.domainBaseUrl}/server/crash-report`,
-                uploadToServer: !0,
-                extra: {desktopEnvironment: l.default.env, desktopVersion: s.app.getVersion()}
-            }), c.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
-                for (const e in t) {
-                    const r = t[e];
-                    "string" == typeof r && s.crashReporter.addExtraParameter(e, r)
+                submitURL: `${__config.default.domainBaseUrl}/server/crash-report`,
+                uploadToServer: true,
+                extra: {
+                    desktopEnvironment: __config.default.env,
+                    desktopVersion: __electron.app.getVersion()
                 }
-            }))
+            })
+            m10454.handleEventFromRenderer.addListener("notion:set-logger-data", (e, data) => {
+                for (const key in data) {
+                    const value = data[key];
+                    if ("string" == typeof value) {
+                        __electron.crashReporter.addExtraParameter(key, value)
+                    }
+                }
+            })
         },
         89304: function (e, t, r) {
             "use strict";
@@ -3333,6 +3403,8 @@
                 }
             }
         },
+
+        // logging
         5554: function (module, exports, require) {
             "use strict";
             var __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -3367,40 +3439,64 @@
 
             const s = __importDefault(require(16928)),
                 __electron = require(4482),
-                c = __importDefault(require(47419)),
+                m47419 = __importDefault(require(47419)),
                 u = __importDefault(require(80115)),
                 d = __importStar(require(21248)),
                 m3420 = require(3420),
                 m10454 = __importStar(require(10454)),
                 m56116 = __importStar(require(56116)),
-                m = require(69340);
+                m69340 = require(69340);
 
             function setupLocalLogging() {
-                c.default.transports.console.level = exports.LOG_LEVEL, c.default.transports.file.level = exports.LOG_LEVEL, c.default.transports.file.maxSize = 2097152, c.default.info(`App starting with version ${__electron.app.getVersion()}`, {
+                m47419.default.transports.console.level = exports.LOG_LEVEL
+                m47419.default.transports.file.level = exports.LOG_LEVEL
+                m47419.default.transports.file.maxSize = 2097152
+                m47419.default.info(`App starting with version ${__electron.app.getVersion()}`, {
                     system: `${process.platform} ${process.arch}`,
                     electron: process.versions.electron
-                }), __electron.app.on("render-process-gone", ((e, t, r) => {
+                })
+                __electron.app.on("render-process-gone", (evt, webContents, details) => {
                     try {
-                        c.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
+                        m47419.default.error("renderer-process-gone", {url: webContents?.getURL(), details: details})
                     } catch (e) {
-                        c.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
+                        m47419.default.error("renderer-process-gone", {url: "[unavailable]", details: details})
                     }
-                })), __electron.app.on("child-process-gone", ((e, t) => {
-                    c.default.error("child-process-gone", t)
-                })), __electron.app.on("web-contents-created", ((e, t) => {
-                    const r = `${t.getType()}-${t.id}`, n = c.default.scope(r);
-                    t.on("did-fail-load", ((e, t, r, o) => {
+                })
+                __electron.app.on("child-process-gone", (evt, details) => {
+                    m47419.default.error("child-process-gone", details)
+                })
+                __electron.app.on("web-contents-created", (evt, webContents) => {
+                    const r = `${webContents.getType()}-${webContents.id}`,
+                        n = m47419.default.scope(r);
+                    webContents.on("did-fail-load", ((e, t, r, o) => {
                         n.error("did-fail-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("did-fail-provisional-load", ((e, t, r, o) => {
+                    }))
+                    webContents.on("did-fail-provisional-load", ((e, t, r, o) => {
                         n.error("did-fail-provisional-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), shouldLog("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
-                        t > 1 && n.debug(`console-message: ${r}`, {line: o, sourceId: a})
-                    })))
-                })), __electron.app.on("before-quit", (() => c.default.info("Quitting..."))), shouldLog("debug") && (__electron.app.on("browser-window-blur", (() => {
-                    __electron.BrowserWindow.getFocusedWindow() || c.default.debug("App blurred")
-                })), __electron.app.on("browser-window-focus", (() => {
-                    c.default.debug("App focused")
-                })))
+                    }))
+                    webContents.on("unresponsive", (() => n.error("unresponsive")))
+                    webContents.on("destroyed", (() => n.warn("destroyed")))
+                    webContents.on("unresponsive", (() => n.warn("unresponsive")))
+                    webContents.on("responsive", (() => n.warn("responsive")))
+                    if (shouldLog("debug")) {
+                        webContents.on("did-start-loading", () => n.debug("did-start-loading"))
+                        webContents.on("did-stop-loading", () => n.debug("did-stop-loading"))
+                        webContents.on("dom-ready", () => n.debug("dom-ready"))
+                        webContents.on("console-message", (e, t, r, o, a) => {
+                            t > 1 && n.debug(`console-message: ${r}`, {line: o, sourceId: a})
+                        })
+                    }
+                })
+                __electron.app.on("before-quit", () => m47419.default.info("Quitting..."))
+
+                if (shouldLog("debug")) {
+                    __electron.app.on("browser-window-blur", () => {
+                        __electron.BrowserWindow.getFocusedWindow() || m47419.default.debug("App blurred")
+                    })
+                    __electron.app.on("browser-window-focus", () => {
+                        m47419.default.debug("App focused")
+                    })
+                }
             }
 
             function shouldLog(e, r = exports.LOG_LEVEL) {
@@ -3408,8 +3504,14 @@
             }
 
             exports.LOG_LEVEL = function () {
-                const e = m.Store.getState();
-                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : u.default.existsSync(s.default.join(__electron.app.getPath("userData"), "debug")) ? "debug" : __electron.app.isPackaged ? "info" : "debug"
+                const e = m69340.Store.getState();
+                return e?.app?.preferences?.logLevel
+                    ? e?.app?.preferences?.logLevel
+                    : u.default.existsSync(s.default.join(__electron.app.getPath("userData"), "debug"))
+                        ? "debug"
+                        : __electron.app.isPackaged
+                            ? "info"
+                            : "debug"
             }()
             exports.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"]
             exports.setupLogging = function () {
@@ -3464,6 +3566,8 @@
 
         // 入口
         64982: function (module, exports, require) {
+            debugger
+
             "use strict";
             const __importDefault = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -3472,9 +3576,10 @@
             exports.handleActivate = void 0;
 
             const __electron = require(4482);
-            require(84041);
+            require(84041); // crash reporter
+
             const m21248 = require(21248),
-                m11239 = __importDefault(require(11239)),
+                __config = __importDefault(require(11239)),
                 m3420 = require(3420),
                 m21852 = require(21852),
                 m94774 = require(94774),
@@ -3493,7 +3598,7 @@
                 m50833 = require(50833),
                 m98441 = require(98441),
                 m19628 = require(19628);
-            let S, C;
+            let S;
 
             function handleActivate() {
                 const e = m21852.appController.getMostRecentlyFocusedWindowController();
@@ -3516,10 +3621,13 @@
             }
             exports.handleActivate = handleActivate
 
-            ;(async function () {
+            debugger
+
+                ;
+            (async function () {
                 m5554.setupLogging()
                 m98441.maybeDisableHardwareAcceleration()
-                __electron.app.setAsDefaultProtocolClient(m11239.default.protocol)
+                __electron.app.setAsDefaultProtocolClient(__config.default.protocol)
                 if ("darwin" === process.platform) {
                     __electron.app.on("open-url", (evt, url) => {
                         evt.preventDefault()
@@ -3540,26 +3648,26 @@
                     S = m29902.findNotionProtocolUrl(process.argv)
                 }
                 __electron.Menu.setApplicationMenu(null)
-                __electron.app.setAppUserModelId(m11239.default.desktopAppId)
+                __electron.app.setAppUserModelId(__config.default.desktopAppId)
 
-                ;(function () {
-                    if (C = new m19628.WebUpdater(__electron.app, m94774.assetCache), !m11239.default.isLocalhost || m11239.default.offline) {
-                        const e = "production" === m11239.default.env ? 6e5 : 6e4;
-                        setInterval((async () => {
-                            try {
-                                await m94774.assetCache.checkForUpdates()
-                            } catch (e) {
-                                const t = (0, m21248.convertErrorToLog)(e);
-                                m3420.serverLogger.log({
-                                    level: "error",
-                                    from: "AssetCache",
-                                    type: "topLevelAssetPollingError",
-                                    error: t
-                                })
-                            }
-                        }), e)
-                    }
-                })()
+                // 检查更新
+                new m19628.WebUpdater(__electron.app, m94774.assetCache)
+                if (!__config.default.isLocalhost || __config.default.offline) {
+                    const interval = "production" === __config.default.env ? 10 * 60_000 : 60_000;
+                    setInterval(async () => {
+                        try {
+                            await m94774.assetCache.checkForUpdates()
+                        } catch (e) {
+                            const t = m21248.convertErrorToLog(e);
+                            m3420.serverLogger.log({
+                                level: "error",
+                                from: "AssetCache",
+                                type: "topLevelAssetPollingError",
+                                error: t
+                            })
+                        }
+                    }, interval)
+                }
 
                 await __electron.app.whenReady()
                 await m83789.waitForWebpack()
@@ -4286,34 +4394,49 @@
                 }
             }), n = t.quickSearchSlice.actions, t.toggleVisibilityStateIfReady = n.toggleVisibilityStateIfReady, t.setReadyState = n.setReadyState
         },
-        69340: function (e, t, r) {
+
+        69340: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getElectronAppFeatures = t.subscribeToSelector = t.Store = t.selectQuickSearchState = t.selectHistory = t.selectTabSearchingState = t.selectTabStates = t.selectTabState = t.selectAppVisibilityBaseOnRenderers = t.selectFocusedWindowDisplayState = t.selectWindowState = t.selectAppState = void 0;
-            const s = r(6354), l = a(r(6600)), c = i(r(80637)), u = r(73553), d = r(28192), p = r(14473), h = r(54417),
-                f = r(772), m = (0, s.combineReducers)({
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.getElectronAppFeatures = exports.subscribeToSelector = exports.Store = exports.selectQuickSearchState = exports.selectHistory = exports.selectTabSearchingState = exports.selectTabStates = exports.selectTabState = exports.selectAppVisibilityBaseOnRenderers = exports.selectFocusedWindowDisplayState = exports.selectWindowState = exports.selectAppState = void 0;
+
+            const s = require(6354),
+                l = a(require(6600)),
+                c = i(require(80637)),
+                u = require(73553),
+                d = require(28192),
+                p = require(14473),
+                h = require(54417),
+                f = require(772),
+                m = s.combineReducers({
                     windows: f.windowSlice.reducer,
                     tabs: h.tabSlice.reducer,
                     app: u.appSlice.reducer,
@@ -4329,43 +4452,54 @@
                 return e => t => e(t)
             }
 
-            t.selectAppState = function (e) {
+            exports.selectAppState = function (e) {
                 return e.app
-            }, t.selectWindowState = function (e, t) {
+            }
+            exports.selectWindowState = function (e, t) {
                 return e.windows[t]
-            }, t.selectFocusedWindowDisplayState = function (e) {
+            }
+            exports.selectFocusedWindowDisplayState = function (e) {
                 const t = l.maxBy(Object.values(e.windows), (e => e.focusOrder));
                 return t?.displayState
-            }, t.selectAppVisibilityBaseOnRenderers = function (e) {
+            }
+            exports.selectAppVisibilityBaseOnRenderers = function (e) {
                 return Object.values(e.windows).some((e => e.isVisible))
-            }, t.selectTabState = g, t.selectTabStates = function (e, t) {
+            }
+            exports.selectTabState = g
+            exports.selectTabStates = function (e, t) {
                 return l.compact(t.map((t => e.tabs[t])))
-            }, t.selectTabSearchingState = function (e, t) {
+            }
+            exports.selectTabSearchingState = function (e, t) {
                 return g(e, t)?.searching
-            }, t.selectHistory = function (e) {
+            }
+            exports.selectHistory = function (e) {
                 return e.history
-            }, t.selectQuickSearchState = function (e) {
+            }
+            exports.selectQuickSearchState = function (e) {
                 return e.quickSearch
-            }, t.Store = (0, s.configureStore)({
+            }
+            exports.Store = s.configureStore({
                 reducer: m,
                 middleware: e => e().concat(b)
-            }), t.subscribeToSelector = function (e, r, n) {
-                let o = e(t.Store.getState()), a = o;
+            })
+            exports.subscribeToSelector = function (e, r, n) {
+                let o = e(exports.Store.getState()), a = o;
                 const i = () => {
-                    const n = e(t.Store.getState());
+                    const n = e(exports.Store.getState());
                     (0, c.default)(o, n) || (a = o, o = n, r(o, a))
                 };
                 if (n) {
                     const e = void 0 === n.leading || n.leading, r = void 0 === n.trailing || n.trailing,
-                        o = l.throttle(i, n.wait, {leading: e, trailing: r}), a = t.Store.subscribe(o);
+                        o = l.throttle(i, n.wait, {leading: e, trailing: r}), a = exports.Store.subscribe(o);
                     return () => {
                         r ? o.flush() : o.cancel(), a()
                     }
                 }
-                return t.Store.subscribe(i)
-            }, t.getElectronAppFeatures = function (e = {}) {
-                const r = {...u.DEFAULT_PERSISTED_PREFERENCES, ...t.Store.getState().app.preferences || {}, ...e.preferences},
-                    n = t.Store.getState().app.zoomFactor;
+                return exports.Store.subscribe(i)
+            }
+            exports.getElectronAppFeatures = function (e = {}) {
+                const r = {...u.DEFAULT_PERSISTED_PREFERENCES, ...exports.Store.getState().app.preferences || {}, ...e.preferences},
+                    n = exports.Store.getState().app.zoomFactor;
                 return {...u.ALWAYS_SET_ELECTRON_APP_FEATURES, ...e, preferences: r, zoomFactor: n}
             }
         },
@@ -8896,12 +9030,16 @@
                 return !0
             }
         },
-        21248: (e, t, r) => {
+        21248: (module, exports, require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.stringifyMiscData = t.convertErrorToLog = t.safelyConvertAnyToString = t.shouldLog = void 0;
-            const n = r(37318), o = ["silent", "error", "warning", "info", "debug"];
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            function a(e, t = JSON.stringify) {
+            exports.stringifyMiscData = exports.convertErrorToLog = exports.safelyConvertAnyToString = exports.shouldLog = void 0;
+
+            const n = require(37318)
+            const logLevels = ["silent", "error", "warning", "info", "debug"];
+
+            function safelyConvertAnyToString(e, t = JSON.stringify) {
                 try {
                     return "object" == typeof e && null !== e ? t((0, n.cleanObjectForSerialization)(e, 10)) : String(e)
                 } catch (e) {
@@ -8910,9 +9048,11 @@
                 }
             }
 
-            t.shouldLog = function (e) {
-                return o.indexOf(e.messageLevel) <= o.indexOf(e.loggerLevel)
-            }, t.safelyConvertAnyToString = a, t.convertErrorToLog = function (e, t = JSON.stringify, r = !1) {
+            exports.shouldLog = function (e) {
+                return logLevels.indexOf(e.messageLevel) <= logLevels.indexOf(e.loggerLevel)
+            }
+            exports.safelyConvertAnyToString = safelyConvertAnyToString
+            exports.convertErrorToLog = function (e, t = JSON.stringify, r = !1) {
                 try {
                     if ("object" == typeof e && null !== e) {
                         const n = e, {
@@ -8925,25 +9065,26 @@
                             body: d,
                             reason: p
                         } = n, h = {};
-                        if (o && (h.statusCode = Number(o)), i && (h.name = String(i)), s && (h.message = a(s, t)), p && !h.message && r && (h.message = a(p, t)), l && (h.miscDataString = a(l, t)), c) {
-                            h.miscErrorString = a(c, t);
+                        if (o && (h.statusCode = Number(o)), i && (h.name = String(i)), s && (h.message = safelyConvertAnyToString(s, t)), p && !h.message && r && (h.message = safelyConvertAnyToString(p, t)), l && (h.miscDataString = safelyConvertAnyToString(l, t)), c) {
+                            h.miscErrorString = safelyConvertAnyToString(c, t);
                             const e = c.code;
                             void 0 !== e && (h.code = String(e))
                         }
                         if (u && (h.stack = String(u)), d) if (h.body = {}, "object" == typeof d && null !== d) {
                             const e = d, {errorId: r, name: n, message: o, clientData: i} = e;
-                            r && (h.body.errorId = String(r)), n && (h.body.name = String(n)), o && (h.body.message = a(o, t)), i && (h.body.clientDataString = a(i, t))
-                        } else h.body.message = a(d, t);
+                            r && (h.body.errorId = String(r)), n && (h.body.name = String(n)), o && (h.body.message = safelyConvertAnyToString(o, t)), i && (h.body.clientDataString = safelyConvertAnyToString(i, t))
+                        } else h.body.message = safelyConvertAnyToString(d, t);
                         return h
                     }
-                    return {miscErrorString: a(e, t)}
+                    return {miscErrorString: safelyConvertAnyToString(e, t)}
                 } catch (e) {
                     const t = e;
                     return {miscErrorString: `Unable to safely convert error to log: "${t.stack ? t.stack : ""}"`}
                 }
-            }, t.stringifyMiscData = function (e, t = JSON.stringify) {
+            }
+            exports.stringifyMiscData = function (e, t = JSON.stringify) {
                 const {miscDataToConvertToString: r, ...n} = e, o = n;
-                return void 0 !== r && (o.miscDataString = a(r, t)), o
+                return void 0 !== r && (o.miscDataString = safelyConvertAnyToString(r, t)), o
             }
         },
         32289: function (e, t, r) {
@@ -44439,9 +44580,27 @@
 
             Object.create, Object.create, "function" == typeof SuppressedError && SuppressedError
         },
-        68272: e => {
+
+        // config.json
+        68272: module => {
             "use strict";
-            e.exports = JSON.parse('{"env":"production","isLocalhost":false,"domainName":"www.notion.so","domainBaseUrl":"https://www.notion.so","protocol":"notion","desktopAppId":"notion.id","offline":true,"desktopS3Url":"https://desktop-release.notion-static.com","splunkConfig":{"host":"http-inputs-notion.splunkcloud.com","path":"services/collector/raw","token":"EA76605A-F565-4B17-A496-34435622A1EB","maxBatchCount":0,"port":443}}')
+            module.exports = {
+                "env": "production",
+                "isLocalhost": false,
+                "domainName": "www.notion.so",
+                "domainBaseUrl": "https://www.notion.so",
+                "protocol": "notion",
+                "desktopAppId": "notion.id",
+                "offline": true,
+                "desktopS3Url": "https://desktop-release.notion-static.com",
+                "splunkConfig": {
+                    "host": "http-inputs-notion.splunkcloud.com",
+                    "path": "services/collector/raw",
+                    "token": "EA76605A-F565-4B17-A496-34435622A1EB",
+                    "maxBatchCount": 0,
+                    "port": 443
+                }
+            }
         },
         16813: e => {
             "use strict";
