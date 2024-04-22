@@ -1,0 +1,72 @@
+{
+  "name": "Notion",
+  "author": "Notion Labs, Inc",
+  "version": "3.5.0",
+  "private": true,
+  "description": "Notion",
+  "dependencies": {
+    "@reduxjs/toolkit": "1.8.3",
+    "@sentry/electron": "2.5.4",
+    "better-sqlite3": "git://github.com/felixrieseberg/better-sqlite3#3d335d17",
+    "bindings": "1.5.0",
+    "bufferutil": "4.0.3",
+    "colord": "2.9.3",
+    "csp_evaluator": "1.1.0",
+    "electron-log": "4.4.8",
+    "electron-store": "8.1.0",
+    "electron-updater": "4.1.2",
+    "express": "4.17.1",
+    "fflate": "0.7.4",
+    "framer-motion": "10.17.6",
+    "fs-extra": "8.1.0",
+    "get-port": "5.1.1",
+    "intl-messageformat": "10.5.0",
+    "lodash": "4.17.21",
+    "node-addon-api": "6.1.0",
+    "node-mac-window": "git://github.com/abhaybuch/node-mac-window#750eb3e1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "6.4.4",
+    "url": "0.11.0",
+    "ws": "7.4.1",
+    "@notionhq/shared": "file:../shared",
+    "@notionhq/shared-intl": "file:../shared-intl",
+    "@notionhq/shared-utils": "file:../shared-utils",
+    "@notionhq/test-framework": "file:../test-framework"
+  },
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "postinstall": "test -n \"$SKIP_POSTINSTALL\" || node scripts/postinstall.js"
+  },
+  "main": "./.webpack/main",
+  "overrides": {
+    "asar": "3.2.6",
+    "electron-packager": "git://github.com/electron/electron-packager#75146a71cf8339cff29a423c42382ed36fbc5d67"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "6.4.2",
+    "@electron-forge/core": "6.4.2",
+    "@electron-forge/maker-dmg": "6.4.2",
+    "@electron-forge/maker-zip": "6.4.2",
+    "@electron-forge/plugin-fuses": "6.4.2",
+    "@electron-forge/plugin-webpack": "6.4.2",
+    "@electron-forge/shared-types": "6.4.2",
+    "@electron/fuses": "1.7.0",
+    "@felixrieseberg/electron-forge-maker-nsis": "6.0.6",
+    "@types/ws": "7.4.0",
+    "@vercel/webpack-asset-relocator-loader": "1.7.3",
+    "css-loader": "6.10.0",
+    "electron": "29.1.0",
+    "electron-packager": "git://github.com/electron/electron-packager#75146a71cf8339cff29a423c42382ed36fbc5d67",
+    "electron-updater-yaml": "1.1.2",
+    "node-loader": "2.0.0",
+    "style-loader": "3.3.3"
+  },
+  "files": [
+    "*.js",
+    "*.html"
+  ],
+  "productName": "Notion"
+}

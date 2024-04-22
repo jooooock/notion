@@ -1,0 +1,18 @@
+{
+  "name": "notion-reverse",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:jooooock/notion.git",
+  "author": "Jock",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron src"
+  },
+  "dependencies": {
+    "@electron/remote": "2.0.11",
+    "electron": "^27.1.2"
+  },
+  "devDependencies": {
+    "@electron/asar": "^3.2.8"
+  }
+}
