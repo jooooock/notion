@@ -3333,9 +3333,9 @@
                 }
             }
         },
-        5554: function (e, t, r) {
+        5554: function (module, exports, require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            var __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -3346,132 +3346,211 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            })
+            let __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            })
+            let __importStar = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && __createBinding(t, e, r);
+                return __setModuleDefault(t, e), t
+            }
+            let __importDefault = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.shouldLog = t.setupLocalLogging = t.setupLogging = t.LOG_LEVELS = t.LOG_LEVEL = void 0;
-            const s = i(r(16928)), l = r(4482), c = i(r(47419)), u = i(r(80115)), d = a(r(21248)), p = r(3420),
-                h = a(r(10454)), f = a(r(56116)), m = r(69340);
+            }
 
-            function g() {
-                c.default.transports.console.level = t.LOG_LEVEL, c.default.transports.file.level = t.LOG_LEVEL, c.default.transports.file.maxSize = 2097152, c.default.info(`App starting with version ${l.app.getVersion()}`, {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = __importDefault(require(16928)),
+                __electron = require(4482),
+                c = __importDefault(require(47419)),
+                u = __importDefault(require(80115)),
+                d = __importStar(require(21248)),
+                m3420 = require(3420),
+                m10454 = __importStar(require(10454)),
+                m56116 = __importStar(require(56116)),
+                m = require(69340);
+
+            function setupLocalLogging() {
+                c.default.transports.console.level = exports.LOG_LEVEL, c.default.transports.file.level = exports.LOG_LEVEL, c.default.transports.file.maxSize = 2097152, c.default.info(`App starting with version ${__electron.app.getVersion()}`, {
                     system: `${process.platform} ${process.arch}`,
                     electron: process.versions.electron
-                }), l.app.on("render-process-gone", ((e, t, r) => {
+                }), __electron.app.on("render-process-gone", ((e, t, r) => {
                     try {
                         c.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
                     } catch (e) {
                         c.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
                     }
-                })), l.app.on("child-process-gone", ((e, t) => {
+                })), __electron.app.on("child-process-gone", ((e, t) => {
                     c.default.error("child-process-gone", t)
-                })), l.app.on("web-contents-created", ((e, t) => {
+                })), __electron.app.on("web-contents-created", ((e, t) => {
                     const r = `${t.getType()}-${t.id}`, n = c.default.scope(r);
                     t.on("did-fail-load", ((e, t, r, o) => {
                         n.error("did-fail-load", {errorCode: t, errorDescription: r, validatedURL: o})
                     })), t.on("did-fail-provisional-load", ((e, t, r, o) => {
                         n.error("did-fail-provisional-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), b("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
+                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), shouldLog("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
                         t > 1 && n.debug(`console-message: ${r}`, {line: o, sourceId: a})
                     })))
-                })), l.app.on("before-quit", (() => c.default.info("Quitting..."))), b("debug") && (l.app.on("browser-window-blur", (() => {
-                    l.BrowserWindow.getFocusedWindow() || c.default.debug("App blurred")
-                })), l.app.on("browser-window-focus", (() => {
+                })), __electron.app.on("before-quit", (() => c.default.info("Quitting..."))), shouldLog("debug") && (__electron.app.on("browser-window-blur", (() => {
+                    __electron.BrowserWindow.getFocusedWindow() || c.default.debug("App blurred")
+                })), __electron.app.on("browser-window-focus", (() => {
                     c.default.debug("App focused")
                 })))
             }
 
-            function b(e, r = t.LOG_LEVEL) {
-                return t.LOG_LEVELS.indexOf(r) <= t.LOG_LEVELS.indexOf(e)
+            function shouldLog(e, r = exports.LOG_LEVEL) {
+                return exports.LOG_LEVELS.indexOf(r) <= exports.LOG_LEVELS.indexOf(e)
             }
 
-            t.LOG_LEVEL = function () {
+            exports.LOG_LEVEL = function () {
                 const e = m.Store.getState();
-                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : u.default.existsSync(s.default.join(l.app.getPath("userData"), "debug")) ? "debug" : l.app.isPackaged ? "info" : "debug"
-            }(), t.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"], t.setupLogging = function () {
-                g(), f.initialize(l.app), process.on("uncaughtException", (e => {
-                    e.message.startsWith("net::ERR") ? p.serverLogger.log({
-                        level: "info",
-                        from: "main",
-                        type: "networkError",
-                        error: d.convertErrorToLog(e)
-                    }) : (f.capture(e), p.serverLogger.log({
-                        level: "error",
-                        from: "main",
-                        type: "uncaughtException",
-                        error: d.convertErrorToLog(e)
-                    }))
-                })), process.on("unhandledRejection", (e => {
-                    e && e instanceof Error && e.message.startsWith("net::ERR") ? p.serverLogger.log({
-                        level: "info",
-                        from: "main",
-                        type: "networkError",
-                        error: d.convertErrorToLog(e)
-                    }) : (f.capture(e), p.serverLogger.log({
-                        level: "error",
-                        from: "main",
-                        type: "unhandledRejection",
-                        error: d.convertErrorToLog(e)
-                    }))
-                })), h.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
-                    p.serverLogger.extraLoggingContext.clientEnvironmentData = t
-                })), h.handleEventFromRenderer.addListener("notion:log-error", ((e, t) => {
-                    p.serverLogger.log(t)
-                }))
-            }, t.setupLocalLogging = g, t.shouldLog = b
+                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : u.default.existsSync(s.default.join(__electron.app.getPath("userData"), "debug")) ? "debug" : __electron.app.isPackaged ? "info" : "debug"
+            }()
+            exports.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"]
+            exports.setupLogging = function () {
+                setupLocalLogging()
+                m56116.initialize(__electron.app)
+                process.on("uncaughtException", e => {
+                    if (e.message.startsWith("net::ERR")) {
+                        m3420.serverLogger.log({
+                            level: "info",
+                            from: "main",
+                            type: "networkError",
+                            error: d.convertErrorToLog(e)
+                        })
+                    } else {
+                        m56116.capture(e)
+                        m3420.serverLogger.log({
+                            level: "error",
+                            from: "main",
+                            type: "uncaughtException",
+                            error: d.convertErrorToLog(e)
+                        })
+                    }
+                })
+                process.on("unhandledRejection", e => {
+                    if (e && e instanceof Error && e.message.startsWith("net::ERR")) {
+                        m3420.serverLogger.log({
+                            level: "info",
+                            from: "main",
+                            type: "networkError",
+                            error: d.convertErrorToLog(e)
+                        })
+                    } else {
+                        m56116.capture(e)
+                        m3420.serverLogger.log({
+                            level: "error",
+                            from: "main",
+                            type: "unhandledRejection",
+                            error: d.convertErrorToLog(e)
+                        })
+                    }
+                })
+                m10454.handleEventFromRenderer.addListener("notion:set-logger-data", (e, t) => {
+                    m3420.serverLogger.extraLoggingContext.clientEnvironmentData = t
+                })
+                m10454.handleEventFromRenderer.addListener("notion:log-error", (e, t) => {
+                    m3420.serverLogger.log(t)
+                })
+            }
+            exports.setupLocalLogging = setupLocalLogging
+            exports.shouldLog = shouldLog
         },
-        64982: function (e, t, r) {
+
+        // 入口
+        64982: function (module, exports, require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            const __importDefault = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.handleActivate = void 0;
-            const o = r(4482);
-            r(84041);
-            const a = r(21248), i = n(r(11239)), s = r(3420), l = r(21852), c = r(94774), u = r(43579), d = r(68516),
-                p = r(83789), h = r(5554), f = r(77514), m = r(26605), g = r(29902), b = r(35219), v = r(15425),
-                y = r(13387), w = r(34516), _ = r(69340), k = r(50833), T = r(98441), E = r(19628);
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.handleActivate = void 0;
+
+            const __electron = require(4482);
+            require(84041);
+            const m21248 = require(21248),
+                m11239 = __importDefault(require(11239)),
+                m3420 = require(3420),
+                m21852 = require(21852),
+                m94774 = require(94774),
+                m43579 = require(43579),
+                m68516 = require(68516),
+                m83789 = require(83789),
+                m5554 = require(5554),
+                m77514 = require(77514),
+                m26605 = require(26605),
+                m29902 = require(29902),
+                m35219 = require(35219),
+                m15425 = require(15425),
+                m13387 = require(13387),
+                m34516 = require(34516),
+                m69340 = require(69340),
+                m50833 = require(50833),
+                m98441 = require(98441),
+                m19628 = require(19628);
             let S, C;
 
-            function O() {
-                const e = l.appController.getMostRecentlyFocusedWindowController();
+            function handleActivate() {
+                const e = m21852.appController.getMostRecentlyFocusedWindowController();
                 if (e) {
-                    const t = l.appController.rehydrateEntireAppInForeground(S);
-                    S && !t && e.loadUrlInActiveTab(S), e.browserWindow.show()
-                } else (0, m.getWasOpenedAsHidden)() ? l.appController.rehydrateSingleTabInBackground(S) || l.appController.newWindow({
-                    initialUrl: S,
-                    showWhenLoaded: !1
-                }) : l.appController.rehydrateEntireAppInForeground(S) || l.appController.newWindow({initialUrl: S}).browserWindow.show();
+                    const t = m21852.appController.rehydrateEntireAppInForeground(S);
+                    S && !t && e.loadUrlInActiveTab(S)
+                    e.browserWindow.show()
+                } else if (m26605.getWasOpenedAsHidden()) {
+                    m21852.appController.rehydrateSingleTabInBackground(S) || m21852.appController.newWindow({
+                        initialUrl: S,
+                        showWhenLoaded: !1
+                    })
+                } else {
+                    m21852.appController.rehydrateEntireAppInForeground(S) || m21852.appController.newWindow({initialUrl: S}).browserWindow.show();
+                }
                 S = void 0
             }
 
-            o.dialog.showErrorBox = function (e, t) {
-            }, t.handleActivate = O, async function () {
-                (0, h.setupLogging)(), (0, T.maybeDisableHardwareAcceleration)(), o.app.setAsDefaultProtocolClient(i.default.protocol), "darwin" === process.platform ? o.app.on("open-url", ((e, t) => {
-                    if (e.preventDefault(), o.app.isReady()) {
-                        const e = (0, g.normalizeUrlProtocol)(t);
-                        l.appController.rehydrateEntireAppInForeground(e) || l.appController.handleProtocolUrl((0, g.normalizeUrlProtocol)(t))
-                    }
-                })) : "win32" === process.platform && (o.app.requestSingleInstanceLock() ? o.app.on("second-instance", ((e, t) => {
-                    S = (0, g.findNotionProtocolUrl)(t), O()
-                })) : o.app.quit(), S = (0, g.findNotionProtocolUrl)(process.argv)), o.Menu.setApplicationMenu(null), o.app.setAppUserModelId(i.default.desktopAppId), function () {
-                    if (C = new E.WebUpdater(o.app, c.assetCache), !i.default.isLocalhost || i.default.offline) {
-                        const e = "production" === i.default.env ? 6e5 : 6e4;
+            __electron.dialog.showErrorBox = function (e, t) {
+            }
+            exports.handleActivate = handleActivate
+
+            ;(async function () {
+                m5554.setupLogging()
+                m98441.maybeDisableHardwareAcceleration()
+                __electron.app.setAsDefaultProtocolClient(m11239.default.protocol)
+                if ("darwin" === process.platform) {
+                    __electron.app.on("open-url", (evt, url) => {
+                        evt.preventDefault()
+                        if (__electron.app.isReady()) {
+                            const e = m29902.normalizeUrlProtocol(url);
+                            if (!m21852.appController.rehydrateEntireAppInForeground(e)) {
+                                m21852.appController.handleProtocolUrl(m29902.normalizeUrlProtocol(url))
+                            }
+                        }
+                    })
+                } else if ("win32" === process.platform) {
+                    __electron.app.requestSingleInstanceLock()
+                        ? __electron.app.on("second-instance", (e, t) => {
+                            S = m29902.findNotionProtocolUrl(t)
+                            handleActivate()
+                        })
+                        : __electron.app.quit()
+                    S = m29902.findNotionProtocolUrl(process.argv)
+                }
+                __electron.Menu.setApplicationMenu(null)
+                __electron.app.setAppUserModelId(m11239.default.desktopAppId)
+
+                ;(function () {
+                    if (C = new m19628.WebUpdater(__electron.app, m94774.assetCache), !m11239.default.isLocalhost || m11239.default.offline) {
+                        const e = "production" === m11239.default.env ? 6e5 : 6e4;
                         setInterval((async () => {
                             try {
-                                await c.assetCache.checkForUpdates()
+                                await m94774.assetCache.checkForUpdates()
                             } catch (e) {
-                                const t = (0, a.convertErrorToLog)(e);
-                                s.serverLogger.log({
+                                const t = (0, m21248.convertErrorToLog)(e);
+                                m3420.serverLogger.log({
                                     level: "error",
                                     from: "AssetCache",
                                     type: "topLevelAssetPollingError",
@@ -3480,10 +3559,25 @@
                             }
                         }), e)
                     }
-                }(), await o.app.whenReady(), await (0, p.waitForWebpack)(), async function () {
-                    (0, u.initializeAutoUpdater)(), (0, k.setupSystemMenu)(), await c.assetCache.initialize(), await (0, w.setupSqliteServer)(), (0, v.setupSecurity)(), (0, y.setupSessionListeners)(), (0, b.setupRendererListeners)(), _.Store.getState().app.preferences.isUsingHttps || (0, f.handleNotionProtocol)(), O(), await (0, d.wipeTransientCsrfCookie)(), l.appController.onAppReady(), o.app.on("before-quit", (() => l.appController.handleQuit())), o.app.on("activate", O)
-                }()
-            }()
+                })()
+
+                await __electron.app.whenReady()
+                await m83789.waitForWebpack()
+
+                m43579.initializeAutoUpdater()
+                m50833.setupSystemMenu()
+                await m94774.assetCache.initialize()
+                await m34516.setupSqliteServer()
+                m15425.setupSecurity()
+                m13387.setupSessionListeners()
+                m35219.setupRendererListeners()
+                m69340.Store.getState().app.preferences.isUsingHttps || m77514.handleNotionProtocol()
+                handleActivate()
+                await m68516.wipeTransientCsrfCookie()
+                m21852.appController.onAppReady()
+                __electron.app.on("before-quit", (() => m21852.appController.handleQuit()))
+                __electron.app.on("activate", handleActivate)
+            })()
         },
         10454: function (e, t, r) {
             "use strict";
@@ -42891,9 +42985,9 @@
             } catch (e) {
             }
         },
-        4482: e => {
+        4482: module => {
             "use strict";
-            e.exports = require("electron")
+            module.exports = require("electron")
         },
         34681: e => {
             "use strict";
