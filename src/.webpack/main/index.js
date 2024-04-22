@@ -123,36 +123,49 @@
                 }
             }
         },
-        3420: function (e, t, r) {
+
+        // ServerLogger
+        3420: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.serverLogger = t.ServerLogger = void 0;
-            const s = i(r(70857)), l = r(4482), c = i(r(47419)), u = a(r(6600)), d = r(21248), p = r(43067),
-                h = i(r(11239));
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
 
-            class f {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __os = i(require(70857)),
+                l = require(4482),
+                c = i(require(47419)),
+                u = a(require(6600)),
+                d = require(21248),
+                p = require(43067),
+                __config = i(require(11239));
+
+            class ServerLogger {
                 static {
                     this.PLATFORM = "electron"
                 }
@@ -192,7 +205,10 @@
                         }
                     };
                     const {env: t, splunkConfig: r} = e;
-                    this.env = t, this.loggingContext = {os: e.os, platform: f.PLATFORM}, this.splunkConfig = r
+                    this.env = t, this.loggingContext = {
+                        os: e.os,
+                        platform: ServerLogger.PLATFORM
+                    }, this.splunkConfig = r
                 }
 
                 async log(e) {
@@ -210,9 +226,10 @@
                 }
             }
 
-            t.ServerLogger = f, t.serverLogger = new f({
+            exports.ServerLogger = ServerLogger
+            exports.serverLogger = new ServerLogger({
                 os: function () {
-                    switch (s.default.platform()) {
+                    switch (__os.default.platform()) {
                         case"darwin":
                             return "mac";
                         case"win32":
@@ -220,17 +237,24 @@
                         default:
                             return "unknown"
                     }
-                }(), env: h.default.env, logger: {
+                }(),
+                env: __config.default.env,
+                logger: {
                     log(e) {
                         c.default.log(e)
-                    }, error(e) {
+                    },
+                    error(e) {
                         c.default.error(e)
                     }
-                }, splunkConfig: h.default.splunkConfig
+                },
+                splunkConfig: __config.default.splunkConfig,
             });
-            const m = s.default.cpus(), g = m && m[0] && m[0].model,
-                b = `${Math.round(s.default.totalmem() / 1024 / 1024 / 1024)}G`;
-            t.serverLogger.extraLoggingContext.desktopVersion = l.app.getVersion(), t.serverLogger.extraLoggingContext.desktopCPU = g, t.serverLogger.extraLoggingContext.desktopRAM = b
+            const m = __os.default.cpus(),
+                g = m && m[0] && m[0].model,
+                b = `${Math.round(__os.default.totalmem() / 1024 / 1024 / 1024)}G`;
+            exports.serverLogger.extraLoggingContext.desktopVersion = l.app.getVersion()
+            exports.serverLogger.extraLoggingContext.desktopCPU = g
+            exports.serverLogger.extraLoggingContext.desktopRAM = b
         },
         18503: (e, t) => {
             "use strict";
@@ -250,34 +274,36 @@
             const n = r(39023), o = r(40041), a = (0, n.promisify)(o.zip);
             t.default = a
         },
+
+        // AppController
         21852: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            },
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
                 i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
+                    return e && e.__esModule ? e : {default: e}
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
@@ -669,38 +695,73 @@
             exports.appController = new AppController()
             exports.AppController_TEST_ONLY = AppController
         },
-        87309: function (e, t, r) {
+
+        // AssetCache
+        87309: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.AssetCache = t.assetCacheDirName = void 0;
-            const s = i(r(76982)), l = i(r(16928)), c = a(r(4482)), u = i(r(47419)), d = i(r(80115)), p = i(r(45437)),
-                h = r(4058), f = r(28902), m = a(r(6600)), g = r(21248), b = r(43067), v = a(r(60411)), y = i(r(11239)),
-                w = r(3420), _ = r(5554), k = r(13387), T = u.default.scope("AssetCache");
-            t.assetCacheDirName = "notionAssetCache-v2", t.AssetCache = class {
-                constructor(e) {
-                    this.args = e, this.queue = new h.AsyncQueue(1), this.events = new p.default, this.appActive = !0, this.lastAppStateChangeTime = 0, this.latestVersionFileName = "latestVersion.json", this.assetsJsonFileName = "assets.json", this.assetHeadersFileName = "headers.json", this.assetsDirName = "assets", this.cacheDir = l.default.join(this.args.baseDir, t.assetCacheDirName), this.latestVersionPath = l.default.join(this.cacheDir, this.latestVersionFileName)
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = i(require(76982)),
+                m16928 = i(require(16928)),
+                c = a(require(4482)),
+                u = i(require(47419)),
+                d = i(require(80115)),
+                p = i(require(45437)),
+                h = require(4058),
+                f = require(28902),
+                m = a(require(6600)),
+                g = require(21248),
+                b = require(43067),
+                v = a(require(60411)),
+                y = i(require(11239)),
+                w = require(3420),
+                _ = require(5554),
+                k = require(13387)
+
+            const T = u.default.scope("AssetCache");
+
+            exports.assetCacheDirName = "notionAssetCache-v2"
+            exports.AssetCache = class AssetCache {
+                constructor(args) {
+                    this.args = args
+                    this.queue = new h.AsyncQueue(1)
+                    this.events = new p.default
+                    this.appActive = true
+                    this.lastAppStateChangeTime = 0
+                    this.latestVersionFileName = "latestVersion.json"
+                    this.assetsJsonFileName = "assets.json"
+                    this.assetHeadersFileName = "headers.json"
+                    this.assetsDirName = "assets"
+                    this.cacheDir = m16928.default.join(this.args.baseDir, exports.assetCacheDirName)
+                    this.latestVersionPath = m16928.default.join(this.cacheDir, this.latestVersionFileName)
                 }
 
                 async handleRequest(e) {
@@ -711,7 +772,7 @@
                     if (o.assetsJson.proxyServerPathPrefixes.some((e => n.startsWith(e)))) return;
                     const a = o.assetsJson.files.find((e => e.path === n));
                     if (a) {
-                        const e = this.getAssetsDir(o.assetsJson.version), t = l.default.join(e, a.path);
+                        const e = this.getAssetsDir(o.assetsJson.version), t = m16928.default.join(e, a.path);
                         return (0, _.shouldLog)("silly") && T.silly("Performing file request", {
                             absolutePath: t,
                             urlPath: n
@@ -740,7 +801,7 @@
                             type: "requestReturnedAsIndexV2",
                             data: {url: n}
                         });
-                        const e = l.default.join(i, u.path);
+                        const e = m16928.default.join(i, u.path);
                         return (0, _.shouldLog)("silly") && T.silly("Performing file request (2)", {
                             absolutePath: e,
                             urlPath: n
@@ -833,9 +894,9 @@
                         if (r) {
                             const e = r.assetsJson, t = r.assetHeaders, n = new Set(e.files.map((e => e.path))),
                                 o = i.files.filter((e => n.has(e.path))), a = this.getCacheDir(e.version),
-                                u = l.default.join(a, this.assetsDirName);
+                                u = m16928.default.join(a, this.assetsDirName);
                             for (const e of o) {
-                                const r = e.path, n = l.default.join(u, r), o = l.default.join(p, r);
+                                const r = e.path, n = m16928.default.join(u, r), o = m16928.default.join(p, r);
                                 c[r] = t[r];
                                 try {
                                     await d.default.copy(n, o), w.add(r)
@@ -862,7 +923,7 @@
                     const C = Date.now(), O = new h.AsyncQueue(8), M = [];
                     await Promise.all(i.files.map((e => O.enqueue((async () => {
                         if (w.has(e.path) && await this.verifyAsset(p, e)) return k++, void S();
-                        const t = l.default.join(p, e.path);
+                        const t = m16928.default.join(p, e.path);
                         try {
                             const r = await this.downloadFile(v.resolve(this.args.baseUrl, e.path), t);
                             if (c[e.path] = r, await this.verifyAsset(p, e)) k++, S(); else {
@@ -928,7 +989,7 @@
                 }
 
                 async verifyAsset(e, t) {
-                    const r = l.default.join(e, t.path);
+                    const r = m16928.default.join(e, t.path);
                     return await this.getFileHash(r) === t.hash
                 }
 
@@ -970,19 +1031,19 @@
                 }
 
                 getCacheDir(e) {
-                    return l.default.join(this.cacheDir, e)
+                    return m16928.default.join(this.cacheDir, e)
                 }
 
                 getAssetsDir(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetsDirName)
+                    return m16928.default.join(this.getCacheDir(e), this.assetsDirName)
                 }
 
                 getAssetsJsonPath(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetsJsonFileName)
+                    return m16928.default.join(this.getCacheDir(e), this.assetsJsonFileName)
                 }
 
                 getAssetHeadersPath(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetHeadersFileName)
+                    return m16928.default.join(this.getCacheDir(e), this.assetHeadersFileName)
                 }
 
                 async directoryExists(e) {
@@ -1043,7 +1104,7 @@
                 }
 
                 async downloadFile(e, t) {
-                    await d.default.mkdirp(l.default.parse(t).dir), this.session = this.session || c.session.fromPartition(k.electronSessionPartition);
+                    await d.default.mkdirp(m16928.default.parse(t).dir), this.session = this.session || c.session.fromPartition(k.electronSessionPartition);
                     const r = c.default.net.request({url: e, session: this.session}),
                         n = d.default.createWriteStream(t), o = {};
                     return r.on("response", (function (e) {
@@ -2672,34 +2733,36 @@
                 }
             }
         },
+
+        // AssetCache
         94774: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            },
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
                 i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
+                    return e && e.__esModule ? e : {default: e}
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
@@ -2741,35 +2804,57 @@
                 exports.assetCache.checkForUpdates()
             })
         },
-        43579: function (e, t, r) {
+
+        // auto updater
+        43579: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isAutoUpdateDisabled = t.restartToApplyUpdate = t.checkForUpdate = t.initializeAutoUpdater = t.autoUpdateStatus = void 0;
-            const s = r(4482), l = i(r(47419)), c = r(94625), u = r(36343), d = r(37318), p = a(r(6600)), h = r(21248),
-                f = r(43067), m = i(r(11239)), g = r(3420), b = r(21852), v = r(94774), y = a(r(10454)), w = r(69340),
-                _ = r(50833), k = (0, u.defineMessages)({
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.isAutoUpdateDisabled = exports.restartToApplyUpdate = exports.checkForUpdate = exports.initializeAutoUpdater = exports.autoUpdateStatus = void 0;
+
+            const __electron = require(4482),
+                m47419 = i(require(47419)),
+                m94625 = require(94625),
+                u = require(36343),
+                d = require(37318),
+                p = a(require(6600)),
+                h = require(21248),
+                f = require(43067),
+                m = i(require(11239)),
+                g = require(3420),
+                m21852 = require(21852),
+                v = require(94774),
+                m10454 = a(require(10454)),
+                m69340 = require(69340),
+                _ = require(50833),
+                k = u.defineMessages({
                     updateInstallButton: {
                         id: "updatePrompt.installAndRelaunch",
                         defaultMessage: "Install and relaunch",
@@ -2791,147 +2876,243 @@
                         description: "Detail text for the dialog telling the user that a new update is available"
                     }
                 });
-            let T, E;
-            c.autoUpdater.logger = l.default.scope("AutoUpdater"), function () {
-                const {updaterChannel: e} = w.Store.getState()?.app?.preferences || {},
-                    t = "darwin" === process.platform,
-                    r = "arm64" === process.arch || s.app.runningUnderARM64Translation;
-                if (e) return c.autoUpdater.channel = e, void l.default.info(`Setting autoUpdater channel to "${e}" (from preferences)`);
-                t && r ? (c.autoUpdater.channel = "arm64", l.default.info('Setting autoUpdater channel to "arm64"')) : t && (c.autoUpdater.channel = "latest", l.default.info('Setting autoUpdater channel to "latest" (for Intel)')), c.autoUpdater.allowDowngrade = !1
-            }();
-            const S = {checking: void 0, available: void 0, downloaded: void 0, downloading: void 0};
 
-            function C(e) {
-                Object.assign(t.autoUpdateStatus, e), (0, _.setupSystemMenu)()
+            let updatePromise, E;
+            m94625.autoUpdater.logger = m47419.default.scope("AutoUpdater")
+
+            debugger
+
+            // 设置自动更新渠道
+            !function () {
+                const {updaterChannel} = m69340.Store.getState()?.app?.preferences || {}
+                const isDarwin = "darwin" === process.platform
+                const isArm64 = "arm64" === process.arch || __electron.app.runningUnderARM64Translation
+                if (updaterChannel) {
+                    m94625.autoUpdater.channel = updaterChannel
+                    m47419.default.info(`Setting autoUpdater channel to "${updaterChannel}" (from preferences)`)
+                    return
+                }
+                if (isDarwin && isArm64) {
+                    m94625.autoUpdater.channel = "arm64"
+                    m47419.default.info('Setting autoUpdater channel to "arm64"')
+                } else if (isDarwin) {
+                    m94625.autoUpdater.channel = "latest"
+                    m47419.default.info('Setting autoUpdater channel to "latest" (for Intel)')
+                }
+                m94625.autoUpdater.allowDowngrade = false
+            }();
+
+            const status = {
+                checking: void 0,
+                available: void 0,
+                downloaded: void 0,
+                downloading: void 0
+            };
+
+            function _updateStatus(e) {
+                Object.assign(exports.autoUpdateStatus, e)
+                _.setupSystemMenu()
             }
 
             async function O(e) {
-                if (e && await (0, f.timeout)(e), await b.appController.waitForFocusedWindowController(), !t.autoUpdateStatus.downloaded) return void (E = void 0);
+                if (e && await (0, f.timeout)(e), await m21852.appController.waitForFocusedWindowController(), !exports.autoUpdateStatus.downloaded) return void (E = void 0);
                 let r = !1;
-                const n = b.appController.intl;
+                const n = m21852.appController.intl;
                 try {
-                    0 === (await s.dialog.showMessageBox({
+                    0 === (await __electron.dialog.showMessageBox({
                         type: "question",
                         buttons: [n.formatMessage(k.updateInstallButton), n.formatMessage(k.updateRemindButton)],
                         defaultId: 0,
                         message: n.formatMessage(k.updateMessage),
                         detail: n.formatMessage(k.updateDetail)
-                    })).response ? I({launch: !0}) : (E = O(864e5), r = !0)
+                    })).response ? restartToApplyUpdate({launch: !0}) : (E = O(864e5), r = !0)
                 } catch (e) {
-                    l.default.warn("Error asking windows user to update", e)
+                    m47419.default.warn("Error asking windows user to update", e)
                 }
                 r || (E = void 0)
             }
 
-            function M() {
-                return T || (T = c.autoUpdater.checkForUpdates().then((e => (T = void 0, e))).catch((e => {
-                    throw T = void 0, e
-                })))
+            function checkForUpdate() {
+                if (updatePromise) {
+                    return updatePromise
+                }
+
+                updatePromise = m94625.autoUpdater.checkForUpdates().then(e => {
+                    updatePromise = void 0
+                    return e
+                }).catch(e => {
+                    updatePromise = void 0
+                    throw e
+                })
+                return updatePromise
             }
 
-            function I({silent: e, launch: r} = {}) {
-                process.nextTick((() => {
-                    b.appController.handleQuit(), t.autoUpdateStatus.downloaded ? c.autoUpdater.quitAndInstall(Boolean(e), Boolean(r)) : (s.app.relaunch(), s.app.quit())
-                }))
+            function restartToApplyUpdate({silent, launch} = {}) {
+                process.nextTick(() => {
+                    m21852.appController.handleQuit()
+                    if (exports.autoUpdateStatus.downloaded) {
+                        m94625.autoUpdater.quitAndInstall(Boolean(silent), Boolean(launch))
+                    } else {
+                        __electron.app.relaunch()
+                        __electron.app.quit()
+                    }
+                })
             }
 
-            function A() {
+            function isAutoUpdateDisabled() {
                 if ("darwin" === process.platform) {
-                    const e = s.systemPreferences?.getUserDefault("NotionNoAutoUpdates", "boolean"),
-                        t = w.Store.getState().app.preferences?.isAutoUpdaterDisabled;
+                    const e = __electron.systemPreferences?.getUserDefault("NotionNoAutoUpdates", "boolean")
+                    const t = m69340.Store.getState().app.preferences?.isAutoUpdaterDisabled;
                     return Boolean(e || t)
                 }
-                return !1
+                return false
             }
 
-            t.autoUpdateStatus = {...S}, c.autoUpdater.autoDownload = !1, c.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform, t.initializeAutoUpdater = function () {
-                c.autoUpdater.on("error", (e => {
-                    if (C(S), T = void 0, function (e) {
-                        return e && e.message && ["ERR_CONNECTION_REFUSED", "ECONNREFUSED"].some((t => -1 !== e.message.indexOf(t)))
-                    }(e)) return l.default.info("No electron update -- offline"), void b.appController.sendMainToAllNotionInstances("notion:update-not-available");
-                    "NSPOSIXErrorDomain" === e.domain ? g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "NSPOSIXErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : "SQRLUpdaterErrorDomain" === e.domain ? g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "SQRLUpdaterErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : "NSCocoaErrorDomain" === e.domain ? g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "NSCocoaErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : e.message.startsWith("net::ERR") ? g.serverLogger.log({
-                        level: "info",
-                        from: "autoUpdater",
-                        type: "networkError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : 403 === e.statusCode ? g.serverLogger.log({
-                        level: "warning",
-                        from: "autoUpdater",
-                        type: "cloudflareCaptcha",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : 503 === e.statusCode ? g.serverLogger.log({
-                        level: "warning",
-                        from: "autoUpdater",
-                        type: "serviceUnavailable",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : -1 !== e.message.indexOf("/opt/notion-app/app.asar") ? g.serverLogger.log({
-                        level: "info",
-                        from: "autoUpdater",
-                        type: "unsupportedLinuxApp",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : -1 !== e.message.indexOf("app-update.yml") || g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "unknownAutoUpdaterError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }), b.appController.sendMainToAllNotionInstances("notion:update-error", (0, d.cleanObjectForSerialization)(e))
-                })), c.autoUpdater.on("checking-for-update", (() => {
-                    l.default.info("Checking for update"), C({checking: !0}), b.appController.sendMainToAllNotionInstances("notion:checking-for-update")
-                })), c.autoUpdater.on("update-available", (e => {
-                    l.default.info("Update available", {info: e});
-                    const r = t.autoUpdateStatus.downloaded?.version !== e.version;
-                    r && (l.default.info("Downloading update", {info: e}), c.autoUpdater.downloadUpdate()), C({
+            m94625.autoUpdater.autoDownload = false
+            m94625.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform
+
+            exports.autoUpdateStatus = {...status}
+            exports.initializeAutoUpdater = function () {
+                m94625.autoUpdater.on("error", e => {
+                    _updateStatus(status)
+                    updatePromise = void 0
+                    if (e && e.message && ["ERR_CONNECTION_REFUSED", "ECONNREFUSED"].some((t => -1 !== e.message.indexOf(t)))) {
+                        m47419.default.info("No electron update -- offline")
+                        m21852.appController.sendMainToAllNotionInstances("notion:update-not-available")
+                        return
+                    }
+                    "NSPOSIXErrorDomain" === e.domain
+                        ? g.serverLogger.log({
+                            level: "error",
+                            from: "autoUpdater",
+                            type: "NSPOSIXErrorDomainError",
+                            error: (0, h.convertErrorToLog)(e)
+                        })
+                        : "SQRLUpdaterErrorDomain" === e.domain
+                            ? g.serverLogger.log({
+                                level: "error",
+                                from: "autoUpdater",
+                                type: "SQRLUpdaterErrorDomainError",
+                                error: (0, h.convertErrorToLog)(e)
+                            })
+                            : "NSCocoaErrorDomain" === e.domain
+                                ? g.serverLogger.log({
+                                    level: "error",
+                                    from: "autoUpdater",
+                                    type: "NSCocoaErrorDomainError",
+                                    error: (0, h.convertErrorToLog)(e)
+                                })
+                                : e.message.startsWith("net::ERR")
+                                    ? g.serverLogger.log({
+                                        level: "info",
+                                        from: "autoUpdater",
+                                        type: "networkError",
+                                        error: (0, h.convertErrorToLog)(e)
+                                    })
+                                    : 403 === e.statusCode
+                                        ? g.serverLogger.log({
+                                            level: "warning",
+                                            from: "autoUpdater",
+                                            type: "cloudflareCaptcha",
+                                            error: (0, h.convertErrorToLog)(e)
+                                        })
+                                        : 503 === e.statusCode
+                                            ? g.serverLogger.log({
+                                                level: "warning",
+                                                from: "autoUpdater",
+                                                type: "serviceUnavailable",
+                                                error: (0, h.convertErrorToLog)(e)
+                                            })
+                                            : -1 !== e.message.indexOf("/opt/notion-app/app.asar")
+                                                ? g.serverLogger.log({
+                                                    level: "info",
+                                                    from: "autoUpdater",
+                                                    type: "unsupportedLinuxApp",
+                                                    error: (0, h.convertErrorToLog)(e)
+                                                })
+                                                : -1 !== e.message.indexOf("app-update.yml") || g.serverLogger.log({
+                                                level: "error",
+                                                from: "autoUpdater",
+                                                type: "unknownAutoUpdaterError",
+                                                error: (0, h.convertErrorToLog)(e)
+                                            })
+                    m21852.appController.sendMainToAllNotionInstances("notion:update-error", d.cleanObjectForSerialization(e))
+                })
+                m94625.autoUpdater.on("checking-for-update", () => {
+                    m47419.default.info("Checking for update")
+                    _updateStatus({checking: true})
+                    m21852.appController.sendMainToAllNotionInstances("notion:checking-for-update")
+                })
+                m94625.autoUpdater.on("update-available", info => {
+                    m47419.default.info("Update available", {info: info});
+                    const r = exports.autoUpdateStatus.downloaded?.version !== info.version;
+                    if (r) {
+                        m47419.default.info("Downloading update", {info: info})
+                        m94625.autoUpdater.downloadUpdate()
+                    }
+                    _updateStatus({
                         checking: void 0,
-                        available: e, ...r ? {downloaded: void 0} : {}
-                    }), (0, _.setupSystemMenu)(), b.appController.sendMainToAllNotionInstances("notion:update-available", e)
-                })), c.autoUpdater.on("update-not-available", (() => {
-                    C({
+                        available: info, ...r ? {downloaded: void 0} : {}
+                    })
+                    _.setupSystemMenu()
+                    m21852.appController.sendMainToAllNotionInstances("notion:update-available", info)
+                })
+                m94625.autoUpdater.on("update-not-available", () => {
+                    _updateStatus({
                         checking: void 0,
                         available: void 0
-                    }), (0, _.setupSystemMenu)(), b.appController.sendMainToAllNotionInstances("notion:update-not-available")
-                }));
-                const e = p.throttle((e => {
-                    C({downloading: e}), b.appController.sendMainToAllNotionInstances("notion:update-progress", e), (0, _.setupSystemMenu)()
-                }), 300);
-                c.autoUpdater.on("download-progress", e), c.autoUpdater.on("update-downloaded", (e => {
-                    l.default.info("Update downloaded", {info: e}), C({
-                        ...S,
+                    })
+                    _.setupSystemMenu()
+                    m21852.appController.sendMainToAllNotionInstances("notion:update-not-available")
+                })
+                const e = p.throttle(e => {
+                    _updateStatus({downloading: e})
+                    m21852.appController.sendMainToAllNotionInstances("notion:update-progress", e)
+                    _.setupSystemMenu()
+                }, 300)
+                m94625.autoUpdater.on("download-progress", e)
+                m94625.autoUpdater.on("update-downloaded", e => {
+                    m47419.default.info("Update downloaded", {info: e})
+                    _updateStatus({
+                        ...status,
                         downloaded: e
-                    }), b.appController.sendMainToAllNotionInstances("notion:update-ready", e), async function () {
+                    })
+                    m21852.appController.sendMainToAllNotionInstances("notion:update-ready", e)
+                    ;(async function () {
                         if (E) return;
                         const e = process.uptime() < 5;
-                        await v.assetCache.checkForUpdates(), "win32" === process.platform ? E = O() : e ? I() : "production" !== m.default.env && (E = O())
-                    }()
-                }))
-            }, t.checkForUpdate = M, t.restartToApplyUpdate = I, t.isAutoUpdateDisabled = A, y.handleEventFromRenderer.addListener("notion:install-update", (() => {
-                I()
-            })), y.handleEventFromRenderer.addListener("notion:check-for-updates", (() => {
-                M()
-            })), process.env.JEST_WORKER_ID || async function () {
-                for (; ;) {
-                    if (A()) l.default.info("Auto updates are disabled."); else try {
-                        await M()
-                    } catch (e) {
-                        l.default.warn("Error checking for update", e)
+                        await v.assetCache.checkForUpdates()
+                        "win32" === process.platform ? E = O() : e ? restartToApplyUpdate() : "production" !== m.default.env && (E = O())
+                    })()
+                })
+            }
+            exports.checkForUpdate = checkForUpdate
+            exports.restartToApplyUpdate = restartToApplyUpdate
+            exports.isAutoUpdateDisabled = isAutoUpdateDisabled
+
+            m10454.handleEventFromRenderer.addListener("notion:install-update", () => {
+                restartToApplyUpdate()
+            })
+            m10454.handleEventFromRenderer.addListener("notion:check-for-updates", () => {
+                checkForUpdate()
+            })
+
+            if (!process.env.JEST_WORKER_ID) {
+                (async function () {
+                    for (; ;) {
+                        if (isAutoUpdateDisabled()) {
+                            m47419.default.info("Auto updates are disabled.")
+                        } else {
+                            try {
+                                await checkForUpdate()
+                            } catch (e) {
+                                m47419.default.warn("Error checking for update", e)
+                            }
+                        }
+                        await f.timeout(24 * 60 * 60 * 1000) // 24小时
                     }
-                    await (0, f.timeout)(864e5)
-                }
-            }()
+                })()
+            }
         },
         68115: function (e, t, r) {
             "use strict";
@@ -3573,13 +3754,13 @@
                 return e && e.__esModule ? e : {default: e}
             };
             Object.defineProperty(exports, "__esModule", {value: !0})
-            exports.handleActivate = void 0;
+
 
             const __electron = require(4482);
             require(84041); // crash reporter
 
-            const m21248 = require(21248),
-                __config = __importDefault(require(11239)),
+            const m21248 = require(21248), // log util
+                __config = __importDefault(require(11239)), // config
                 m3420 = require(3420),
                 m21852 = require(21852),
                 m94774 = require(94774),
@@ -3623,8 +3804,8 @@
 
             debugger
 
-                ;
-            (async function () {
+
+            void (async function () {
                 m5554.setupLogging()
                 m98441.maybeDisableHardwareAcceleration()
                 __electron.app.setAsDefaultProtocolClient(__config.default.protocol)
@@ -3670,6 +3851,8 @@
                 }
 
                 await __electron.app.whenReady()
+
+                debugger
                 await m83789.waitForWebpack()
 
                 m43579.initializeAutoUpdater()
@@ -3687,6 +3870,7 @@
                 __electron.app.on("activate", handleActivate)
             })()
         },
+
         10454: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -9030,11 +9214,12 @@
                 return !0
             }
         },
+
+        // log util
         21248: (module, exports, require) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            exports.stringifyMiscData = exports.convertErrorToLog = exports.safelyConvertAnyToString = exports.shouldLog = void 0;
 
             const n = require(37318)
             const logLevels = ["silent", "error", "warning", "info", "debug"];
@@ -26053,123 +26238,179 @@
                 }
             }
         },
-        21789: (e, t, r) => {
+        21789: (module, exports, require) => {
             "use strict";
-            var n, o = r(16928);
+            var __electron, __path = require(16928);
             try {
-                n = r(4482)
+                __electron = require(4482)
             } catch (e) {
-                n = null
+                __electron = null
             }
-            var a = r(70857);
+            var __os = require(70857);
 
             function i() {
                 return l("app")
             }
 
-            function s() {
-                var e = i();
-                return e ? "name" in e ? e.name : e.getName() : null
+            function getName() {
+                var app = i();
+                return app
+                    ? "name" in app
+                        ? app.name
+                        : app.getName()
+                    : null
             }
 
-            function l(e) {
-                return n ? n[e] ? n[e] : n.remote ? n.remote[e] : null : null
+            function l(key) {
+                return __electron
+                    ? __electron[key]
+                        ? __electron[key]
+                        : __electron.remote
+                            ? __electron.remote[key]
+                            : null
+                    : null
             }
 
             function c() {
-                return "browser" === process.type && n && n.ipcMain ? n.ipcMain : "renderer" === process.type && n && n.ipcRenderer ? n.ipcRenderer : null
+                return "browser" === process.type && __electron && __electron.ipcMain
+                    ? __electron.ipcMain
+                    : "renderer" === process.type && __electron && __electron.ipcRenderer
+                        ? __electron.ipcRenderer
+                        : null
             }
 
-            function u() {
-                var e = i();
-                return e ? "version" in e ? e.version : e.getVersion() : null
+            function getVersion() {
+                var app = i();
+                return app ? "version" in app ? app.version : app.getVersion() : null
             }
 
-            e.exports = {
-                getName: s, getPath: function (e) {
-                    var t = i();
-                    if (!t) return null;
+            module.exports = {
+                getName: getName,
+                getPath: function (name) {
+                    var app = i();
+                    if (!app) return null;
                     try {
-                        return t.getPath(e)
+                        return app.getPath(name)
                     } catch (e) {
                         return null
                     }
-                }, getVersion: u, getVersions: function () {
-                    return {
-                        app: s() + " " + u(),
-                        electron: "Electron " + process.versions.electron,
-                        os: (e = a.type().replace("_", " "), t = a.release(), "Darwin" === e && (e = "macOS", t = "10." + (Number(a.release().split(".")[0]) - 4)), e + " " + t)
-                    };
+                },
+                getVersion: getVersion,
+                getVersions: function () {
                     var e, t
-                }, isDev: function () {
-                    var e = i();
-                    return e && void 0 !== e.isPackaged ? !e.isPackaged : "string" == typeof process.execPath ? o.basename(process.execPath).toLowerCase().startsWith("electron") : "1" === process.env.ELECTRON_IS_DEV
-                }, isElectron: function () {
+                    return {
+                        app: getName() + " " + getVersion(),
+                        electron: "Electron " + process.versions.electron,
+                        os: (e = __os.type().replace("_", " "), t = __os.release(), "Darwin" === e && (e = "macOS", t = "10." + (Number(__os.release().split(".")[0]) - 4)), e + " " + t)
+                    };
+                },
+                isDev: function () {
+                    // debugger
+                    var app = i();
+                    return false
+                    // return app && void 0 !== app.isPackaged
+                    //     ? !app.isPackaged
+                    //     : "string" == typeof process.execPath
+                    //         ? __path.basename(process.execPath).toLowerCase().startsWith("electron")
+                    //         : "1" === process.env.ELECTRON_IS_DEV
+                },
+                isElectron: function () {
                     return "browser" === process.type || "renderer" === process.type
-                }, isIpcChannelListened: function (e) {
+                },
+                isIpcChannelListened: function (e) {
                     var t = c();
                     return !!t && t.listenerCount(e) > 0
-                }, loadRemoteModule: function (e) {
+                },
+                loadRemoteModule: function (e) {
                     "browser" === process.type ? i().on("web-contents-created", (function (t, r) {
                         var n = r.executeJavaScript('try {require("' + e + '")} catch(e){}; void 0;');
                         n && "function" == typeof n.catch && n.catch((function () {
                         }))
                     })) : process.type
-                }, onIpc: function (e, t) {
+                },
+                onIpc: function (e, t) {
                     var r = c();
                     r && r.on(e, t)
-                }, openUrl: function (e, t) {
+                },
+                openUrl: function (e, t) {
                     t = t || console.error;
                     var r = l("shell");
                     r && r.openExternal(e).catch(t)
-                }, sendIpc: function (e, t) {
+                },
+                sendIpc: function (e, t) {
                     "browser" === process.type ? function (e, t) {
-                        n && n.BrowserWindow && n.BrowserWindow.getAllWindows().forEach((function (r) {
+                        __electron && __electron.BrowserWindow && __electron.BrowserWindow.getAllWindows().forEach((function (r) {
                             r.webContents && !r.webContents.isDestroyed() && r.webContents.send(e, t)
                         }))
                     }(e, t) : "renderer" === process.type && function (e, t) {
                         var r = c();
                         r && r.send(e, t)
                     }(e, t)
-                }, showErrorBox: function (e, t) {
+                },
+                showErrorBox: function (e, t) {
                     var r = l("dialog");
                     r && r.showErrorBox(e, t)
                 }
             }
         },
-        47419: (e, t, r) => {
+        47419: (module, exports, require) => {
             "use strict";
-            var n = r(77259), o = r(21789), a = r(58189), i = r(41083), s = r(65067), l = r(36209), c = r(19636),
-                u = r(55190);
-            e.exports = function e(t) {
+            var n = require(77259),
+                o = require(21789),
+                a = require(58189),
+                i = require(41083),
+                s = require(65067),
+                l = require(36209),
+                c = require(19636),
+                u = require(55190);
+
+            module.exports = function create(logId) {
                 var r = {
                     catchErrors: function (e) {
-                        var t = Object.assign({}, {log: r.error, showDialog: "browser" === process.type}, e || {});
+                        var t = Object.assign({}, {
+                            log: r.error,
+                            showDialog: "browser" === process.type
+                        }, e || {});
                         n(t)
                     },
-                    create: e,
+                    create: create,
                     functions: {},
                     hooks: [],
                     isDev: o.isDev(),
                     levels: [],
-                    logId: t,
-                    variables: {processType: process.type}
+                    logId: logId,
+                    variables: {
+                        processType: process.type
+                    }
                 };
-                return r.scope = i(r), r.transports = {
+                r.scope = i(r)
+                r.transports = {
                     console: s(r),
                     file: l(r),
                     remote: u(r),
                     ipc: c(r)
-                }, Object.defineProperty(r.levels, "add", {
-                    enumerable: !1, value: function (e, t) {
-                        t = void 0 === t ? r.levels.length : t, r.levels.splice(t, 0, e), r[e] = a.log.bind(null, r, {level: e}), r.functions[e] = r[e]
+                }
+                Object.defineProperty(r.levels, "add", {
+                    enumerable: false,
+                    value: function (level, index = r.levels.length) {
+                        r.levels.splice(index, 0, level)
+                        r[level] = a.log.bind(null, r, {level: level})
+                        r.functions[level] = r[level]
                     }
-                }), ["error", "warn", "info", "verbose", "debug", "silly"].forEach((function (e) {
-                    r.levels.add(e)
-                })), r.log = a.log.bind(null, r, {level: "info"}), r.functions.log = r.log, r.logMessageWithTransports = function (e, t) {
-                    return void 0 === e.date && (e.date = new Date), void 0 === e.variables && (e.variables = r.variables), a.runTransports(t, e, r)
-                }, r
-            }("default"), e.exports.default = e.exports
+                })
+                ;["error", "warn", "info", "verbose", "debug", "silly"].forEach(function (level) {
+                    r.levels.add(level)
+                })
+                r.log = a.log.bind(null, r, {level: "info"})
+                r.functions.log = r.log
+                r.logMessageWithTransports = function (e, t) {
+                    void 0 === e.date && (e.date = new Date)
+                    void 0 === e.variables && (e.variables = r.variables)
+                    return a.runTransports(t, e, r)
+                }
+                return r
+            }("default")
+            module.exports.default = module.exports
         },
         58189: e => {
             "use strict";
