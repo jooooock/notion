@@ -1,13 +1,19 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
+
+
 const ws_1 = __importDefault(require("ws"));
 const SqliteConnectionWrapper_1 = require("./SqliteConnectionWrapper");
 const electron_log_1 = __importDefault(require("electron-log"));
 const crypto_1 = __importDefault(require("crypto"));
+
 let killed = false;
+
 class SqliteServer {
     constructor() {
         this.dbConnection = this.getDbConnection();
@@ -83,6 +89,7 @@ class SqliteServer {
         }, 100);
     }
 }
+
 const server = new SqliteServer();
 process.on("SIGTERM", () => {
     electron_log_1.default.info("Responding to SIGTERM and shutting down...");

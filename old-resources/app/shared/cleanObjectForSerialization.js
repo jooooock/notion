@@ -1,10 +1,14 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanObjectForSerialization = void 0;
+
+
 const lodash_1 = __importDefault(require("lodash"));
+
 const nonEnumerableProperties = [
     "name",
     "message",
@@ -53,5 +57,6 @@ function cleanObjectForSerialization(object, depth = 10, cycles = new Set()) {
         return serialized;
     }
 }
+
 exports.cleanObjectForSerialization = cleanObjectForSerialization;
 //# sourceMappingURL=cleanObjectForSerialization.js.map

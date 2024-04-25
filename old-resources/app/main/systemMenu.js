@@ -1,9 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupSystemMenu = void 0;
+
+
 const electron_1 = require("electron");
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const createWindow_1 = require("./createWindow");
@@ -11,6 +14,8 @@ const config_1 = __importDefault(require("../config"));
 const notion_intl_1 = require("notion-intl");
 const localizationHelper_1 = require("../helpers/localizationHelper");
 const devOnlyTools_1 = require("./devOnlyTools");
+
+
 const menuMessages = notion_intl_1.defineMessages({
     fileMenuTitle: {
         id: "desktopTopbar.fileMenu.title",
@@ -425,5 +430,6 @@ function setupSystemMenu(locale) {
     const menu = electron_1.Menu.buildFromTemplate(template);
     electron_1.Menu.setApplicationMenu(menu);
 }
+
 exports.setupSystemMenu = setupSystemMenu;
 //# sourceMappingURL=systemMenu.js.map

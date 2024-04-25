@@ -1,27 +1,63 @@
 "use strict";
-var __await = (this && this.__await) || function (v) { return this instanceof __await ? (this.v = v, this) : new __await(v); }
-var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
+
+const __await = (this && this.__await) || function (v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+const __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
     if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
     var g = generator.apply(thisArg, _arguments || []), i, q = [];
-    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
-    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
-    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
-    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
-    function fulfill(value) { resume("next", value); }
-    function reject(value) { resume("throw", value); }
-    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () {
+        return this;
+    }, i;
+
+    function verb(n) {
+        if (g[n]) i[n] = function (v) {
+            return new Promise(function (a, b) {
+                q.push([n, v, a, b]) > 1 || resume(n, v);
+            });
+        };
+    }
+
+    function resume(n, v) {
+        try {
+            step(g[n](v));
+        } catch (e) {
+            settle(q[0][3], e);
+        }
+    }
+
+    function step(r) {
+        r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);
+    }
+
+    function fulfill(value) {
+        resume("next", value);
+    }
+
+    function reject(value) {
+        resume("throw", value);
+    }
+
+    function settle(f, v) {
+        if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]);
+    }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+const __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PromiseWithState = exports.batchAsyncIterable = exports.Waitable = exports.timeAll = exports.retryTimeout = exports.raceWithTimeout = exports.requestTimeout = exports.deferred = exports.race = exports.timeoutResolve = exports.timeout = exports.allBatched = exports.batch = exports.eventLoopNextTick = void 0;
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
 const lodash_1 = __importDefault(require("lodash"));
 const TimeSource_1 = require("./TimeSource");
+
 function eventLoopNextTick() {
     return new Promise(resolve => setImmediate(resolve));
 }
+
 exports.eventLoopNextTick = eventLoopNextTick;
+
 function batch(tasks, batchSize, processTasks) {
     return new Promise((resolve, reject) => {
         let currentIndex = 0;
@@ -32,19 +68,20 @@ function batch(tasks, batchSize, processTasks) {
             if (currentTasks.length > 0) {
                 processTasks(currentTasks)
                     .then(result => {
-                    results.push(result);
-                    setImmediate(evalNext);
-                })
+                        results.push(result);
+                        setImmediate(evalNext);
+                    })
                     .catch(reject);
-            }
-            else {
+            } else {
                 resolve(results);
             }
         };
         evalNext();
     });
 }
+
 exports.batch = batch;
+
 async function allBatched(tasks, batchSize, createPromise) {
     const results = [];
     if (batchSize <= 0) {
@@ -61,7 +98,9 @@ async function allBatched(tasks, batchSize, createPromise) {
     }
     return results;
 }
+
 exports.allBatched = allBatched;
+
 function timeout(time, timeSource = TimeSource_1.SYSTEM_TIME_SOURCE) {
     return new Promise(resolve => {
         timeSource.setTimeout(() => {
@@ -69,7 +108,9 @@ function timeout(time, timeSource = TimeSource_1.SYSTEM_TIME_SOURCE) {
         }, time);
     });
 }
+
 exports.timeout = timeout;
+
 function timeoutResolve(time, value) {
     return new Promise(resolve => {
         setTimeout(() => {
@@ -77,7 +118,9 @@ function timeoutResolve(time, value) {
         }, time);
     });
 }
+
 exports.timeoutResolve = timeoutResolve;
+
 async function race(promises) {
     const defer = deferred();
     const rest = Promise.all(promises.map(async (promise, index) => {
@@ -85,9 +128,11 @@ async function race(promises) {
         defer.resolve(index);
     }));
     const winner = await defer.promise;
-    return { winner, rest };
+    return {winner, rest};
 }
+
 exports.race = race;
+
 function deferred() {
     let resolve;
     let reject;
@@ -101,18 +146,22 @@ function deferred() {
         promise,
     };
 }
+
 exports.deferred = deferred;
+
 function requestTimeout(arg, time) {
     return new Promise((resolve, reject) => {
-        void timeout(time).then(() => resolve({ result: undefined, timeout: true }));
-        arg.then(result => resolve({ result, timeout: false })).catch(reject);
+        void timeout(time).then(() => resolve({result: undefined, timeout: true}));
+        arg.then(result => resolve({result, timeout: false})).catch(reject);
     });
 }
+
 exports.requestTimeout = requestTimeout;
+
 async function raceWithTimeout(maxTimeoutMs, promises) {
     const promiseTimeout = deferred();
     const timerId = setTimeout(() => {
-        promiseTimeout.resolve({ result: undefined, timeout: true });
+        promiseTimeout.resolve({result: undefined, timeout: true});
     }, maxTimeoutMs);
     const firstResponse = await Promise.race([
         promiseTimeout.promise,
@@ -124,7 +173,9 @@ async function raceWithTimeout(maxTimeoutMs, promises) {
     clearTimeout(timerId);
     return firstResponse;
 }
+
 exports.raceWithTimeout = raceWithTimeout;
+
 async function retryTimeout(tries, time, fn) {
     const result = await requestTimeout(fn(), time);
     if (tries <= 1 || !result.timeout) {
@@ -132,6 +183,7 @@ async function retryTimeout(tries, time, fn) {
     }
     return retryTimeout(tries - 1, time, fn);
 }
+
 exports.retryTimeout = retryTimeout;
 const timeAll = async function (promises) {
     const start = Date.now();
@@ -139,20 +191,21 @@ const timeAll = async function (promises) {
         if (promise) {
             await promise;
             return Date.now() - start;
-        }
-        else {
+        } else {
             return 0;
         }
     });
     return Promise.all(mapped);
 };
 exports.timeAll = timeAll;
+
 class Waitable {
     constructor(timeSource = TimeSource_1.SYSTEM_TIME_SOURCE) {
         this.timeSource = timeSource;
         this.deferredPromise = deferred();
         this.isCompleted = false;
     }
+
     async wait(minDelay, maxDelay) {
         if (minDelay > 0) {
             await timeout(minDelay, this.timeSource);
@@ -169,6 +222,7 @@ class Waitable {
             this.deferredPromise.resolve(undefined);
         }
     }
+
     trigger() {
         if (!this.isCompleted) {
             this.deferredPromise.resolve(undefined);
@@ -176,7 +230,9 @@ class Waitable {
         this.isCompleted = true;
     }
 }
+
 exports.Waitable = Waitable;
+
 function batchAsyncIterable(maxConcurrency, input, transform) {
     return __asyncGenerator(this, arguments, function* batchAsyncIterable_1() {
         let batch = [];
@@ -184,7 +240,7 @@ function batchAsyncIterable(maxConcurrency, input, transform) {
         while (!inputIteratorDone) {
             while (batch.length < maxConcurrency) {
                 const next = yield __await(input.next());
-                const { value, done } = next;
+                const {value, done} = next;
                 if (done === true) {
                     inputIteratorDone = true;
                     break;
@@ -199,11 +255,13 @@ function batchAsyncIterable(maxConcurrency, input, transform) {
         }
     });
 }
+
 exports.batchAsyncIterable = batchAsyncIterable;
+
 class PromiseWithState {
     constructor(promise) {
         this.wrappedPromise = promise;
-        this._state = { status: "pending" };
+        this._state = {status: "pending"};
         promise.then(value => {
             this._state = {
                 status: "resolved",
@@ -216,9 +274,11 @@ class PromiseWithState {
             };
         });
     }
+
     get state() {
         return this._state;
     }
 }
+
 exports.PromiseWithState = PromiseWithState;
 //# sourceMappingURL=PromiseUtils.js.map

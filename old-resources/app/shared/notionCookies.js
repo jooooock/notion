@@ -1,6 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.thirdPartyServiceToCookiePrefixes = exports.thirdPartyServiceToTrackingType = exports.cookieToTrackingType = exports.notionCookies = exports.trackingTypes = void 0;
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
 exports.trackingTypes = [
     "necessary",
     "preference",

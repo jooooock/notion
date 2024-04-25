@@ -1,5 +1,6 @@
 "use strict";
-var __rest = (this && this.__rest) || function (s, e) {
+
+const __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
         t[p] = s[p];
@@ -10,32 +11,37 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+const __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUrlAnalytics = exports.tryUrl = exports.getWorkspaceDomainFromHostname = exports.removeUrlFromString = exports.sanitizeUrlStrict = exports.sanitizeUrl = exports.addQueryParams = exports.removeQueryParam = exports.resolve = exports.replacePathname = exports.setBaseUrl = exports.isRelativeUrl = exports.removeBaseUrl = exports.makeUrl = exports.format = exports.parse = void 0;
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
 const lodash_1 = __importDefault(require("lodash"));
 const url_1 = __importDefault(require("url"));
+
 function parse(str, args = {}) {
     try {
         return url_1.default.parse(str, true, args.slashesDenoteHost);
-    }
-    catch (err) {
+    } catch (err) {
         try {
             const result = url_1.default.parse(str);
-            return Object.assign(Object.assign({}, result), { query: {} });
-        }
-        catch (err) {
+            return Object.assign(Object.assign({}, result), {query: {}});
+        } catch (err) {
             return url_1.default.parse("", true);
         }
     }
 }
+
 exports.parse = parse;
+
 function format(args) {
     return url_1.default.format(args);
 }
+
 exports.format = format;
+
 function makeUrl(args) {
     const parsed = parse(args.url);
     parsed.search = null;
@@ -43,7 +49,9 @@ function makeUrl(args) {
     parsed.hash = args.hash || null;
     return format(parsed);
 }
+
 exports.makeUrl = makeUrl;
+
 function removeBaseUrl(str) {
     const parsed = parse(str);
     parsed.protocol = null;
@@ -52,12 +60,16 @@ function removeBaseUrl(str) {
     parsed.slashes = false;
     return format(parsed);
 }
+
 exports.removeBaseUrl = removeBaseUrl;
+
 function isRelativeUrl(relativeUrl) {
     const parsed = parse(relativeUrl);
     return Boolean(!parsed.host && !parsed.hostname);
 }
+
 exports.isRelativeUrl = isRelativeUrl;
+
 function setBaseUrl(args) {
     const parsed = parse(args.relativeUrl);
     const baseUrlParsed = parse(args.baseUrl);
@@ -66,31 +78,40 @@ function setBaseUrl(args) {
     parsed.hostname = baseUrlParsed.hostname;
     return format(parsed);
 }
+
 exports.setBaseUrl = setBaseUrl;
+
 function replacePathname(args) {
     const parsed = parse(args.url);
     parsed.path = null;
     parsed.pathname = args.pathname;
     return format(parsed);
 }
+
 exports.replacePathname = replacePathname;
+
 function resolve(baseUrl, pathname) {
-    return replacePathname({ url: baseUrl, pathname });
+    return replacePathname({url: baseUrl, pathname});
 }
+
 exports.resolve = resolve;
+
 function removeQueryParam(str, param) {
     const parsed = parse(str);
     parsed.search = null;
     delete parsed.query[param];
     return format(parsed);
 }
+
 exports.removeQueryParam = removeQueryParam;
+
 function addQueryParams(str, query) {
     const parsed = parse(str);
     parsed.search = null;
     parsed.query = Object.assign(Object.assign({}, parsed.query), query);
     return format(parsed);
 }
+
 exports.addQueryParams = addQueryParams;
 const hostBlacklist = {
     "thumpmagical.top": true,
@@ -107,8 +128,9 @@ const hostBlacklist = {
     "clangchapshop.xyz": true,
 };
 const allowedProtocols = ["http:", "https:", "mailto:", "itms-apps:", "tel:"];
+
 function sanitizeUrl(args) {
-    const { str, allowNoProtocol } = args;
+    const {str, allowNoProtocol} = args;
     if (!str || typeof str !== "string") {
         return;
     }
@@ -122,30 +144,31 @@ function sanitizeUrl(args) {
         }
         if (!parsed.protocol) {
             try {
-                const { host } = new URL(`stub:${str}`);
+                const {host} = new URL(`stub:${str}`);
                 if (hostBlacklist[host]) {
                     return;
                 }
+            } catch (_a) {
             }
-            catch (_a) { }
             try {
-                const { host } = new URL(`stub://${str}`);
+                const {host} = new URL(`stub://${str}`);
                 if (hostBlacklist[host]) {
                     return;
                 }
+            } catch (_b) {
             }
-            catch (_b) { }
         }
         if ((parsed.protocol && allowedProtocols.includes(parsed.protocol)) ||
             (allowNoProtocol && !parsed.protocol)) {
             return str;
         }
-    }
-    catch (err) {
+    } catch (err) {
         return;
     }
 }
+
 exports.sanitizeUrl = sanitizeUrl;
+
 function sanitizeUrlStrict(url) {
     if (!url) {
         return;
@@ -158,15 +181,19 @@ function sanitizeUrlStrict(url) {
         if (allowedProtocols.includes(parsed.protocol)) {
             return parsed.href;
         }
+    } catch (_a) {
     }
-    catch (_a) { }
 }
+
 exports.sanitizeUrlStrict = sanitizeUrlStrict;
+
 function removeUrlFromString(str) {
     return (str || "").replace(/(?:https?|ftp):\/\/[\n\S]+/g, "");
 }
+
 exports.removeUrlFromString = removeUrlFromString;
-function getWorkspaceDomainFromHostname({ publicDomainName }, hostname) {
+
+function getWorkspaceDomainFromHostname({publicDomainName}, hostname) {
     if (!publicDomainName || !hostname) {
         return undefined;
     }
@@ -177,16 +204,19 @@ function getWorkspaceDomainFromHostname({ publicDomainName }, hostname) {
         }
     }
 }
+
 exports.getWorkspaceDomainFromHostname = getWorkspaceDomainFromHostname;
+
 function tryUrl(url) {
     try {
         return new URL(url);
-    }
-    catch (_a) {
+    } catch (_a) {
         return undefined;
     }
 }
+
 exports.tryUrl = tryUrl;
+
 function getUrlAnalytics(urlString, urlAnalyticsFromSessionStorage) {
     const url = tryUrl(urlString);
     if (!url) {
@@ -206,16 +236,19 @@ function getUrlAnalytics(urlString, urlAnalyticsFromSessionStorage) {
         targetid: url.searchParams.get("targetid") || undefined,
         criterionid: url.searchParams.get("criterionid") || undefined,
     };
-    const { pathname, query } = urlAnalytics, optionalParams = __rest(urlAnalytics, ["pathname", "query"]);
+    const {pathname, query} = urlAnalytics, optionalParams = __rest(urlAnalytics, ["pathname", "query"]);
     const hasOptionalParams = !lodash_1.default.isEmpty(lodash_1.default.omitBy(optionalParams, lodash_1.default.isUndefined));
     if (hasOptionalParams) {
         return urlAnalytics;
     }
     if (urlAnalyticsFromSessionStorage) {
-        return Object.assign({ pathname,
-            query }, urlAnalyticsFromSessionStorage);
+        return Object.assign({
+            pathname,
+            query
+        }, urlAnalyticsFromSessionStorage);
     }
     return urlAnalytics;
 }
+
 exports.getUrlAnalytics = getUrlAnalytics;
 //# sourceMappingURL=urlHelpers.js.map

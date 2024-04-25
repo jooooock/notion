@@ -1,11 +1,15 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.shouldSimulateAirplaneMode = exports.getDevOnlyViewMenuItems = void 0;
+
+
 const electron_1 = require("electron");
 const config_1 = __importDefault(require("../config"));
+
 let simulateAirplaneMode = false;
 function shouldShowDevOnlyTools() {
     return config_1.default.env === "local" || config_1.default.env === "development";
@@ -24,7 +28,9 @@ function getDevOnlyViewMenuItems() {
         },
     ];
 }
+
 exports.getDevOnlyViewMenuItems = getDevOnlyViewMenuItems;
+
 async function setSimulateAirplaneMode(newValue) {
     if (!shouldShowDevOnlyTools()) {
         throw new Error("Dev tools are disabled, this should never be called!");
@@ -46,7 +52,9 @@ async function setSimulateAirplaneMode(newValue) {
 function shouldSimulateAirplaneMode() {
     return simulateAirplaneMode;
 }
+
 exports.shouldSimulateAirplaneMode = shouldSimulateAirplaneMode;
+
 function enableOfflineMode(event, webContents) {
     void setOfflineMode(webContents, true);
 }

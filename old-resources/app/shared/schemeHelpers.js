@@ -1,28 +1,30 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fixSchemeUrl = exports.getHttpUrl = exports.getSchemeUrl = void 0;
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
 const url_1 = __importDefault(require("url"));
+
 function forceConsistentEndingSlash(args) {
     if (args.src.endsWith("/")) {
         if (args.dest.endsWith("/")) {
             return args.dest;
-        }
-        else {
+        } else {
             return `${args.dest}/`;
         }
-    }
-    else {
+    } else {
         if (args.dest.endsWith("/")) {
             return args.dest.slice(0, args.dest.length - 1);
-        }
-        else {
+        } else {
             return args.dest;
         }
     }
 }
+
 function getSchemeUrl(args) {
     const parsed = url_1.default.parse(args.httpUrl, true);
     parsed.protocol = `${args.protocol}:`;
@@ -34,7 +36,9 @@ function getSchemeUrl(args) {
         dest: schemeUrl,
     });
 }
+
 exports.getSchemeUrl = getSchemeUrl;
+
 function getHttpUrl(args) {
     const parsedBaseURL = url_1.default.parse(args.baseUrl);
     const parsed = url_1.default.parse(args.schemeUrl, true);
@@ -47,7 +51,9 @@ function getHttpUrl(args) {
         dest: httpUrl,
     });
 }
+
 exports.getHttpUrl = getHttpUrl;
+
 function fixSchemeUrl(args) {
     if (!args.url.startsWith(`${args.protocol}:`)) {
         return args.url;
@@ -59,5 +65,6 @@ function fixSchemeUrl(args) {
     }
     return args.url.replace(`${args.protocol}://*`, `${args.protocol}:/`);
 }
+
 exports.fixSchemeUrl = fixSchemeUrl;
 //# sourceMappingURL=schemeHelpers.js.map

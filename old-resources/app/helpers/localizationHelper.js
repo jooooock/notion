@@ -1,9 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createIntlShape = exports.getMessages = void 0;
+
+
 const notion_intl_1 = require("notion-intl");
 const messages_json_1 = __importDefault(require("../i18n/ko_KR/messages.json"));
 const messages_json_2 = __importDefault(require("../i18n/es_ES/messages.json"));
@@ -13,6 +16,8 @@ const messages_json_5 = __importDefault(require("../i18n/ja_JP/messages.json"));
 const messages_json_6 = __importDefault(require("../i18n/pt_BR/messages.json"));
 const messages_json_7 = __importDefault(require("../i18n/zh_CN/messages.json"));
 const messages_json_8 = __importDefault(require("../i18n/zh_TW/messages.json"));
+
+
 function getMessages(locale) {
     const localeToMessages = {
         "ko-KR": messages_json_1.default,
@@ -26,12 +31,15 @@ function getMessages(locale) {
     };
     return localeToMessages[locale];
 }
+
 exports.getMessages = getMessages;
+
 function createIntlShape(locale) {
     const messages = getMessages(locale);
     const cache = notion_intl_1.createIntlCache();
     const intl = notion_intl_1.createIntl({ locale: locale, defaultLocale: "en-US", messages }, cache);
     return intl;
 }
+
 exports.createIntlShape = createIntlShape;
 //# sourceMappingURL=localizationHelper.js.map

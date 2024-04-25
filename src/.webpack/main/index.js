@@ -1789,7 +1789,7 @@
                 }
             }
         },
-        19628: function (e, t, r) {
+        19628: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -1802,21 +1802,31 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.WebUpdater = void 0;
-            const s = i(r(47419)), l = i(r(11239)), c = r(21852), u = a(r(10454)), d = r(29902), p = r(69340);
-            t.WebUpdater = class {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const s = i(require(47419)),
+                l = i(require(11239)),
+                c = require(21852),
+                u = a(require(10454)),
+                d = require(29902),
+                p = require(69340);
+
+            exports.WebUpdater = class {
                 constructor(e, t) {
                     this.pendingUpdate = void 0, this.backgroundInterval = void 0, this.app = e, this.assetCache = t, this.isAppVisible = !0, (0, p.subscribeToSelector)(p.selectAppVisibilityBaseOnRenderers, (e => {
                         this.isAppVisible = e, s.default.info(`App is visible: ${e}`), this.onAppVisibilityChange(e)
@@ -3149,50 +3159,71 @@
                 }(e)
             }
         },
-        68516: function (e, t, r) {
+        68516: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.wipeTransientCsrfCookie = void 0;
-            const s = r(4482), l = i(r(11239)), c = a(r(10454)), u = r(13387);
-            t.wipeTransientCsrfCookie = async function () {
-                const e = (0, u.getSession)().cookies, [t] = await e.get({name: "csrf"});
-                if (t && t.domain) {
-                    const r = "localhost" === t.domain ? "https://localhost:3000/" : l.default.domainBaseUrl;
-                    await e.remove(r, t.name)
-                }
-            }, c.handleEventFromRenderer.addListener("notion:clear-cookies", (() => {
-                (0, u.getSession)().clearStorageData({origin: l.default.domainBaseUrl, storages: ["cookies"]})
-            })), c.handleEventFromRenderer.addListener("notion:clear-all-cookies", (() => {
-                (0, u.getSession)().clearStorageData(), s.session.defaultSession && s.session.defaultSession.clearStorageData()
-            })), c.handleRequestFromRenderer.addListener("notion:get-cookie", (async (e, t) => {
-                const {cookies: r} = (0, u.getSession)(), [n] = await r.get({url: l.default.domainBaseUrl, name: t});
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const __electron = require(4482),
+                __config = i(require(11239)),
+                c = a(require(10454)),
+                u = require(13387);
+
+            c.handleEventFromRenderer.addListener("notion:clear-cookies", () => {
+                u.getSession().clearStorageData({origin: __config.default.domainBaseUrl, storages: ["cookies"]})
+            })
+            c.handleEventFromRenderer.addListener("notion:clear-all-cookies", () => {
+                u.getSession().clearStorageData()
+                __electron.session.defaultSession && __electron.session.defaultSession.clearStorageData()
+            })
+            c.handleRequestFromRenderer.addListener("notion:get-cookie", async (evt, name) => {
+                const {cookies} = u.getSession(),
+                    [n] = await cookies.get({url: __config.default.domainBaseUrl, name: name});
                 return {value: n && !n.httpOnly ? n.value : void 0}
-            })), c.handleEventFromRenderer.addListener("notion:set-cookie", ((e, t) => {
-                const {cookies: r} = (0, u.getSession)();
-                r.set({...t, url: l.default.domainBaseUrl, expirationDate: t.expires})
-            }))
+            })
+            c.handleEventFromRenderer.addListener("notion:set-cookie", (e, t) => {
+                const {cookies} = u.getSession();
+                cookies.set({
+                    ...t,
+                    url: __config.default.domainBaseUrl,
+                    expirationDate: t.expires
+                })
+            })
+
+            exports.wipeTransientCsrfCookie = async function () {
+                const cookies = u.getSession().cookies
+                const [t] = await cookies.get({name: "csrf"})
+                if (t && t.domain) {
+                    const r = "localhost" === t.domain ? "https://localhost:3000/" : __config.default.domainBaseUrl;
+                    await cookies.remove(r, t.name)
+                }
+            }
         },
 
         // 处理 crash reporter
@@ -3362,7 +3393,7 @@
                 return r && (r.includes("https:") || r.includes("*")) ? (r.push(`${e.customProtocol}:`), t.csp.convertToString().trim()) : e.cspHeader
             }
         },
-        83789: function (e, t, r) {
+        83789: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -3375,24 +3406,39 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.waitForWebpack = t.shouldSimulateAirplaneMode = t.getDebugMenu = t.shouldShowDebugMenu = void 0;
-            const s = i(r(79896)), l = i(r(70857)), c = i(r(16928)), u = r(4482), d = i(r(47419)), p = a(r(6600)),
-                h = i(r(11239)), f = r(27683), m = r(21852), g = r(73553), b = r(14473), v = r(69340);
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const s = i(require(79896)),
+                l = i(require(70857)),
+                c = i(require(16928)),
+                u = require(4482),
+                d = i(require(47419)),
+                p = a(require(6600)),
+                h = i(require(11239)),
+                f = require(27683),
+                m = require(21852),
+                g = require(73553),
+                b = require(14473),
+                v = require(69340);
             let y = !1;
 
-            function w() {
+            function shouldShowDebugMenu() {
                 return "production" !== h.default.env
             }
 
@@ -3417,8 +3463,9 @@
                 }))
             }
 
-            t.shouldShowDebugMenu = w, t.getDebugMenu = function () {
-                if (!w()) throw new Error("Dev tools are disabled, this should never be called!");
+            exports.shouldShowDebugMenu = shouldShowDebugMenu
+            exports.getDebugMenu = function () {
+                if (!shouldShowDebugMenu()) throw new Error("Dev tools are disabled, this should never be called!");
 
                 function e(e, t) {
                     return {
@@ -3507,7 +3554,7 @@
                     }, {
                         label: "Simulate Airplane Mode", type: "checkbox", click(e) {
                             !async function (e) {
-                                if (!w()) throw new Error("Dev tools are disabled, this should never be called!");
+                                if (!shouldShowDebugMenu()) throw new Error("Dev tools are disabled, this should never be called!");
                                 if (y !== e) {
                                     y = e;
                                     for (const e of u.webContents.getAllWebContents()) await k(e, y);
@@ -3573,9 +3620,11 @@
                         }
                     }]
                 }
-            }, t.shouldSimulateAirplaneMode = function () {
+            }
+            exports.shouldSimulateAirplaneMode = function () {
                 return y
-            }, t.waitForWebpack = async function e() {
+            }
+            exports.waitForWebpack = async function e() {
                 if (u.app.isPackaged) return;
                 const t = [require("path").resolve(__dirname, "../renderer", "tabs", "preload.js"), require("path").resolve(__dirname, "../renderer", "search", "preload.js"), require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"), require("path").resolve(__dirname, "../renderer", "popup", "preload.js")].filter((e => !s.default.existsSync(e)));
                 if (t.length > 0) {
@@ -3761,32 +3810,33 @@
 
             const m21248 = require(21248), // log util
                 __config = __importDefault(require(11239)), // config
-                m3420 = require(3420),
-                m21852 = require(21852),
-                m94774 = require(94774),
-                m43579 = require(43579),
-                m68516 = require(68516),
+                m3420 = require(3420), // ServerLogger
+                m21852 = require(21852), // AppController
+                m94774 = require(94774), // AssetCache
+                m43579 = require(43579), // auto updater
+                m68516 = require(68516), // csrf
                 m83789 = require(83789),
-                m5554 = require(5554),
-                m77514 = require(77514),
-                m26605 = require(26605),
+                m5554 = require(5554), // logging
+                m77514 = require(77514), // protocol
+                m26605 = require(26605), // open at login
                 m29902 = require(29902),
-                m35219 = require(35219),
+                m35219 = require(35219), // setupRendererListeners
                 m15425 = require(15425),
-                m13387 = require(13387),
-                m34516 = require(34516),
+                m13387 = require(13387), // session
+                m34516 = require(34516), // setupSqliteServer
                 m69340 = require(69340),
-                m50833 = require(50833),
+                m50833 = require(50833), // setupSystemMenu
                 m98441 = require(98441),
-                m19628 = require(19628);
+                m19628 = require(19628); // WebUpdater
+
             let S;
 
             function handleActivate() {
-                const e = m21852.appController.getMostRecentlyFocusedWindowController();
-                if (e) {
+                const controller = m21852.appController.getMostRecentlyFocusedWindowController();
+                if (controller) {
                     const t = m21852.appController.rehydrateEntireAppInForeground(S);
-                    S && !t && e.loadUrlInActiveTab(S)
-                    e.browserWindow.show()
+                    S && !t && controller.loadUrlInActiveTab(S)
+                    controller.browserWindow.show()
                 } else if (m26605.getWasOpenedAsHidden()) {
                     m21852.appController.rehydrateSingleTabInBackground(S) || m21852.appController.newWindow({
                         initialUrl: S,
@@ -3900,14 +3950,27 @@
                 }
             }
         },
-        77514: function (e, t, r) {
+        77514: function (module, exports, require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.handleNotionProtocol = void 0;
-            const o = r(57075), a = n(r(16857)), i = r(4482), s = n(r(47419)), l = n(r(80115)), c = r(21248),
-                u = r(32289), d = n(r(11239)), p = r(3420), h = r(94774), f = r(66991), m = r(83789), g = r(13387);
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.handleNotionProtocol = void 0;
+
+            const o = require(57075),
+                a = n(require(16857)),
+                i = require(4482),
+                s = n(require(47419)),
+                l = n(require(80115)),
+                c = require(21248),
+                u = require(32289),
+                d = n(require(11239)),
+                p = require(3420),
+                h = require(94774),
+                f = require(66991),
+                m = require(83789),
+                g = require(13387);
 
             async function b(e) {
                 if ((0, m.shouldSimulateAirplaneMode)()) return new Response("App is simulating airplane mode", {status: 0});
@@ -3937,44 +4000,44 @@
             i.protocol.registerSchemesAsPrivileged([{
                 scheme: d.default.protocol,
                 privileges: {standard: !0, secure: !0, allowServiceWorkers: !0, supportFetchAPI: !0, corsEnabled: !0}
-            }]), t.handleNotionProtocol = function () {
-                const {webRequest: e, protocol: t} = (0, g.getSession)();
-                !function (e) {
-                    const t = {urls: [`${d.default.protocol}://*/*`]};
-                    e.onBeforeRequest(t, ((e, t) => {
-                        const r = e.frame;
-                        r && r.top !== r ? t({cancel: !0}) : t({})
-                    }))
-                }(e), function (e) {
-                    e.onHeadersReceived(((e, t) => {
-                        if (e.responseHeaders && "subFrame" === e.resourceType) {
-                            const r = e.responseHeaders["content-security-policy"];
-                            if (r) return t({
-                                responseHeaders: {
-                                    ...e.responseHeaders,
-                                    "content-security-policy": r.map((e => (0, f.ensureCspFrameAncestorsParityWithNotionWebsite)({
-                                        cspHeader: e,
-                                        customProtocol: d.default.protocol
-                                    })))
-                                }
-                            })
-                        }
-                        t({})
-                    }))
-                }(e), function (e) {
-                    e.onBeforeSendHeaders({urls: ["<all_urls>"]}, ((e, t) => {
-                        "subFrame" === e.resourceType && e.frame?.parent && e.frame.parent === e.frame.top && !e.requestHeaders.Referer && (e.requestHeaders.Referer = `${d.default.domainBaseUrl}/`);
-                        const r = e.url.toLowerCase();
-                        ["https://file.notion.so/", "https://file-dev.notion.so/", "https://file-stg.notion.so/", "http://file-local.notion.so:3000/"].some((e => r.startsWith(e))) ? (0, g.getSession)().cookies.get({
-                            domain: ".notion.so",
-                            name: "file_token"
-                        }).then((r => {
-                            0 !== r.length && (e.requestHeaders.Cookie ? e.requestHeaders.Cookie.includes("file_token") || (e.requestHeaders.Cookie = `${e.requestHeaders.Cookie}; file_token=${r[0].value}`) : e.requestHeaders.Cookie = "file_token=${cookies[0].value}"), t({requestHeaders: e.requestHeaders})
-                        })).catch((r => {
-                            s.default.error("Failed to retrieve file_token from cookies"), t({requestHeaders: e.requestHeaders})
-                        })) : t({requestHeaders: e.requestHeaders})
-                    }))
-                }(e), t.handle(d.default.protocol, (async e => {
+            }])
+
+            exports.handleNotionProtocol = function () {
+                const {webRequest, protocol} = g.getSession();
+                const filter = {urls: [`${d.default.protocol}://*/*`]};
+                webRequest.onBeforeRequest(filter, (details, callback) => {
+                    const r = details.frame;
+                    r && r.top !== r ? callback({cancel: !0}) : callback({})
+                })
+                webRequest.onHeadersReceived((details, callback) => {
+                    if (details.responseHeaders && "subFrame" === details.resourceType) {
+                        const r = details.responseHeaders["content-security-policy"];
+                        if (r) return callback({
+                            responseHeaders: {
+                                ...details.responseHeaders,
+                                "content-security-policy": r.map((e => (0, f.ensureCspFrameAncestorsParityWithNotionWebsite)({
+                                    cspHeader: e,
+                                    customProtocol: d.default.protocol
+                                })))
+                            }
+                        })
+                    }
+                    callback({})
+                })
+                webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {
+                    "subFrame" === details.resourceType && details.frame?.parent && details.frame.parent === details.frame.top && !details.requestHeaders.Referer && (details.requestHeaders.Referer = `${d.default.domainBaseUrl}/`);
+                    const r = details.url.toLowerCase();
+                    ["https://file.notion.so/", "https://file-dev.notion.so/", "https://file-stg.notion.so/", "http://file-local.notion.so:3000/"].some((e => r.startsWith(e))) ? (0, g.getSession)().cookies.get({
+                        domain: ".notion.so",
+                        name: "file_token"
+                    }).then((r => {
+                        0 !== r.length && (details.requestHeaders.Cookie ? details.requestHeaders.Cookie.includes("file_token") || (details.requestHeaders.Cookie = `${details.requestHeaders.Cookie}; file_token=${r[0].value}`) : details.requestHeaders.Cookie = "file_token=${cookies[0].value}"), callback({requestHeaders: details.requestHeaders})
+                    })).catch((r => {
+                        s.default.error("Failed to retrieve file_token from cookies"), callback({requestHeaders: details.requestHeaders})
+                    })) : callback({requestHeaders: details.requestHeaders})
+                })
+
+                protocol.handle(d.default.protocol, async e => {
                     if (d.default.isLocalhost && !d.default.offline) return b(e);
                     try {
                         const t = await h.assetCache.handleRequest(e);
@@ -3997,27 +4060,37 @@
                             error: (0, c.convertErrorToLog)(e)
                         }), new Response("Something went wrong.", {status: 500})
                     }
-                }))
+                })
             }
         },
-        26605: function (e, t, r) {
+        26605: function (module, exports, require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setIsOpenAtLogin = t.getIsOpenAtLogin = t.getWasOpenedAsHidden = void 0;
-            const o = r(4482), a = n(r(47419)).default.scope("launchOnLogin"), i = "--open-at-login";
-            t.getWasOpenedAsHidden = function () {
-                return "darwin" === process.platform ? o.app.getLoginItemSettings().wasOpenedAsHidden || o.app.getLoginItemSettings().wasOpenedAtLogin : process.argv.includes(i)
-            }, t.getIsOpenAtLogin = function () {
-                const e = o.app.getLoginItemSettings({args: [i]});
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.setIsOpenAtLogin = exports.getIsOpenAtLogin = exports.getWasOpenedAsHidden = void 0;
+
+            const __electron = require(4482),
+                a = n(require(47419)).default.scope("launchOnLogin"),
+                i = "--open-at-login";
+
+            exports.getWasOpenedAsHidden = function () {
+                return "darwin" === process.platform ? __electron.app.getLoginItemSettings().wasOpenedAsHidden || __electron.app.getLoginItemSettings().wasOpenedAtLogin : process.argv.includes(i)
+            }
+            exports.getIsOpenAtLogin = function () {
+                const e = __electron.app.getLoginItemSettings({args: [i]});
                 return e.openAtLogin || Boolean(e.executableWillLaunchAtLogin)
-            }, t.setIsOpenAtLogin = function (e) {
-                o.app.isPackaged && (a.info(`Setting open at login to ${e}`), o.app.setLoginItemSettings({
-                    openAtLogin: e,
-                    openAsHidden: !0,
-                    args: [i]
-                }))
+            }
+            exports.setIsOpenAtLogin = function (e) {
+                if (__electron.app.isPackaged) {
+                    a.info(`Setting open at login to ${e}`)
+                    __electron.app.setLoginItemSettings({
+                        openAtLogin: e,
+                        openAsHidden: !0,
+                        args: [i]
+                    })
+                }
             }
         },
         88493: (e, t, r) => {
@@ -4046,15 +4119,21 @@
                 })
             }
         },
-        29902: function (e, t, r) {
+        29902: function (module, exports, require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.findNotionProtocolUrl = t.normalizeUrlProtocolWithDefault = t.normalizeUrlProtocol = t.initialBaseUrl = t.getIsProtocolRegistered = void 0;
-            const o = n(r(47419)), a = r(32289), i = r(60411), s = n(r(11239)), l = r(31957), c = r(69340);
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            function u() {
+            const o = n(require(47419)),
+                a = require(32289),
+                i = require(60411),
+                s = n(require(11239)),
+                l = require(31957),
+                c = require(69340);
+
+            function initialBaseUrl() {
                 return c.Store.getState().app.preferences.isUsingHttps ? s.default.domainBaseUrl : (0, a.getSchemeUrl)({
                     httpUrl: s.default.domainBaseUrl,
                     protocol: s.default.protocol,
@@ -4062,13 +4141,14 @@
                 })
             }
 
-            function d(e) {
+            function normalizeUrlProtocol(e) {
                 if (!e) return;
-                const t = (0, i.isStrictRelativeUrl)(e) ? e : (0, i.removeBaseUrl)(e), r = u();
+                const t = i.isStrictRelativeUrl(e) ? e : i.removeBaseUrl(e),
+                    r = initialBaseUrl();
                 return t.startsWith("/") ? `${r}${t}` : `${r}/${t}`
             }
 
-            t.getIsProtocolRegistered = async function (e) {
+            exports.getIsProtocolRegistered = async function (e) {
                 return !!function (e) {
                     const t = i.allowedProtocols.map((e => e.replace(/:$/, "")));
                     return t.includes(e)
@@ -4087,13 +4167,17 @@
                         return o.default.error(`Error checking for protocol registration: ${e}`), !1
                     }
                 }(e))
-            }, t.initialBaseUrl = u, t.normalizeUrlProtocol = d, t.normalizeUrlProtocolWithDefault = function (e) {
-                return d(e) || u()
-            }, t.findNotionProtocolUrl = function (e) {
-                return d(e.find((e => e.startsWith(`${s.default.protocol}:`))))
+            }
+            exports.initialBaseUrl = initialBaseUrl
+            exports.normalizeUrlProtocol = normalizeUrlProtocol
+            exports.normalizeUrlProtocolWithDefault = function (e) {
+                return normalizeUrlProtocol(e) || initialBaseUrl()
+            }
+            exports.findNotionProtocolUrl = function (args) {
+                return normalizeUrlProtocol(args.find(arg => arg.startsWith(`${s.default.protocol}:`)))
             }
         },
-        35219: function (e, t, r) {
+        35219: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -4106,85 +4190,134 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupRendererListeners = void 0;
-            const s = r(4482);
-            r(84041), r(15425);
-            const l = i(r(47419)), c = a(r(6600)), u = r(80004), d = a(r(60411)), p = r(55108), h = r(68543),
-                f = r(21852), m = r(89304), g = r(43041), b = a(r(10454)), v = r(29902), y = r(73553), w = r(14473),
-                _ = r(69340), k = r(54417);
-            t.setupRendererListeners = function () {
-                s.app.on("browser-window-blur", (() => {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const __electron = require(4482);
+            require(84041)
+            require(15425);
+            const l = i(require(47419)),
+                c = a(require(6600)),
+                u = require(80004),
+                d = a(require(60411)),
+                p = require(55108),
+                h = require(68543),
+                f = require(21852),
+                m = require(89304),
+                g = require(43041),
+                b = a(require(10454)),
+                v = require(29902),
+                y = require(73553),
+                w = require(14473),
+                _ = require(69340),
+                k = require(54417);
+            exports.setupRendererListeners = function () {
+                __electron.app.on("browser-window-blur", (() => {
                     f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleRequestFromRenderer.addListener("notion:refresh-all", ((e, t) => (f.appController.refreshAll(void 0 === t || t), Promise.resolve({value: void 0})))), b.handleEventFromRenderer.addListener("notion:focus", (e => {
+                }))
+                b.handleRequestFromRenderer.addListener("notion:refresh-all", ((e, t) => (f.appController.refreshAll(void 0 === t || t), Promise.resolve({value: void 0}))))
+                b.handleEventFromRenderer.addListener("notion:focus", (e => {
                     f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleEventFromRenderer.addListener("notion:blur", (() => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:blur", (() => {
                     f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleEventFromRenderer.addListener("notion:renderer-visibility-changed", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:renderer-visibility-changed", ((e, t) => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.setRendererVisibility(t)
-                })), b.handleRequestFromRenderer.addListener("notion:is-active-tab", (e => f.appController.getWindowControllerForWebContents(e.sender)?.isActiveTab(e.sender) || !1)), b.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", (e => "visible" === _.Store.getState().quickSearch.visibilityState.type)), b.handleEventFromRenderer.addListener("notion:toggle-maximized", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
+                }))
+                b.handleRequestFromRenderer.addListener("notion:is-active-tab", (e => f.appController.getWindowControllerForWebContents(e.sender)?.isActiveTab(e.sender) || !1))
+                b.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", (e => "visible" === _.Store.getState().quickSearch.visibilityState.type))
+                b.handleEventFromRenderer.addListener("notion:toggle-maximized", (e => {
+                    const t = __electron.BrowserWindow.fromWebContents(e.sender);
                     t && (t.isMaximized() ? t.unmaximize() : t.maximize())
-                })), b.handleRequestFromRenderer.addListener("notion:is-main-tab", (e => {
+                }))
+                b.handleRequestFromRenderer.addListener("notion:is-main-tab", (e => {
                     const t = f.appController.getMostRecentlyFocusedWindowController();
                     return t && t.browserWindow.isVisible() ? {value: t.getActiveTabController().isManagerOf(e.sender)} : {value: !1}
-                })), b.handleRequestFromRenderer.addListener("notion:is-window-visible", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
+                }))
+                b.handleRequestFromRenderer.addListener("notion:is-window-visible", (e => {
+                    const t = __electron.BrowserWindow.fromWebContents(e.sender);
                     return t ? {value: t.isVisible()} : {value: !1}
-                })), b.handleEventFromRenderer.addListener("notion:set-theme", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-theme", ((e, t) => {
                     _.Store.dispatch((0, y.updateTheme)(t))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-colors", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-tab-colors", ((e, t) => {
                     const r = f.appController.getTabControllerForWebContents(e.sender);
                     r && _.Store.dispatch((0, k.updateTabColors)({tabId: r.tabId, colors: t}))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", ((e, t) => {
                     const r = f.appController.getTabControllerForWebContents(e.sender);
                     r && _.Store.dispatch((0, k.updateTabIsOverlayActive)({tabId: r.tabId, isOverlayActive: t}))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-order", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-tab-order", ((e, t) => {
                     const r = f.appController.getWindowControllerForWebContents(e.sender);
                     r && r.reorderTabs(t)
-                })), b.handleEventFromRenderer.addListener("notion:zoom", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:zoom", ((e, t) => {
                     f.appController.setZoom(t)
-                })), b.DEPRECATED_receiveSyncMainFromRenderer.addListener("notion:get-fullscreen", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
+                }))
+                b.DEPRECATED_receiveSyncMainFromRenderer.addListener("notion:get-fullscreen", (e => {
+                    const t = __electron.BrowserWindow.fromWebContents(e.sender);
                     return t ? {value: t.isFullScreen()} : {value: !1}
-                })), b.handleRequestFromRenderer.addListener("notion:get-electron-app-features", (e => {
+                }))
+                b.handleRequestFromRenderer.addListener("notion:get-electron-app-features", (e => {
                     const t = f.appController.getWindowControllerForWebContents(e.sender);
                     return (0, _.getElectronAppFeatures)({isShowingTabBar: !t || t.hasMultipleTabs()})
-                })), b.handleEventFromRenderer.addListener("notion:set-user-preference", ((e, t, r) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-user-preference", ((e, t, r) => {
                     l.default.info("notion:set-user-preference", {
                         key: t,
                         value: r
                     }), _.Store.dispatch((0, y.updatePreferences)({[t]: r}))
-                })), b.handleRequestFromRenderer.addListener("notion:get-app-version", (e => ({value: s.app.getVersion()}))), b.handleRequestFromRenderer.addListener("notion:get-is-running-under-arm64-translation", (e => s.app.runningUnderARM64Translation)), b.handleRequestFromRenderer.addListener("notion:get-analytics-info", (async e => await (0, h.getAnalyticsInfo)())), b.handleRequestFromRenderer.addListener("notion:get-app-path", (e => ({value: s.app.getAppPath()}))), b.handleEventFromRenderer.addListener("notion:cut", (e => {
+                }))
+                b.handleRequestFromRenderer.addListener("notion:get-app-version", (e => ({value: __electron.app.getVersion()})))
+                b.handleRequestFromRenderer.addListener("notion:get-is-running-under-arm64-translation", (e => __electron.app.runningUnderARM64Translation))
+                b.handleRequestFromRenderer.addListener("notion:get-analytics-info", (async e => await (0, h.getAnalyticsInfo)()))
+                b.handleRequestFromRenderer.addListener("notion:get-app-path", (e => ({value: __electron.app.getAppPath()})))
+                b.handleEventFromRenderer.addListener("notion:cut", (e => {
                     e.sender.cut()
-                })), b.handleEventFromRenderer.addListener("notion:copy", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:copy", (e => {
                     e.sender.copy()
-                })), b.handleEventFromRenderer.addListener("notion:paste", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:paste", (e => {
                     e.sender.paste()
-                })), function () {
+                }))
+                !function () {
                     const e = e => (0, p.isNotionWebContents)(e.sender);
-                    b.handleRequestFromRenderer.addListener("notion:clipboard:read-text", (t => e(t) ? s.clipboard.readText() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-html", (t => e(t) ? s.clipboard.readHTML() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-rtf", (t => e(t) ? s.clipboard.readRTF() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-image", (t => e(t) ? s.clipboard.readImage()?.toDataURL() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-bookmark", (t => e(t) ? s.clipboard.readBookmark() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-text", ((t, r) => e(t) ? s.clipboard.writeText(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-html", ((t, r) => e(t) ? s.clipboard.writeHTML(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-rtf", ((t, r) => e(t) ? s.clipboard.writeRTF(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-image", ((t, r) => e(t) ? s.clipboard.writeImage(s.nativeImage.createFromDataURL(r)) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-bookmark", ((t, r) => e(t) ? s.clipboard.writeBookmark(r.title, r.url) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:clear", (t => e(t) ? s.clipboard.clear() : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:available-formats", (t => e(t) ? s.clipboard.availableFormats() : [])), b.handleRequestFromRenderer.addListener("notion:clipboard:has", ((t, r) => !!e(t) && s.clipboard.has(r))), b.handleRequestFromRenderer.addListener("notion:clipboard:read", ((t, r) => e(t) ? s.clipboard.read(r) : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:write", ((t, r) => e(t) ? s.clipboard.write(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-buffer", ((t, r) => e(t) ? new Uint8Array(s.clipboard.readBuffer(r)) : new Uint8Array)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-buffer", ((t, r, n) => e(t) ? s.clipboard.writeBuffer(r, Buffer.from(n)) : void 0))
-                }(), b.handleEventFromRenderer.addListener("notion:set-sidebar-state", ((e, t) => {
-                })), b.handleEventFromRenderer.addListener("notion:toggle-sidebar-expanded", (e => {
+                    b.handleRequestFromRenderer.addListener("notion:clipboard:read-text", (t => e(t) ? __electron.clipboard.readText() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-html", (t => e(t) ? __electron.clipboard.readHTML() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-rtf", (t => e(t) ? __electron.clipboard.readRTF() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-image", (t => e(t) ? __electron.clipboard.readImage()?.toDataURL() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-bookmark", (t => e(t) ? __electron.clipboard.readBookmark() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-text", ((t, r) => e(t) ? __electron.clipboard.writeText(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-html", ((t, r) => e(t) ? __electron.clipboard.writeHTML(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-rtf", ((t, r) => e(t) ? __electron.clipboard.writeRTF(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-image", ((t, r) => e(t) ? __electron.clipboard.writeImage(__electron.nativeImage.createFromDataURL(r)) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-bookmark", ((t, r) => e(t) ? __electron.clipboard.writeBookmark(r.title, r.url) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:clear", (t => e(t) ? __electron.clipboard.clear() : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:available-formats", (t => e(t) ? __electron.clipboard.availableFormats() : [])), b.handleRequestFromRenderer.addListener("notion:clipboard:has", ((t, r) => !!e(t) && __electron.clipboard.has(r))), b.handleRequestFromRenderer.addListener("notion:clipboard:read", ((t, r) => e(t) ? __electron.clipboard.read(r) : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:write", ((t, r) => e(t) ? __electron.clipboard.write(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-buffer", ((t, r) => e(t) ? new Uint8Array(__electron.clipboard.readBuffer(r)) : new Uint8Array)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-buffer", ((t, r, n) => e(t) ? __electron.clipboard.writeBuffer(r, Buffer.from(n)) : void 0))
+                }()
+                b.handleEventFromRenderer.addListener("notion:set-sidebar-state", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:toggle-sidebar-expanded", (e => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().toggleSidebarInNotion()
-                })), b.handleEventFromRenderer.addListener("notion:set-sidebar-open", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-sidebar-open", ((e, t) => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().setSidebarOpenInNotion(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-window-sidebar-state", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-window-sidebar-state", ((e, t) => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.setWindowSidebarState(e.sender, t)
-                })), b.handleEventFromRenderer.addListener("notion:set-app-store-state", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-app-store-state", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.setAppStoreState(t)
-                })), b.handleEventFromRenderer.addListener("notion:new-tab-from-notion", ((e, t, r, n) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:new-tab-from-notion", ((e, t, r, n) => {
                     const o = f.appController.getWindowControllerForWebContents(e.sender),
                         a = f.appController.getTabControllerForWebContents(e.sender);
                     if (!o || !a) return;
@@ -4202,146 +4335,203 @@
                             (0, u.unreachable)(n)
                     }
                     o.newTab({initialUrl: t, makeActiveTab: r, position: i})
-                })), b.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", (e => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.searchForNewTab({
                         makeActiveTab: !0,
                         position: {type: "end"}
                     })
-                })), b.handleEventFromRenderer.addListener("notion:tab-clicked", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:tab-clicked", ((e, t) => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.makeTabActive(t)
-                })), b.handleEventFromRenderer.addListener("notion:show-tab-menu", ((e, t, r, n) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:show-tab-menu", ((e, t, r, n) => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.showTabMenu({
                         tabIndex: t,
                         clientX: r,
                         clientY: n
                     })
-                })), b.handleEventFromRenderer.addListener("notion:close-tab", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:close-tab", ((e, t) => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.closeTab(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-start", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:search-start", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStartFromNotion(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-stop-from-notion", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:search-stop-from-notion", (e => {
                     f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromNotion()
-                })), b.handleEventFromRenderer.addListener("notion:search-next", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:search-next", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.handleSearchNextFromSearch(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-prev", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:search-prev", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.handleSearchPrevFromSearch(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-clear", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:search-clear", (e => {
                     f.appController.getTabControllerForWebContents(e.sender)?.handleSearchClearFromSearch()
-                })), b.handleEventFromRenderer.addListener("notion:search-stop-from-search", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:search-stop-from-search", (e => {
                     f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromSearch()
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-close", (() => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:quick-search-close", (() => {
                     "visible" === _.Store.getState().quickSearch.visibilityState.type && _.Store.dispatch((0, w.toggleVisibilityStateIfReady)("navigation"))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-open-result", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:quick-search-open-result", ((e, t) => {
                     const r = (0, v.normalizeUrlProtocol)(t);
                     r && f.appController.openURLOptionallySurfacingExistingTab(r)
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-ready", (() => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:quick-search-ready", (() => {
                     _.Store.dispatch((0, w.setReadyState)({type: "ready"}))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-not-ready", (() => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:quick-search-not-ready", (() => {
                     _.Store.dispatch((0, w.setReadyState)({type: "not-ready"}))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-refresh", (() => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:quick-search-refresh", (() => {
                     f.appController.quickSearchController?.reload()
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", (() => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", (() => {
                     f.appController.openUserSettings()
-                })), b.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getSpellcheckerLanguages() || [])), b.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getAvailableSpellcheckerLanguages() || [])), b.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", ((e, t) => {
+                }))
+                b.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getSpellcheckerLanguages() || []))
+                b.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getAvailableSpellcheckerLanguages() || []))
+                b.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerLanguages(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerEnabled(t)
-                })), b.handleEventFromRenderer.addListener("notion:replace-misspelling", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:replace-misspelling", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.replaceMisspelling(t)
-                })), b.handleEventFromRenderer.addListener("notion:add-to-dictionary", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:add-to-dictionary", ((e, t) => {
                     f.appController.getTabControllerForWebContents(e.sender)?.addToDictionary(t)
-                })), b.handleRequestFromRenderer.addListener("notion:get-substitutions", (e => {
-                    if (!s.systemPreferences.getUserDefault) return {value: []};
-                    const t = s.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
+                }))
+                b.handleRequestFromRenderer.addListener("notion:get-substitutions", (e => {
+                    if (!__electron.systemPreferences.getUserDefault) return {value: []};
+                    const t = __electron.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
                     return t ? {value: t} : {value: []}
-                })), b.handleEventFromRenderer.addListener("notion:navigation-meta-click", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:navigation-meta-click", ((e, t) => {
                     const r = f.appController.getWindowControllerForWebContents(e.sender);
                     "back" === t ? r?.handleBackMetaClick() : r?.handleForwardMetaClick()
-                })), b.handleEventFromRenderer.addListener("notion:go-back", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:go-back", (e => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goBack()
-                })), b.handleEventFromRenderer.addListener("notion:go-forward", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:go-forward", (e => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goForward()
-                })), b.handleEventFromRenderer.addListener("notion:show-tab-history-menu", ((e, t, r, n) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:show-tab-history-menu", ((e, t, r, n) => {
                     f.appController.getWindowControllerForWebContents(e.sender)?.showTabHistoryMenu({
                         direction: t,
                         clientX: r,
                         clientY: n
                     })
-                })), b.handleEventFromRenderer.addListener("notion:create-window", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:create-window", ((e, t) => {
                     f.appController.newWindow({initialUrl: t})
-                })), b.handleEventFromRenderer.addListener("notion:create-popup", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:create-popup", ((e, t) => {
                     (0, g.createPopup)(t)
-                })), b.handleEventFromRenderer.addListener("notion:create-google-drive-picker", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:create-google-drive-picker", ((e, t) => {
                     (0, m.createGoogleDrivePicker)(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-window-title", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-window-title", ((e, t) => {
                     const r = f.appController.getTabControllerForWebContents(e.sender);
                     r && r.setPageTitle(t.title)
-                })), b.handleEventFromRenderer.addListener("notion:set-badge", ((e, t) => {
-                    if (_.Store.dispatch((0, y.updateNotificationCount)(c.toNumber(t.badgeString))), s.app.dock) return void s.app.dock.setBadge(t.badgeString);
-                    const r = s.BrowserWindow.fromWebContents(e.sender);
+                }))
+                b.handleEventFromRenderer.addListener("notion:set-badge", ((e, t) => {
+                    if (_.Store.dispatch((0, y.updateNotificationCount)(c.toNumber(t.badgeString))), __electron.app.dock) return void __electron.app.dock.setBadge(t.badgeString);
+                    const r = __electron.BrowserWindow.fromWebContents(e.sender);
                     if (!r) return;
                     if (!r.setOverlayIcon) return;
                     if ("" === t.badgeString || null === t.badgeImageDataUrl) return void r.setOverlayIcon(null, "");
-                    const n = s.nativeImage.createFromDataURL(t.badgeImageDataUrl).toPNG(),
-                        o = s.nativeImage.createFromBuffer(n, {scaleFactor: t.devicePixelRatio});
+                    const n = __electron.nativeImage.createFromDataURL(t.badgeImageDataUrl).toPNG(),
+                        o = __electron.nativeImage.createFromBuffer(n, {scaleFactor: t.devicePixelRatio});
                     r.setOverlayIcon(o, `${t.badgeString} unread notifications`)
-                })), b.handleEventFromRenderer.addListener("notion:clear-browser-history", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:clear-browser-history", (e => {
                     e.sender.clearHistory()
-                })), b.handleEventFromRenderer.addListener("notion:open-app-menu", (e => {
-                    s.Menu.getApplicationMenu()?.popup({x: 8, y: 8})
-                })), b.handleEventFromRenderer.addListener("notion:open-dev-tools", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:open-app-menu", (e => {
+                    __electron.Menu.getApplicationMenu()?.popup({x: 8, y: 8})
+                }))
+                b.handleEventFromRenderer.addListener("notion:open-dev-tools", (e => {
                     e.sender.openDevTools()
-                })), b.handleEventFromRenderer.addListener("notion:download-url", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:download-url", ((e, t) => {
                     e.sender.downloadURL(t.url)
-                })), b.handleEventFromRenderer.addListener("notion:open-external-url", ((e, t) => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:open-external-url", ((e, t) => {
                     const {url: r} = t;
-                    d.sanitizeUrlStrict(r) && s.shell.openExternal(r)
-                })), b.handleRequestFromRenderer.addListener("notion:ready", (e => Promise.resolve({value: void 0}))), b.handleEventFromRenderer.addListener("notion:alt-key-down", (e => {
+                    d.sanitizeUrlStrict(r) && __electron.shell.openExternal(r)
+                }))
+                b.handleRequestFromRenderer.addListener("notion:ready", (e => Promise.resolve({value: void 0})))
+                b.handleEventFromRenderer.addListener("notion:alt-key-down", (e => {
                     const t = f.appController.getWindowControllerForWebContents(e.sender);
                     t && "win32" === process.platform && (_.Store.getState().app.preferences.isUnifiedTitleBarEnabled ? t.setShouldShowAppMenuFromAltKey(!0) : t.maybeAddWindowsMenuBarSpacing())
-                })), b.handleEventFromRenderer.addListener("notion:alt-key-up", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:alt-key-up", (e => {
                     const t = f.appController.getWindowControllerForWebContents(e.sender);
                     "win32" === process.platform && _.Store.getState().app.preferences.isUnifiedTitleBarEnabled && t && (t.toggleAppMenuPopup(), t.setShouldShowAppMenuFromAltKey(!1))
-                })), b.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", (e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", (e => {
                     const t = f.appController.getWindowControllerForWebContents(e.sender);
                     t?.setShouldShowAppMenuFromAltKey(!1)
-                })), b.handleEventFromRenderer.addListener("notion:broadcast", ((e, t) => {
-                    const r = s.BrowserWindow.fromWebContents(e.sender);
-                    r && s.BrowserWindow.getAllWindows().forEach((e => {
+                }))
+                b.handleEventFromRenderer.addListener("notion:broadcast", ((e, t) => {
+                    const r = __electron.BrowserWindow.fromWebContents(e.sender);
+                    r && __electron.BrowserWindow.getAllWindows().forEach((e => {
                         r.id !== e.id && f.appController.getWindowControllerForWebContents(e.webContents)?.getActiveTabController()?.broadcast(t)
                     }))
-                })), b.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", (async (e, t) => (0, v.getIsProtocolRegistered)(t))), b.handleEventFromRenderer.addListener("notion:set-is-media-active", ((e, t) => {
+                }))
+                b.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", (async (e, t) => (0, v.getIsProtocolRegistered)(t)))
+                b.handleEventFromRenderer.addListener("notion:set-is-media-active", ((e, t) => {
                     f.appController.updateMediaIndicator(e.sender, t)
                 }))
             }
         },
-        15425: function (e, t, r) {
+        15425: function (module, exports, require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSecurity = t.isNavigationAllowed = void 0;
-            const o = r(4482), a = n(r(47419)), i = n(r(11239)), s = r(13387), l = r(49248),
-                c = `${i.default.protocol}:`, u = i.default.domainBaseUrl, d = u.replace(/\.so$/, ".com"), p = [u, d],
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.setupSecurity = exports.isNavigationAllowed = void 0;
+
+            const __electron = require(4482),
+                a = n(require(47419)),
+                i = n(require(11239)),
+                s = require(13387),
+                l = require(49248),
+                c = `${i.default.protocol}:`,
+                u = i.default.domainBaseUrl,
+                d = u.replace(/\.so$/, ".com"),
+                p = [u, d],
                 h = new URL(u).host,
                 f = ["https://accounts.google.com", "https://app.asana.com", "https://trello.com", "https://www.evernote.com", "https://slack.com", "https://login.microsoftonline.com", "https://connect.wustl.edu"],
                 m = [".okta.com", ".onelogin.com", ".jumpcloud.com", ".slack.com"],
                 g = [/^https:\/\/www\.google\.com\/accounts\//],
                 b = [/^http(s?):\/\/[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.slack\.com\/(archives|huddle)\//];
-            if (o.app.isPackaged) b.push(/^http:\/\//); else {
+            if (__electron.app.isPackaged) {
+                b.push(/^http:\/\//);
+            } else {
                 const e = i.default.domainName.replace(/:.*/, "");
-                g.push(new RegExp(`^http://${e}`)), g.push(/^http:\/\/localhost/)
+                g.push(new RegExp(`^http://${e}`))
+                g.push(/^http:\/\/localhost/)
             }
 
-            function v(e) {
+            function isNavigationAllowed(e) {
                 const {protocol: t, origin: r, href: n, host: o} = e;
                 if (h === o || p.includes(r)) return !0;
                 let i = !1;
                 return f.includes(r) && (i = !0), m.find((e => "https:" === t && r.endsWith(e))) && (i = !0), g.find((e => e.test(n))) && (i = !0), b.find((e => e.test(n))) && (i = !1), a.default.silly(`Navigation to ${n} is ${i ? "allowed" : "disallowed"}`), i
             }
 
-            t.isNavigationAllowed = v, t.setupSecurity = function () {
-                const e = o.session.fromPartition(s.electronSessionPartition);
+            exports.isNavigationAllowed = isNavigationAllowed
+            exports.setupSecurity = function () {
+                const e = __electron.session.fromPartition(s.electronSessionPartition);
                 e.setPermissionRequestHandler(((e, t, r, n) => {
                     const o = n.requestingUrl, {protocol: a} = new URL(o);
                     r(a === c)
@@ -4350,17 +4540,21 @@
                         "completed" === r && (0, l.setQuarantine)(t.getSavePath())
                     }))
                 }))
-            }, o.app.on("web-contents-created", ((e, t) => {
-                t.on("will-navigate", ((e, t, r, n) => {
+            }
+
+            __electron.app.on("web-contents-created", (evt, webContents) => {
+                webContents.on("will-navigate", (e, t, r, n) => {
                     const a = new URL(t), {protocol: i} = a;
-                    n && !v(a) && (e.preventDefault(), "https:" !== i && "http:" !== i || o.shell.openExternal(t))
-                })), t.on("will-redirect", ((e, t, r, n) => {
+                    n && !isNavigationAllowed(a) && (e.preventDefault(), "https:" !== i && "http:" !== i || __electron.shell.openExternal(t))
+                })
+                webContents.on("will-redirect", (e, t, r, n) => {
                     const o = new URL(t);
-                    n && !v(o) && e.preventDefault()
-                })), t.on("will-prevent-unload", (e => {
+                    n && !isNavigationAllowed(o) && e.preventDefault()
+                })
+                webContents.on("will-prevent-unload", e => {
                     e.preventDefault()
-                }))
-            }))
+                })
+            })
         },
         56116: function (e, t, r) {
             "use strict";
@@ -4403,32 +4597,53 @@
                 "local" !== l.default.env && s.captureException(e, {extra: {assetsJsVersionAtErrorTime: c.assetCache.version}})
             }
         },
-        13387: (e, t, r) => {
+        13387: (module, exports, require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSessionListeners = t.getSession = t.electronSessionPartition = void 0;
-            const n = r(4482), o = r(21852);
-            let a;
-            t.electronSessionPartition = "persist:notion", t.getSession = function () {
-                return a || (a = n.session.fromPartition(t.electronSessionPartition)), a
-            }, t.setupSessionListeners = function () {
-                !function (e) {
-                    const t = new Set;
-                    let r = 0, a = 0, i = 0;
-                    e.addListener("will-download", ((e, s, l) => {
-                        const c = o.appController.getWindowControllerForWebContents(l)?.browserWindow;
-                        t.add(s), i += s.getTotalBytes(), s.on("updated", ((e, n) => {
-                            (() => {
-                                r = a;
-                                for (const e of t) r += e.getReceivedBytes()
-                            })(), c?.setProgressBar(r / i)
-                        })), s.on("done", ((e, o) => {
-                            a += s.getTotalBytes(), t.delete(s), c?.isDestroyed() || 0 !== t.size || (c?.setProgressBar(-1), r = 0, a = 0, i = 0), "completed" === o && "darwin" === process.platform && n.app.dock.downloadFinished(s.getSavePath())
-                        }))
-                    }))
-                }(n.session.fromPartition(t.electronSessionPartition))
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const __electron = require(4482),
+                __controller = require(21852);
+            let _session;
+
+            exports.electronSessionPartition = "persist:notion"
+            exports.getSession = function () {
+                if (!_session) {
+                    _session = __electron.session.fromPartition(exports.electronSessionPartition)
+                }
+                return _session
+            }
+            exports.setupSessionListeners = function () {
+                const session = __electron.session.fromPartition(exports.electronSessionPartition)
+                const t = new Set();
+                let r = 0, downloadedTotalBytes = 0, totalBytes = 0;
+                session.addListener("will-download", (evt, item, webContents) => {
+                    const win = __controller.appController.getWindowControllerForWebContents(webContents)?.browserWindow;
+                    t.add(item)
+                    totalBytes += item.getTotalBytes()
+                    item.on("updated", (e, n) => {
+                        r = downloadedTotalBytes;
+                        for (const e of t) {
+                            r += e.getReceivedBytes()
+                        }
+                        win?.setProgressBar(r / totalBytes)
+                    })
+                    item.on("done", (evt, state) => {
+                        downloadedTotalBytes += item.getTotalBytes()
+                        t.delete(item)
+                        if (!win?.isDestroyed() && 0 === t.size) {
+                            win?.setProgressBar(-1)
+                            r = 0
+                            downloadedTotalBytes = 0
+                            totalBytes = 0
+                        }
+                        if ("completed" === state && "darwin" === process.platform) {
+                            __electron.app.dock.downloadFinished(item.getSavePath())
+                        }
+                    })
+                })
             }
         },
-        34516: function (e, t, r) {
+        34516: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -4441,24 +4656,35 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSqliteServer = void 0;
-            const s = i(r(76982)), l = i(r(16928)), c = r(4482), u = i(r(47419)), d = i(r(51359)), p = a(r(10454)),
-                h = a(r(56116));
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.setupSqliteServer = void 0;
+
+            const s = i(require(76982)),
+                l = i(require(16928)),
+                c = require(4482),
+                u = i(require(47419)),
+                d = i(require(51359)),
+                p = a(require(10454)),
+                h = a(require(56116));
             let f, m, g;
             const b = u.default.scope("Sqlite");
-            t.setupSqliteServer = async function () {
+
+            exports.setupSqliteServer = async function () {
                 m ? b.error("Tried to start SqliteServer but Sqlite child process is already running") : (f = s.default.randomBytes(20).toString("hex"), g = await (0, d.default)({host: "127.0.0.1"}), m = function () {
                     if (!g) throw new Error("No process port assigned.");
                     const e = c.app.getPath("userData"), t = l.default.join(__dirname, "./SqliteServer.js");
@@ -4610,7 +4836,6 @@
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            exports.getElectronAppFeatures = exports.subscribeToSelector = exports.Store = exports.selectQuickSearchState = exports.selectHistory = exports.selectTabSearchingState = exports.selectTabStates = exports.selectTabState = exports.selectAppVisibilityBaseOnRenderers = exports.selectFocusedWindowDisplayState = exports.selectWindowState = exports.selectAppState = void 0;
 
             const s = require(6354),
                 l = a(require(6600)),
@@ -4821,7 +5046,7 @@
             const o = n(r(9245));
             t.appStatePersister = new o.default({name: "state"})
         },
-        50833: function (e, t, r) {
+        50833: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -4834,21 +5059,36 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSystemMenu = void 0;
-            const s = r(4482), l = r(36343), c = i(r(11239)), u = r(21852), d = r(94774), p = r(43579), h = r(83789),
-                f = r(73553), m = r(69340), g = a(r(48021)), b = a(r(98441)), v = (0, l.defineMessages)({
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = require(4482),
+                l = require(36343),
+                c = i(require(11239)),
+                u = require(21852),
+                d = require(94774),
+                p = require(43579),
+                h = require(83789),
+                f = require(73553),
+                m = require(69340),
+                g = a(require(48021)),
+                b = a(require(98441)),
+                v = l.defineMessages({
                     fileMenuTitle: {id: "desktopTopbar.fileMenu.title", defaultMessage: "File"},
                     editMenuTitle: {id: "desktopTopbar.editMenu.title", defaultMessage: "Edit"},
                     viewMenuTitle: {id: "desktopTopbar.viewMenu.title", defaultMessage: "View"},
@@ -5098,7 +5338,7 @@
                 }))
             }
 
-            function w() {
+            function setupSystemMenu() {
                 const e = "darwin" === process.platform, t = u.appController.intl, r = function (e) {
                     const t = function (e) {
                         const t = [];
@@ -5431,7 +5671,7 @@
                         } catch (n) {
                             t = e.formatMessage(v.updateCheckFailed), r += `\n${n}`
                         }
-                        w(), s.dialog.showMessageBox({
+                        setupSystemMenu(), s.dialog.showMessageBox({
                             title: e.formatMessage(v.checkForUpdateMessageTitle),
                             message: t,
                             detail: r
@@ -5440,7 +5680,7 @@
                 }
             }
 
-            t.setupSystemMenu = w
+            exports.setupSystemMenu = setupSystemMenu
         },
         48021: function (e, t, r) {
             "use strict";
@@ -5624,7 +5864,7 @@
                 }(e)), o
             }
         },
-        98441: function (e, t, r) {
+        98441: function (module, exports, require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -5637,22 +5877,37 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.deleteLocalData = t.maybeDisableHardwareAcceleration = t.getAuxiliaryInfo = t.showLogsInShell = void 0;
-            const s = i(r(70857)), l = i(r(16928)), c = r(4482), u = i(r(47419)), d = r(40041), p = a(r(80115)),
-                h = r(36343), f = i(r(4928)), m = a(r(21852)), g = r(87309), b = r(13387), v = r(69340),
-                y = (0, h.defineMessages)({
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.deleteLocalData = exports.maybeDisableHardwareAcceleration = exports.getAuxiliaryInfo = exports.showLogsInShell = void 0;
+
+            const s = i(require(70857)),
+                l = i(require(16928)),
+                c = require(4482),
+                u = i(require(47419)),
+                d = require(40041),
+                p = a(require(80115)),
+                h = require(36343),
+                f = i(require(4928)),
+                m = a(require(21852)),
+                g = require(87309),
+                b = require(13387),
+                v = require(69340),
+                y = h.defineMessages({
                     logsInShellFailedTitle: {
                         id: "desktopTroubleshooting.showLogs.error.title",
                         defaultMessage: "Showing the logs failed",
@@ -5670,7 +5925,7 @@
                     }
                 });
 
-            async function w() {
+            async function getAuxiliaryInfo() {
                 const e = JSON.stringify(c.app.getAppMetrics(), void 0, 2),
                     t = JSON.stringify([c.app.getGPUFeatureStatus(), await c.app.getGPUInfo("complete")], void 0, 2),
                     r = JSON.stringify({
@@ -5683,7 +5938,7 @@
                 return n["app-info.json"] = (0, d.strToU8)(e), n["gpu-info.json"] = (0, d.strToU8)(t), n["environment.json"] = (0, d.strToU8)(r), n
             }
 
-            t.showLogsInShell = async function () {
+            exports.showLogsInShell = async function () {
                 try {
                     const e = await async function () {
                             const e = l.default.dirname(u.default.transports.file.getFile().path), t = await p.readdir(e),
@@ -5692,7 +5947,7 @@
                                 const t = l.default.join(e, n);
                                 r[n] = (0, d.strToU8)(await p.readFile(t, "utf8"))
                             }
-                            const n = await w();
+                            const n = await getAuxiliaryInfo();
                             return await (0, f.default)({...r, ...n})
                         }(), t = `${c.app.getName()}-logs-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
                         r = l.default.join(c.app.getPath("downloads"), t);
@@ -5707,10 +5962,13 @@
                         message: `${r}\n\n${e}`
                     })
                 }
-            }, t.getAuxiliaryInfo = w, t.maybeDisableHardwareAcceleration = function () {
+            }
+            exports.getAuxiliaryInfo = getAuxiliaryInfo
+            exports.maybeDisableHardwareAcceleration = function () {
                 const {preferences: e} = v.Store.getState().app;
                 !c.app.isReady() && e.isHardwareAccelerationDisabled && (u.default.info("Disabling GPU hardware acceleration"), c.app.disableHardwareAcceleration())
-            }, t.deleteLocalData = async function (e) {
+            }
+            exports.deleteLocalData = async function (e) {
                 if (u.default.info("Resetting and erasing all local data"), "win32" !== process.platform) try {
                     await p.remove(c.app.getPath("userData"))
                 } catch (e) {
@@ -26356,7 +26614,7 @@
         47419: (module, exports, require) => {
             "use strict";
             var n = require(77259),
-                o = require(21789),
+                appUtil = require(21789),
                 a = require(58189),
                 i = require(41083),
                 s = require(65067),
@@ -26376,7 +26634,7 @@
                     create: create,
                     functions: {},
                     hooks: [],
-                    isDev: o.isDev(),
+                    isDev: appUtil.isDev(),
                     levels: [],
                     logId: logId,
                     variables: {

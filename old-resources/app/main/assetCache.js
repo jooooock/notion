@@ -1,28 +1,42 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
+
+const __createBinding = (this && this.__createBinding) || (Object.create ? (function(target, source, key, bindName) {
+    if (bindName === undefined) bindName = key;
+
+    Object.defineProperty(target, bindName, {
+        enumerable: true,
+        get: function() { return source[key]; }
+    });
+}) : (function(target, source, key, bindName) {
+    if (bindName === undefined) bindName = key;
+    target[bindName] = source[key];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
+const __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(target, value) {
+    Object.defineProperty(target, "default", { enumerable: true, value: value });
+}) : function(target, value) {
+    target["default"] = value;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
+const __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
+
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) {
+        for (const key in mod) {
+            if (key !== "default" && Object.prototype.hasOwnProperty.call(mod, key)) {
+                __createBinding(result, mod, key);
+            }
+        }
+    }
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assetCache = void 0;
+
+
 const electron_1 = __importDefault(require("electron"));
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const crypto_1 = __importDefault(require("crypto"));
@@ -35,6 +49,8 @@ const notionIpc = __importStar(require("../helpers/notionIpc"));
 const cleanObjectForSerialization_1 = require("../shared/cleanObjectForSerialization");
 const constants_1 = require("../shared/constants");
 const lodash_1 = __importDefault(require("lodash"));
+
+
 exports.assetCache = new AssetCache_1.AssetCache({
     baseUrl: config_1.default.domainBaseUrl,
     baseDir: electron_1.default.app.getPath("userData"),
@@ -120,6 +136,7 @@ exports.assetCache = new AssetCache_1.AssetCache({
         },
     },
 });
+
 exports.assetCache.events.addListener("error", error => {
     notionIpc.sendMainToNotion("notion:app-update-error", cleanObjectForSerialization_1.cleanObjectForSerialization(error));
 });
@@ -141,12 +158,16 @@ exports.assetCache.events.addListener("update-downloaded", info => {
 exports.assetCache.events.addListener("update-finished", assets => {
     notionIpc.sendMainToNotion("notion:app-update-finished", assets);
 });
+
+
 notionIpc.receiveMainFromRenderer.addListener("notion:reset-app-cache", () => {
     void exports.assetCache.reset();
 });
 notionIpc.receiveMainFromRenderer.addListener("notion:check-for-app-updates", () => {
     void exports.assetCache.checkForUpdates();
 });
+
+
 const pollInterval = config_1.default.isLocalhost ? 10 * 1000 : 10 * 60 * 1000;
 async function pollForAssetUpdates() {
     if (!config_1.default.isLocalhost || config_1.default.offline) {

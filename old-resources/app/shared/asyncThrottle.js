@@ -1,5 +1,7 @@
 "use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
+
 function asyncThrottle(fn) {
     let runningPromise;
     let queuedPromise;
@@ -25,5 +27,6 @@ function asyncThrottle(fn) {
         }
     };
 }
+
 exports.default = asyncThrottle;
 //# sourceMappingURL=asyncThrottle.js.map

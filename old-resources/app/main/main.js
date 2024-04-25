@@ -1,78 +1,98 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
+
+const __createBinding = (this && this.__createBinding) || (Object.create ? (function (target, source, key, bindName) {
+    if (bindName === undefined) bindName = key;
+
+    Object.defineProperty(target, bindName, {
+        enumerable: true,
+        get: function () {
+            return source[key];
+        }
+    });
+}) : (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
+const __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (target, value) {
+    Object.defineProperty(target, "default", {enumerable: true, value: value});
+}) : function (target, value) {
+    target["default"] = value;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
+const __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+
+    const result = {};
+    if (mod != null) {
+        for (const key in mod) {
+            if (key !== "default" && Object.prototype.hasOwnProperty.call(mod, key)) {
+                __createBinding(result, mod, key);
+            }
+        }
+    }
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+const __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
+const __electron = require("electron");
 require("isomorphic-fetch");
 require("./crashReporter");
-const autoUpdater_1 = require("./autoUpdater");
-const systemMenu_1 = require("./systemMenu");
+const __autoUpdater = require("./autoUpdater");
+const __systemMenu = require("./systemMenu");
 require("./security");
-const schemeHandler_1 = require("./schemeHandler");
-const createWindow_1 = require("./createWindow");
-const createPopup_1 = require("./createPopup");
-const createGoogleDrivePicker_1 = require("./createGoogleDrivePicker");
-const config_1 = __importDefault(require("../config"));
-const notionIpc = __importStar(require("../helpers/notionIpc"));
-const loggly_1 = require("../helpers/loggly");
-const assetCache_1 = require("./assetCache");
-const schemeHelpers = __importStar(require("../shared/schemeHelpers"));
-const urlHelpers = __importStar(require("../shared/urlHelpers"));
-const fs_1 = __importDefault(require("fs"));
-const localizationHelper_1 = require("../helpers/localizationHelper");
-const notion_intl_1 = require("notion-intl");
-const path_1 = __importDefault(require("path"));
-const child_process_1 = require("child_process");
-const electron_log_1 = __importDefault(require("electron-log"));
-const get_port_1 = __importDefault(require("get-port"));
-const crypto_1 = __importDefault(require("crypto"));
+const __schemeHandler = require("./schemeHandler");
+const __createWindow = require("./createWindow");
+const __createPopup = require("./createPopup");
+const __createGoogleDrivePicker = require("./createGoogleDrivePicker");
+const __config = __importDefault(require("../config"));
+const __notionIpc = __importStar(require("../helpers/notionIpc"));
+const __loggly = require("../helpers/loggly");
+const __assetCache = require("./assetCache");
+const __schemeHelpers = __importStar(require("../shared/schemeHelpers"));
+const __urlHelpers = __importStar(require("../shared/urlHelpers"));
+const __fs = __importDefault(require("fs"));
+const __localizationHelper = require("../helpers/localizationHelper");
+const __notion_intl = require("notion-intl");
+const __path = __importDefault(require("path"));
+const __child_process = require("child_process");
+const __electron_log = __importDefault(require("electron-log"));
+const __get_port = __importDefault(require("get-port"));
+const __crypto = __importDefault(require("crypto"));
 const urlHelpers_1 = require("../helpers/urlHelpers");
 const logglyHelpers_1 = require("../shared/logglyHelpers");
 const Sentry = __importStar(require("./sentry"));
 const desktopLocaleHelpers_1 = require("../shared/desktopLocaleHelpers");
-electron_1.dialog.showErrorBox = function (title, content) { };
+
+
+__electron.dialog.showErrorBox = function (title, content) {}
+
 function makeRelativeUrl(url) {
     try {
         new URL(url);
-    }
-    catch (error) {
+    } catch (error) {
         return;
     }
-    const fixedUrl = schemeHelpers.fixSchemeUrl({
+    const fixedUrl = __schemeHelpers.fixSchemeUrl({
         url: url,
-        protocol: config_1.default.protocol,
-        baseUrl: config_1.default.domainBaseUrl,
+        protocol: __config.default.protocol,
+        baseUrl: __config.default.domainBaseUrl,
     });
-    const httpUrl = schemeHelpers.getHttpUrl({
+    const httpUrl = __schemeHelpers.getHttpUrl({
         schemeUrl: fixedUrl,
-        baseUrl: config_1.default.domainBaseUrl,
+        baseUrl: __config.default.domainBaseUrl,
     });
-    const relativeUrl = urlHelpers.removeBaseUrl(httpUrl);
+    const relativeUrl = __urlHelpers.removeBaseUrl(httpUrl);
     return relativeUrl;
 }
+
 function handleActivate(relativeUrl) {
-    const allWindows = electron_1.BrowserWindow.getAllWindows();
-    const { isLocalhost, env } = config_1.default;
+    const allWindows = __electron.BrowserWindow.getAllWindows();
+    const {isLocalhost, env} = __config.default;
     const isLocal = env === "local" || isLocalhost;
     if (allWindows.length === 1 && allWindows[0].isVisible()) {
         const win = allWindows[0];
@@ -80,21 +100,20 @@ function handleActivate(relativeUrl) {
             void win.webContents.loadURL(urlHelpers_1.getIndexUrl(relativeUrl));
         }
         win.focus();
-    }
-    else {
-        const win = createWindow_1.createWindow(relativeUrl, { isLocalhost: isLocal });
+    } else {
+        const win = __createWindow.createWindow(relativeUrl, {isLocalhost: isLocal});
         if (isLocal) {
             win.minimize();
-        }
-        else {
+        } else {
             win.focus();
         }
     }
 }
+
 async function handleReady() {
-    const locale = desktopLocaleHelpers_1.externalLocaleToNotionLocale(electron_1.app.getLocale(), config_1.default.env === "production");
-    const intl = localizationHelper_1.createIntlShape(locale);
-    const messages = notion_intl_1.defineMessages({
+    const locale = desktopLocaleHelpers_1.externalLocaleToNotionLocale(__electron.app.getLocale(), __config.default.env === "production");
+    const intl = __localizationHelper.createIntlShape(locale);
+    const messages = __notion_intl.defineMessages({
         invalidInstallMessage: {
             id: "desktopInstaller.invalidInstallDialog.title",
             defaultMessage: "Invalid Install",
@@ -109,7 +128,7 @@ async function handleReady() {
         },
     });
     if (isOpenedFromNonWritableDirectory()) {
-        await electron_1.dialog.showMessageBox({
+        await __electron.dialog.showMessageBox({
             type: "error",
             buttons: [intl.formatMessage(messages.okButton)],
             message: intl.formatMessage(messages.invalidInstallMessage),
@@ -118,34 +137,37 @@ async function handleReady() {
         const helpUrl = locale === "ko-KR"
             ? "https://www.notion.so/fe244a58c73b4174a89effb4828b86c5"
             : "https://www.notion.so/b2be23041a0b4b948aa675184abc9165";
-        await electron_1.shell.openExternal(helpUrl);
-        electron_1.app.quit();
+        await __electron.shell.openExternal(helpUrl);
+        __electron.app.quit();
         return;
     }
     let relativeUrl;
     if (process.platform === "win32") {
-        const { argv } = process;
-        const url = argv.find(arg => arg.startsWith(`${config_1.default.protocol}:`));
+        const {argv} = process;
+        const url = argv.find(arg => arg.startsWith(`${__config.default.protocol}:`));
         if (url) {
             relativeUrl = makeRelativeUrl(url);
         }
     }
     void startup(relativeUrl);
 }
+
 let serverProcess;
 let serverProcessPort;
-const authToken = crypto_1.default.randomBytes(20).toString("hex");
+const authToken = __crypto.default.randomBytes(20).toString("hex");
+
 async function assignServerProcessPort() {
-    serverProcessPort = await get_port_1.default({ host: "127.0.0.1" });
+    serverProcessPort = await __get_port.default({host: "127.0.0.1"});
 }
+
 async function startupServer() {
-    const userDataPath = electron_1.app.getPath("userData");
-    const executorPath = path_1.default.join(__dirname, "sqlite", "SqliteServer.js");
+    const userDataPath = __electron.app.getPath("userData");
+    const executorPath = __path.default.join(__dirname, "sqlite", "SqliteServer.js");
     await assignServerProcessPort();
     if (!serverProcessPort) {
         throw new Error("No process port assigned.");
     }
-    const process = child_process_1.fork(executorPath, [userDataPath, serverProcessPort.toString(), authToken], {
+    const process = __child_process.fork(executorPath, [userDataPath, serverProcessPort.toString(), authToken], {
         stdio: ["pipe", "inherit", "pipe", "ipc"],
     });
     process.on("error", error => {
@@ -163,29 +185,31 @@ async function startupServer() {
     }
     return process;
 }
+
 async function startup(relativeUrl) {
-    Sentry.initialize(electron_1.app);
-    autoUpdater_1.initializeAutoUpdater();
-    const locale = desktopLocaleHelpers_1.externalLocaleToNotionLocale(electron_1.app.getLocale(), config_1.default.env === "production");
-    systemMenu_1.setupSystemMenu(locale);
-    await schemeHandler_1.migrateCookies();
-    await assetCache_1.assetCache.initialize();
+    Sentry.initialize(__electron.app);
+    __autoUpdater.initializeAutoUpdater();
+    const locale = desktopLocaleHelpers_1.externalLocaleToNotionLocale(__electron.app.getLocale(), __config.default.env === "production");
+    __systemMenu.setupSystemMenu(locale);
+    await __schemeHandler.migrateCookies();
+    await __assetCache.assetCache.initialize();
     if (!serverProcess) {
         serverProcess = await startupServer();
     }
-    schemeHandler_1.registerUrlSchemeProxy();
+    __schemeHandler.registerUrlSchemeProxy();
     handleActivate(relativeUrl);
-    await schemeHandler_1.wipeTransientCsrfCookie();
+    await __schemeHandler.wipeTransientCsrfCookie();
 }
-electron_1.app.on("ready", handleReady);
-electron_1.app.setAppUserModelId(config_1.default.desktopAppId);
-electron_1.app.setAsDefaultProtocolClient(config_1.default.protocol);
-electron_1.app.on("open-url", (event, url) => {
+
+__electron.app.on("ready", handleReady);
+__electron.app.setAppUserModelId(__config.default.desktopAppId);
+__electron.app.setAsDefaultProtocolClient(__config.default.protocol);
+__electron.app.on("open-url", (event, url) => {
     event.preventDefault();
     const relativeUrl = makeRelativeUrl(url);
-    if (electron_1.app.isReady()) {
-        const focusedWindow = electron_1.BrowserWindow.getFocusedWindow();
-        const allWindows = electron_1.BrowserWindow.getAllWindows();
+    if (__electron.app.isReady()) {
+        const focusedWindow = __electron.BrowserWindow.getFocusedWindow();
+        const allWindows = __electron.BrowserWindow.getAllWindows();
         const targetWindow = (() => {
             if (focusedWindow && focusedWindow.isVisible()) {
                 return focusedWindow;
@@ -195,87 +219,86 @@ electron_1.app.on("open-url", (event, url) => {
             }
         })();
         if (targetWindow && relativeUrl) {
-            notionIpc.sendMainToNotionWindow(targetWindow, "notion:navigate-to-url", relativeUrl);
+            __notionIpc.sendMainToNotionWindow(targetWindow, "notion:navigate-to-url", relativeUrl);
             targetWindow.focus();
-        }
-        else {
-            const win = createWindow_1.createWindow(relativeUrl);
+        } else {
+            const win = __createWindow.createWindow(relativeUrl);
             win.focus();
         }
-    }
-    else {
-        electron_1.app.removeListener("ready", handleReady);
-        electron_1.app.on("ready", async () => startup(relativeUrl));
+    } else {
+        __electron.app.removeListener("ready", handleReady);
+        __electron.app.on("ready", async () => startup(relativeUrl));
     }
 });
-if (electron_1.app.requestSingleInstanceLock()) {
-    electron_1.app.on("second-instance", (_event, argv, workingDirectory) => {
+if (__electron.app.requestSingleInstanceLock()) {
+    __electron.app.on("second-instance", (_event, argv, workingDirectory) => {
         if (process.platform === "win32") {
-            const url = argv.find(arg => arg.startsWith(`${config_1.default.protocol}:`));
+            const url = argv.find(arg => arg.startsWith(`${__config.default.protocol}:`));
             const urlPath = url && makeRelativeUrl(url);
             handleActivate(urlPath);
         }
     });
+} else {
+    __electron.app.quit();
 }
-else {
-    electron_1.app.quit();
-}
-electron_1.app.on("window-all-closed", () => {
+__electron.app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {
-        electron_1.app.quit();
+        __electron.app.quit();
     }
 });
-electron_1.app.on("before-quit", () => {
-    electron_log_1.default.info("Quitting...");
+__electron.app.on("before-quit", () => {
+    __electron_log.default.info("Quitting...");
     if (serverProcess) {
-        electron_log_1.default.info("Killing child process");
+        __electron_log.default.info("Killing child process");
         serverProcess.kill("SIGTERM");
         serverProcess = undefined;
     }
 });
-electron_1.app.on("activate", (_event, hasVisibleWindows) => {
+__electron.app.on("activate", (_event, hasVisibleWindows) => {
     if (!hasVisibleWindows) {
-        createWindow_1.createWindow();
+        __createWindow.createWindow();
     }
 });
 let refreshInterval;
-electron_1.app.on("browser-window-blur", () => {
+__electron.app.on("browser-window-blur", () => {
     clearInterval(refreshInterval);
     refreshInterval = setInterval(() => {
-        if (!electron_1.BrowserWindow.getFocusedWindow()) {
+        if (!__electron.BrowserWindow.getFocusedWindow()) {
             if (Math.random() <= 0.0005) {
-                notionIpc.sendMainToNotion("notion:app-update-install");
-            }
-            else {
-                notionIpc.sendMainToNotion("notion:windows-backgrounded");
+                __notionIpc.sendMainToNotion("notion:app-update-install");
+            } else {
+                __notionIpc.sendMainToNotion("notion:windows-backgrounded");
             }
         }
     }, 10 * 1000);
 });
-electron_1.app.on("browser-window-focus", () => {
+__electron.app.on("browser-window-focus", () => {
     clearInterval(refreshInterval);
 });
-notionIpc.receiveMainFromRenderer.addListener("notion:create-window", (_event, urlPath) => {
-    createWindow_1.createWindow(urlPath);
+
+__notionIpc.receiveMainFromRenderer.addListener("notion:create-window", (_event, urlPath) => {
+    __createWindow.createWindow(urlPath);
 });
-notionIpc.receiveMainFromRenderer.addListener("notion:create-popup", (_event, args) => {
-    createPopup_1.createPopup(args);
+__notionIpc.receiveMainFromRenderer.addListener("notion:create-popup", (_event, args) => {
+    __createPopup.createPopup(args);
 });
-notionIpc.receiveMainFromRenderer.addListener("notion:create-google-drive-picker", (_event, args) => {
-    createGoogleDrivePicker_1.createGoogleDrivePicker(args);
+__notionIpc.receiveMainFromRenderer.addListener("notion:create-google-drive-picker", (_event, args) => {
+    __createGoogleDrivePicker.createGoogleDrivePicker(args);
 });
-notionIpc.addMainHandler("notion:get-sqlite-meta", _event => {
+__notionIpc.addMainHandler("notion:get-sqlite-meta", _event => {
     if (!serverProcessPort) {
         throw new Error("Port not yet assigned, should not be possible.");
     }
-    return { value: { serverProcessPort, authToken } };
+    return {value: {serverProcessPort, authToken}};
 });
-notionIpc.receiveMainFromRenderer.addListener("notion:broadcast", (_event, args) => {
-    notionIpc.sendMainToNotion("notion:broadcast", args);
+__notionIpc.receiveMainFromRenderer.addListener("notion:broadcast", (_event, args) => {
+    __notionIpc.sendMainToNotion("notion:broadcast", args);
 });
+
+
 process.on("uncaughtException", error => {
     Sentry.capture(error);
-    void loggly_1.loggly.log({
+    void __loggly.loggly.log({
         level: "error",
         from: "main",
         type: "uncaughtException",
@@ -284,23 +307,24 @@ process.on("uncaughtException", error => {
 });
 process.on("unhandledRejection", error => {
     Sentry.capture(error);
-    void loggly_1.loggly.log({
+    void __loggly.loggly.log({
         level: "error",
         from: "main",
         type: "unhandledRejection",
         error: logglyHelpers_1.convertErrorToLog(error),
     });
 });
+
 function isOpenedFromNonWritableDirectory() {
     if (process.platform === "darwin") {
         try {
-            fs_1.default.accessSync(electron_1.app.getPath("exe"), fs_1.default.constants.W_OK);
+            __fs.default.accessSync(__electron.app.getPath("exe"), __fs.default.constants.W_OK);
             return false;
-        }
-        catch (error) {
+        } catch (error) {
             return true;
         }
     }
     return false;
 }
+
 //# sourceMappingURL=main.js.map

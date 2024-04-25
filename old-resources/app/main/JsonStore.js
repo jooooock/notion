@@ -1,13 +1,17 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.JsonStore = void 0;
+
+
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const electron_1 = __importDefault(require("electron"));
 const path_1 = __importDefault(require("path"));
 const electron_log_1 = __importDefault(require("electron-log"));
+
 class JsonStore {
     constructor(name) {
         const userDataPath = electron_1.default.app.getPath("userData");
@@ -58,5 +62,6 @@ class JsonStore {
         }
     }
 }
+
 exports.JsonStore = JsonStore;
 //# sourceMappingURL=JsonStore.js.map

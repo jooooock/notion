@@ -1,5 +1,6 @@
 "use strict";
-var __rest = (this && this.__rest) || function (s, e) {
+
+const __rest = (this && this.__rest) || function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
         t[p] = s[p];
@@ -10,8 +11,10 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertLogDataToFinalVersion = exports.convertErrorToLog = exports.safelyConvertAnyToString = exports.trimActorDataForLogging = exports.isStringifiedLogglyMessage = exports.fromStringifiedLogglyMessage = exports.shouldLog = void 0;
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
 const cleanObjectForSerialization_1 = require("./cleanObjectForSerialization");
 const logLevelOrder = [
     "silent",
@@ -20,37 +23,44 @@ const logLevelOrder = [
     "info",
     "debug",
 ];
+
 function shouldLog(args) {
     return (logLevelOrder.indexOf(args.messageLevel) <=
         logLevelOrder.indexOf(args.loggerLevel));
 }
+
 exports.shouldLog = shouldLog;
+
 function fromStringifiedLogglyMessage(logglyMessage, jsonParse) {
-    const { data, error } = logglyMessage, shared = __rest(logglyMessage, ["data", "error"]);
+    const {data, error} = logglyMessage, shared = __rest(logglyMessage, ["data", "error"]);
     const result = shared;
     if (data) {
         result.data = jsonParse(data.asJSON);
     }
     if (error) {
         const parsedJSON = error.asJSON ? jsonParse(error.asJSON) : {};
-        result.error = Object.assign({ name: error.name, message: error.message, stack: error.stack }, parsedJSON);
+        result.error = Object.assign({name: error.name, message: error.message, stack: error.stack}, parsedJSON);
     }
     return result;
 }
+
 exports.fromStringifiedLogglyMessage = fromStringifiedLogglyMessage;
+
 function isStringifiedLogglyMessage(message) {
     return ((typeof message.data === "object" &&
-        typeof message.data.asJSON === "string") ||
+            typeof message.data.asJSON === "string") ||
         (typeof message.error === "object" &&
             typeof message.error.asJSON === "string"));
 }
+
 exports.isStringifiedLogglyMessage = isStringifiedLogglyMessage;
+
 function trimActorDataForLogging(actor) {
     if (actor === undefined) {
         return undefined;
     }
-    const { table } = actor;
-    const { id, email, parent_table, name, type } = actor.value;
+    const {table} = actor;
+    const {id, email, parent_table, name, type} = actor.value;
     const actorForLogging = {
         id,
         table,
@@ -66,26 +76,28 @@ function trimActorDataForLogging(actor) {
     });
     return actorForLogging;
 }
+
 exports.trimActorDataForLogging = trimActorDataForLogging;
+
 function safelyConvertAnyToString(toConvert, stringify = JSON.stringify) {
     try {
         if (typeof toConvert === "object" && toConvert !== null) {
             return stringify(cleanObjectForSerialization_1.cleanObjectForSerialization(toConvert, 10));
-        }
-        else {
+        } else {
             return String(toConvert);
         }
-    }
-    catch (e) {
+    } catch (e) {
         return `Unable to safely convert to string: "${e.stack ? e.stack : ""}"`;
     }
 }
+
 exports.safelyConvertAnyToString = safelyConvertAnyToString;
+
 function convertErrorToLog(toConvert, stringify = JSON.stringify, shouldFallBackToReason = false) {
     try {
         if (typeof toConvert === "object" && toConvert !== null) {
             const temp1 = toConvert;
-            const { statusCode, name, message, data, error, stack, body, reason } = temp1;
+            const {statusCode, name, message, data, error, stack, body, reason} = temp1;
             const result = {};
             if (statusCode) {
                 result.statusCode = Number(statusCode);
@@ -112,7 +124,7 @@ function convertErrorToLog(toConvert, stringify = JSON.stringify, shouldFallBack
                 result.body = {};
                 if (typeof body === "object" && body !== null) {
                     const temp2 = body;
-                    const { errorId, name, message, clientData } = temp2;
+                    const {errorId, name, message, clientData} = temp2;
                     if (errorId) {
                         result.body.errorId = String(errorId);
                     }
@@ -125,33 +137,33 @@ function convertErrorToLog(toConvert, stringify = JSON.stringify, shouldFallBack
                     if (clientData) {
                         result.body.clientDataString = safelyConvertAnyToString(clientData, stringify);
                     }
-                }
-                else {
+                } else {
                     result.body.message = safelyConvertAnyToString(body, stringify);
                 }
             }
             return result;
-        }
-        else {
+        } else {
             return {
                 miscErrorString: safelyConvertAnyToString(toConvert, stringify),
             };
         }
-    }
-    catch (e) {
+    } catch (e) {
         return {
             miscErrorString: `Unable to safely convert error to log: "${e.stack ? e.stack : ""}"`,
         };
     }
 }
+
 exports.convertErrorToLog = convertErrorToLog;
+
 function convertLogDataToFinalVersion(data, stringify = JSON.stringify) {
-    const { miscDataToConvertToString } = data, everythingElse = __rest(data, ["miscDataToConvertToString"]);
+    const {miscDataToConvertToString} = data, everythingElse = __rest(data, ["miscDataToConvertToString"]);
     const postProcessedData = everythingElse;
     if (miscDataToConvertToString !== undefined) {
         postProcessedData.miscDataString = safelyConvertAnyToString(miscDataToConvertToString, stringify);
     }
     return postProcessedData;
 }
+
 exports.convertLogDataToFinalVersion = convertLogDataToFinalVersion;
 //# sourceMappingURL=logglyHelpers.js.map

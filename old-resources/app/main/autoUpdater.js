@@ -1,28 +1,31 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+
+const __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+const __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
+const __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
     if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initializeAutoUpdater = void 0;
+
+
 const electron_1 = require("electron");
 const electron_log_1 = __importDefault(require("electron-log"));
 const electron_updater_1 = require("electron-updater");
@@ -33,11 +36,13 @@ const isOfflineError_1 = __importDefault(require("../shared/isOfflineError"));
 const cleanObjectForSerialization_1 = require("../shared/cleanObjectForSerialization");
 const logglyHelpers_1 = require("../shared/logglyHelpers");
 const assetCache_1 = require("./assetCache");
+
 electron_log_1.default.transports.file.level = "info";
 electron_log_1.default.transports.file.fileName = "log.log";
 electron_updater_1.autoUpdater.logger = electron_log_1.default;
 let electronUpdateIsAvailable = false;
 electron_updater_1.autoUpdater.autoInstallOnAppQuit = process.platform !== "win32";
+
 function initializeAutoUpdater() {
     let inInstallInitializationWindow = true;
     setTimeout(() => {
@@ -139,7 +144,9 @@ function initializeAutoUpdater() {
         }
     });
 }
+
 exports.initializeAutoUpdater = initializeAutoUpdater;
+
 notionIpc.receiveMainFromRenderer.addListener("notion:install-update", () => {
     setTimeout(async () => {
         await assetCache_1.assetCache.checkForUpdates();
@@ -155,6 +162,8 @@ notionIpc.receiveMainFromRenderer.addListener("notion:install-update", () => {
 notionIpc.receiveMainFromRenderer.addListener("notion:check-for-updates", () => {
     void electron_updater_1.autoUpdater.checkForUpdates();
 });
+
+
 const pollInterval = config_1.default.isLocalhost ? 10 * 1000 : 24 * 60 * 60 * 1000;
 async function pollForElectronUpdates() {
     while (true) {

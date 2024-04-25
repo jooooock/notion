@@ -1,28 +1,31 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+
+const __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+const __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
+const __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
     if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerUrlSchemeProxy = exports.wipeTransientCsrfCookie = exports.migrateCookies = void 0;
+
+
 const electron_1 = require("electron");
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const stream_1 = require("stream");
@@ -37,6 +40,8 @@ const logglyHelpers_1 = require("../shared/logglyHelpers");
 const lodash_1 = __importDefault(require("lodash"));
 const devOnlyTools_1 = require("./devOnlyTools");
 const cspMangle_1 = require("./cspMangle");
+
+
 const cookieJsonStore = new JsonStore_1.JsonStore("cookies");
 async function migrateCookies() {
     const cookies = electron_1.session.fromPartition(constants_1.electronSessionPartition).cookies;
@@ -90,7 +95,9 @@ async function migrateCookies() {
     }
     void cookieJsonStore.set({});
 }
+
 exports.migrateCookies = migrateCookies;
+
 async function wipeTransientCsrfCookie() {
     const cookies = electron_1.session.fromPartition(constants_1.electronSessionPartition).cookies;
     const [csrfCookie] = await cookies.get({ name: "csrf" });
@@ -101,7 +108,9 @@ async function wipeTransientCsrfCookie() {
         await cookies.remove(url, csrfCookie.name);
     }
 }
+
 exports.wipeTransientCsrfCookie = wipeTransientCsrfCookie;
+
 notionIpc.receiveMainFromRenderer.addListener("notion:clear-cookies", () => {
     void electron_1.session.fromPartition(constants_1.electronSessionPartition).clearStorageData({
         origin: config_1.default.domainBaseUrl,
@@ -139,6 +148,7 @@ electron_1.protocol.registerSchemesAsPrivileged([
         },
     },
 ]);
+
 function supportEmbedsInUrlScheme(webRequest) {
     webRequest.onHeadersReceived((details, callback) => {
         if (details.responseHeaders && details.resourceType === "subFrame") {
@@ -203,7 +213,9 @@ function registerUrlSchemeProxy() {
         throw error;
     }
 }
+
 exports.registerUrlSchemeProxy = registerUrlSchemeProxy;
+
 function proxyRequest(req, callback) {
     if (devOnlyTools_1.shouldSimulateAirplaneMode()) {
         process.nextTick(() => {

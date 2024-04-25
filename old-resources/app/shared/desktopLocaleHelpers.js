@@ -1,6 +1,8 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLocaleFromCookie = exports.externalLocaleToNotionLocale = exports.isDevelopmentShortLocale = exports.isPreferredShortLocale = exports.isPreferredLocaleOrigin = exports.isPreferredLocaleExtended = exports.isPreferredLocale = exports.isDevelopmentLocale = exports.isDevelopmentOnlyLocale = exports.VALID_PREFERRED_SHORT_LOCALES_IN_DEVELOPMENT = exports.VALID_PREFERRED_SHORT_LOCALES = exports.shortCodeToPreferredLocaleExtended = exports.countryToPreferredLocale = exports.preferredContentfulLocales = exports.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = exports.VALID_PREFERRED_LOCALES_IN_BETA = exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = exports.VALID_PREFERRED_LOCALES = void 0;
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
 exports.VALID_PREFERRED_LOCALES = ["en-US", "ko-KR", "ja-JP"];
 exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = [
     "es-ES",
@@ -18,12 +20,14 @@ exports.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = exports.VALID_PREFERRED_L
         [key]: `/${value}`,
     };
 }).reduce((result, current) => Object.assign(result, current), {});
+
 const VALID_PREFERRED_LOCALE_ORIGINS = [
     "autodetect",
     "user_choice",
     "legacy",
     "inferred_from_inviter",
 ];
+
 exports.preferredContentfulLocales = {
     "es-LA": "es-419",
     "zh-TW": "zh-Hant-TW",
@@ -49,36 +53,51 @@ exports.VALID_PREFERRED_SHORT_LOCALES_IN_DEVELOPMENT = [
     "pt",
     "zh",
 ];
+
 function isDevelopmentOnlyLocale(locale) {
     return exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.includes(locale);
 }
+
 exports.isDevelopmentOnlyLocale = isDevelopmentOnlyLocale;
+
 function isDevelopmentLocale(locale) {
     return (isPreferredLocale(locale) ||
         exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.includes(locale));
 }
+
 exports.isDevelopmentLocale = isDevelopmentLocale;
+
 function isPreferredLocale(locale) {
     return exports.VALID_PREFERRED_LOCALES.includes(locale);
 }
+
 exports.isPreferredLocale = isPreferredLocale;
+
 function isPreferredLocaleExtended(locale) {
     return isPreferredLocale(locale) || isDevelopmentLocale(locale);
 }
+
 exports.isPreferredLocaleExtended = isPreferredLocaleExtended;
+
 function isPreferredLocaleOrigin(origin) {
     return VALID_PREFERRED_LOCALE_ORIGINS.includes(origin);
 }
+
 exports.isPreferredLocaleOrigin = isPreferredLocaleOrigin;
+
 function isPreferredShortLocale(shortLocale) {
     return exports.VALID_PREFERRED_SHORT_LOCALES.includes(shortLocale);
 }
+
 exports.isPreferredShortLocale = isPreferredShortLocale;
+
 function isDevelopmentShortLocale(locale) {
     return (isPreferredShortLocale(locale) ||
         exports.VALID_PREFERRED_SHORT_LOCALES_IN_DEVELOPMENT.includes(locale));
 }
+
 exports.isDevelopmentShortLocale = isDevelopmentShortLocale;
+
 function externalLocaleToNotionLocale(externalLocale, onlyProdLanguages) {
     const [shortCode, region] = externalLocale.split("-");
     if (shortCode && !region) {
@@ -93,7 +112,9 @@ function externalLocaleToNotionLocale(externalLocale, onlyProdLanguages) {
     }
     return "en-US";
 }
+
 exports.externalLocaleToNotionLocale = externalLocaleToNotionLocale;
+
 function getLocaleFromCookie(cookie) {
     if (cookie === "") {
         return "en-US";
@@ -104,5 +125,6 @@ function getLocaleFromCookie(cookie) {
     }
     return "en-US";
 }
+
 exports.getLocaleFromCookie = getLocaleFromCookie;
 //# sourceMappingURL=desktopLocaleHelpers.js.map

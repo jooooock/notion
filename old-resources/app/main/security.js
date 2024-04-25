@@ -1,12 +1,18 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+
 Object.defineProperty(exports, "__esModule", { value: true });
+
+
 const electron_1 = require("electron");
 const config_1 = __importDefault(require("../config"));
 const url_1 = require("url");
 const constants_1 = require("../shared/constants");
+
+
 const configProtocol = `${config_1.default.protocol}:`;
 const configBaseOrigin = config_1.default.domainBaseUrl;
 const configBaseOriginFuture = configBaseOrigin.replace(/\.so$/, ".com");
@@ -31,6 +37,7 @@ const allowedSubdomainsOnDomain = [
 const allowedUrlPrefixes = [
     "https://www.google.com/accounts/",
 ];
+
 electron_1.app.on("web-contents-created", (event, contents) => {
     contents.on("will-attach-webview", (event, webPreferences, params) => {
         params.partition = constants_1.electronSessionPartition;

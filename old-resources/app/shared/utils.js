@@ -1,31 +1,40 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+
+const __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.diff = exports.safeJSONParse = exports.groupBy = exports.isNumber = exports.regexpMatchAll = exports.trimQuery = exports.KiloByte = exports.roundDownToNearestMinute = exports.DayS = exports.HourS = exports.MinuteS = exports.SecondS = exports.DayMs = exports.HourMs = exports.MinuteMs = exports.SecondMs = exports.filterOut = exports.shiftN = exports.popN = exports.ignoreFirst = exports.omit = exports.pick = exports.objectFromEntries = exports.mapValues = exports.values = exports.unionToArray = exports.keys = exports.nullify = exports.defaultValue = exports.isNotDefined = exports.uniq = exports.uniqDeep = void 0;
+
+Object.defineProperty(exports, "__esModule", {value: true});
+
+
 const lodash_1 = __importDefault(require("lodash"));
+
 function uniqDeep(items) {
     return lodash_1.default.uniqWith(items, lodash_1.default.isEqual);
 }
+
 exports.uniqDeep = uniqDeep;
+
 function uniq(items) {
     return Array.from(new Set(items));
 }
+
 exports.uniq = uniq;
 const isNotDefined = function (value) {
     return value === null || value === undefined;
 };
 exports.isNotDefined = isNotDefined;
+
 function defaultValue(optional, value) {
     if (exports.isNotDefined(optional)) {
         return value;
-    }
-    else {
+    } else {
         return optional;
     }
 }
+
 exports.defaultValue = defaultValue;
+
 function nullify(obj) {
     const result = obj;
     for (const key in result) {
@@ -35,45 +44,57 @@ function nullify(obj) {
     }
     return result;
 }
+
 exports.nullify = nullify;
+
 function keys(obj) {
     return Object.keys(obj);
 }
+
 exports.keys = keys;
+
 function unionToArray(obj) {
     return Object.keys(obj);
 }
+
 exports.unionToArray = unionToArray;
+
 function values(obj) {
     return keys(obj).map(key => obj[key]);
 }
+
 exports.values = values;
 const mapValues = (obj, fn) => {
     return lodash_1.default.mapValues(obj, fn);
 };
 exports.mapValues = mapValues;
-const objectFromEntries = (entries) => Object.assign({}, ...entries.map(([key, value]) => ({ [key]: value })));
+const objectFromEntries = (entries) => Object.assign({}, ...entries.map(([key, value]) => ({[key]: value})));
 exports.objectFromEntries = objectFromEntries;
+
 function pick(obj, keys) {
     const result = lodash_1.default.pick(obj, keys);
     return result;
 }
+
 exports.pick = pick;
+
 function omit(obj, keys) {
     return lodash_1.default.omit(obj, keys);
 }
+
 exports.omit = omit;
+
 function ignoreFirst(fn) {
     let called = false;
     return (...args) => {
         if (called) {
             return fn(...args);
-        }
-        else {
+        } else {
             called = true;
         }
     };
 }
+
 exports.ignoreFirst = ignoreFirst;
 const popN = function (array, num) {
     const popped = [];
@@ -97,9 +118,11 @@ const shiftN = function (array, num) {
     return shifted;
 };
 exports.shiftN = shiftN;
+
 function filterOut(array, isRemoved) {
     return array.filter((item) => !isRemoved(item));
 }
+
 exports.filterOut = filterOut;
 const timeScale = 1;
 exports.SecondMs = 1000 * timeScale;
@@ -110,18 +133,23 @@ exports.SecondS = 1 * timeScale;
 exports.MinuteS = 60 * exports.SecondS;
 exports.HourS = 60 * exports.MinuteS;
 exports.DayS = 24 * exports.HourS;
+
 function roundDownToNearestMinute(timeMs) {
     return Math.round(Math.floor(timeMs / exports.MinuteMs) * exports.MinuteMs);
 }
+
 exports.roundDownToNearestMinute = roundDownToNearestMinute;
 exports.KiloByte = 1024;
+
 function trimQuery(query) {
     const lines = query.split("\n");
     return lodash_1.default.map(lines, (line) => {
         return line.trim();
     }).join("\n");
 }
+
 exports.trimQuery = trimQuery;
+
 function regexpMatchAll(givenRegexp, text) {
     let regexp = givenRegexp;
     if (regexp.sticky || !regexp.global) {
@@ -141,11 +169,15 @@ function regexpMatchAll(givenRegexp, text) {
     regexp.lastIndex = initialLastIndex;
     return result;
 }
+
 exports.regexpMatchAll = regexpMatchAll;
+
 function isNumber(value) {
     return lodash_1.default.isFinite(value);
 }
+
 exports.isNumber = isNumber;
+
 function groupBy(array, fn) {
     const grouped = new Map();
     for (let i = 0; i < array.length; i++) {
@@ -160,16 +192,19 @@ function groupBy(array, fn) {
     }
     return grouped;
 }
+
 exports.groupBy = groupBy;
+
 function safeJSONParse(str) {
     try {
         return JSON.parse(str);
-    }
-    catch (e) {
+    } catch (e) {
         return undefined;
     }
 }
+
 exports.safeJSONParse = safeJSONParse;
+
 function diff(expected, actual) {
     const normalize = (value) => {
         if (value === NaN || value === null) {
@@ -189,13 +224,11 @@ function diff(expected, actual) {
     const recursiveNormalize = (obj) => {
         if (lodash_1.default.isArray(obj)) {
             return obj.map(innerObj => recursiveNormalize(innerObj));
-        }
-        else if (lodash_1.default.isObject(obj)) {
+        } else if (lodash_1.default.isObject(obj)) {
             const beforeOmit = exports.mapValues(obj, val => recursiveNormalize(val));
             const afterOmit = lodash_1.default.omitBy(beforeOmit, omitValueFuncion);
             return afterOmit;
-        }
-        else {
+        } else {
             return normalize(obj);
         }
     };
@@ -206,5 +239,6 @@ function diff(expected, actual) {
     }
     return false;
 }
+
 exports.diff = diff;
 //# sourceMappingURL=utils.js.map
