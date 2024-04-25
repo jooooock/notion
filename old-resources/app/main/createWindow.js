@@ -1,15 +1,19 @@
 "use strict";
 
-const __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+const __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
+    Object.defineProperty(o, k2, {
+        enumerable: true, get: function () {
+            return m[k];
+        }
+    });
+}) : (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-const __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
+const __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
+    Object.defineProperty(o, "default", {enumerable: true, value: v});
+}) : function (o, v) {
     o["default"] = v;
 });
 const __importStar = (this && this.__importStar) || function (mod) {
@@ -20,10 +24,10 @@ const __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 const __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+    return (mod && mod.__esModule) ? mod : {"default": mod};
 };
 
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, "__esModule", {value: true});
 
 
 const electron_1 = require("electron");
@@ -41,6 +45,7 @@ class WarmWindowState {
         this.warmedLoaded = false;
     }
 }
+
 const warmWindowState = new WarmWindowState();
 
 function createWindow(relativeUrl = "", args) {
@@ -50,13 +55,19 @@ function createWindow(relativeUrl = "", args) {
     });
     const focusedWindow = electron_1.BrowserWindow.getFocusedWindow();
     const rect = getRectFromFocusedWindow(windowState);
-    const windowCreationArgs = Object.assign(Object.assign({}, rect), { show: false, backgroundColor: "#ffffff", titleBarStyle: "hiddenInset", autoHideMenuBar: true, webPreferences: {
+    const windowCreationArgs = Object.assign(Object.assign({}, rect), {
+        show: false,
+        backgroundColor: "#ffffff",
+        titleBarStyle: "hiddenInset",
+        autoHideMenuBar: true,
+        webPreferences: {
             preload: path_1.default.resolve(__dirname, "../renderer/index.js"),
             webviewTag: true,
             session: electron_1.session.fromPartition(constants_1.electronSessionPartition),
             enableRemoteModule: true,
-        } });
-    const { window, warmed } = getNextWindow(windowCreationArgs);
+        }
+    });
+    const {window, warmed} = getNextWindow(windowCreationArgs);
     window.setMenuBarVisibility(false);
     warmWindowState.warmedWindow = undefined;
     window.once("ready-to-show", () => {
@@ -70,22 +81,19 @@ function createWindow(relativeUrl = "", args) {
     if (warmed) {
         if (warmWindowState.warmedLoaded) {
             notionIpc.sendMainToNotionWindow(window, "notion:navigate-to-url", relativeUrl);
-        }
-        else {
+        } else {
             void window.loadURL(urlHelpers_1.getIndexUrl(relativeUrl));
         }
         window.setBounds(getRectFromFocusedWindow(windowState));
         window.show();
-    }
-    else {
+    } else {
         void window.loadURL(urlHelpers_1.getIndexUrl(relativeUrl));
     }
     if (focusedWindow) {
         if (focusedWindow.isFullScreen()) {
             window.setFullScreen(true);
         }
-    }
-    else {
+    } else {
         if (windowState.isFullScreen) {
             window.setFullScreen(true);
         }
@@ -116,7 +124,7 @@ notionIpc.addMainHandler("notion:ready", (_event, windowId) => {
         windowId === warmWindowState.warmedWindow.id) {
         warmWindowState.warmedLoaded = true;
     }
-    return Promise.resolve({ value: undefined });
+    return Promise.resolve({value: undefined});
 });
 notionIpc.addMainHandler("notion:refresh-all", (_event, includeFocusedWindow) => {
     const focusedWindow = electron_1.BrowserWindow.getFocusedWindow();
@@ -128,7 +136,7 @@ notionIpc.addMainHandler("notion:refresh-all", (_event, includeFocusedWindow) =>
         }
         void window.loadURL(urlHelpers_1.getIndexUrl("/"));
     }
-    return Promise.resolve({ value: undefined });
+    return Promise.resolve({value: undefined});
 });
 
 function getRectFromFocusedWindow(windowState) {
@@ -149,12 +157,13 @@ function getRectFromFocusedWindow(windowState) {
     }
     return rect;
 }
+
 function getNextWindow(windowCreationArgs) {
     if (warmWindowState.warmedWindow) {
-        return { window: warmWindowState.warmedWindow, warmed: true };
-    }
-    else {
-        return { window: new electron_1.BrowserWindow(windowCreationArgs), warmed: false };
+        return {window: warmWindowState.warmedWindow, warmed: true};
+    } else {
+        return {window: new electron_1.BrowserWindow(windowCreationArgs), warmed: false};
     }
 }
+
 //# sourceMappingURL=createWindow.js.map
