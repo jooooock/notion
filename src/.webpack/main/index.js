@@ -1,6 +1,6 @@
 (() => {
     const __modules = {
-        // conifg
+        // config
         11239: (module, exports, __require) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0});
@@ -332,6 +332,7 @@
             exports.serverLogger.extraLoggingContext.desktopRAM = desktopRAM
         },
 
+        // getTrafficLightPosition
         18503: (module, exports) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
@@ -348,6 +349,7 @@
                 }
             }
         },
+        // zip
         4928: (module, exports, __require) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0});
@@ -3073,35 +3075,50 @@
             exports.WindowController = WindowController
         },
 
-        68543: function (e, t, r) {
+        // getAnalyticsInfo
+        68543: function (module, exports, __require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getAnalyticsInfo = void 0;
-            const o = n(r(70857)), a = n(r(47419)), i = n(r(80115)), s = a.default.scope("Analytics");
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __os = n(__require(70857)),
+                electron_log = n(__require(47419)),
+                i = n(__require(80115))
+
+            const logger = electron_log.default.scope("Analytics");
             let l = null;
 
             async function c() {
-                return l || (l = "darwin" === process.platform ? await async function () {
-                    try {
-                        const e = await i.default.readFile("/System/Library/CoreServices/SystemVersion.plist", "utf8"),
-                            t = /<key>ProductVersion<\/key>\s*<string>([\d.]+)<\/string>/.exec(e),
-                            r = t?.[1].replace("10.16", "11");
-                        if (!r) return "Unknown";
-                        const {length: n} = r.split(".");
-                        return 1 === n ? `${r}.0.0` : 2 === n ? `${r}.0` : r
-                    } catch (e) {
-                        s.error("Error getting macOS version", e)
-                    }
-                    return "Unknown"
-                }() || "Unknown" : "win32" === process.platform ? o.default.release() : "Unknown"), l
+                if (!l) {
+                    l = "darwin" === process.platform
+                        ? await async function () {
+                        try {
+                            const e = await i.default.readFile("/System/Library/CoreServices/SystemVersion.plist", "utf8"),
+                                t = /<key>ProductVersion<\/key>\s*<string>([\d.]+)<\/string>/.exec(e),
+                                r = t?.[1].replace("10.16", "11");
+                            if (!r) return "Unknown";
+                            const {length: n} = r.split(".");
+                            return 1 === n ? `${r}.0.0` : 2 === n ? `${r}.0` : r
+                        } catch (e) {
+                            logger.error("Error getting macOS version", e)
+                        }
+                        return "Unknown"
+                    }() || "Unknown"
+                        : "win32" === process.platform
+                            ? __os.default.release()
+                            : "Unknown"
+                }
+                return l
             }
 
-            t.getAnalyticsInfo = async function () {
+            exports.getAnalyticsInfo = async function () {
                 return {
                     platform: process.platform,
-                    kernel: o.default.release(),
+                    kernel: __os.default.release(),
                     os: await c(),
                     electron: process.versions.electron,
                     node: process.versions.node,
@@ -3110,84 +3127,128 @@
                 }
             }
         },
-        94774: function (e, t, r) {
+        // assetCache
+        94774: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.assetCache = void 0;
-            const s = i(r(4482)), l = r(37318), c = i(r(11239)), u = r(21852), d = r(87309), p = a(r(10454));
-            t.assetCache = new d.AssetCache({
-                baseUrl: c.default.domainBaseUrl,
-                baseDir: s.default.app.getPath("userData"),
-                tempDir: s.default.app.getPath("temp")
-            }), t.assetCache.events.addListener("error", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-error", (0, l.cleanObjectForSerialization)(e))
-            })), t.assetCache.events.addListener("checking-for-update", (() => {
-                u.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
-            })), t.assetCache.events.addListener("update-available", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-available", e)
-            })), t.assetCache.events.addListener("update-not-available", (() => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-not-available")
-            })), t.assetCache.events.addListener("download-progress", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-progress", e)
-            })), t.assetCache.events.addListener("update-downloaded", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-ready", e)
-            })), t.assetCache.events.addListener("update-finished", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-finished", e)
-            })), p.handleEventFromRenderer.addListener("notion:check-for-app-updates", (() => {
-                t.assetCache.checkForUpdates()
-            }))
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = i(__require(4482)),
+                l = __require(37318),
+                __config = i(__require(11239)),
+                __AppController = __require(21852),
+                __AssetCache = __require(87309),
+                __notionIPC = a(__require(10454));
+
+            exports.assetCache = new __AssetCache.AssetCache({
+                baseUrl: __config.default.domainBaseUrl,
+                baseDir: electron.default.app.getPath("userData"),
+                tempDir: electron.default.app.getPath("temp")
+            })
+
+            exports.assetCache.events.addListener("error", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-error", l.cleanObjectForSerialization(e))
+            })
+            exports.assetCache.events.addListener("checking-for-update", () => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
+            })
+            exports.assetCache.events.addListener("update-available", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-available", e)
+            })
+            exports.assetCache.events.addListener("update-not-available", () => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-not-available")
+            })
+            exports.assetCache.events.addListener("download-progress", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-progress", e)
+            })
+            exports.assetCache.events.addListener("update-downloaded", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-ready", e)
+            })
+            exports.assetCache.events.addListener("update-finished", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-finished", e)
+            })
+
+            __notionIPC.handleEventFromRenderer.addListener("notion:check-for-app-updates", () => {
+                exports.assetCache.checkForUpdates()
+            })
         },
-        43579: function (e, t, r) {
+
+        // autoUpdater
+        43579: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isAutoUpdateDisabled = t.restartToApplyUpdate = t.checkForUpdate = t.initializeAutoUpdater = t.autoUpdateStatus = void 0;
-            const s = r(4482), l = i(r(47419)), c = r(94625), u = r(36343), d = r(37318), p = a(r(6600)), h = r(21248),
-                f = r(43067), m = i(r(11239)), g = r(3420), b = r(21852), v = r(94774), y = a(r(10454)), w = r(69340),
-                _ = r(50833), k = (0, u.defineMessages)({
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.isAutoUpdateDisabled = exports.restartToApplyUpdate = exports.checkForUpdate = exports.initializeAutoUpdater = exports.autoUpdateStatus = void 0;
+            const electron = __require(4482),
+                electron_log = i(__require(47419)),
+                __autoUpdater = __require(94625),
+                u = __require(36343),
+                d = __require(37318),
+                p = a(__require(6600)),
+                h = __require(21248),
+                f = __require(43067),
+                m = i(__require(11239)),
+                __serverLogger = __require(3420),
+                __AppController = __require(21852),
+                __assetCache = __require(94774),
+                __notionIPC = a(__require(10454)),
+                __store = __require(69340),
+                _ = __require(50833),
+                k = u.defineMessages({
                     updateInstallButton: {
                         id: "updatePrompt.installAndRelaunch",
                         defaultMessage: "Install and relaunch",
@@ -3209,147 +3270,262 @@
                         description: "Detail text for the dialog telling the user that a new update is available"
                     }
                 });
+
             let T, E;
-            c.autoUpdater.logger = l.default.scope("AutoUpdater"), function () {
-                const {updaterChannel: e} = w.Store.getState()?.app?.preferences || {},
-                    t = "darwin" === process.platform,
-                    r = "arm64" === process.arch || s.app.runningUnderARM64Translation;
-                if (e) return c.autoUpdater.channel = e, void l.default.info(`Setting autoUpdater channel to "${e}" (from preferences)`);
-                t && r ? (c.autoUpdater.channel = "arm64", l.default.info('Setting autoUpdater channel to "arm64"')) : t && (c.autoUpdater.channel = "latest", l.default.info('Setting autoUpdater channel to "latest" (for Intel)')), c.autoUpdater.allowDowngrade = !1
-            }();
-            const S = {checking: void 0, available: void 0, downloaded: void 0, downloading: void 0};
+            __autoUpdater.autoUpdater.logger = electron_log.default.scope("AutoUpdater")
 
-            function C(e) {
-                Object.assign(t.autoUpdateStatus, e), (0, _.setupSystemMenu)()
-            }
-
-            async function O(e) {
-                if (e && await (0, f.timeout)(e), await b.appController.waitForFocusedWindowController(), !t.autoUpdateStatus.downloaded) return void (E = void 0);
-                let r = !1;
-                const n = b.appController.intl;
-                try {
-                    0 === (await s.dialog.showMessageBox({
-                        type: "question",
-                        buttons: [n.formatMessage(k.updateInstallButton), n.formatMessage(k.updateRemindButton)],
-                        defaultId: 0,
-                        message: n.formatMessage(k.updateMessage),
-                        detail: n.formatMessage(k.updateDetail)
-                    })).response ? I({launch: !0}) : (E = O(864e5), r = !0)
-                } catch (e) {
-                    l.default.warn("Error asking windows user to update", e)
+            // setting autoUpdater channel
+            void function () {
+                const {updaterChannel} = __store.Store.getState()?.app?.preferences || {},
+                    isDarwin = "darwin" === process.platform,
+                    isArm64 = "arm64" === process.arch || electron.app.runningUnderARM64Translation;
+                if (updaterChannel) {
+                    __autoUpdater.autoUpdater.channel = updaterChannel
+                    electron_log.default.info(`Setting autoUpdater channel to "${updaterChannel}" (from preferences)`)
+                    return
                 }
-                r || (E = void 0)
+                if (isDarwin && isArm64) {
+                    __autoUpdater.autoUpdater.channel = "arm64"
+                    electron_log.default.info('Setting autoUpdater channel to "arm64"')
+                } else if (isDarwin) {
+                    __autoUpdater.autoUpdater.channel = "latest"
+                    electron_log.default.info('Setting autoUpdater channel to "latest" (for Intel)')
+                }
+                __autoUpdater.autoUpdater.allowDowngrade = false
+            }();
+
+            const autoUpdateStatus = {
+                checking: void 0,
+                available: void 0,
+                downloaded: void 0,
+                downloading: void 0
+            };
+
+            function updateStatus(updater) {
+                Object.assign(exports.autoUpdateStatus, updater)
+                _.setupSystemMenu()
             }
 
-            function M() {
-                return T || (T = c.autoUpdater.checkForUpdates().then((e => (T = void 0, e))).catch((e => {
-                    throw T = void 0, e
-                })))
+            async function O(timeout) {
+                timeout && await f.timeout(timeout)
+                await __AppController.appController.waitForFocusedWindowController()
+                if (!exports.autoUpdateStatus.downloaded) {
+                    E = void 0
+                    return
+                }
+                let r = false;
+                const intl = __AppController.appController.intl;
+                try {
+                    if (0 === (await electron.dialog.showMessageBox({
+                        type: "question",
+                        buttons: [intl.formatMessage(k.updateInstallButton), intl.formatMessage(k.updateRemindButton)],
+                        defaultId: 0,
+                        message: intl.formatMessage(k.updateMessage),
+                        detail: intl.formatMessage(k.updateDetail)
+                    })).response) {
+                        restartToApplyUpdate({launch: true})
+                    } else {
+                        E = O(864e5)
+                        r = true
+                    }
+                } catch (e) {
+                    electron_log.default.warn("Error asking windows user to update", e)
+                }
+                if (!r) {
+                    E = void 0
+                }
             }
 
-            function I({silent: e, launch: r} = {}) {
-                process.nextTick((() => {
-                    b.appController.handleQuit(), t.autoUpdateStatus.downloaded ? c.autoUpdater.quitAndInstall(Boolean(e), Boolean(r)) : (s.app.relaunch(), s.app.quit())
-                }))
+            function checkForUpdate() {
+                if (T) {
+                    return T
+                }
+                T = __autoUpdater.autoUpdater.checkForUpdates().then(e => {
+                    T = void 0
+                    return e
+                }).catch(e => {
+                    T = void 0
+                    throw e
+                })
+                return T
             }
 
-            function A() {
+            function restartToApplyUpdate({silent, launch} = {}) {
+                process.nextTick(() => {
+                    __AppController.appController.handleQuit()
+                    if (exports.autoUpdateStatus.downloaded) {
+                        __autoUpdater.autoUpdater.quitAndInstall(Boolean(silent), Boolean(launch))
+                    } else {
+                        electron.app.relaunch()
+                        electron.app.quit()
+                    }
+                })
+            }
+
+            function isAutoUpdateDisabled() {
                 if ("darwin" === process.platform) {
-                    const e = s.systemPreferences?.getUserDefault("NotionNoAutoUpdates", "boolean"),
-                        t = w.Store.getState().app.preferences?.isAutoUpdaterDisabled;
+                    const e = electron.systemPreferences?.getUserDefault("NotionNoAutoUpdates", "boolean"),
+                        t = __store.Store.getState().app.preferences?.isAutoUpdaterDisabled;
                     return Boolean(e || t)
                 }
-                return !1
+                return false
             }
 
-            t.autoUpdateStatus = {...S}, c.autoUpdater.autoDownload = !1, c.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform, t.initializeAutoUpdater = function () {
-                c.autoUpdater.on("error", (e => {
-                    if (C(S), T = void 0, function (e) {
-                        return e && e.message && ["ERR_CONNECTION_REFUSED", "ECONNREFUSED"].some((t => -1 !== e.message.indexOf(t)))
-                    }(e)) return l.default.info("No electron update -- offline"), void b.appController.sendMainToAllNotionInstances("notion:update-not-available");
-                    "NSPOSIXErrorDomain" === e.domain ? g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "NSPOSIXErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : "SQRLUpdaterErrorDomain" === e.domain ? g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "SQRLUpdaterErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : "NSCocoaErrorDomain" === e.domain ? g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "NSCocoaErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : e.message.startsWith("net::ERR") ? g.serverLogger.log({
-                        level: "info",
-                        from: "autoUpdater",
-                        type: "networkError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : 403 === e.statusCode ? g.serverLogger.log({
-                        level: "warning",
-                        from: "autoUpdater",
-                        type: "cloudflareCaptcha",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : 503 === e.statusCode ? g.serverLogger.log({
-                        level: "warning",
-                        from: "autoUpdater",
-                        type: "serviceUnavailable",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : -1 !== e.message.indexOf("/opt/notion-app/app.asar") ? g.serverLogger.log({
-                        level: "info",
-                        from: "autoUpdater",
-                        type: "unsupportedLinuxApp",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : -1 !== e.message.indexOf("app-update.yml") || g.serverLogger.log({
-                        level: "error",
-                        from: "autoUpdater",
-                        type: "unknownAutoUpdaterError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }), b.appController.sendMainToAllNotionInstances("notion:update-error", (0, d.cleanObjectForSerialization)(e))
-                })), c.autoUpdater.on("checking-for-update", (() => {
-                    l.default.info("Checking for update"), C({checking: !0}), b.appController.sendMainToAllNotionInstances("notion:checking-for-update")
-                })), c.autoUpdater.on("update-available", (e => {
-                    l.default.info("Update available", {info: e});
-                    const r = t.autoUpdateStatus.downloaded?.version !== e.version;
-                    r && (l.default.info("Downloading update", {info: e}), c.autoUpdater.downloadUpdate()), C({
+            exports.autoUpdateStatus = {...autoUpdateStatus}
+
+            __autoUpdater.autoUpdater.autoDownload = false
+            __autoUpdater.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform
+
+            exports.initializeAutoUpdater = function () {
+                __autoUpdater.autoUpdater.on("error", e => {
+                    updateStatus(autoUpdateStatus)
+                    T = void 0
+                    if (e && e.message && ["ERR_CONNECTION_REFUSED", "ECONNREFUSED"].some(t => -1 !== e.message.indexOf(t))) {
+                        electron_log.default.info("No electron update -- offline")
+                        __AppController.appController.sendMainToAllNotionInstances("notion:update-not-available")
+                        return
+                    }
+
+                    if ("NSPOSIXErrorDomain" === e.domain) {
+                        __serverLogger.serverLogger.log({
+                            level: "error",
+                            from: "autoUpdater",
+                            type: "NSPOSIXErrorDomainError",
+                            error: h.convertErrorToLog(e)
+                        })
+                    } else if ("SQRLUpdaterErrorDomain" === e.domain) {
+                        __serverLogger.serverLogger.log({
+                            level: "error",
+                            from: "autoUpdater",
+                            type: "SQRLUpdaterErrorDomainError",
+                            error: h.convertErrorToLog(e)
+                        })
+                    } else if ("NSCocoaErrorDomain" === e.domain) {
+                        __serverLogger.serverLogger.log({
+                            level: "error",
+                            from: "autoUpdater",
+                            type: "NSCocoaErrorDomainError",
+                            error: h.convertErrorToLog(e)
+                        })
+                    } else if (e.message.startsWith("net::ERR")) {
+                        __serverLogger.serverLogger.log({
+                            level: "info",
+                            from: "autoUpdater",
+                            type: "networkError",
+                            error: h.convertErrorToLog(e)
+                        })
+                    } else if (403 === e.statusCode) {
+                        __serverLogger.serverLogger.log({
+                            level: "warning",
+                            from: "autoUpdater",
+                            type: "cloudflareCaptcha",
+                            error: h.convertErrorToLog(e)
+                        })
+                    } else if (503 === e.statusCode) {
+                        __serverLogger.serverLogger.log({
+                            level: "warning",
+                            from: "autoUpdater",
+                            type: "serviceUnavailable",
+                            error: h.convertErrorToLog(e)
+                        })
+                    } else if (-1 !== e.message.indexOf("/opt/notion-app/app.asar")) {
+                        __serverLogger.serverLogger.log({
+                            level: "info",
+                            from: "autoUpdater",
+                            type: "unsupportedLinuxApp",
+                            error: h.convertErrorToLog(e)
+                        })
+                    } else if (-1 === e.message.indexOf("app-update.yml")) {
+                        __serverLogger.serverLogger.log({
+                            level: "error",
+                            from: "autoUpdater",
+                            type: "unknownAutoUpdaterError",
+                            error: h.convertErrorToLog(e)
+                        })
+                    }
+
+                    __AppController.appController.sendMainToAllNotionInstances("notion:update-error", d.cleanObjectForSerialization(e))
+                })
+                __autoUpdater.autoUpdater.on("checking-for-update", () => {
+                    electron_log.default.info("Checking for update")
+                    updateStatus({checking: true})
+                    __AppController.appController.sendMainToAllNotionInstances("notion:checking-for-update")
+                })
+                __autoUpdater.autoUpdater.on("update-available", info => {
+                    electron_log.default.info("Update available", {info: info});
+                    const r = exports.autoUpdateStatus.downloaded?.version !== info.version;
+                    if (r) {
+                        electron_log.default.info("Downloading update", {info: info})
+                        __autoUpdater.autoUpdater.downloadUpdate()
+                    }
+                    updateStatus({
                         checking: void 0,
-                        available: e, ...r ? {downloaded: void 0} : {}
-                    }), (0, _.setupSystemMenu)(), b.appController.sendMainToAllNotionInstances("notion:update-available", e)
-                })), c.autoUpdater.on("update-not-available", (() => {
-                    C({
+                        available: info,
+                        ...r ? {downloaded: void 0} : {}
+                    })
+                    _.setupSystemMenu()
+                    __AppController.appController.sendMainToAllNotionInstances("notion:update-available", info)
+                })
+                __autoUpdater.autoUpdater.on("update-not-available", () => {
+                    updateStatus({
                         checking: void 0,
                         available: void 0
-                    }), (0, _.setupSystemMenu)(), b.appController.sendMainToAllNotionInstances("notion:update-not-available")
-                }));
-                const e = p.throttle((e => {
-                    C({downloading: e}), b.appController.sendMainToAllNotionInstances("notion:update-progress", e), (0, _.setupSystemMenu)()
-                }), 300);
-                c.autoUpdater.on("download-progress", e), c.autoUpdater.on("update-downloaded", (e => {
-                    l.default.info("Update downloaded", {info: e}), C({
-                        ...S,
-                        downloaded: e
-                    }), b.appController.sendMainToAllNotionInstances("notion:update-ready", e), async function () {
+                    })
+                    _.setupSystemMenu()
+                    __AppController.appController.sendMainToAllNotionInstances("notion:update-not-available")
+                })
+                const e = p.throttle(e => {
+                    updateStatus({downloading: e})
+                    __AppController.appController.sendMainToAllNotionInstances("notion:update-progress", e)
+                    _.setupSystemMenu()
+                }, 300)
+                __autoUpdater.autoUpdater.on("download-progress", e)
+                __autoUpdater.autoUpdater.on("update-downloaded", info => {
+                    electron_log.default.info("Update downloaded", {info: info})
+                    updateStatus({
+                        ...autoUpdateStatus,
+                        downloaded: info
+                    })
+                    __AppController.appController.sendMainToAllNotionInstances("notion:update-ready", info)
+                    void async function () {
                         if (E) return;
                         const e = process.uptime() < 5;
-                        await v.assetCache.checkForUpdates(), "win32" === process.platform ? E = O() : e ? I() : "production" !== m.default.env && (E = O())
+                        await __assetCache.assetCache.checkForUpdates()
+                        "win32" === process.platform
+                            ? E = O()
+                            : e
+                                ? restartToApplyUpdate()
+                                : "production" !== m.default.env && (E = O())
                     }()
-                }))
-            }, t.checkForUpdate = M, t.restartToApplyUpdate = I, t.isAutoUpdateDisabled = A, y.handleEventFromRenderer.addListener("notion:install-update", (() => {
-                I()
-            })), y.handleEventFromRenderer.addListener("notion:check-for-updates", (() => {
-                M()
-            })), process.env.JEST_WORKER_ID || async function () {
-                for (; ;) {
-                    if (A()) l.default.info("Auto updates are disabled."); else try {
-                        await M()
-                    } catch (e) {
-                        l.default.warn("Error checking for update", e)
+                })
+            }
+            exports.checkForUpdate = checkForUpdate
+            exports.restartToApplyUpdate = restartToApplyUpdate
+            exports.isAutoUpdateDisabled = isAutoUpdateDisabled
+
+            __notionIPC.handleEventFromRenderer.addListener("notion:install-update", () => {
+                restartToApplyUpdate()
+            })
+            __notionIPC.handleEventFromRenderer.addListener("notion:check-for-updates", () => {
+                checkForUpdate()
+            })
+
+            if (!process.env.JEST_WORKER_ID) {
+                void async function () {
+                    for (; ;) {
+                        if (isAutoUpdateDisabled()) {
+                            electron_log.default.info("Auto updates are disabled.");
+                        } else {
+                            try {
+                                await checkForUpdate()
+                            } catch (e) {
+                                electron_log.default.warn("Error checking for update", e)
+                            }
+                        }
+                        await f.timeout(864e5)
                     }
-                    await (0, f.timeout)(864e5)
-                }
-            }()
+                }()
+            }
         },
         68115: function (e, t, r) {
             "use strict";
@@ -26450,43 +26626,55 @@
                 }, l
             }
         },
-        99163: (e, t, r) => {
-            t.formatArgs = function (t) {
-                if (t[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + t[0] + (this.useColors ? "%c " : " ") + "+" + e.exports.humanize(this.diff), !this.useColors) return;
+        // node:debug for browser
+        99163: (module, exports, __require) => {
+            exports.formatArgs = function (t) {
+                if (t[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + t[0] + (this.useColors ? "%c " : " ") + "+" + module.exports.humanize(this.diff), !this.useColors) return;
                 const r = "color: " + this.color;
                 t.splice(1, 0, r, "color: inherit");
                 let n = 0, o = 0;
                 t[0].replace(/%[a-zA-Z%]/g, (e => {
                     "%%" !== e && (n++, "%c" === e && (o = n))
                 })), t.splice(o, 0, r)
-            }, t.save = function (e) {
+            }
+            exports.save = function (e) {
                 try {
-                    e ? t.storage.setItem("debug", e) : t.storage.removeItem("debug")
+                    e ? exports.storage.setItem("debug", e) : exports.storage.removeItem("debug")
                 } catch (e) {
                 }
-            }, t.load = function () {
+            }
+            exports.load = function () {
                 let e;
                 try {
-                    e = t.storage.getItem("debug")
+                    e = exports.storage.getItem("debug")
                 } catch (e) {
                 }
                 return !e && "undefined" != typeof process && "env" in process && (e = process.env.DEBUG), e
-            }, t.useColors = function () {
+            }
+            exports.useColors = function () {
                 return !("undefined" == typeof window || !window.process || "renderer" !== window.process.type && !window.process.__nwjs) || ("undefined" == typeof navigator || !navigator.userAgent || !navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) && ("undefined" != typeof document && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || "undefined" != typeof window && window.console && (window.console.firebug || window.console.exception && window.console.table) || "undefined" != typeof navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31 || "undefined" != typeof navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/))
-            }, t.storage = function () {
+            }
+            exports.storage = function () {
                 try {
                     return localStorage
                 } catch (e) {
                 }
-            }(), t.destroy = (() => {
-                let e = !1;
+            }()
+            exports.destroy = (() => {
+                let e = false;
                 return () => {
-                    e || (e = !0, console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."))
+                    if (!e) {
+                        e = true
+                        console.warn("Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.")
+                    }
                 }
-            })(), t.colors = ["#0000CC", "#0000FF", "#0033CC", "#0033FF", "#0066CC", "#0066FF", "#0099CC", "#0099FF", "#00CC00", "#00CC33", "#00CC66", "#00CC99", "#00CCCC", "#00CCFF", "#3300CC", "#3300FF", "#3333CC", "#3333FF", "#3366CC", "#3366FF", "#3399CC", "#3399FF", "#33CC00", "#33CC33", "#33CC66", "#33CC99", "#33CCCC", "#33CCFF", "#6600CC", "#6600FF", "#6633CC", "#6633FF", "#66CC00", "#66CC33", "#9900CC", "#9900FF", "#9933CC", "#9933FF", "#99CC00", "#99CC33", "#CC0000", "#CC0033", "#CC0066", "#CC0099", "#CC00CC", "#CC00FF", "#CC3300", "#CC3333", "#CC3366", "#CC3399", "#CC33CC", "#CC33FF", "#CC6600", "#CC6633", "#CC9900", "#CC9933", "#CCCC00", "#CCCC33", "#FF0000", "#FF0033", "#FF0066", "#FF0099", "#FF00CC", "#FF00FF", "#FF3300", "#FF3333", "#FF3366", "#FF3399", "#FF33CC", "#FF33FF", "#FF6600", "#FF6633", "#FF9900", "#FF9933", "#FFCC00", "#FFCC33"], t.log = console.debug || console.log || (() => {
-            }), e.exports = r(39942)(t);
-            const {formatters: n} = e.exports;
-            n.j = function (e) {
+            })()
+            exports.colors = ["#0000CC", "#0000FF", "#0033CC", "#0033FF", "#0066CC", "#0066FF", "#0099CC", "#0099FF", "#00CC00", "#00CC33", "#00CC66", "#00CC99", "#00CCCC", "#00CCFF", "#3300CC", "#3300FF", "#3333CC", "#3333FF", "#3366CC", "#3366FF", "#3399CC", "#3399FF", "#33CC00", "#33CC33", "#33CC66", "#33CC99", "#33CCCC", "#33CCFF", "#6600CC", "#6600FF", "#6633CC", "#6633FF", "#66CC00", "#66CC33", "#9900CC", "#9900FF", "#9933CC", "#9933FF", "#99CC00", "#99CC33", "#CC0000", "#CC0033", "#CC0066", "#CC0099", "#CC00CC", "#CC00FF", "#CC3300", "#CC3333", "#CC3366", "#CC3399", "#CC33CC", "#CC33FF", "#CC6600", "#CC6633", "#CC9900", "#CC9933", "#CCCC00", "#CCCC33", "#FF0000", "#FF0033", "#FF0066", "#FF0099", "#FF00CC", "#FF00FF", "#FF3300", "#FF3333", "#FF3366", "#FF3399", "#FF33CC", "#FF33FF", "#FF6600", "#FF6633", "#FF9900", "#FF9933", "#FFCC00", "#FFCC33"]
+            exports.log = console.debug || console.log || (() => {
+            })
+            module.exports = __require(39942)(exports);
+            const {formatters} = module.exports;
+            formatters.j = function (e) {
                 try {
                     return JSON.stringify(e)
                 } catch (e) {
@@ -26562,45 +26750,60 @@
                 }, t.enable(t.load()), t
             }
         },
+        // debug
         55623: (e, t, r) => {
-            "undefined" == typeof process || "renderer" === process.type || !0 === process.browser || process.__nwjs ? e.exports = r(99163) : e.exports = r(81047)
+            "undefined" == typeof process || "renderer" === process.type || true === process.browser || process.__nwjs
+                ? e.exports = r(99163)
+                : e.exports = r(81047)
         },
-        81047: (e, t, r) => {
-            const n = r(52018), o = r(39023);
-            t.init = function (e) {
+        // node:debug for nodejs
+        81047: (module, exports, __require) => {
+            const n = __require(52018),
+                o = __require(39023);
+
+            exports.init = function (e) {
                 e.inspectOpts = {};
-                const r = Object.keys(t.inspectOpts);
-                for (let n = 0; n < r.length; n++) e.inspectOpts[r[n]] = t.inspectOpts[r[n]]
-            }, t.log = function (...e) {
+                const r = Object.keys(exports.inspectOpts);
+                for (let n = 0; n < r.length; n++) e.inspectOpts[r[n]] = exports.inspectOpts[r[n]]
+            }
+            exports.log = function (...e) {
                 return process.stderr.write(o.format(...e) + "\n")
-            }, t.formatArgs = function (r) {
+            }
+            exports.formatArgs = function (r) {
                 const {namespace: n, useColors: o} = this;
                 if (o) {
                     const t = this.color, o = "[3" + (t < 8 ? t : "8;5;" + t), a = `  ${o};1m${n} [0m`;
-                    r[0] = a + r[0].split("\n").join("\n" + a), r.push(o + "m+" + e.exports.humanize(this.diff) + "[0m")
-                } else r[0] = (t.inspectOpts.hideDate ? "" : (new Date).toISOString() + " ") + n + " " + r[0]
-            }, t.save = function (e) {
+                    r[0] = a + r[0].split("\n").join("\n" + a), r.push(o + "m+" + module.exports.humanize(this.diff) + "[0m")
+                } else r[0] = (exports.inspectOpts.hideDate ? "" : (new Date).toISOString() + " ") + n + " " + r[0]
+            }
+            exports.save = function (e) {
                 e ? process.env.DEBUG = e : delete process.env.DEBUG
-            }, t.load = function () {
+            }
+            exports.load = function () {
                 return process.env.DEBUG
-            }, t.useColors = function () {
-                return "colors" in t.inspectOpts ? Boolean(t.inspectOpts.colors) : n.isatty(process.stderr.fd)
-            }, t.destroy = o.deprecate((() => {
-            }), "Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`."), t.colors = [6, 2, 3, 4, 5, 1];
+            }
+            exports.useColors = function () {
+                return "colors" in exports.inspectOpts ? Boolean(exports.inspectOpts.colors) : n.isatty(process.stderr.fd)
+            }
+            exports.destroy = o.deprecate((() => {
+            }), "Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.")
+            exports.colors = [6, 2, 3, 4, 5, 1];
             try {
-                const e = r(96809);
-                e && (e.stderr || e).level >= 2 && (t.colors = [20, 21, 26, 27, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 56, 57, 62, 63, 68, 69, 74, 75, 76, 77, 78, 79, 80, 81, 92, 93, 98, 99, 112, 113, 128, 129, 134, 135, 148, 149, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 178, 179, 184, 185, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 214, 215, 220, 221])
+                const e = __require(96809);
+                e && (e.stderr || e).level >= 2 && (exports.colors = [20, 21, 26, 27, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 56, 57, 62, 63, 68, 69, 74, 75, 76, 77, 78, 79, 80, 81, 92, 93, 98, 99, 112, 113, 128, 129, 134, 135, 148, 149, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 178, 179, 184, 185, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 214, 215, 220, 221])
             } catch (e) {
             }
-            t.inspectOpts = Object.keys(process.env).filter((e => /^debug_/i.test(e))).reduce(((e, t) => {
+            exports.inspectOpts = Object.keys(process.env).filter((e => /^debug_/i.test(e))).reduce(((e, t) => {
                 const r = t.substring(6).toLowerCase().replace(/_([a-z])/g, ((e, t) => t.toUpperCase()));
                 let n = process.env[t];
                 return n = !!/^(yes|on|true|enabled)$/i.test(n) || !/^(no|off|false|disabled)$/i.test(n) && ("null" === n ? null : Number(n)), e[r] = n, e
-            }), {}), e.exports = r(39942)(t);
-            const {formatters: a} = e.exports;
-            a.o = function (e) {
+            }), {})
+            module.exports = __require(39942)(exports);
+            const {formatters} = module.exports;
+            formatters.o = function (e) {
                 return this.inspectOpts.colors = this.useColors, o.inspect(e, this.inspectOpts).split("\n").map((e => e.trim())).join(" ")
-            }, a.O = function (e) {
+            }
+            formatters.O = function (e) {
                 return this.inspectOpts.colors = this.useColors, o.inspect(e, this.inspectOpts)
             }
         },
@@ -27539,87 +27742,121 @@
                 }
             }
         },
-        75593: (e, t, r) => {
+
+        // CancellationToken
+        75593: (module, exports, __require) => {
             "use strict";
 
             function n() {
-                const e = r(24434);
+                const e = __require(24434);
                 return n = function () {
                     return e
                 }, e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.CancellationError = t.CancellationToken = void 0;
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            class o extends n().EventEmitter {
-                constructor(e) {
-                    super(), this.parentCancelHandler = null, this._parent = null, this._cancelled = !1, null != e && (this.parent = e)
+            exports.CancellationError = exports.CancellationToken = void 0;
+
+            class CancellationToken extends n().EventEmitter {
+                constructor(parent) {
+                    super()
+                    this.parentCancelHandler = null
+                    this._parent = null
+                    this._cancelled = false
+                    null != parent && (this.parent = parent)
                 }
 
                 get cancelled() {
                     return this._cancelled || null != this._parent && this._parent.cancelled
                 }
 
-                set parent(e) {
-                    this.removeParentCancelHandler(), this._parent = e, this.parentCancelHandler = () => this.cancel(), this._parent.onCancel(this.parentCancelHandler)
+                set parent(parent) {
+                    this.removeParentCancelHandler()
+                    this._parent = parent
+                    this.parentCancelHandler = () => this.cancel()
+                    this._parent.onCancel(this.parentCancelHandler)
                 }
 
                 cancel() {
-                    this._cancelled = !0, this.emit("cancel")
+                    this._cancelled = true
+                    this.emit("cancel")
                 }
 
-                onCancel(e) {
-                    this.cancelled ? e() : this.once("cancel", e)
+                onCancel(callback) {
+                    this.cancelled ? callback() : this.once("cancel", callback)
                 }
 
                 createPromise(e) {
-                    if (this.cancelled) return Promise.reject(new a);
+                    if (this.cancelled) {
+                        return Promise.reject(new CancellationError());
+                    }
                     const t = () => {
-                        if (null != r) try {
-                            this.removeListener("cancel", r), r = null
-                        } catch (e) {
+                        if (null != cancelCallback) {
+                            try {
+                                this.removeListener("cancel", cancelCallback)
+                                cancelCallback = null
+                            } catch (e) {
+                            }
                         }
                     };
-                    let r = null;
-                    return new Promise(((t, n) => {
+                    let cancelCallback = null;
+                    return new Promise((resolve, reject) => {
                         let o = null;
-                        r = () => {
+                        cancelCallback = () => {
                             try {
-                                null != o && (o(), o = null)
+                                if (null != o) {
+                                    o()
+                                    o = null
+                                }
                             } finally {
-                                n(new a)
+                                reject(new CancellationError())
                             }
-                        }, this.cancelled ? r() : (this.onCancel(r), e(t, n, (e => {
-                            o = e
-                        })))
-                    })).then((e => (t(), e))).catch((e => {
-                        throw t(), e
-                    }))
+                        }
+                        if (this.cancelled) {
+                            cancelCallback()
+                        } else {
+                            this.onCancel(cancelCallback)
+                            e(resolve, reject, e => {
+                                o = e
+                            })
+                        }
+                    }).then(e => {
+                        t()
+                        return e
+                    }).catch(e => {
+                        t()
+                        throw e
+                    })
                 }
 
                 removeParentCancelHandler() {
-                    const e = this._parent;
-                    null != e && null != this.parentCancelHandler && (e.removeListener("cancel", this.parentCancelHandler), this.parentCancelHandler = null)
+                    const parent = this._parent;
+                    if (null != parent && null != this.parentCancelHandler) {
+                        parent.removeListener("cancel", this.parentCancelHandler)
+                        this.parentCancelHandler = null
+                    }
                 }
 
                 dispose() {
                     try {
                         this.removeParentCancelHandler()
                     } finally {
-                        this.removeAllListeners(), this._parent = null
+                        this.removeAllListeners()
+                        this._parent = null
                     }
                 }
             }
 
-            t.CancellationToken = o;
+            exports.CancellationToken = CancellationToken;
 
-            class a extends Error {
+            class CancellationError extends Error {
                 constructor() {
                     super("Cancelled")
                 }
             }
 
-            t.CancellationError = a
+            exports.CancellationError = CancellationError
         },
         60193: (e, t, r) => {
             "use strict";
@@ -27710,98 +27947,133 @@
                 }
             }
         },
-        59664: (e, t, r) => {
+        59664: (module, exports, __require) => {
             "use strict";
 
             function n() {
-                const e = r(76982);
+                const e = __require(76982);
                 return n = function () {
                     return e
                 }, e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createHttpError = h, t.parseJson = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.createHttpError = createHttpError
+            exports.parseJson = function (e) {
                 return e.then((e => null == e || 0 === e.length ? null : JSON.parse(e)))
-            }, t.configureRequestOptionsFromUrl = b, t.configureRequestUrl = v, t.safeGetHeader = w, t.configureRequestOptions = _, t.safeStringifyJson = k, t.DigestTransform = t.HttpExecutor = t.HttpError = void 0;
-            var o, a = (o = r(55623)) && o.__esModule ? o : {default: o}, i = r(79896);
+            }
+            exports.configureRequestOptionsFromUrl = configureRequestOptionsFromUrl
+            exports.configureRequestUrl = configureRequestUrl
+            exports.safeGetHeader = safeGetHeader
+            exports.configureRequestOptions = configureRequestOptions
+            exports.safeStringifyJson = safeStringifyJson
+
+
+            var o = __require(55623),
+                __debug = o && o.__esModule ? o : {default: o},
+                i = __require(79896);
 
             function s() {
-                const e = r(2203);
+                const e = __require(2203);
                 return s = function () {
                     return e
                 }, e
             }
 
             function l() {
-                const e = r(16857);
+                const e = __require(16857);
                 return l = function () {
                     return e
                 }, e
             }
 
             function c() {
-                const e = r(75593);
+                const e = __require(75593);
                 return c = function () {
                     return e
                 }, e
             }
 
             function u() {
-                const e = r(79529);
+                const e = __require(79529);
                 return u = function () {
                     return e
                 }, e
             }
 
             function d() {
-                const e = r(60193);
+                const e = __require(60193);
                 return d = function () {
                     return e
                 }, e
             }
 
-            const p = (0, a.default)("electron-builder");
+            const p = __debug.default("electron-builder");
 
-            function h(e, t = null) {
-                return new m(e.statusCode || -1, `${e.statusCode} ${e.statusMessage}` + (null == t ? "" : "\n" + JSON.stringify(t, null, "  ")) + "\nHeaders: " + k(e.headers), t)
+            function createHttpError(e, t = null) {
+                return new HttpError(e.statusCode || -1, `${e.statusCode} ${e.statusMessage}` + (null == t ? "" : "\n" + JSON.stringify(t, null, "  ")) + "\nHeaders: " + safeStringifyJson(e.headers), t)
             }
 
-            const f = new Map([[429, "Too many requests"], [400, "Bad request"], [403, "Forbidden"], [404, "Not found"], [405, "Method not allowed"], [406, "Not acceptable"], [408, "Request timeout"], [413, "Request entity too large"], [500, "Internal server error"], [502, "Bad gateway"], [503, "Service unavailable"], [504, "Gateway timeout"], [505, "HTTP version not supported"]]);
+            const f = new Map([
+                [429, "Too many requests"],
+                [400, "Bad request"],
+                [403, "Forbidden"],
+                [404, "Not found"],
+                [405, "Method not allowed"],
+                [406, "Not acceptable"],
+                [408, "Request timeout"],
+                [413, "Request entity too large"],
+                [500, "Internal server error"],
+                [502, "Bad gateway"],
+                [503, "Service unavailable"],
+                [504, "Gateway timeout"],
+                [505, "HTTP version not supported"]
+            ]);
 
-            class m extends Error {
+            class HttpError extends Error {
                 constructor(e, t = `HTTP error: ${f.get(e) || e}`, r = null) {
                     super(t), this.statusCode = e, this.description = r, this.name = "HttpError"
                 }
             }
 
-            t.HttpError = m;
+            exports.HttpError = HttpError;
 
-            class g {
+            class HttpExecutor {
                 constructor() {
                     this.maxRedirects = 10
                 }
 
-                request(e, t = new (c().CancellationToken), r) {
-                    _(e);
-                    const n = null == r ? void 0 : Buffer.from(JSON.stringify(r));
-                    return null != n && (e.method = "post", e.headers["Content-Type"] = "application/json", e.headers["Content-Length"] = n.length), this.doApiRequest(e, t, (e => {
-                        e.end(n)
-                    }))
+                request(options, t = new (c().CancellationToken), data) {
+                    configureRequestOptions(options);
+                    const body = null == data ? void 0 : Buffer.from(JSON.stringify(data));
+                    if (null != body) {
+                        options.method = "post"
+                        options.headers["Content-Type"] = "application/json"
+                        options.headers["Content-Length"] = body.length
+                    }
+                    return this.doApiRequest(options, t, e => {
+                        e.end(body)
+                    })
                 }
 
-                doApiRequest(e, t, r, n = 0) {
-                    return p.enabled && p(`Request: ${k(e)}`), t.createPromise(((o, a, i) => {
-                        const s = this.createRequest(e, (i => {
+                doApiRequest(options, t, r, n = 0) {
+                    p.enabled && p(`Request: ${safeStringifyJson(options)}`)
+                    return t.createPromise((resolve, reject, i) => {
+                        const s = this.createRequest(options, i => {
                             try {
-                                this.handleResponse(i, e, t, o, a, n, r)
+                                this.handleResponse(i, options, t, resolve, reject, n, r)
                             } catch (e) {
-                                a(e)
+                                reject(e)
                             }
-                        }));
-                        this.addErrorAndTimeoutHandlers(s, a), this.addRedirectHandlers(s, e, a, n, (e => {
-                            this.doApiRequest(e, t, r, n).then(o).catch(a)
-                        })), r(s, a), i((() => s.abort()))
-                    }))
+                        });
+                        this.addErrorAndTimeoutHandlers(s, reject)
+                        this.addRedirectHandlers(s, options, reject, n, e => {
+                            this.doApiRequest(e, t, r, n).then(resolve).catch(reject)
+                        })
+                        r(s, reject)
+                        i(() => s.abort())
+                    })
                 }
 
                 addRedirectHandlers(e, t, r, n, o) {
@@ -27814,18 +28086,18 @@
                 }
 
                 handleResponse(e, t, r, n, o, a, i) {
-                    if (p.enabled && p(`Response: ${e.statusCode} ${e.statusMessage}, request options: ${k(t)}`), 404 === e.statusCode) return void o(h(e, `method: ${t.method || "GET"} url: ${t.protocol || "https:"}//${t.hostname}${t.port ? `:${t.port}` : ""}${t.path}\n\nPlease double check that your authentication token is correct. Due to security reasons actual status maybe not reported, but 404.\n`));
+                    if (p.enabled && p(`Response: ${e.statusCode} ${e.statusMessage}, request options: ${safeStringifyJson(t)}`), 404 === e.statusCode) return void o(createHttpError(e, `method: ${t.method || "GET"} url: ${t.protocol || "https:"}//${t.hostname}${t.port ? `:${t.port}` : ""}${t.path}\n\nPlease double check that your authentication token is correct. Due to security reasons actual status maybe not reported, but 404.\n`));
                     if (204 === e.statusCode) return void n();
-                    const s = w(e, "location");
-                    if (null != s) return a > this.maxRedirects ? void o(this.createMaxRedirectError()) : void this.doApiRequest(g.prepareRedirectUrlOptions(s, t), r, i, a).then(n).catch(o);
+                    const s = safeGetHeader(e, "location");
+                    if (null != s) return a > this.maxRedirects ? void o(this.createMaxRedirectError()) : void this.doApiRequest(HttpExecutor.prepareRedirectUrlOptions(s, t), r, i, a).then(n).catch(o);
                     e.setEncoding("utf8");
                     let l = "";
                     e.on("data", (e => l += e)), e.on("end", (() => {
                         try {
                             if (null != e.statusCode && e.statusCode >= 400) {
-                                const t = w(e, "content-type"),
+                                const t = safeGetHeader(e, "content-type"),
                                     r = null != t && (Array.isArray(t) ? null != t.find((e => e.includes("json"))) : t.includes("json"));
-                                o(h(e, r ? JSON.parse(l) : l))
+                                o(createHttpError(e, r ? JSON.parse(l) : l))
                             } else n(0 === l.length ? null : l)
                         } catch (e) {
                             o(e)
@@ -27837,11 +28109,11 @@
                     return await t.cancellationToken.createPromise(((r, n, o) => {
                         let a = null;
                         const i = {headers: t.headers || void 0, redirect: "manual"};
-                        v(e, i), _(i), this.doDownload(i, {
+                        configureRequestUrl(e, i), configureRequestOptions(i), this.doDownload(i, {
                             destination: null, options: t, onCancel: o, callback: e => {
                                 null == e ? r(a) : n(e)
                             }, responseHandler: (e, t) => {
-                                const r = w(e, "content-length");
+                                const r = safeGetHeader(e, "content-length");
                                 let n = -1;
                                 if (null != r) {
                                     const e = parseInt(r, 10);
@@ -27866,17 +28138,17 @@
                 doDownload(e, t, r) {
                     const n = this.createRequest(e, (n => {
                         if (n.statusCode >= 400) return void t.callback(new Error(`Cannot download "${e.protocol || "https:"}//${e.hostname}${e.path}", status ${n.statusCode}: ${n.statusMessage}`));
-                        const o = w(n, "location");
+                        const o = safeGetHeader(n, "location");
                         null == o ? null == t.responseHandler ? function (e, t) {
-                            if (r = w(t, "X-Checksum-Sha2"), n = e.options.sha2, o = e.callback, null != r && null != n && r !== n && (o(new Error(`checksum mismatch: expected ${n} but got ${r} (X-Checksum-Sha2 header)`)), 1)) return;
+                            if (r = safeGetHeader(t, "X-Checksum-Sha2"), n = e.options.sha2, o = e.callback, null != r && null != n && r !== n && (o(new Error(`checksum mismatch: expected ${n} but got ${r} (X-Checksum-Sha2 header)`)), 1)) return;
                             var r, n, o;
                             const a = [];
                             if (null != e.options.onProgress) {
-                                const r = w(t, "content-length");
+                                const r = safeGetHeader(t, "content-length");
                                 null != r && a.push(new (d().ProgressCallbackTransform)(parseInt(r, 10), e.options.cancellationToken, e.options.onProgress))
                             }
                             const s = e.options.sha512;
-                            null != s ? a.push(new y(s, "sha512", 128 !== s.length || s.includes("+") || s.includes("Z") || s.includes("=") ? "base64" : "hex")) : null != e.options.sha2 && a.push(new y(e.options.sha2, "sha256", "hex"));
+                            null != s ? a.push(new DigestTransform(s, "sha512", 128 !== s.length || s.includes("+") || s.includes("Z") || s.includes("=") ? "base64" : "hex")) : null != e.options.sha2 && a.push(new DigestTransform(e.options.sha2, "sha256", "hex"));
                             const l = (0, i.createWriteStream)(e.destination);
                             a.push(l);
                             let c = t;
@@ -27886,7 +28158,7 @@
                             l.on("finish", (() => {
                                 l.close(e.callback)
                             }))
-                        }(t, n) : t.responseHandler(n, t.callback) : r < this.maxRedirects ? this.doDownload(g.prepareRedirectUrlOptions(o, e), t, r++) : t.callback(this.createMaxRedirectError())
+                        }(t, n) : t.responseHandler(n, t.callback) : r < this.maxRedirects ? this.doDownload(HttpExecutor.prepareRedirectUrlOptions(o, e), t, r++) : t.callback(this.createMaxRedirectError())
                     }));
                     this.addErrorAndTimeoutHandlers(n, t.callback), this.addRedirectHandlers(n, e, t.callback, r, (e => {
                         this.doDownload(e, t, r++)
@@ -27906,23 +28178,23 @@
                 }
 
                 static prepareRedirectUrlOptions(e, t) {
-                    const r = b(e, Object.assign({}, t)), n = r.headers;
+                    const r = configureRequestOptionsFromUrl(e, Object.assign({}, t)), n = r.headers;
                     return null != n && null != n.authorization && n.authorization.startsWith("token") && new (l().URL)(e).hostname.endsWith(".amazonaws.com") && delete n.authorization, r
                 }
             }
 
-            function b(e, t) {
-                const r = _(t);
-                return v(new (l().URL)(e), r), r
+            function configureRequestOptionsFromUrl(e, t) {
+                const r = configureRequestOptions(t);
+                return configureRequestUrl(new (l().URL)(e), r), r
             }
 
-            function v(e, t) {
+            function configureRequestUrl(e, t) {
                 t.protocol = e.protocol, t.hostname = e.hostname, e.port ? t.port = e.port : t.port && delete t.port, t.path = e.pathname + e.search
             }
 
-            t.HttpExecutor = g;
+            exports.HttpExecutor = HttpExecutor;
 
-            class y extends s().Transform {
+            class DigestTransform extends s().Transform {
                 constructor(e, t = "sha512", r = "base64") {
                     super(), this.expected = e, this.algorithm = t, this.encoding = r, this._actual = null, this.isValidateOnEnd = !0, this.digester = (0, n().createHash)(t)
                 }
@@ -27951,183 +28223,257 @@
                 }
             }
 
-            function w(e, t) {
+            function safeGetHeader(e, t) {
                 const r = e.headers[t];
                 return null == r ? null : Array.isArray(r) ? 0 === r.length ? null : r[r.length - 1] : r
             }
 
-            function _(e, t, r) {
+            function configureRequestOptions(e, t, r) {
                 null != r && (e.method = r);
                 let n = e.headers;
                 return null == n && (n = {}, e.headers = n), null != t && (n.authorization = t.startsWith("Basic") ? t : `token ${t}`), null == n["User-Agent"] && (n["User-Agent"] = "electron-builder"), null != r && "GET" !== r && null != n["Cache-Control"] || (n["Cache-Control"] = "no-cache"), null == e.protocol && null != process.versions.electron && (e.protocol = "https:"), e
             }
 
-            function k(e, t) {
+            function safeStringifyJson(e, t) {
                 return JSON.stringify(e, ((e, r) => e.endsWith("authorization") || e.endsWith("Password") || e.endsWith("PASSWORD") || e.endsWith("Token") || e.includes("password") || e.includes("token") || null != t && t.has(e) ? "<stripped sensitive data>" : r), 2)
             }
 
-            t.DigestTransform = y
+            exports.DigestTransform = DigestTransform
         },
-        79529: (e, t, r) => {
+        79529: (module, exports, __require) => {
             "use strict";
 
             function n() {
-                const e = r(75593);
-                return n = function () {
+                const e = __require(75593);
+                n = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function o() {
-                const e = r(59664);
-                return o = function () {
+                const e = __require(59664);
+                o = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function a() {
-                const e = r(45074);
-                return a = function () {
+                const e = __require(45074);
+                a = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function i() {
-                const e = r(89707);
-                return i = function () {
+                const e = __require(89707);
+                i = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function s() {
-                const e = r(98062);
-                return s = function () {
+                const e = __require(98062);
+                s = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function l() {
-                const e = r(60193);
-                return l = function () {
+                const e = __require(60193);
+                l = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function c() {
-                const e = r(46348);
-                return c = function () {
+                const e = __require(46348);
+                c = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.asArray = function (e) {
-                return null == e ? [] : Array.isArray(e) ? e : [e]
-            }, t.newError = function (e, t) {
-                const r = new Error(e);
-                return r.code = t, r
-            }, Object.defineProperty(t, "CancellationToken", {
-                enumerable: !0, get: function () {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.asArray = function (data) {
+                return null == data ? [] : Array.isArray(data) ? data : [data]
+            }
+            exports.newError = function (message, code) {
+                const error = new Error(message);
+                error.code = code
+                return error
+            }
+            Object.defineProperty(exports, "CancellationToken", {
+                enumerable: !0,
+                get: function () {
                     return n().CancellationToken
                 }
-            }), Object.defineProperty(t, "CancellationError", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "CancellationError", {
+                enumerable: !0,
+                get: function () {
                     return n().CancellationError
                 }
-            }), Object.defineProperty(t, "HttpError", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "HttpError", {
+                enumerable: !0,
+                get: function () {
                     return o().HttpError
                 }
-            }), Object.defineProperty(t, "createHttpError", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "createHttpError", {
+                enumerable: !0,
+                get: function () {
                     return o().createHttpError
                 }
-            }), Object.defineProperty(t, "HttpExecutor", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "HttpExecutor", {
+                enumerable: !0,
+                get: function () {
                     return o().HttpExecutor
                 }
-            }), Object.defineProperty(t, "DigestTransform", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "DigestTransform", {
+                enumerable: !0,
+                get: function () {
                     return o().DigestTransform
                 }
-            }), Object.defineProperty(t, "safeGetHeader", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "safeGetHeader", {
+                enumerable: !0,
+                get: function () {
                     return o().safeGetHeader
                 }
-            }), Object.defineProperty(t, "configureRequestOptions", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "configureRequestOptions", {
+                enumerable: !0,
+                get: function () {
                     return o().configureRequestOptions
                 }
-            }), Object.defineProperty(t, "configureRequestOptionsFromUrl", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "configureRequestOptionsFromUrl", {
+                enumerable: !0,
+                get: function () {
                     return o().configureRequestOptionsFromUrl
                 }
-            }), Object.defineProperty(t, "safeStringifyJson", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "safeStringifyJson", {
+                enumerable: !0,
+                get: function () {
                     return o().safeStringifyJson
                 }
-            }), Object.defineProperty(t, "parseJson", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "parseJson", {
+                enumerable: !0,
+                get: function () {
                     return o().parseJson
                 }
-            }), Object.defineProperty(t, "configureRequestUrl", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "configureRequestUrl", {
+                enumerable: !0,
+                get: function () {
                     return o().configureRequestUrl
                 }
-            }), Object.defineProperty(t, "getS3LikeProviderBaseUrl", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "getS3LikeProviderBaseUrl", {
+                enumerable: !0,
+                get: function () {
                     return a().getS3LikeProviderBaseUrl
                 }
-            }), Object.defineProperty(t, "githubUrl", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "githubUrl", {
+                enumerable: !0,
+                get: function () {
                     return a().githubUrl
                 }
-            }), Object.defineProperty(t, "parseDn", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "parseDn", {
+                enumerable: !0,
+                get: function () {
                     return i().parseDn
                 }
-            }), Object.defineProperty(t, "UUID", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "UUID", {
+                enumerable: !0,
+                get: function () {
                     return s().UUID
                 }
-            }), Object.defineProperty(t, "ProgressCallbackTransform", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "ProgressCallbackTransform", {
+                enumerable: !0,
+                get: function () {
                     return l().ProgressCallbackTransform
                 }
-            }), Object.defineProperty(t, "parseXml", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "parseXml", {
+                enumerable: !0,
+                get: function () {
                     return c().parseXml
                 }
-            }), Object.defineProperty(t, "XElement", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "XElement", {
+                enumerable: !0,
+                get: function () {
                     return c().XElement
                 }
-            }), t.CURRENT_APP_PACKAGE_FILE_NAME = t.CURRENT_APP_INSTALLER_FILE_NAME = void 0, t.CURRENT_APP_INSTALLER_FILE_NAME = "installer.exe", t.CURRENT_APP_PACKAGE_FILE_NAME = "package.7z"
+            })
+
+            exports.CURRENT_APP_INSTALLER_FILE_NAME = "installer.exe"
+            exports.CURRENT_APP_PACKAGE_FILE_NAME = "package.7z"
         },
-        45074: (e, t) => {
+        // provider
+        45074: (module, exports) => {
             "use strict";
 
             function r(e, t) {
                 return null != t && t.length > 0 && (t.startsWith("/") || (e += "/"), e += t), e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.githubUrl = function (e, t = "github.com") {
-                return `${e.protocol || "https"}://${e.host || t}`
-            }, t.getS3LikeProviderBaseUrl = function (e) {
-                const t = e.provider;
-                if ("s3" === t) return function (e) {
-                    let t;
-                    if (null != e.endpoint) t = `${e.endpoint}/${e.bucket}`; else if (e.bucket.includes(".")) {
-                        if (null == e.region) throw new Error(`Bucket name "${e.bucket}" includes a dot, but S3 region is missing`);
-                        t = "us-east-1" === e.region ? `https://s3.amazonaws.com/${e.bucket}` : `https://s3-${e.region}.amazonaws.com/${e.bucket}`
-                    } else t = "cn-north-1" === e.region ? `https://${e.bucket}.s3.${e.region}.amazonaws.com.cn` : `https://${e.bucket}.s3.amazonaws.com`;
-                    return r(t, e.path)
-                }(e);
-                if ("spaces" === t) return function (e) {
-                    if (null == e.name) throw new Error("name is missing");
-                    if (null == e.region) throw new Error("region is missing");
-                    return r(`https://${e.name}.${e.region}.digitaloceanspaces.com`, e.path)
-                }(e);
-                throw new Error(`Not supported provider: ${t}`)
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.githubUrl = function (e, host = "github.com") {
+                return `${e.protocol || "https"}://${e.host || host}`
+            }
+            exports.getS3LikeProviderBaseUrl = function (e) {
+                const provider = e.provider;
+                if ("s3" === provider) {
+                    return function (e) {
+                        let t;
+                        if (null != e.endpoint) {
+                            t = `${e.endpoint}/${e.bucket}`;
+                        } else if (e.bucket.includes(".")) {
+                            if (null == e.region) {
+                                throw new Error(`Bucket name "${e.bucket}" includes a dot, but S3 region is missing`);
+                            }
+                            t = "us-east-1" === e.region
+                                ? `https://s3.amazonaws.com/${e.bucket}`
+                                : `https://s3-${e.region}.amazonaws.com/${e.bucket}`
+                        } else {
+                            t = "cn-north-1" === e.region
+                                ? `https://${e.bucket}.s3.${e.region}.amazonaws.com.cn`
+                                : `https://${e.bucket}.s3.amazonaws.com`;
+                        }
+                        return r(t, e.path)
+                    }(e);
+                }
+                if ("spaces" === provider) {
+                    return function (e) {
+                        if (null == e.name) {
+                            throw new Error("name is missing");
+                        }
+                        if (null == e.region) {
+                            throw new Error("region is missing");
+                        }
+                        return r(`https://${e.name}.${e.region}.digitaloceanspaces.com`, e.path)
+                    }(e);
+                }
+                throw new Error(`Not supported provider: ${provider}`)
             }
         },
         89707: (e, t) => {
@@ -31638,96 +31984,131 @@
 
             t.ElectronHttpExecutor = s
         },
-        94625: (e, t, r) => {
+        94625: (module, exports, __require) => {
             "use strict";
 
             function n() {
-                const e = r(16857);
+                const e = __require(16857);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(96064);
-                return o = function () {
+                const e = __require(96064);
+                o = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function a() {
-                const e = r(79529);
-                return a = function () {
+                const e = __require(79529);
+                a = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function i() {
-                const e = r(45414);
-                return i = function () {
+                const e = __require(45414);
+                i = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             let s;
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getChannelFilename = function (e) {
-                return `${e}.yml`
-            }, t.newBaseUrl = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.getChannelFilename = function (channel) {
+                return `${channel}.yml`
+            }
+            exports.newBaseUrl = function (e) {
                 const t = new (n().URL)(e);
-                return t.pathname.endsWith("/") || (t.pathname += "/"), t
-            }, t.newUrlFromBase = function (e, t, r = !1) {
+                t.pathname.endsWith("/") || (t.pathname += "/")
+                return t
+            }
+            exports.newUrlFromBase = function (e, t, r = !1) {
                 const o = new (n().URL)(e, t), a = t.search;
-                return null != a && 0 !== a.length ? o.search = a : r && (o.search = `noCache=${Date.now().toString(32)}`), o
-            }, Object.defineProperty(t, "AppUpdater", {
-                enumerable: !0, get: function () {
+                null != a && 0 !== a.length ? o.search = a : r && (o.search = `noCache=${Date.now().toString(32)}`)
+                return o
+            }
+            Object.defineProperty(exports, "AppUpdater", {
+                enumerable: true,
+                get: function () {
                     return o().AppUpdater
                 }
-            }), Object.defineProperty(t, "NoOpLogger", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "NoOpLogger", {
+                enumerable: true,
+                get: function () {
                     return o().NoOpLogger
                 }
-            }), Object.defineProperty(t, "CancellationToken", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "CancellationToken", {
+                enumerable: true,
+                get: function () {
                     return a().CancellationToken
                 }
-            }), Object.defineProperty(t, "Provider", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "Provider", {
+                enumerable: true,
+                get: function () {
                     return i().Provider
                 }
-            }), t.UpdaterSignal = t.UPDATE_DOWNLOADED = t.DOWNLOAD_PROGRESS = void 0, Object.defineProperty(t, "autoUpdater", {
-                enumerable: !0,
-                get: () => s || (s = "win32" === process.platform ? new (r(35778).p) : "darwin" === process.platform ? new (r(95136).t) : new (r(49619).g), s)
+            })
+            Object.defineProperty(exports, "autoUpdater", {
+                enumerable: true,
+                get: () => {
+                    if (s) {
+                        return s
+                    }
+                    s = "win32" === process.platform
+                        ? new (__require(35778).p)
+                        : "darwin" === process.platform
+                            ? new (__require(95136).t)
+                            : new (__require(49619).g)
+                    return s
+                }
             });
-            const l = "download-progress";
-            t.DOWNLOAD_PROGRESS = l;
-            const c = "update-downloaded";
-            t.UPDATE_DOWNLOADED = c, t.UpdaterSignal = class {
-                constructor(e) {
-                    this.emitter = e
+
+            const download_progress = "download-progress";
+            exports.DOWNLOAD_PROGRESS = download_progress;
+
+            const update_downloaded = "update-downloaded";
+            exports.UPDATE_DOWNLOADED = update_downloaded
+
+            exports.UpdaterSignal = class {
+                constructor(emitter) {
+                    this.emitter = emitter
                 }
 
-                login(e) {
-                    d(this.emitter, "login", e)
+                login(cb) {
+                    addListener(this.emitter, "login", cb)
                 }
 
-                progress(e) {
-                    d(this.emitter, l, e)
+                progress(cb) {
+                    addListener(this.emitter, download_progress, cb)
                 }
 
-                updateDownloaded(e) {
-                    d(this.emitter, c, e)
+                updateDownloaded(cb) {
+                    addListener(this.emitter, update_downloaded, cb)
                 }
 
-                updateCancelled(e) {
-                    d(this.emitter, "update-cancelled", e)
+                updateCancelled(cb) {
+                    addListener(this.emitter, "update-cancelled", cb)
                 }
             };
-            const u = !1;
+            const isDev = false;
 
-            function d(e, t, r) {
-                u ? e.on(t, ((...e) => {
-                    console.log("%s %s", t, e), r.apply(null, e)
-                })) : e.on(t, r)
+            function addListener(emitter, type, callback) {
+                isDev
+                    ? emitter.on(type, (...args) => {
+                        console.log("%s %s", type, args)
+                        callback.apply(null, args)
+                    })
+                    : emitter.on(type, callback)
             }
         },
         54679: (e, t, r) => {
@@ -32190,42 +32571,46 @@
 
             t.PrivateGitHubProvider = u
         },
-        45414: (e, t, r) => {
+        45414: (module, exports, __require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
-                return n = function () {
+                const e = __require(79529);
+                n = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function o() {
-                const e = r(69866);
+                const e = __require(69866);
                 return o = function () {
                     return e
                 }, e
             }
 
             function a() {
-                const e = r(94625);
+                const e = __require(94625);
                 return a = function () {
                     return e
                 }, e
             }
 
-            function i(e) {
+            function getFileList(e) {
                 const t = e.files;
                 if (null != t && t.length > 0) return t;
                 if (null != e.path) return [{url: e.path, sha2: e.sha2, sha512: e.sha512}];
                 throw (0, n().newError)(`No files provided: ${(0, n().safeStringifyJson)(e)}`, "ERR_UPDATER_NO_FILES_PROVIDED")
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.findFile = function (e, t, r) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.findFile = function (e, t, r) {
                 if (0 === e.length) throw (0, n().newError)("No files provided", "ERR_UPDATER_NO_FILES_PROVIDED");
                 const o = e.find((e => e.url.pathname.toLowerCase().endsWith(`.${t}`)));
                 return null != o ? o : null == r ? e[0] : e.find((e => !r.some((t => e.url.pathname.toLowerCase().endsWith(`.${t}`)))))
-            }, t.parseUpdateInfo = function (e, t, r) {
+            }
+            exports.parseUpdateInfo = function (e, t, r) {
                 if (null == e) throw (0, n().newError)(`Cannot parse update info from ${t} in the latest release artifacts (${r}): rawData: null`, "ERR_UPDATER_INVALID_UPDATE_INFO");
                 let a;
                 try {
@@ -32234,25 +32619,31 @@
                     throw (0, n().newError)(`Cannot parse update info from ${t} in the latest release artifacts (${r}): ${o.stack || o.message}, rawData: ${e}`, "ERR_UPDATER_INVALID_UPDATE_INFO")
                 }
                 return a
-            }, t.getFileList = i, t.resolveFiles = function (e, t, r = (e => e)) {
-                const o = i(e).map((e => {
+            }
+            exports.getFileList = getFileList
+            exports.resolveFiles = function (e, t, r = (e => e)) {
+                const o = getFileList(e).map((e => {
                     if (null == e.sha2 && null == e.sha512) throw (0, n().newError)(`Update info doesn't contain nor sha256 neither sha512 checksum: ${(0, n().safeStringifyJson)(e)}`, "ERR_UPDATER_NO_CHECKSUM");
                     return {url: (0, a().newUrlFromBase)(r(e.url), t), info: e}
                 })), s = e.packages, l = null == s ? null : s[process.arch] || s.ia32;
                 return null != l && (o[0].packageInfo = Object.assign({}, l, {path: (0, a().newUrlFromBase)(r(l.path), t).href})), o
-            }, t.Provider = void 0, t.Provider = class {
-                constructor(e) {
-                    this.runtimeOptions = e, this.requestHeaders = null, this.executor = e.executor
+            }
+
+            exports.Provider = class {
+                constructor(runtimeOptions) {
+                    this.runtimeOptions = runtimeOptions
+                    this.requestHeaders = null
+                    this.executor = runtimeOptions.executor
                 }
 
                 get isUseMultipleRangeRequest() {
-                    return !1 !== this.runtimeOptions.isUseMultipleRangeRequest
+                    return false !== this.runtimeOptions.isUseMultipleRangeRequest
                 }
 
                 getChannelFilePrefix() {
                     if ("linux" === this.runtimeOptions.platform) {
-                        const e = process.env.TEST_UPDATER_ARCH || process.arch;
-                        return "-linux" + ("x64" === e ? "" : `-${e}`)
+                        const arch = process.env.TEST_UPDATER_ARCH || process.arch;
+                        return "-linux" + ("x64" === arch ? "" : `-${arch}`)
                     }
                     return "darwin" === this.runtimeOptions.platform ? "-mac" : ""
                 }
@@ -32261,25 +32652,31 @@
                     return this.getCustomChannelName("latest")
                 }
 
-                getCustomChannelName(e) {
-                    return `${e}${this.getChannelFilePrefix()}`
+                getCustomChannelName(channel) {
+                    return `${channel}${this.getChannelFilePrefix()}`
                 }
 
                 get fileExtraDownloadHeaders() {
                     return null
                 }
 
-                setRequestHeaders(e) {
-                    this.requestHeaders = e
+                setRequestHeaders(requestHeaders) {
+                    this.requestHeaders = requestHeaders
                 }
 
                 httpRequest(e, t, r) {
                     return this.executor.request(this.createRequestOptions(e, t), r)
                 }
 
-                createRequestOptions(e, t) {
+                createRequestOptions(e, headers) {
                     const r = {};
-                    return null == this.requestHeaders ? null != t && (r.headers = t) : r.headers = null == t ? this.requestHeaders : Object.assign({}, this.requestHeaders, t), (0, n().configureRequestUrl)(e, r), r
+                    null == this.requestHeaders
+                        ? null != headers && (r.headers = headers)
+                        : r.headers = null == headers
+                            ? this.requestHeaders
+                            : Object.assign({}, this.requestHeaders, headers)
+                    n().configureRequestUrl(e, r)
+                    return r
                 }
             }
         },
@@ -32764,37 +33161,64 @@
                 }
             }
         },
-        71284: (e, t, r) => {
+        71284: (module, exports, __require) => {
             "use strict";
-            const n = r(83410).S, o = r(83641),
+            const n = __require(83410).S,
+                o = __require(83641),
                 a = ["access", "appendFile", "chmod", "chown", "close", "copyFile", "fchmod", "fchown", "fdatasync", "fstat", "fsync", "ftruncate", "futimes", "lchown", "lchmod", "link", "lstat", "mkdir", "mkdtemp", "open", "readFile", "readdir", "readlink", "realpath", "rename", "rmdir", "stat", "symlink", "truncate", "unlink", "utimes", "writeFile"].filter((e => "function" == typeof o[e]));
-            Object.keys(o).forEach((e => {
-                "promises" !== e && (t[e] = o[e])
-            })), a.forEach((e => {
-                t[e] = n(o[e])
-            })), t.exists = function (e, t) {
+
+            Object.keys(o).forEach(e => {
+                "promises" !== e && (exports[e] = o[e])
+            })
+            a.forEach(e => {
+                exports[e] = n(o[e])
+            })
+
+            exports.exists = function (e, t) {
                 return "function" == typeof t ? o.exists(e, t) : new Promise((t => o.exists(e, t)))
-            }, t.read = function (e, t, r, n, a, i) {
+            }
+            exports.read = function (e, t, r, n, a, i) {
                 return "function" == typeof i ? o.read(e, t, r, n, a, i) : new Promise(((i, s) => {
                     o.read(e, t, r, n, a, ((e, t, r) => {
                         if (e) return s(e);
                         i({bytesRead: t, buffer: r})
                     }))
                 }))
-            }, t.write = function (e, t, ...r) {
+            }
+            exports.write = function (e, t, ...r) {
                 return "function" == typeof r[r.length - 1] ? o.write(e, t, ...r) : new Promise(((n, a) => {
                     o.write(e, t, ...r, ((e, t, r) => {
                         if (e) return a(e);
                         n({bytesWritten: t, buffer: r})
                     }))
                 }))
-            }, "function" == typeof o.realpath.native && (t.realpath.native = n(o.realpath.native))
+            }
+            if ("function" == typeof o.realpath.native) {
+                exports.realpath.native = n(o.realpath.native)
+            }
         },
-        80115: (e, t, r) => {
+        80115: (module, exports, __require) => {
             "use strict";
-            e.exports = Object.assign({}, r(71284), r(90823), r(95925), r(5721), r(35850), r(20958), r(15776), r(53167), r(16797), r(13573), r(18386), r(88024));
-            const n = r(79896);
-            Object.getOwnPropertyDescriptor(n, "promises") && Object.defineProperty(e.exports, "promises", {get: () => n.promises})
+
+            module.exports = Object.assign({},
+                __require(71284),
+                __require(90823),
+                __require(95925),
+                __require(5721),
+                __require(35850),
+                __require(20958),
+                __require(15776),
+                __require(53167),
+                __require(16797),
+                __require(13573),
+                __require(18386),
+                __require(88024)
+            );
+
+            const n = __require(79896);
+            if (Object.getOwnPropertyDescriptor(n, "promises")) {
+                Object.defineProperty(module.exports, "promises", {get: () => n.promises})
+            }
         },
         20958: (e, t, r) => {
             "use strict";
@@ -43814,8 +44238,8 @@
             } catch (e) {
             }
         },
-        
-        
+
+
         // electron
         4482: e => {
             "use strict";
@@ -43993,25 +44417,25 @@
                 C = _(T, 5, 0),
                 O = _(T, 5, 1),
                 M = function (e) {
-                for (var t = e[0], r = 1; r < e.length; ++r) e[r] > t && (t = e[r]);
-                return t
-            },
+                    for (var t = e[0], r = 1; r < e.length; ++r) e[r] > t && (t = e[r]);
+                    return t
+                },
                 I = function (e, t, r) {
-                var n = t / 8 | 0;
-                return (e[n] | e[n + 1] << 8) >> (7 & t) & r
-            },
+                    var n = t / 8 | 0;
+                    return (e[n] | e[n + 1] << 8) >> (7 & t) & r
+                },
                 A = function (e, t) {
-                var r = t / 8 | 0;
-                return (e[r] | e[r + 1] << 8 | e[r + 2] << 16) >> (7 & t)
-            },
+                    var r = t / 8 | 0;
+                    return (e[r] | e[r + 1] << 8 | e[r + 2] << 16) >> (7 & t)
+                },
                 P = function (e) {
-                return (e + 7) / 8 | 0
-            },
+                    return (e + 7) / 8 | 0
+                },
                 x = function (e, t, r) {
-                (null == t || t < 0) && (t = 0), (null == r || r > e.length) && (r = e.length);
-                var n = new (2 == e.BYTES_PER_ELEMENT ? i : 4 == e.BYTES_PER_ELEMENT ? s : a)(r - t);
-                return n.set(e.subarray(t, r)), n
-            };
+                    (null == t || t < 0) && (t = 0), (null == r || r > e.length) && (r = e.length);
+                    var n = new (2 == e.BYTES_PER_ELEMENT ? i : 4 == e.BYTES_PER_ELEMENT ? s : a)(r - t);
+                    return n.set(e.subarray(t, r)), n
+                };
 
             exports.FlateErrorCode = {
                 UnexpectedEOF: 0,
@@ -44739,26 +45163,26 @@
             } catch (e) {
             }
             var Ze = function (e) {
-                for (var t = "", r = 0; ;) {
-                    var n = e[r++], o = (n > 127) + (n > 223) + (n > 239);
-                    if (r + o > e.length) return [t, x(e, r - 1)];
-                    o ? 3 == o ? (n = ((15 & n) << 18 | (63 & e[r++]) << 12 | (63 & e[r++]) << 6 | 63 & e[r++]) - 65536, t += String.fromCharCode(55296 | n >> 10, 56320 | 1023 & n)) : t += 1 & o ? String.fromCharCode((31 & n) << 6 | 63 & e[r++]) : String.fromCharCode((15 & n) << 12 | (63 & e[r++]) << 6 | 63 & e[r++]) : t += String.fromCharCode(n)
-                }
-            },
+                    for (var t = "", r = 0; ;) {
+                        var n = e[r++], o = (n > 127) + (n > 223) + (n > 239);
+                        if (r + o > e.length) return [t, x(e, r - 1)];
+                        o ? 3 == o ? (n = ((15 & n) << 18 | (63 & e[r++]) << 12 | (63 & e[r++]) << 6 | 63 & e[r++]) - 65536, t += String.fromCharCode(55296 | n >> 10, 56320 | 1023 & n)) : t += 1 & o ? String.fromCharCode((31 & n) << 6 | 63 & e[r++]) : String.fromCharCode((15 & n) << 12 | (63 & e[r++]) << 6 | 63 & e[r++]) : t += String.fromCharCode(n)
+                    }
+                },
                 Qe = function () {
-                function e(e) {
-                    this.ondata = e, Xe ? this.t = new TextDecoder : this.p = q
-                }
+                    function e(e) {
+                        this.ondata = e, Xe ? this.t = new TextDecoder : this.p = q
+                    }
 
-                return e.prototype.push = function (e, t) {
-                    if (this.ondata || R(5), t = !!t, this.t) return this.ondata(this.t.decode(e, {stream: !0}), t), void (t && (this.t.decode().length && R(8), this.t = null));
-                    this.p || R(4);
-                    var r = new a(this.p.length + e.length);
-                    r.set(this.p), r.set(e, this.p.length);
-                    var n = Ze(r), o = n[0], i = n[1];
-                    t ? (i.length && R(8), this.p = null) : this.p = i, this.ondata(o, t)
-                }, e
-            }();
+                    return e.prototype.push = function (e, t) {
+                        if (this.ondata || R(5), t = !!t, this.t) return this.ondata(this.t.decode(e, {stream: !0}), t), void (t && (this.t.decode().length && R(8), this.t = null));
+                        this.p || R(4);
+                        var r = new a(this.p.length + e.length);
+                        r.set(this.p), r.set(e, this.p.length);
+                        var n = Ze(r), o = n[0], i = n[1];
+                        t ? (i.length && R(8), this.p = null) : this.p = i, this.ondata(o, t)
+                    }, e
+                }();
             exports.DecodeUTF8 = Qe;
             var et = function () {
                 function e(e) {
@@ -44804,53 +45228,54 @@
             exports.strToU8 = tt
             exports.strFromU8 = rt;
             var nt = function (e) {
-                return 1 == e ? 3 : e < 6 ? 2 : 9 == e ? 1 : 0
-            },
+                    return 1 == e ? 3 : e < 6 ? 2 : 9 == e ? 1 : 0
+                },
                 ot = function (e, t) {
-                return t + 30 + pe(e, t + 26) + pe(e, t + 28)
-            },
+                    return t + 30 + pe(e, t + 26) + pe(e, t + 28)
+                },
                 at = function (e, t, r) {
-                var n = pe(e, t + 28), o = rt(e.subarray(t + 46, t + 46 + n), !(2048 & pe(e, t + 8))), a = t + 46 + n,
-                    i = he(e, t + 20), s = r && 4294967295 == i ? it(e, a) : [i, he(e, t + 24), he(e, t + 42)],
-                    l = s[0], c = s[1], u = s[2];
-                return [pe(e, t + 10), l, c, o, a + pe(e, t + 30) + pe(e, t + 32), u]
-            },
+                    var n = pe(e, t + 28), o = rt(e.subarray(t + 46, t + 46 + n), !(2048 & pe(e, t + 8))),
+                        a = t + 46 + n,
+                        i = he(e, t + 20), s = r && 4294967295 == i ? it(e, a) : [i, he(e, t + 24), he(e, t + 42)],
+                        l = s[0], c = s[1], u = s[2];
+                    return [pe(e, t + 10), l, c, o, a + pe(e, t + 30) + pe(e, t + 32), u]
+                },
                 it = function (e, t) {
-                for (; 1 != pe(e, t); t += 4 + pe(e, t + 2)) ;
-                return [fe(e, t + 12), fe(e, t + 4), fe(e, t + 20)]
-            },
+                    for (; 1 != pe(e, t); t += 4 + pe(e, t + 2)) ;
+                    return [fe(e, t + 12), fe(e, t + 4), fe(e, t + 20)]
+                },
                 st = function (e) {
-                var t = 0;
-                if (e) for (var r in e) {
-                    var n = e[r].length;
-                    n > 65535 && R(9), t += n + 4
-                }
-                return t
-            },
+                    var t = 0;
+                    if (e) for (var r in e) {
+                        var n = e[r].length;
+                        n > 65535 && R(9), t += n + 4
+                    }
+                    return t
+                },
                 lt = function (e, t, r, n, o, a, i, s) {
-                var l = n.length, c = r.extra, u = s && s.length, d = st(c);
-                me(e, t, null != i ? 33639248 : 67324752), t += 4, null != i && (e[t++] = 20, e[t++] = r.os), e[t] = 20, t += 2, e[t++] = r.flag << 1 | (a < 0 && 8), e[t++] = o && 8, e[t++] = 255 & r.compression, e[t++] = r.compression >> 8;
-                var p = new Date(null == r.mtime ? Date.now() : r.mtime), h = p.getFullYear() - 1980;
-                if ((h < 0 || h > 119) && R(10), me(e, t, h << 25 | p.getMonth() + 1 << 21 | p.getDate() << 16 | p.getHours() << 11 | p.getMinutes() << 5 | p.getSeconds() >>> 1), t += 4, -1 != a && (me(e, t, r.crc), me(e, t + 4, a < 0 ? -a - 2 : a), me(e, t + 8, r.size)), me(e, t + 12, l), me(e, t + 14, d), t += 16, null != i && (me(e, t, u), me(e, t + 6, r.attrs), me(e, t + 10, i), t += 14), e.set(n, t), t += l, d) for (var f in c) {
-                    var m = c[f], g = m.length;
-                    me(e, t, +f), me(e, t + 2, g), e.set(m, t + 4), t += 4 + g
-                }
-                return u && (e.set(s, t), t += u), t
-            },
+                    var l = n.length, c = r.extra, u = s && s.length, d = st(c);
+                    me(e, t, null != i ? 33639248 : 67324752), t += 4, null != i && (e[t++] = 20, e[t++] = r.os), e[t] = 20, t += 2, e[t++] = r.flag << 1 | (a < 0 && 8), e[t++] = o && 8, e[t++] = 255 & r.compression, e[t++] = r.compression >> 8;
+                    var p = new Date(null == r.mtime ? Date.now() : r.mtime), h = p.getFullYear() - 1980;
+                    if ((h < 0 || h > 119) && R(10), me(e, t, h << 25 | p.getMonth() + 1 << 21 | p.getDate() << 16 | p.getHours() << 11 | p.getMinutes() << 5 | p.getSeconds() >>> 1), t += 4, -1 != a && (me(e, t, r.crc), me(e, t + 4, a < 0 ? -a - 2 : a), me(e, t + 8, r.size)), me(e, t + 12, l), me(e, t + 14, d), t += 16, null != i && (me(e, t, u), me(e, t + 6, r.attrs), me(e, t + 10, i), t += 14), e.set(n, t), t += l, d) for (var f in c) {
+                        var m = c[f], g = m.length;
+                        me(e, t, +f), me(e, t + 2, g), e.set(m, t + 4), t += 4 + g
+                    }
+                    return u && (e.set(s, t), t += u), t
+                },
                 ct = function (e, t, r, n, o) {
-                me(e, t, 101010256), me(e, t + 8, r), me(e, t + 10, r), me(e, t + 12, n), me(e, t + 16, o)
-            },
+                    me(e, t, 101010256), me(e, t + 8, r), me(e, t + 10, r), me(e, t + 12, n), me(e, t + 16, o)
+                },
                 ut = function () {
-                function e(e) {
-                    this.filename = e, this.c = K(), this.size = 0, this.compression = 0
-                }
+                    function e(e) {
+                        this.filename = e, this.c = K(), this.size = 0, this.compression = 0
+                    }
 
-                return e.prototype.process = function (e, t) {
-                    this.ondata(null, e, t)
-                }, e.prototype.push = function (e, t) {
-                    this.ondata || R(5), this.c.p(e), this.size += e.length, t && (this.crc = this.c.d()), this.process(e, t || !1)
-                }, e
-            }();
+                    return e.prototype.process = function (e, t) {
+                        this.ondata(null, e, t)
+                    }, e.prototype.push = function (e, t) {
+                        this.ondata || R(5), this.c.p(e), this.size += e.length, t && (this.crc = this.c.d()), this.process(e, t || !1)
+                    }, e
+                }();
 
             exports.ZipPassThrough = ut;
             var dt = function () {
@@ -45144,8 +45569,8 @@
                 : "function" == typeof setTimeout
                     ? setTimeout
                     : function (e) {
-                e()
-            };
+                        e()
+                    };
             exports.unzip = function (e, t, r) {
                 r || (r = t, t = {}), "function" != typeof r && R(7);
                 var n = [], o = function () {

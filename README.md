@@ -18,8 +18,8 @@
 19628: WebUpdater
 52728: TabController
 
-94774: AssetCache
-87309: AssetCache
+87309: AssetCache 类
+94774: AssetCache 实例
 
 43579: auto updater
 94625: auto updater
@@ -27,6 +27,8 @@
 3420: ServerLogger 对应老版本的 helpers/loggly.js
 21789: AppUtil
 
+75593: CancellationToken
+79529: 
 
 69340: redux store
 73553: app slice
@@ -38,6 +40,8 @@
 13387: session
 45437: events
 4058: AsyncQueue
+
+59664: HttpExecutor
 
 21248: shared/logglyHelpers
 37318: shared/cleanObjectForSerialization
@@ -69,4 +73,7 @@
 6354: redux toolkit
 4482: electron
 47419: electron-log
+99163: debug for browser
+81047: debug for nodejs
+55623: debug
 ```
