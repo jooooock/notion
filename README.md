@@ -3,15 +3,20 @@
 ## 模块名
 
 ```
-5554: logging
 64982: 入口
+5554: logging
 84041: crash reporter
+10454: notion ipc
 
 11239: config
 68272: config
 
-4482: electron
 21852: AppController
+26760: QuickSearchController
+84087: TrayController
+1147: WindowController
+19628: WebUpdater
+52728: TabController
 
 94774: AssetCache
 87309: AssetCache
@@ -19,10 +24,23 @@
 43579: auto updater
 94625: auto updater
 
-3420: ServerLogger
+3420: ServerLogger 对应老版本的 helpers/loggly.js
 21789: AppUtil
 
+
+69340: redux store
+73553: app slice
+28192: history slice
+14473: quick search slice
+54417: tab slice
+772: window slice
+
 13387: session
+45437: events
+4058: AsyncQueue
+
+21248: shared/logglyHelpers
+37318: shared/cleanObjectForSerialization
 
 
 // nodejs模块
@@ -48,4 +66,7 @@
 65692: https
 69278: net
 
+6354: redux toolkit
+4482: electron
+47419: electron-log
 ```

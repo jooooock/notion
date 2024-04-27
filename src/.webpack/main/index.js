@@ -1,19 +1,31 @@
-/*! For license information please see index.js.LICENSE.txt */
 (() => {
     const __modules = {
-        11239: (e, t, r) => {
+        // conifg
+        11239: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const n = r(68272);
-            t.default = n
-        }, 60522: (e, t) => {
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            const __config = __require(68272);
+
+            exports.default = __config
+        },
+        60522: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.MIN_TAB_WIDTH_PX = t.MAX_TAB_WIDTH_PX = t.TAB_BAR_HEIGHT_PX = void 0, t.TAB_BAR_HEIGHT_PX = 36, t.MAX_TAB_WIDTH_PX = 200, t.MIN_TAB_WIDTH_PX = 52
-        }, 27683: (e, t, r) => {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.TAB_BAR_HEIGHT_PX = 36
+            exports.MAX_TAB_WIDTH_PX = 200
+            exports.MIN_TAB_WIDTH_PX = 52
+        },
+        27683: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.electronColors = t.tabColors = void 0;
-            const n = r(52869);
-            t.tabColors = {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const n = __require(52869);
+
+            exports.tabColors = {
                 default: {light: "#F7F7F5", dark: "#202020"},
                 active: {light: n.colors.white, dark: n.accentColors.dark.gray[50]},
                 hovered: {light: "#EFEEEE", dark: n.accentColors.dark.gray[300]},
@@ -21,7 +33,8 @@
                 border: {light: n.accentColors.light.gray[75], dark: n.accentColors.dark.gray[400]},
                 textActive: {light: n.accentColors.light.gray[900], dark: n.accentColors.dark.gray[850]},
                 textInactive: {light: n.accentColors.light.gray[600], dark: n.accentColors.dark.gray[700]}
-            }, t.electronColors = {
+            }
+            exports.electronColors = {
                 tabBarBackground: {light: "#F7F7F5", dark: "#202020"},
                 notionBackground: {light: n.colors.white, dark: "#191919"},
                 buttonBackground: {light: "#DDDDDC", dark: "#434343"},
@@ -34,28 +47,38 @@
                 redBadgeBackground: {light: n.colors.red, dark: n.accentColors.dark.red[600]},
                 titleBarOverlayBackground: {light: "rgba(255, 255, 255, 0.1)", dark: "rgba(0, 0, 0, 0)"}
             }
-        }, 51916: function (e, t, r) {
+        },
+        51916: function (module, exports, __require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.throwIfNotProd = void 0;
-            const o = n(r(11239));
-            t.throwIfNotProd = function (e) {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = n(__require(11239));
+
+            exports.throwIfNotProd = function (e) {
                 if ("production" !== o.default.env) throw new Error(e)
             }
-        }, 31957: (e, t, r) => {
+        },
+        31957: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.execFile = t.exec = void 0;
-            const n = r(35317);
-            t.exec = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const n = __require(35317);
+
+            exports.exec = function (e) {
                 return new Promise(((t, r) => {
                     (0, n.exec)(e, ((e, n, o) => {
                         if (e) return r(e);
                         t({stdout: n, stderr: o})
                     }))
                 }))
-            }, t.execFile = function (e, t) {
+            }
+            exports.execFile = function (e, t) {
                 return new Promise(((r, o) => {
                     (0, n.execFile)(e, t, ((e, t, n) => {
                         if (e) return o(e);
@@ -63,49 +86,81 @@
                     }))
                 }))
             }
-        }, 55108: (e, t) => {
+        },
+        55108: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isNotionWebContents = void 0, t.isNotionWebContents = function (e) {
-                const t = e.getURL(), {hostname: r, protocol: n} = new URL(t);
-                return !("notion.so" !== r && "notion.site" !== r && "notion.com" !== r && !r.endsWith(".notion.so")) || "file:" === n || "localhost" === r
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.isNotionWebContents = function (e) {
+                const t = e.getURL()
+                const {hostname, protocol} = new URL(t);
+                return !("notion.so" !== hostname && "notion.site" !== hostname && "notion.com" !== hostname && !hostname.endsWith(".notion.so")) || "file:" === protocol || "localhost" === hostname
             }
-        }, 55870: function (e, t, r) {
+        },
+        55870: function (module, exports, __require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createIntlShape = t.getMessages = void 0;
-            const o = r(36343), a = n(r(16813)), i = n(r(39687)), s = n(r(29499)), l = n(r(58545)), c = n(r(85395)),
-                u = n(r(61993)), d = n(r(27290)), p = n(r(8332)), h = n(r(16996)), f = n(r(63969)), m = n(r(39301)),
-                g = n(r(86144)), b = n(r(49596)), v = n(r(36044));
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            function y(e) {
+
+            const o = __require(36343),
+                da_DK = n(__require(16813)),
+                de_DE = n(__require(39687)),
+                es_LA = n(__require(29499)),
+                es_ES = n(__require(58545)),
+                fi_FI = n(__require(85395)),
+                fr_FR = n(__require(61993)),
+                ja_JP = n(__require(27290)),
+                ko_KR = n(__require(8332)),
+                nb_NO = n(__require(16996)),
+                nl_NL = n(__require(63969)),
+                pt_BR = n(__require(39301)),
+                sv_SE = n(__require(86144)),
+                zh_CN = n(__require(49596)),
+                zh_TW = n(__require(36044));
+
+            function getMessages(locale) {
                 return {
-                    "ko-KR": p.default,
-                    "es-ES": l.default,
-                    "es-LA": s.default,
-                    "fr-FR": u.default,
-                    "ja-JP": d.default,
-                    "pt-BR": m.default,
-                    "zh-CN": b.default,
-                    "zh-TW": v.default,
-                    "de-DE": i.default,
-                    "da-DK": a.default,
-                    "fi-FI": c.default,
-                    "nb-NO": h.default,
-                    "nl-NL": f.default,
-                    "sv-SE": g.default
-                }[e]
+                    "ko-KR": ko_KR.default,
+                    "es-ES": es_ES.default,
+                    "es-LA": es_LA.default,
+                    "fr-FR": fr_FR.default,
+                    "ja-JP": ja_JP.default,
+                    "pt-BR": pt_BR.default,
+                    "zh-CN": zh_CN.default,
+                    "zh-TW": zh_TW.default,
+                    "de-DE": de_DE.default,
+                    "da-DK": da_DK.default,
+                    "fi-FI": fi_FI.default,
+                    "nb-NO": nb_NO.default,
+                    "nl-NL": nl_NL.default,
+                    "sv-SE": sv_SE.default
+                }[locale]
             }
 
-            t.getMessages = y, t.createIntlShape = function (e) {
-                const t = y(e), r = (0, o.createIntlCache)();
-                return (0, o.createIntl)({locale: e, defaultLocale: "en-US", messages: t}, r)
+            exports.getMessages = getMessages
+            exports.createIntlShape = function (locale) {
+                const messages = getMessages(locale),
+                    r = o.createIntlCache();
+                return o.createIntl({
+                    locale: locale,
+                    defaultLocale: "en-US",
+                    messages: messages
+                }, r)
             }
-        }, 49960: (e, t) => {
+        },
+        49960: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getHumanPlatformName = void 0, t.getHumanPlatformName = function () {
-                if (navigator) return navigator.userAgentData?.platform;
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.getHumanPlatformName = function () {
+                if (navigator) {
+                    return navigator.userAgentData?.platform;
+                }
                 switch (process?.platform) {
                     case"darwin":
                         return "macOS";
@@ -115,96 +170,139 @@
                         return process?.platform || "Unknown operating system"
                 }
             }
-        }, 3420: function (e, t, r) {
+        },
+
+        // ServerLogger 对应老版本的 helpers/loggly.js
+        3420: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.serverLogger = t.ServerLogger = void 0;
-            const s = i(r(70857)), l = r(4482), c = i(r(47419)), u = a(r(6600)), d = r(21248), p = r(43067),
-                h = i(r(11239));
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
 
-            class f {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.serverLogger = exports.ServerLogger = void 0;
+            const __os = i(__require(70857)),
+                electron = __require(4482),
+                electron_log = i(__require(47419)),
+                lodash_1 = a(__require(6600)),
+                d = __require(21248),
+                p = __require(43067),
+                __config = i(__require(11239));
+
+            class ServerLogger {
                 static {
                     this.PLATFORM = "electron"
                 }
 
-                constructor(e) {
-                    this.args = e, this.extraLoggingContext = {}, this.queue = [], this.flushing = !1, this.rateLimitedLog = u.throttle(this.log.bind(this), 500), this.flush = async () => {
+                constructor(args) {
+                    this.args = args
+                    this.extraLoggingContext = {}
+                    this.queue = []
+                    this.flushing = false
+                    this.rateLimitedLog = lodash_1.throttle(this.log.bind(this), 500)
+                    this.flush = async () => {
                         if (!this.flushing && this.queue.length > 0) {
-                            this.flushing = !0;
-                            const e = this.queue.splice(0, Math.max(this.queue.length, 50)),
-                                t = e.map((e => JSON.stringify(e))).join("\n");
+                            this.flushing = true;
+                            const data = this.queue.splice(0, Math.max(this.queue.length, 50))
+                            const body = data.map((item => JSON.stringify(item))).join("\n");
                             try {
-                                const e = await (0, p.raceWithTimeout)(1e4, fetch(`https://${this.splunkConfig.host}:${this.splunkConfig.port}/${this.splunkConfig.path}`, {
+                                const e = await p.raceWithTimeout(10_000, fetch(`https://${this.splunkConfig.host}:${this.splunkConfig.port}/${this.splunkConfig.path}`, {
                                     method: "post",
-                                    headers: {Authorization: `Splunk ${this.splunkConfig.token}`},
-                                    body: t
+                                    headers: {
+                                        Authorization: `Splunk ${this.splunkConfig.token}`
+                                    },
+                                    body: body
                                 }));
                                 if (!e.timeout) {
-                                    const {result: t} = e;
-                                    200 !== t.status && this.args.logger.log({
-                                        level: "warning",
-                                        from: "serverLogger.ts",
-                                        type: "unreachableSplunk",
-                                        error: {
-                                            message: "Could not reach Splunk!",
-                                            miscErrorString: (0, d.safelyConvertAnyToString)({
-                                                status: t.status,
-                                                statusText: t.statusText,
-                                                responseText: await t.text()
-                                            })
-                                        }
-                                    })
+                                    const {result} = e;
+                                    if (200 !== result.status) {
+                                        this.args.logger.log({
+                                            level: "warning",
+                                            from: "serverLogger.ts",
+                                            type: "unreachableSplunk",
+                                            error: {
+                                                message: "Could not reach Splunk!",
+                                                miscErrorString: d.safelyConvertAnyToString({
+                                                    status: result.status,
+                                                    statusText: result.statusText,
+                                                    responseText: await result.text()
+                                                })
+                                            }
+                                        })
+                                    }
                                 }
-                                this.flushing = !1
+                                this.flushing = false
                             } catch (t) {
-                                this.flushing = !1, this.queue.splice(0, 0, ...e), setTimeout(this.flush, 6e4)
+                                this.flushing = false
+                                this.queue.splice(0, 0, ...data)
+                                setTimeout(this.flush, 6e4)
                             }
                         }
                     };
-                    const {env: t, splunkConfig: r} = e;
-                    this.env = t, this.loggingContext = {os: e.os, platform: f.PLATFORM}, this.splunkConfig = r
+                    const {env, splunkConfig} = args;
+                    this.env = env
+                    this.loggingContext = {
+                        os: args.os,
+                        platform: ServerLogger.PLATFORM
+                    }
+                    this.splunkConfig = splunkConfig
                 }
 
-                async log(e) {
-                    const t = this.appendAdditionalFields(this.prepareMessage(e));
-                    this.args.logger.log(t), "local" !== this.args.env && (this.queue.push(t), await this.flush())
+                async log(message) {
+                    const t = this.appendAdditionalFields(this.prepareMessage(message));
+                    this.args.logger.log(t)
+                    if ("local" !== this.args.env) {
+                        this.queue.push(t)
+                        await this.flush()
+                    }
                 }
 
-                prepareMessage(e) {
-                    const {data: t, ...r} = e;
-                    return {environment: this.env, data: t ? (0, d.stringifyMiscData)(t) : void 0, ...r}
+                prepareMessage(message) {
+                    const {data: data, ...r} = message;
+                    return {
+                        environment: this.env,
+                        data: data ? d.stringifyMiscData(data) : void 0,
+                        ...r,
+                    }
                 }
 
-                appendAdditionalFields(e) {
-                    return {...this.loggingContext, ...this.extraLoggingContext, ...e}
+                appendAdditionalFields(message) {
+                    return {
+                        ...this.loggingContext,
+                        ...this.extraLoggingContext,
+                        ...message
+                    }
                 }
             }
 
-            t.ServerLogger = f, t.serverLogger = new f({
+            exports.ServerLogger = ServerLogger
+            exports.serverLogger = new ServerLogger({
                 os: function () {
-                    switch (s.default.platform()) {
+                    switch (__os.default.platform()) {
                         case"darwin":
                             return "mac";
                         case"win32":
@@ -212,93 +310,169 @@
                         default:
                             return "unknown"
                     }
-                }(), env: h.default.env, logger: {
-                    log(e) {
-                        c.default.log(e)
-                    }, error(e) {
-                        c.default.error(e)
+                }(),
+                env: __config.default.env,
+                logger: {
+                    log(logMessage) {
+                        electron_log.default.log(logMessage)
+                    },
+                    error(logMessage) {
+                        electron_log.default.error(logMessage)
                     }
-                }, splunkConfig: h.default.splunkConfig
+                },
+                splunkConfig: __config.default.splunkConfig
             });
-            const m = s.default.cpus(), g = m && m[0] && m[0].model,
-                b = `${Math.round(s.default.totalmem() / 1024 / 1024 / 1024)}G`;
-            t.serverLogger.extraLoggingContext.desktopVersion = l.app.getVersion(), t.serverLogger.extraLoggingContext.desktopCPU = g, t.serverLogger.extraLoggingContext.desktopRAM = b
-        }, 18503: (e, t) => {
+
+            const cpus = __os.default.cpus()
+            const desktopCPU = cpus && cpus[0] && cpus[0].model
+            const desktopRAM = `${Math.round(__os.default.totalmem() / 1024 / 1024 / 1024)}G`
+
+            exports.serverLogger.extraLoggingContext.desktopVersion = electron.app.getVersion()
+            exports.serverLogger.extraLoggingContext.desktopCPU = desktopCPU
+            exports.serverLogger.extraLoggingContext.desktopRAM = desktopRAM
+        },
+
+        18503: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getTrafficLightPosition = t.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS = void 0, t.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS = {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS = {
                 x: 10,
                 y: 10
-            }, t.getTrafficLightPosition = function (e, r) {
+            }
+            exports.getTrafficLightPosition = function (e, r) {
                 return {
-                    x: r > 1 ? Math.ceil(e / 2) - 8 : t.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS.x,
+                    x: r > 1 ? Math.ceil(e / 2) - 8 : exports.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS.x,
                     y: Math.ceil(e / 2) - 8
                 }
             }
-        }, 4928: (e, t, r) => {
+        },
+        4928: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const n = r(39023), o = r(40041), a = (0, n.promisify)(o.zip);
-            t.default = a
-        }, 21852: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.AppController_TEST_ONLY = t.appController = void 0;
-            const s = i(r(76982)), l = r(4482), c = i(r(47419)), u = r(43277), d = r(83704), p = r(28902),
-                h = a(r(6600)), f = a(r(60411)), m = i(r(11239)), g = r(55870), b = a(r(68115)), v = r(26605),
-                y = r(88493), w = r(29902), _ = r(26760), k = r(73553), T = r(30506), E = r(28192), S = r(69340),
-                C = r(54417), O = r(772), M = r(84087), I = r(1147), A = c.default.scope("AppController");
+            Object.defineProperty(exports, "__esModule", {value: !0});
 
-            class P {
+            const util = __require(39023),
+                o = __require(40041),
+                a = util.promisify(o.zip);
+
+            exports.default = a
+        },
+
+        // AppController
+        21852: function (module, exports, __require) {
+            "use strict";
+
+            let __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                __importStar = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && __createBinding(t, e, r);
+                    return __setModuleDefault(t, e), t
+                },
+                __importDefault = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = __importDefault(__require(76982)),
+                electron = __require(4482),
+                electron_log = __importDefault(__require(47419)),
+                u = __require(43277),
+                d = __require(83704),
+                p = __require(28902),
+                h = __importStar(__require(6600)),
+                f = __importStar(__require(60411)),
+                __config = __importDefault(__require(11239)),
+                g = __require(55870),
+                b = __importStar(__require(68115)),
+                v = __require(26605),
+                y = __require(88493),
+                w = __require(29902),
+                __quickSearchController = __require(26760),
+                __appSlice = __require(73553),
+                T = __require(30506),
+                E = __require(28192),
+                __store = __require(69340),
+                C = __require(54417),
+                O = __require(772),
+                __trayController = __require(84087),
+                I = __require(1147)
+
+            const scopeLogger = electron_log.default.scope("AppController");
+
+            class AppController {
                 constructor() {
-                    this.windowControllers = new Array, this.isQuitting = !1, this.previousRestorationState = S.Store.getState().history.appRestorationState, this.appStateUnsubscribe = (0, S.subscribeToSelector)(S.selectAppState, ((e, t) => this.handleAppStateChange(e, t))), this.historyStateUnsubscribe = (0, S.subscribeToSelector)((e => (0, S.selectHistory)(e)), (e => {
-                        T.appStatePersister.set("history", e)
-                    })), this.focusedWindowStateUnsubscribe = (0, S.subscribeToSelector)((e => (0, S.selectFocusedWindowDisplayState)(e)), (e => {
-                        e && S.Store.dispatch((0, E.updateLastFocusedWindowDisplayState)(e))
-                    }), {wait: 3e4}), this.appRestorationStateUnsubscribe = (0, S.subscribeToSelector)((e => ({
-                        tabs: e.tabs,
-                        windows: e.windows
-                    })), (e => {
-                        this.handleAppRestorationStateChange(e)
-                    }), {wait: 3e4})
+                    this.windowControllers = []
+                    this.isQuitting = false
+                    this.previousRestorationState = __store.Store.getState().history.appRestorationState
+                    this.appStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectAppState,
+                        ((current, previous) => this.handleAppStateChange(current, previous))
+                    )
+                    this.historyStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => __store.selectHistory(rootState),
+                        current => {
+                            T.appStatePersister.set("history", current)
+                        }
+                    )
+                    this.focusedWindowStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => __store.selectFocusedWindowDisplayState(rootState),
+                        current => {
+                            current && __store.Store.dispatch(E.updateLastFocusedWindowDisplayState(current))
+                        },
+                        {wait: 30_000}
+                    )
+                    this.appRestorationStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => ({
+                            tabs: rootState.tabs,
+                            windows: rootState.windows
+                        }),
+                        current => {
+                            this.handleAppRestorationStateChange(current)
+                        },
+                        {wait: 30_000}
+                    )
                 }
 
                 async onAppReady() {
-                    await l.app.whenReady(), this.initializeQuickSearchController(), this.trayController = new M.TrayController
+                    await electron.app.whenReady()
+                    this.initializeQuickSearchController()
+                    this.trayController = new __trayController.TrayController()
                 }
 
                 get intl() {
-                    if (!l.app.isReady()) {
-                        if ("production" === m.default.env) return (0, g.createIntlShape)("en-US");
+                    if (!electron.app.isReady()) {
+                        if ("production" === __config.default.env) {
+                            return g.createIntlShape("en-US");
+                        }
                         throw new Error("Cannot request intl before app is ready because locale isn't available")
                     }
                     if (!this._intl) {
-                        const e = l.app.getLocale(), t = "es-419" === e ? "es-LA" : e;
-                        this._notionLocale = (0, p.externalLocaleToNotionLocale)(t, "production" === m.default.env);
-                        const r = (0, g.createIntlShape)(this._notionLocale);
-                        if (!l.app.isReady()) return r;
-                        this._intl = r
+                        const locale = electron.app.getLocale(),
+                            _locale = "es-419" === locale ? "es-LA" : locale;
+                        this._notionLocale = p.externalLocaleToNotionLocale(_locale, "production" === __config.default.env);
+                        const intl = g.createIntlShape(this._notionLocale);
+                        if (!electron.app.isReady()) return intl;
+                        this._intl = intl
                     }
                     return this._intl
                 }
@@ -308,10 +482,14 @@
                 }
 
                 rehydrateSingleTabInBackground(e) {
-                    if (!this.previousRestorationState || e) return !1;
+                    if (!this.previousRestorationState || e) {
+                        return false
+                    }
                     const t = h.maxBy(this.previousRestorationState, "focusOrder");
-                    if (!t) return !1;
-                    const r = t.tabs.find((e => e.isActive));
+                    if (!t) {
+                        return false
+                    }
+                    const r = t.tabs.find(e => e.isActive)
                     return !!r && (this.newWindow({
                         windowId: t.windowId,
                         displayState: t.displayState,
@@ -319,13 +497,15 @@
                         initialTabId: r.tabId,
                         initialParentTabId: r.parentTabId,
                         showWhenLoaded: !1
-                    }), !0)
+                    }), true)
                 }
 
                 rehydrateEntireAppInForeground(e) {
-                    if (!this.previousRestorationState) return !1;
-                    const t = this.previousRestorationState;
-                    return h.orderBy(t, ["focusOrder"], ["asc"]).forEach(((r, n) => {
+                    if (!this.previousRestorationState) {
+                        return false
+                    }
+                    const previousRestorationState = this.previousRestorationState;
+                    h.orderBy(previousRestorationState, ["focusOrder"], ["asc"]).forEach((r, n) => {
                         const o = this.getWindowControllerForId(r.windowId) || this.newWindow({
                             windowId: r.windowId,
                             displayState: r.displayState,
@@ -334,51 +514,63 @@
                             initialParentTabId: r.tabs[0].parentTabId,
                             showWhenLoaded: !1
                         });
-                        o.browserWindow.show(), o.browserWindow.focus(), r.tabs.forEach((e => {
-                            o.hasTabWithId(e.tabId) || o.newTabAtIndex({
-                                url: this.getRestoredUrl(e.url),
-                                insertionIndex: e.index,
-                                makeActiveTab: e.isActive,
-                                tabId: e.tabId,
-                                parentTabId: e.parentTabId
+                        o.browserWindow.show()
+                        o.browserWindow.focus()
+                        r.tabs.forEach(tab => {
+                            o.hasTabWithId(tab.tabId) || o.newTabAtIndex({
+                                url: this.getRestoredUrl(tab.url),
+                                insertionIndex: tab.index,
+                                makeActiveTab: tab.isActive,
+                                tabId: tab.tabId,
+                                parentTabId: tab.parentTabId
                             })
-                        })), e && n === t.length - 1 && o.newTabAtIndex({url: e, insertionIndex: 0, makeActiveTab: !0})
-                    })), this.previousRestorationState = void 0, !0
+                        })
+                        e && n === previousRestorationState.length - 1 && o.newTabAtIndex({
+                            url: e,
+                            insertionIndex: 0,
+                            makeActiveTab: !0
+                        })
+                    })
+                    this.previousRestorationState = void 0
+                    return true
                 }
 
                 newWindow(e) {
                     this.trackAnalyticsEvent("electron_new_window");
                     const t = I.WindowController.newInstanceWithUrl({
                         intl: this.intl,
-                        windowId: e.windowId || (0, O.createWindowId)(),
-                        initialTabUrl: (0, w.normalizeUrlProtocolWithDefault)(e.initialUrl),
+                        windowId: e.windowId || O.createWindowId(),
+                        initialTabUrl: w.normalizeUrlProtocolWithDefault(e.initialUrl),
                         displayState: e.displayState,
                         initialTabId: e.initialTabId,
                         initialParentTabId: e.initialParentTabId,
                         showWhenLoaded: e.showWhenLoaded
                     });
-                    return this.windowControllers.push(t), t.browserWindow.on("focus", (() => {
+                    this.windowControllers.push(t)
+                    t.browserWindow.on("focus", () => {
                         this.mostRecentlyFocusedWindowController = t
-                    })), t
+                    })
+                    return t
                 }
 
-                createWindowForTabController(e) {
+                createWindowForTabController(tabController) {
                     const t = I.WindowController.newInstanceWithController({
-                        windowId: (0, O.createWindowId)(),
+                        windowId: O.createWindowId(),
                         intl: this.intl,
-                        initialTabController: e
+                        initialTabController: tabController
                     });
                     this.windowControllers.push(t);
                     const r = t.browserWindow;
-                    return r.on("focus", (() => {
+                    r.on("focus", () => {
                         this.mostRecentlyFocusedWindowController = t
-                    })), r
+                    })
+                    return r
                 }
 
                 reopenLastClosedPages() {
-                    const e = S.Store.getState().history.closeEvents?.[0];
+                    const e = __store.Store.getState().history.closeEvents?.[0];
                     if (!e) return;
-                    S.Store.dispatch((0, E.popCloseEvent)());
+                    __store.Store.dispatch((0, E.popCloseEvent)());
                     const t = this.getWindowControllerForId(e.windowId);
                     if (t) if ("single-tab" === e.type) t.newTabAtIndex({
                         url: this.getRestoredUrl(e.url),
@@ -415,12 +607,16 @@
                 }
 
                 initializeQuickSearchController() {
-                    k.QUICK_SEARCH_ENABLED && (this.quickSearchController || (this.quickSearchController = new _.QuickSearchController))
+                    if (__appSlice.QUICK_SEARCH_ENABLED) {
+                        if (!this.quickSearchController) {
+                            this.quickSearchController = new __quickSearchController.QuickSearchController()
+                        }
+                    }
                 }
 
                 openURLOptionallySurfacingExistingTab(e) {
                     const t = this.getWindowAndTabControllerWithEquivalentURL(f.parse(e));
-                    t ? this.openUrlInTab(e, t) : this.openUrlInNewTabOrWindow(e), l.app.focus({steal: !0})
+                    t ? this.openUrlInTab(e, t) : this.openUrlInNewTabOrWindow(e), electron.app.focus({steal: !0})
                 }
 
                 openUserSettings() {
@@ -441,26 +637,26 @@
                         this.openURLOptionallySurfacingExistingTab(o)
                     } else this.navigateFocusedWindowToUrl(e);
                     b.closeLastBrowserTab({urlContaining: n}).catch((e => {
-                        A.error("Error closing last browser tab", e)
+                        scopeLogger.error("Error closing last browser tab", e)
                     }))
                 }
 
                 getFocusedWindowController() {
-                    return this.getWindowControllerForWebContents(l.BrowserWindow.getFocusedWindow()?.webContents)
+                    return this.getWindowControllerForWebContents(electron.BrowserWindow.getFocusedWindow()?.webContents)
                 }
 
                 async waitForFocusedWindowController() {
                     return this.getFocusedWindowController() || new Promise((e => {
                         const t = () => {
                             const r = this.getFocusedWindowController();
-                            r && (e(r), l.app.removeListener("browser-window-focus", t))
+                            r && (e(r), electron.app.removeListener("browser-window-focus", t))
                         };
-                        l.app.on("browser-window-focus", t)
+                        electron.app.on("browser-window-focus", t)
                     }))
                 }
 
                 getMostRecentlyFocusedWindowController() {
-                    const e = h.maxBy(Object.values(S.Store.getState().windows), (e => e.focusOrder));
+                    const e = h.maxBy(Object.values(__store.Store.getState().windows), (e => e.focusOrder));
                     if (e) {
                         const t = this.getWindowControllerForId(e.windowId);
                         if (t) return t
@@ -470,7 +666,7 @@
 
                 getWindowControllerForWebContents(e) {
                     if (!e) return;
-                    const t = l.BrowserWindow.fromWebContents(e);
+                    const t = electron.BrowserWindow.fromWebContents(e);
                     return t ? this.windowControllers.find((e => e.browserWindow.id === t.id)) : void 0
                 }
 
@@ -488,7 +684,7 @@
                 }
 
                 refreshAll(e) {
-                    const t = l.BrowserWindow.getFocusedWindow();
+                    const t = electron.BrowserWindow.getFocusedWindow();
                     if (e || !t) return this.windowControllers.forEach((e => e.refresh({includeActiveTab: !0}))), void this.quickSearchController?.reload();
                     this.windowControllers.forEach((e => {
                         e.refresh({includeActiveTab: e.browserWindow.id !== t.id})
@@ -506,12 +702,12 @@
                 }
 
                 zoomIn() {
-                    const e = S.Store.getState().app.zoomFactor + d.ELECTRON_ZOOM_INCREMENT;
+                    const e = __store.Store.getState().app.zoomFactor + d.ELECTRON_ZOOM_INCREMENT;
                     this.setZoom(Math.min(Math.max(d.ELECTRON_ZOOM_MINIMUM, e), d.ELECTRON_ZOOM_MAXIMUM))
                 }
 
                 zoomOut() {
-                    const e = S.Store.getState().app.zoomFactor - d.ELECTRON_ZOOM_INCREMENT;
+                    const e = __store.Store.getState().app.zoomFactor - d.ELECTRON_ZOOM_INCREMENT;
                     this.setZoom(Math.min(Math.max(d.ELECTRON_ZOOM_MINIMUM, e), d.ELECTRON_ZOOM_MAXIMUM))
                 }
 
@@ -520,7 +716,7 @@
                 }
 
                 setZoom(e) {
-                    S.Store.dispatch((0, k.updateZoomFactor)(Math.min(Math.max(d.ELECTRON_ZOOM_MINIMUM, e), d.ELECTRON_ZOOM_MAXIMUM)))
+                    __store.Store.dispatch((0, __appSlice.updateZoomFactor)(Math.min(Math.max(d.ELECTRON_ZOOM_MINIMUM, e), d.ELECTRON_ZOOM_MAXIMUM)))
                 }
 
                 handleAppStateChange(e, t) {
@@ -551,7 +747,7 @@
                             }
                         }))
                     })));
-                    S.Store.dispatch((0, E.setAppRestorationState)(t))
+                    __store.Store.dispatch((0, E.setAppRestorationState)(t))
                 }
 
                 handleQuit() {
@@ -559,18 +755,18 @@
                 }
 
                 handleQuitWithoutSavingTabs() {
-                    S.Store.dispatch((0, C.resetTabState)()), S.Store.dispatch((0, O.resetWindowState)()), S.Store.dispatch((0, E.resetHistoryState)()), l.app.quit()
+                    __store.Store.dispatch((0, C.resetTabState)()), __store.Store.dispatch((0, O.resetWindowState)()), __store.Store.dispatch((0, E.resetHistoryState)()), electron.app.quit()
                 }
 
                 handleWindowClose(e, t) {
                     const r = 1 === this.windowControllers.length, n = this.isQuitting,
-                        o = S.Store.getState().app.preferences, a = !1 === o.isHideLastWindowOnCloseEnabled,
+                        o = __store.Store.getState().app.preferences, a = !1 === o.isHideLastWindowOnCloseEnabled,
                         i = !1 === o.isQuickSearchEnabled;
-                    return c.default.debug("Window close", {
+                    return electron_log.default.debug("Window close", {
                         lastWindow: r,
                         isQuitting: n,
                         isHideDisabled: a
-                    }), !(r && !n && !a || (this.windowControllers = this.windowControllers.filter((e => e.browserWindow !== t)), this.mostRecentlyFocusedWindowController?.browserWindow.id === t.id && (this.mostRecentlyFocusedWindowController = void 0), "win32" === process.platform && 0 === this.windowControllers.length && i && !n && l.app.quit(), 0))
+                    }), !(r && !n && !a || (this.windowControllers = this.windowControllers.filter((e => e.browserWindow !== t)), this.mostRecentlyFocusedWindowController?.browserWindow.id === t.id && (this.mostRecentlyFocusedWindowController = void 0), "win32" === process.platform && 0 === this.windowControllers.length && i && !n && electron.app.quit(), 0))
                 }
 
                 getWindowAndTabControllerWithEquivalentURL(e) {
@@ -583,7 +779,7 @@
                 }
 
                 openUrlInTab(e, {windowController: t, tabController: r}) {
-                    const n = {url: e, deduplicationID: s.default.randomUUID()};
+                    const n = {url: e, deduplicationID: crypto.default.randomUUID()};
                     r.navigateToUrl(n), t.makeTabActive(r.tabId), t.browserWindow.isMinimized() && t.browserWindow.restore(), t.browserWindow.show()
                 }
 
@@ -609,7 +805,7 @@
                 }
 
                 handleOpenAtLoginChange(e) {
-                    (0, v.setIsOpenAtLogin)(e), e && ((0, v.getIsOpenAtLogin)() || (c.default.warn("Tried to enable open at login, but failed."), (0, y.showOpenAtLoginErrorDialog)(), S.Store.dispatch((0, k.updatePreferences)({isOpenAtLoginEnabled: !1}))))
+                    (0, v.setIsOpenAtLogin)(e), e && ((0, v.getIsOpenAtLogin)() || (electron_log.default.warn("Tried to enable open at login, but failed."), (0, y.showOpenAtLoginErrorDialog)(), __store.Store.dispatch((0, __appSlice.updatePreferences)({isOpenAtLoginEnabled: !1}))))
                 }
 
                 getRestoredUrl(e) {
@@ -617,44 +813,85 @@
                 }
 
                 updateMediaIndicator(e, r) {
-                    const n = t.appController.getTabControllerForWebContents(e);
-                    n && S.Store.dispatch((0, C.updateTabIsMediaInputActive)({tabId: n.tabId, isMediaInputActive: r}))
+                    const n = exports.appController.getTabControllerForWebContents(e);
+                    n && __store.Store.dispatch((0, C.updateTabIsMediaInputActive)({
+                        tabId: n.tabId,
+                        isMediaInputActive: r
+                    }))
                 }
             }
 
-            t.appController = new P, t.AppController_TEST_ONLY = P
-        }, 87309: function (e, t, r) {
+            exports.appController = new AppController()
+            exports.AppController_TEST_ONLY = AppController
+        },
+
+        // AssetCache
+        87309: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.AssetCache = t.assetCacheDirName = void 0;
-            const s = i(r(76982)), l = i(r(16928)), c = a(r(4482)), u = i(r(47419)), d = i(r(80115)), p = i(r(45437)),
-                h = r(4058), f = r(28902), m = a(r(6600)), g = r(21248), b = r(43067), v = a(r(60411)), y = i(r(11239)),
-                w = r(3420), _ = r(5554), k = r(13387), T = u.default.scope("AssetCache");
-            t.assetCacheDirName = "notionAssetCache-v2", t.AssetCache = class {
-                constructor(e) {
-                    this.args = e, this.queue = new h.AsyncQueue(1), this.events = new p.default, this.appActive = !0, this.lastAppStateChangeTime = 0, this.latestVersionFileName = "latestVersion.json", this.assetsJsonFileName = "assets.json", this.assetHeadersFileName = "headers.json", this.assetsDirName = "assets", this.cacheDir = l.default.join(this.args.baseDir, t.assetCacheDirName), this.latestVersionPath = l.default.join(this.cacheDir, this.latestVersionFileName)
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = i(__require(76982)),
+                __path = i(__require(16928)),
+                electron = a(__require(4482)),
+                electron_log = i(__require(47419)),
+                d = i(__require(80115)),
+                __events = i(__require(45437)),
+                __asyncQueue = __require(4058),
+                f = __require(28902),
+                m = a(__require(6600)),
+                g = __require(21248),
+                b = __require(43067),
+                v = a(__require(60411)),
+                y = i(__require(11239)),
+                w = __require(3420),
+                _ = __require(5554),
+                k = __require(13387)
+
+            const logger = electron_log.default.scope("AssetCache");
+
+            exports.assetCacheDirName = "notionAssetCache-v2"
+
+            exports.AssetCache = class {
+                constructor(args) {
+                    this.args = args
+                    this.queue = new __asyncQueue.AsyncQueue(1)
+                    this.events = new __events.default
+                    this.appActive = true
+                    this.lastAppStateChangeTime = 0
+                    this.latestVersionFileName = "latestVersion.json"
+                    this.assetsJsonFileName = "assets.json"
+                    this.assetHeadersFileName = "headers.json"
+                    this.assetsDirName = "assets"
+                    this.cacheDir = __path.default.join(this.args.baseDir, exports.assetCacheDirName)
+                    this.latestVersionPath = __path.default.join(this.cacheDir, this.latestVersionFileName)
                 }
 
                 async handleRequest(e) {
@@ -665,8 +902,8 @@
                     if (o.assetsJson.proxyServerPathPrefixes.some((e => n.startsWith(e)))) return;
                     const a = o.assetsJson.files.find((e => e.path === n));
                     if (a) {
-                        const e = this.getAssetsDir(o.assetsJson.version), t = l.default.join(e, a.path);
-                        return (0, _.shouldLog)("silly") && T.silly("Performing file request", {
+                        const e = this.getAssetsDir(o.assetsJson.version), t = __path.default.join(e, a.path);
+                        return (0, _.shouldLog)("silly") && logger.silly("Performing file request", {
                             absolutePath: t,
                             urlPath: n
                         }), {absolutePath: t, headers: this.getHeaders(a.path)}
@@ -680,7 +917,7 @@
                     const i = this.getAssetsDir(o.assetsJson.version);
                     let s = o.assetsJson.entry;
                     if (o.assetsJson.localeHtml) {
-                        const e = c.session.fromPartition(k.electronSessionPartition).cookies, [t] = await e.get({name: "notion_locale"});
+                        const e = electron.session.fromPartition(k.electronSessionPartition).cookies, [t] = await e.get({name: "notion_locale"});
                         let r = "en-US";
                         t && (r = (0, f.getLocaleFromCookie)(t.value));
                         const n = o.assetsJson.localeHtml[r];
@@ -694,8 +931,8 @@
                             type: "requestReturnedAsIndexV2",
                             data: {url: n}
                         });
-                        const e = l.default.join(i, u.path);
-                        return (0, _.shouldLog)("silly") && T.silly("Performing file request (2)", {
+                        const e = __path.default.join(i, u.path);
+                        return (0, _.shouldLog)("silly") && logger.silly("Performing file request (2)", {
                             absolutePath: e,
                             urlPath: n
                         }), {absolutePath: e, headers: this.getHeaders(u.path)}
@@ -710,10 +947,10 @@
 
                 initialize() {
                     return this.ready || (this.ready = (async () => {
-                        T.debug("Latest version", {latestVersionPath: this.latestVersionPath}), this.latestVersion = await this.loadJson(this.latestVersionPath), T.debug("Current version loaded", {
+                        logger.debug("Latest version", {latestVersionPath: this.latestVersionPath}), this.latestVersion = await this.loadJson(this.latestVersionPath), logger.debug("Current version loaded", {
                             version: this.latestVersion?.version,
                             hash: this.latestVersion?.hash
-                        }), await this.syncVersions(), T.debug("Current synced assets.json", {version: this.assetCacheState?.assetsJson.version}), await this.cleanOldVersions()
+                        }), await this.syncVersions(), logger.debug("Current synced assets.json", {version: this.assetCacheState?.assetsJson.version}), await this.cleanOldVersions()
                     })()), this.ready
                 }
 
@@ -728,13 +965,13 @@
                 }
 
                 async checkForUpdates() {
-                    if (0 === this.queue.getStats().queue) return T.debug("Enqueue update"), this.queue.enqueue((() => this.checkForUpdatesNow()));
-                    T.debug("Update already queued")
+                    if (0 === this.queue.getStats().queue) return logger.debug("Enqueue update"), this.queue.enqueue((() => this.checkForUpdatesNow()));
+                    logger.debug("Update already queued")
                 }
 
                 async checkForUpdatesNow() {
                     const e = Date.now();
-                    T.debug("Checking for app.js update"), this.events.emit("checking-for-update");
+                    logger.debug("Checking for app.js update"), this.events.emit("checking-for-update");
                     const t = Date.now(), r = this.assetCacheState,
                         n = this.latestVersion && this.latestVersion.hash || r && r.assetsJson.hash || "";
                     let o;
@@ -746,32 +983,32 @@
                                 body: JSON.stringify({hash: n}),
                                 signal: e.signal
                             }));
-                        if (t.timeout) return T.error("Timeout: Fetch request"), void e.abort();
+                        if (t.timeout) return logger.error("Timeout: Fetch request"), void e.abort();
                         o = t.result
                     } catch (e) {
-                        return T.debug("no app.js update available (because offline)", {error: e}), void this.events.emit("update-not-available")
+                        return logger.debug("no app.js update available (because offline)", {error: e}), void this.events.emit("update-not-available")
                     }
                     if (200 !== o.status) {
                         const e = new Error(`${o.status}: ${o.statusText}`);
-                        return T.error(`no app update available (${o.status}: ${o.statusText})`, {data: this.createErrorDataMetrics(t)}), void this.events.emit("error", e)
+                        return logger.error(`no app update available (${o.status}: ${o.statusText})`, {data: this.createErrorDataMetrics(t)}), void this.events.emit("error", e)
                     }
                     this.logPerformance("updateAssetsFetch", t);
                     const a = Date.now();
                     let i;
                     try {
                         const e = await (0, b.raceWithTimeout)(3e4, o.json());
-                        if (e.timeout) return void T.error("Timeout: JSON.parse");
+                        if (e.timeout) return void logger.error("Timeout: JSON.parse");
                         i = e.result
                     } catch (e) {
-                        return T.error("Failed to parse assets JSON", {
+                        return logger.error("Failed to parse assets JSON", {
                             error: e,
                             data: this.createErrorDataMetrics(a)
                         }), void this.events.emit("error", e)
                     }
                     this.logPerformance("updateAssetsResponseParse", a);
                     const s = Date.now();
-                    if (!("version" in i) || this.latestVersion && this.latestVersion.version === i.version) return T.debug("No app update available (noAppUpdateAvailable2)"), void this.events.emit("update-not-available");
-                    T.debug("App update available", {version: i.version}), this.events.emit("update-available", i);
+                    if (!("version" in i) || this.latestVersion && this.latestVersion.version === i.version) return logger.debug("No app update available (noAppUpdateAvailable2)"), void this.events.emit("update-not-available");
+                    logger.debug("App update available", {version: i.version}), this.events.emit("update-available", i);
                     const c = {}, u = this.getCacheDir(i.version), p = this.getAssetsDir(i.version),
                         f = this.getAssetsJsonPath(i.version), m = this.getAssetHeadersPath(i.version),
                         y = await this.directoryExists(u), w = new Set;
@@ -779,7 +1016,7 @@
                         try {
                             await d.default.mkdirp(u)
                         } catch (e) {
-                            return T.error("Failed to run fs.mkdirp", {
+                            return logger.error("Failed to run fs.mkdirp", {
                                 error: e,
                                 data: this.createErrorDataMetrics(s)
                             }), void this.events.emit("error", e)
@@ -787,14 +1024,14 @@
                         if (r) {
                             const e = r.assetsJson, t = r.assetHeaders, n = new Set(e.files.map((e => e.path))),
                                 o = i.files.filter((e => n.has(e.path))), a = this.getCacheDir(e.version),
-                                u = l.default.join(a, this.assetsDirName);
+                                u = __path.default.join(a, this.assetsDirName);
                             for (const e of o) {
-                                const r = e.path, n = l.default.join(u, r), o = l.default.join(p, r);
+                                const r = e.path, n = __path.default.join(u, r), o = __path.default.join(p, r);
                                 c[r] = t[r];
                                 try {
                                     await d.default.copy(n, o), w.add(r)
                                 } catch (e) {
-                                    T.error("Failed to run fs.copy", {
+                                    logger.error("Failed to run fs.copy", {
                                         error: e,
                                         src: n,
                                         dest: o,
@@ -813,10 +1050,10 @@
                         }))
                     };
                     S(), this.logPerformance("assetJson", s);
-                    const C = Date.now(), O = new h.AsyncQueue(8), M = [];
+                    const C = Date.now(), O = new __asyncQueue.AsyncQueue(8), M = [];
                     await Promise.all(i.files.map((e => O.enqueue((async () => {
                         if (w.has(e.path) && await this.verifyAsset(p, e)) return k++, void S();
-                        const t = l.default.join(p, e.path);
+                        const t = __path.default.join(p, e.path);
                         try {
                             const r = await this.downloadFile(v.resolve(this.args.baseUrl, e.path), t);
                             if (c[e.path] = r, await this.verifyAsset(p, e)) k++, S(); else {
@@ -828,14 +1065,14 @@
                         }
                     }))))), this.logPerformance("prepare", C);
                     const I = Date.now();
-                    if (M.length > 0) return T.error("Found errors (downloadError)", {
+                    if (M.length > 0) return logger.error("Found errors (downloadError)", {
                         miscErrorString: (0, g.safelyConvertAnyToString)({errors: M.slice(0, 100)}),
                         data: this.createErrorDataMetrics(s)
                     }), void this.events.emit("error", M[0]);
                     if (!await this.writeJson(m, c)) return void this.events.emit("error", new Error("Cannot write headers.json"));
                     if (!await this.writeJson(f, i)) return void this.events.emit("error", new Error("Cannot write assets.json"));
                     const A = {version: i.version, hash: i.hash};
-                    await this.writeJson(this.latestVersionPath, A) ? (this.latestVersion = A, T.debug("Checking for app.js update (2)"), T.info("App.js update download complete", {version: i.version}), this.events.emit("update-downloaded", i), T.info("Installing app.js update", {version: i.version}), this.events.emit("update-finished", i), this.logPerformance("download", I), this.logPerformance("checkForUpdatesNow", e)) : this.events.emit("error", new Error("Cannot write latestVersion.json"))
+                    await this.writeJson(this.latestVersionPath, A) ? (this.latestVersion = A, logger.debug("Checking for app.js update (2)"), logger.info("App.js update download complete", {version: i.version}), this.events.emit("update-downloaded", i), logger.info("Installing app.js update", {version: i.version}), this.events.emit("update-finished", i), this.logPerformance("download", I), this.logPerformance("checkForUpdatesNow", e)) : this.events.emit("error", new Error("Cannot write latestVersion.json"))
                 }
 
                 updateAppState(e, t) {
@@ -845,7 +1082,7 @@
                 logPerformance(e, t) {
                     if (!(0, _.shouldLog)("debug")) return;
                     const r = Date.now();
-                    !this.appActive || t < this.lastAppStateChangeTime || T.log(`performance.${e}`, {duration: r - t})
+                    !this.appActive || t < this.lastAppStateChangeTime || logger.log(`performance.${e}`, {duration: r - t})
                 }
 
                 createErrorDataMetrics(e) {
@@ -854,11 +1091,11 @@
                 }
 
                 async syncVersions() {
-                    if (!this.latestVersion) return T.debug("Sync version: No last version"), void this.events.emit("update-applied");
-                    if (this.assetCacheState && this.latestVersion.version === this.assetCacheState.assetsJson.version) return T.debug("Sync version: Skipping, same version"), void this.events.emit("update-applied");
+                    if (!this.latestVersion) return logger.debug("Sync version: No last version"), void this.events.emit("update-applied");
+                    if (this.assetCacheState && this.latestVersion.version === this.assetCacheState.assetsJson.version) return logger.debug("Sync version: Skipping, same version"), void this.events.emit("update-applied");
                     const e = this.getAssetsJsonPath(this.latestVersion.version),
                         t = this.getAssetHeadersPath(this.latestVersion.version);
-                    T.info("Sync version", {assetsJsonPath: e, headersJsonPath: t});
+                    logger.info("Sync version", {assetsJsonPath: e, headersJsonPath: t});
                     const r = await this.loadJson(e), n = await this.loadJson(t);
                     r && n && (this.assetCacheState = {
                         assetsJson: r,
@@ -882,7 +1119,7 @@
                 }
 
                 async verifyAsset(e, t) {
-                    const r = l.default.join(e, t.path);
+                    const r = __path.default.join(e, t.path);
                     return await this.getFileHash(r) === t.hash
                 }
 
@@ -905,7 +1142,7 @@
                     try {
                         return await d.default.readJSON(e)
                     } catch (t) {
-                        T.error("Error reading and parsing JSON", {error: t, absolutePath: e})
+                        logger.error("Error reading and parsing JSON", {error: t, absolutePath: e})
                     }
                 }
 
@@ -924,19 +1161,19 @@
                 }
 
                 getCacheDir(e) {
-                    return l.default.join(this.cacheDir, e)
+                    return __path.default.join(this.cacheDir, e)
                 }
 
                 getAssetsDir(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetsDirName)
+                    return __path.default.join(this.getCacheDir(e), this.assetsDirName)
                 }
 
                 getAssetsJsonPath(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetsJsonFileName)
+                    return __path.default.join(this.getCacheDir(e), this.assetsJsonFileName)
                 }
 
                 getAssetHeadersPath(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetHeadersFileName)
+                    return __path.default.join(this.getCacheDir(e), this.assetHeadersFileName)
                 }
 
                 async directoryExists(e) {
@@ -977,7 +1214,7 @@
 
                 async getFileHash(e) {
                     try {
-                        const t = d.default.createReadStream(e), r = s.default.createHash("md5");
+                        const t = d.default.createReadStream(e), r = crypto.default.createHash("md5");
                         return t.on("data", (e => r.update(e))), await new Promise(((e, n) => {
                             t.on("error", (function (e) {
                                 n(e)
@@ -997,8 +1234,8 @@
                 }
 
                 async downloadFile(e, t) {
-                    await d.default.mkdirp(l.default.parse(t).dir), this.session = this.session || c.session.fromPartition(k.electronSessionPartition);
-                    const r = c.default.net.request({url: e, session: this.session}),
+                    await d.default.mkdirp(__path.default.parse(t).dir), this.session = this.session || electron.session.fromPartition(k.electronSessionPartition);
+                    const r = electron.default.net.request({url: e, session: this.session}),
                         n = d.default.createWriteStream(t), o = {};
                     return r.on("response", (function (e) {
                         const {statusCode: t, statusMessage: a} = e;
@@ -1014,151 +1251,237 @@
                     }))
                 }
             }
-        }, 26760: (e, t, r) => {
+        },
+
+        // QuickSearchController
+        26760: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.QuickSearchController = void 0;
-            const n = r(4482), o = r(36343), a = r(21852), i = r(29902), s = r(13387), l = r(14473), c = r(69340),
-                u = (0, o.defineMessages)({
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                o = __require(36343),
+                a = __require(21852),
+                i = __require(29902),
+                s = __require(13387),
+                quick_search_slice = __require(14473),
+                __store = __require(69340),
+                u = o.defineMessages({
                     windowTitle: {
                         id: "commandSearch.window.title",
                         defaultMessage: "Notion - Command Search",
                         description: "Title of the Command Search modal. We want Notion to be in there because this shows up at the OS level"
                     }
                 });
-            t.QuickSearchController = class {
+
+            exports.QuickSearchController = class {
                 constructor() {
-                    this.nodeMacWindow = "darwin" === process.platform ? r(34681) : void 0, this.quickSearchStateUnsubscribe = (0, c.subscribeToSelector)(c.selectQuickSearchState, ((e, t) => this.updateQuickSearchState(e, t))), this.appStateUnsubscribe = (0, c.subscribeToSelector)(c.selectAppState, ((e, t) => this.updateAppState(e, t))), this.updateAppState(c.Store.getState().app)
+                    this.nodeMacWindow = "darwin" === process.platform ? __require(34681) : void 0
+                    this.quickSearchStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectQuickSearchState,
+                        (current, previous) => this.updateQuickSearchState(current, previous)
+                    )
+                    this.appStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectAppState,
+                        (current, previous) => this.updateAppState(current, previous)
+                    )
+                    this.updateAppState(__store.Store.getState().app)
                 }
 
                 toggleDevTools() {
-                    this.quickSearchBrowserWindow && this.quickSearchBrowserWindow.webContents.openDevTools({mode: "detach"})
+                    if (this.quickSearchBrowserWindow) {
+                        this.quickSearchBrowserWindow.webContents.openDevTools({mode: "detach"})
+                    }
                 }
 
                 reload() {
                     if (!this.quickSearchBrowserWindow) return;
-                    clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = void 0;
-                    const e = c.Store.getState().quickSearch.readyState, t = "error" === e.type ? e.attempts : 0;
-                    c.Store.dispatch((0, l.setReadyState)({
+
+                    clearInterval(this.loadingWatchdogTimeout)
+                    this.loadingWatchdogTimeout = void 0;
+
+                    const readyState = __store.Store.getState().quickSearch.readyState,
+                        attempts = "error" === readyState.type ? readyState.attempts : 0;
+                    __store.Store.dispatch(quick_search_slice.setReadyState({
                         type: "loading",
-                        attempts: t + 1
-                    })), this.quickSearchBrowserWindow.webContents.loadURL(`${(0, i.initialBaseUrl)()}/quick-search`).then((() => {
-                        c.Store.dispatch((0, l.setReadyState)({type: "loaded"}))
-                    })).catch((() => {
-                        const e = c.Store.getState().quickSearch.readyState;
-                        "loading" === e.type && c.Store.dispatch((0, l.setReadyState)({
-                            type: "error",
-                            attempts: e.attempts
-                        }))
+                        attempts: attempts + 1
                     }))
+                    this.quickSearchBrowserWindow.webContents
+                        .loadURL(`${i.initialBaseUrl()}/quick-search`)
+                        .then((() => {
+                            __store.Store.dispatch(quick_search_slice.setReadyState({type: "loaded"}))
+                        }))
+                        .catch(() => {
+                            const readyState = __store.Store.getState().quickSearch.readyState;
+                            if ("loading" === readyState.type) {
+                                __store.Store.dispatch(quick_search_slice.setReadyState({
+                                    type: "error",
+                                    attempts: readyState.attempts
+                                }))
+                            }
+                        })
                 }
 
                 updateQuickSearchState(e, t) {
                     if (this.quickSearchBrowserWindow) {
                         if ("visible" === e.visibilityState.type && "not-visible" === t.visibilityState.type) {
                             this.quickSearchBrowserWindow.webContents.send("quick-search:visibility-state-changed", !0, e.visibilityState.source);
-                            const t = "darwin" === process.platform && n.app.isHidden();
-                            if (this.quickSearchBrowserWindow.showInactive(), "darwin" === process.platform ? this.nodeMacWindow?.makeKeyAndOrderFront(this.quickSearchBrowserWindow.getNativeWindowHandle()) : this.quickSearchBrowserWindow.focus(), t) {
+                            const t = "darwin" === process.platform && electron.app.isHidden();
+
+                            this.quickSearchBrowserWindow.showInactive()
+                            "darwin" === process.platform
+                                ? this.nodeMacWindow?.makeKeyAndOrderFront(this.quickSearchBrowserWindow.getNativeWindowHandle())
+                                : this.quickSearchBrowserWindow.focus()
+                            if (t) {
                                 const e = this.quickSearchBrowserWindow;
-                                n.BrowserWindow.getAllWindows().forEach((t => {
+                                electron.BrowserWindow.getAllWindows().forEach(t => {
                                     t.id !== e.id && t.hide()
-                                }))
+                                })
                             }
-                        } else "not-visible" === e.visibilityState.type && "visible" === t.visibilityState.type && (this.quickSearchBrowserWindow.webContents.send("quick-search:visibility-state-changed", !1, e.visibilityState.source), this.quickSearchBrowserWindow.hide());
+                        } else if ("not-visible" === e.visibilityState.type && "visible" === t.visibilityState.type) {
+                            this.quickSearchBrowserWindow.webContents.send("quick-search:visibility-state-changed", !1, e.visibilityState.source)
+                            this.quickSearchBrowserWindow.hide()
+                        }
                         if ("error" === e.readyState.type && "error" !== t.readyState.type) {
                             const t = 1e3 * 2 ** Math.min(e.readyState.attempts, 10);
-                            clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = setInterval((() => {
+                            clearInterval(this.loadingWatchdogTimeout)
+                            this.loadingWatchdogTimeout = setInterval(() => {
                                 this.reload()
-                            }), t)
+                            }, t)
                         }
                     }
                 }
 
                 updateAppState(e, t) {
                     const r = Boolean(e.preferences.isQuickSearchEnabled),
-                        o = Boolean(t?.preferences?.isQuickSearchEnabled), a = e.preferences.quickSearchShortcut,
+                        o = Boolean(t?.preferences?.isQuickSearchEnabled),
+                        a = e.preferences.quickSearchShortcut,
                         i = t?.preferences?.quickSearchShortcut;
-                    !this.quickSearchBrowserWindow && r ? this.initializeQuickSearch() : this.quickSearchBrowserWindow && !r && this.destroyQuickSearch(), r && o ? a !== i && (i && n.globalShortcut.unregister(i), a && n.globalShortcut.register(a, (() => {
+                    !this.quickSearchBrowserWindow && r
+                        ? this.initializeQuickSearch()
+                        : this.quickSearchBrowserWindow && !r && this.destroyQuickSearch()
+                    r && o
+                        ? a !== i && (i && electron.globalShortcut.unregister(i), a && electron.globalShortcut.register(a, (() => {
                         this.handleGlobalShortcutPress()
-                    }))) : !r && o ? (a && n.globalShortcut.unregister(a), i && n.globalShortcut.unregister(i)) : r && !o && a && n.globalShortcut.register(a, (() => {
-                        this.handleGlobalShortcutPress()
-                    }))
+                    })))
+                        : !r && o
+                            ? (a && electron.globalShortcut.unregister(a), i && electron.globalShortcut.unregister(i))
+                            : r && !o && a && electron.globalShortcut.register(a, (() => {
+                            this.handleGlobalShortcutPress()
+                        }))
                 }
 
                 handleGlobalShortcutPress() {
                     const e = a.appController.getMostRecentlyFocusedWindowController();
-                    e && e.browserWindow.isFocused() ? e.getActiveTabController().openSearchModalInNotion() : c.Store.dispatch((0, l.toggleVisibilityStateIfReady)("shortcut"))
+                    e && e.browserWindow.isFocused()
+                        ? e.getActiveTabController().openSearchModalInNotion()
+                        : __store.Store.dispatch(quick_search_slice.toggleVisibilityStateIfReady("shortcut"))
                 }
 
                 initializeQuickSearch() {
-                    this.quickSearchBrowserWindow = new n.BrowserWindow({
+                    this.quickSearchBrowserWindow = new electron.BrowserWindow({
                         width: 755,
                         maxWidth: 755,
                         minWidth: 755,
                         height: 570,
                         minHeight: 570,
-                        maximizable: !1,
-                        resizable: !0,
-                        fullscreenable: !1,
-                        hiddenInMissionControl: !0,
-                        show: !1,
-                        frame: !1,
+                        maximizable: false,
+                        resizable: true,
+                        fullscreenable: false,
+                        hiddenInMissionControl: true,
+                        show: false,
+                        frame: false,
                         type: "panel",
-                        alwaysOnTop: !0,
+                        alwaysOnTop: true,
                         title: a.appController.intl.formatMessage(u.windowTitle),
                         webPreferences: {
-                            sandbox: !0,
-                            session: n.session.fromPartition(s.electronSessionPartition),
+                            sandbox: true,
+                            session: electron.session.fromPartition(s.electronSessionPartition),
                             preload: require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"),
-                            backgroundThrottling: !1
+                            backgroundThrottling: false
                         }
-                    }), this.quickSearchBrowserWindow.on("page-title-updated", (e => {
-                        e.preventDefault()
-                    })), this.quickSearchBrowserWindow.on("blur", (() => {
-                        "visible" !== c.Store.getState().quickSearch.visibilityState.type || this.quickSearchBrowserWindow?.webContents?.isDevToolsOpened() || c.Store.dispatch((0, l.toggleVisibilityStateIfReady)("navigation"))
-                    })), this.quickSearchBrowserWindow.webContents.on("render-process-gone", (() => {
-                        clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = void 0, c.Store.dispatch((0, l.setReadyState)({type: "crashed"}))
-                    })), n.app.on("before-quit", (() => {
+                    })
+                    this.quickSearchBrowserWindow.on("page-title-updated", evt => {
+                        evt.preventDefault()
+                    })
+                    this.quickSearchBrowserWindow.on("blur", () => {
+                        "visible" !== __store.Store.getState().quickSearch.visibilityState.type || this.quickSearchBrowserWindow?.webContents?.isDevToolsOpened() || __store.Store.dispatch(quick_search_slice.toggleVisibilityStateIfReady("navigation"))
+                    })
+                    this.quickSearchBrowserWindow.webContents.on("render-process-gone", () => {
+                        clearInterval(this.loadingWatchdogTimeout)
+                        this.loadingWatchdogTimeout = void 0
+                        __store.Store.dispatch(quick_search_slice.setReadyState({type: "crashed"}))
+                    })
+                    electron.app.on("before-quit", () => {
                         this.destroyQuickSearch()
-                    })), this.reload()
+                    })
+                    this.reload()
                 }
 
                 destroyQuickSearch() {
-                    clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = void 0, this.quickSearchBrowserWindow?.removeAllListeners(), this.quickSearchBrowserWindow?.destroy(), this.quickSearchBrowserWindow = void 0
+                    clearInterval(this.loadingWatchdogTimeout)
+                    this.loadingWatchdogTimeout = void 0
+                    this.quickSearchBrowserWindow?.removeAllListeners()
+                    this.quickSearchBrowserWindow?.destroy()
+                    this.quickSearchBrowserWindow = void 0
                 }
             }
-        }, 52728: function (e, t, r) {
+        },
+
+        // TabController
+        52728: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.TabController = void 0;
-            const s = r(4482), l = i(r(47419)), c = r(43277), u = i(r(5508)), d = r(13984), p = a(r(6600)),
-                h = r(43067), f = r(32289), m = a(r(60411)), g = i(r(11239)), b = r(27683), v = r(60522), y = r(29902),
-                w = r(13387), _ = r(69340), k = r(54417), T = r(54417);
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
 
-            class E {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = __require(4482),
+                l = i(__require(47419)),
+                c = __require(43277),
+                u = i(__require(5508)),
+                d = __require(13984),
+                p = a(__require(6600)),
+                h = __require(43067),
+                f = __require(32289),
+                m = a(__require(60411)),
+                g = i(__require(11239)),
+                b = __require(27683),
+                v = __require(60522),
+                y = __require(29902),
+                w = __require(13387),
+                _ = __require(69340),
+                k = __require(54417),
+                T = __require(54417);
+
+            class TabController {
                 static newInstance(e) {
-                    return new E(e)
+                    return new TabController(e)
                 }
 
                 set backgroundColor(e) {
@@ -1178,24 +1501,38 @@
                 }
 
                 constructor(e) {
-                    this.tabBarOffset = 0, this.animating = !1, this._isVisible = !1, this.handleResize = () => {
+                    this.tabBarOffset = 0
+                    this.animating = false
+                    this._isVisible = false
+                    this.handleResize = () => {
                         this.parentWindowControllerId && _.Store.getState().windows[this.parentWindowControllerId].activeTabId === this.tabId && this.updateState()
-                    }, this.handleResized = () => {
+                    }
+                    this.handleResized = () => {
                         this.updateState()
-                    }, this.debouncedUpdateState = p.debounce((() => this.updateState()), 200), this.tabId = e.id;
-                    const t = _.Store.getState().app, r = {
-                        spellcheck: !0,
-                        sandbox: !0,
-                        contextIsolation: !0,
+                    }
+                    this.debouncedUpdateState = p.debounce((() => this.updateState()), 200)
+                    this.tabId = e.id;
+                    const app = _.Store.getState().app
+                    const webPreferences = {
+                        spellcheck: true,
+                        sandbox: true,
+                        contextIsolation: true,
                         session: s.session.fromPartition(w.electronSessionPartition),
                         preload: require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js")
                     };
-                    this.notion = new s.BrowserView({webPreferences: r}), this.backgroundColor = t.preferences.isVibrancyEnabled ? "#00000000" : b.electronColors.notionBackground[_.Store.getState().app.theme.mode], this.notion.webContents.addListener("found-in-page", ((e, t) => this.handleFoundInPage(e, t))), this.notion.webContents.addListener("context-menu", ((e, t) => this.handleContextMenu(e, t))), this.notion.webContents.addListener("did-navigate-in-page", ((e, t, r, n, o) => {
+                    this.notion = new s.BrowserView({webPreferences: webPreferences})
+                    this.backgroundColor = app.preferences.isVibrancyEnabled
+                        ? "#00000000"
+                        : b.electronColors.notionBackground[_.Store.getState().app.theme.mode]
+                    this.notion.webContents.addListener("found-in-page", ((e, t) => this.handleFoundInPage(e, t)))
+                    this.notion.webContents.addListener("context-menu", ((e, t) => this.handleContextMenu(e, t)))
+                    this.notion.webContents.addListener("did-navigate-in-page", ((e, t, r, n, o) => {
                         o && this.shouldTrackUrlInHistory(t) && _.Store.dispatch((0, T.updateTabUrl)({
                             tabId: this.tabId,
                             url: t
                         }))
-                    })), this.notion.webContents.setWindowOpenHandler((e => {
+                    }))
+                    this.notion.webContents.setWindowOpenHandler((e => {
                         const t = "about:blank#blocked" === e.url || "about:blank",
                             r = e.frameName.startsWith("Notion");
                         return t && r ? {
@@ -1212,19 +1549,26 @@
                                 }
                             }
                         } : (this.sendToNotion("notion:new-window", e.url), {action: "deny"})
-                    })), this.notion.webContents.addListener("page-favicon-updated", ((e, t) => this.handlePageFaviconUpdated(e, t))), this.initialLoadedOrErroredDeferred = (0, h.deferred)(), this.initialReadyToShowDeferred = (0, h.deferred)(), "dark" === _.Store.getState().app.theme.mode ? (this._loadingState = "loading-not-ready-to-show", this.notion.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "darkmode_placeholder", "index.html")}`).then((() => {
-                        this._loadingState = "loading-ready-to-show", this.initialReadyToShowDeferred.resolve(), this.notion.webContents.loadURL(e.initialUrl).then((() => {
-                            this.notion.webContents.clearHistory(), this._loadingState = "loaded", this.initialLoadedOrErroredDeferred.resolve()
+                    }))
+                    this.notion.webContents.addListener("page-favicon-updated", ((e, t) => this.handlePageFaviconUpdated(e, t)))
+                    this.initialLoadedOrErroredDeferred = h.deferred()
+                    this.initialReadyToShowDeferred = h.deferred()
+                    "dark" === _.Store.getState().app.theme.mode
+                        ? (this._loadingState = "loading-not-ready-to-show", this.notion.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "darkmode_placeholder", "index.html")}`).then((() => {
+                            this._loadingState = "loading-ready-to-show", this.initialReadyToShowDeferred.resolve(), this.notion.webContents.loadURL(e.initialUrl).then((() => {
+                                this.notion.webContents.clearHistory(), this._loadingState = "loaded", this.initialLoadedOrErroredDeferred.resolve()
+                            })).catch((t => {
+                                this.notion.webContents.clearHistory(), this.handleInitialLoadError(e.initialUrl, t)
+                            }))
+                        })).catch((() => {
+                            l.default.error("Error loading placeholder page")
+                        })))
+                        : (this._loadingState = "loading-ready-to-show", this.initialReadyToShowDeferred.resolve(), this.notion.webContents.loadURL(e.initialUrl).then((() => {
+                            this._loadingState = "loaded", this.initialLoadedOrErroredDeferred.resolve()
                         })).catch((t => {
-                            this.notion.webContents.clearHistory(), this.handleInitialLoadError(e.initialUrl, t)
-                        }))
-                    })).catch((() => {
-                        l.default.error("Error loading placeholder page")
-                    }))) : (this._loadingState = "loading-ready-to-show", this.initialReadyToShowDeferred.resolve(), this.notion.webContents.loadURL(e.initialUrl).then((() => {
-                        this._loadingState = "loaded", this.initialLoadedOrErroredDeferred.resolve()
-                    })).catch((t => {
-                        this.handleInitialLoadError(e.initialUrl, t)
-                    })));
+                            this.handleInitialLoadError(e.initialUrl, t)
+                        })));
+
                     const n = {
                         spellcheck: !1,
                         contextIsolation: !1,
@@ -1232,12 +1576,16 @@
                         preload: require("path").resolve(__dirname, "../renderer", "search", "preload.js"),
                         transparent: !0
                     };
-                    this.search = new s.BrowserView({webPreferences: n}), this.search.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "search", "index.html")}`).catch((e => {
+                    this.search = new s.BrowserView({webPreferences: n})
+                    this.search.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "search", "index.html")}`).catch((e => {
                         l.default.error("Error loading search URL", e)
-                    })), _.Store.dispatch((0, T.initializeTabState)({
+                    }))
+                    _.Store.dispatch(T.initializeTabState({
                         tabId: e.id,
                         url: e.initialUrl
-                    })), this.appStateUnsubscribe = (0, _.subscribeToSelector)((e => (0, _.selectAppState)(e)), (() => this.updateState())), this.tabStateUnsubscribe = (0, _.subscribeToSelector)((t => (0, _.selectTabState)(t, e.id)), (() => this.updateState()))
+                    }))
+                    this.appStateUnsubscribe = _.subscribeToSelector((e => _.selectAppState(e)), (() => this.updateState()))
+                    this.tabStateUnsubscribe = _.subscribeToSelector((t => _.selectTabState(t, e.id)), (() => this.updateState()))
                 }
 
                 get initialReadyStatePromise() {
@@ -1605,47 +1953,72 @@
                 }
             }
 
-            t.TabController = E
-        }, 84087: function (e, t, r) {
+            exports.TabController = TabController
+        },
+
+        // TrayController
+        84087: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.TrayController = void 0;
-            const s = i(r(16928)), l = r(4482), c = i(r(47419)), u = r(14473), d = r(69340), p = r(63374),
-                h = c.default.scope("Tray");
-            t.TrayController = class {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __path = i(__require(16928)),
+                electron = __require(4482),
+                electron_log = i(__require(47419)),
+                quickSearchSlice = __require(14473),
+                __store = __require(69340),
+                p = __require(63374)
+
+            const logger = electron_log.default.scope("Tray");
+
+            exports.TrayController = class {
                 constructor() {
-                    this.isEnabled = !1, this.appStateUnsubscribe = (0, d.subscribeToSelector)(d.selectAppState, ((e, t) => this.updateAppState(e, t)));
-                    const e = d.Store.getState().app;
-                    this.updateAppState(e), this.onClick = this.onClick.bind(this), this.onRightClick = this.onRightClick.bind(this)
+                    this.isEnabled = false
+                    this.appStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectAppState,
+                        (current, previous) => this.updateAppState(current, previous)
+                    );
+                    const appState = __store.Store.getState().app;
+                    this.updateAppState(appState)
+                    this.onClick = this.onClick.bind(this)
+                    this.onRightClick = this.onRightClick.bind(this)
                 }
 
                 async onClick() {
-                    const {preferences: e} = d.Store.getState().app, {isQuickSearchEnabled: t} = e;
-                    if (t) d.Store.dispatch((0, u.toggleVisibilityStateIfReady)("tray-icon")); else {
-                        const {handleActivate: e} = await Promise.resolve().then((() => a(r(64982))));
-                        e()
+                    const {preferences} = __store.Store.getState().app
+                    const {isQuickSearchEnabled} = preferences;
+                    if (isQuickSearchEnabled) {
+                        __store.Store.dispatch(quickSearchSlice.toggleVisibilityStateIfReady("tray-icon"));
+                    } else {
+                        const {handleActivate} = await Promise.resolve().then(() => a(__require(64982)))
+                        handleActivate()
                     }
                 }
 
@@ -1654,73 +2027,123 @@
                 }
 
                 getIsEnabled(e) {
-                    const {preferences: t} = e, {
-                        isMenuBarIconEnabled: r,
-                        isQuickSearchEnabled: n,
-                        isHideLastWindowOnCloseEnabled: o
-                    } = t;
-                    return !(!r || !n) || "win32" === process.platform || (h.debug("Tray disabled", {
-                        isMenuBarIconEnabled: r,
-                        isQuickSearchEnabled: n,
-                        isHideLastWindowOnCloseEnabled: o
-                    }), !1)
+                    const {preferences: preferences} = e
+                    const {
+                        isMenuBarIconEnabled: isMenuBarIconEnabled,
+                        isQuickSearchEnabled: isQuickSearchEnabled,
+                        isHideLastWindowOnCloseEnabled: isHideLastWindowOnCloseEnabled,
+                    } = preferences;
+                    return !(!isMenuBarIconEnabled || !isQuickSearchEnabled) || "win32" === process.platform || (logger.debug("Tray disabled", {
+                        isMenuBarIconEnabled: isMenuBarIconEnabled,
+                        isQuickSearchEnabled: isQuickSearchEnabled,
+                        isHideLastWindowOnCloseEnabled: isHideLastWindowOnCloseEnabled
+                    }), false)
                 }
 
                 updateAppState(e, t) {
-                    const {preferences: r} = e;
-                    this.isEnabled = this.getIsEnabled(e), [r.quickSearchShortcut !== t?.preferences?.quickSearchShortcut, r.isMenuBarIconEnabled !== t?.preferences?.isMenuBarIconEnabled, r.isQuickSearchEnabled !== t?.preferences?.isQuickSearchEnabled, t && this.isEnabled !== this.getIsEnabled(t)].some((e => e)) && (this.trayMenu && !this.isEnabled ? this.trayMenu = void 0 : this.isEnabled && (this.trayMenu = l.Menu.buildFromTemplate((0, p.buildTrayMenuTemplate)())), this.tray && !this.isEnabled ? (this.tray.destroy(), this.tray = void 0) : !this.tray && this.isEnabled && (this.tray = new l.Tray(this.getIcon()), this.tray.on("click", (() => {
-                        this.onClick()
-                    })), this.tray.on("right-click", (() => this.onRightClick())), this.tray.setToolTip(l.app.getName())))
+                    const {preferences: preferences} = e;
+                    this.isEnabled = this.getIsEnabled(e)
+                    if ([
+                        preferences.quickSearchShortcut !== t?.preferences?.quickSearchShortcut,
+                        preferences.isMenuBarIconEnabled !== t?.preferences?.isMenuBarIconEnabled,
+                        preferences.isQuickSearchEnabled !== t?.preferences?.isQuickSearchEnabled,
+                        t && this.isEnabled !== this.getIsEnabled(t)
+                    ].some(e => e)) {
+                        this.trayMenu && !this.isEnabled
+                            ? this.trayMenu = void 0
+                            : this.isEnabled && (this.trayMenu = electron.Menu.buildFromTemplate((0, p.buildTrayMenuTemplate)()))
+                        this.tray && !this.isEnabled
+                            ? (this.tray.destroy(), this.tray = void 0)
+                            : !this.tray && this.isEnabled && (this.tray = new electron.Tray(this.getIcon()), this.tray.on("click", (() => {
+                            this.onClick()
+                        })), this.tray.on("right-click", (() => this.onRightClick())), this.tray.setToolTip(electron.app.getName()))
+                    }
                 }
 
                 getIcon() {
-                    const e = "darwin" === process.platform ? "menuBarIconTemplate.png" : "trayIcon.ico";
-                    return l.app.isPackaged ? s.default.join(process.resourcesPath, e) : s.default.join("extra-resources", e)
+                    const iconFile = "darwin" === process.platform ? "menuBarIconTemplate.png" : "trayIcon.ico";
+                    return electron.app.isPackaged
+                        ? __path.default.join(process.resourcesPath, iconFile)
+                        : __path.default.join("extra-resources", iconFile)
                 }
             }
-        }, 19628: function (e, t, r) {
+        },
+
+        // WebUpdater
+        19628: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.WebUpdater = void 0;
-            const s = i(r(47419)), l = i(r(11239)), c = r(21852), u = a(r(10454)), d = r(29902), p = r(69340);
-            t.WebUpdater = class {
-                constructor(e, t) {
-                    this.pendingUpdate = void 0, this.backgroundInterval = void 0, this.app = e, this.assetCache = t, this.isAppVisible = !0, (0, p.subscribeToSelector)(p.selectAppVisibilityBaseOnRenderers, (e => {
-                        this.isAppVisible = e, s.default.info(`App is visible: ${e}`), this.onAppVisibilityChange(e)
-                    })), this.assetCache.events.addListener("update-finished", (() => this.updateFinished())), this.assetCache.events.addListener("update-applied", (() => this.updateApplied())), u.handleEventFromRenderer.addListener("notion:install-appjs-update", ((e, t) => {
-                        this.pendingUpdate && this.assetCache.syncVersions().then((() => {
-                            const r = (0, d.normalizeUrlProtocol)(t);
-                            r ? (c.appController.getTabControllerForWebContents(e.sender)?.loadUrl(r), c.appController.refreshAll(!1)) : c.appController.refreshAll(!0)
-                        }))
-                    }))
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron_log = i(__require(47419)),
+                __config = i(__require(11239)),
+                c = __require(21852),
+                __notionIPC = a(__require(10454)),
+                d = __require(29902),
+                __store = __require(69340);
+
+            exports.WebUpdater = class {
+                constructor(app, assetCache) {
+                    this.pendingUpdate = void 0
+                    this.backgroundInterval = void 0
+                    this.app = app
+                    this.assetCache = assetCache
+                    this.isAppVisible = true
+                    __store.subscribeToSelector(
+                        __store.selectAppVisibilityBaseOnRenderers,
+                        current => {
+                            this.isAppVisible = current
+                            electron_log.default.info(`App is visible: ${current}`)
+                            this.onAppVisibilityChange(current)
+                        }
+                    )
+                    this.assetCache.events.addListener("update-finished", () => this.updateFinished())
+                    this.assetCache.events.addListener("update-applied", () => this.updateApplied())
+                    __notionIPC.handleEventFromRenderer.addListener("notion:install-appjs-update", (evt, t) => {
+                        this.pendingUpdate && this.assetCache.syncVersions().then(() => {
+                            const r = d.normalizeUrlProtocol(t);
+                            r
+                                ? (c.appController.getTabControllerForWebContents(evt.sender)?.loadUrl(r), c.appController.refreshAll(!1))
+                                : c.appController.refreshAll(!0)
+                        })
+                    })
                 }
 
                 updateFinished() {
                     if (this.pendingUpdate) return;
-                    const e = Date.now(), t = "production" === l.default.env ? 864e5 * Math.random() : 0;
-                    this.pendingUpdate = {updateAvailableAt: e, applyUpdateAfter: e + t}
+                    const now = Date.now()
+                    const interval = "production" === __config.default.env ? 864e5 * Math.random() : 0;
+                    this.pendingUpdate = {
+                        updateAvailableAt: now,
+                        applyUpdateAfter: now + interval
+                    }
                 }
 
                 updateApplied() {
@@ -1730,105 +2153,134 @@
                 onAppVisibilityChange(e) {
                     if (e) {
                         if (this.backgroundInterval) return;
-                        this.backgroundInterval = setInterval((async () => {
-                            this.pendingUpdate && (this.isAppVisible || Date.now() < this.pendingUpdate.applyUpdateAfter || (s.default.info("Sending update install notification to all windows"), await this.assetCache.syncVersions(), c.appController.refreshAll(!0)))
-                        }), 6e4)
-                    } else this.backgroundInterval && (clearInterval(this.backgroundInterval), this.backgroundInterval = void 0)
+                        this.backgroundInterval = setInterval(async () => {
+                            if (this.pendingUpdate) {
+                                this.isAppVisible || Date.now() < this.pendingUpdate.applyUpdateAfter || (electron_log.default.info("Sending update install notification to all windows"), await this.assetCache.syncVersions(), c.appController.refreshAll(!0))
+                            }
+                        }, 6e4)
+                    } else if (this.backgroundInterval) {
+                        clearInterval(this.backgroundInterval)
+                        this.backgroundInterval = void 0
+                    }
                 }
             }
-        }, 1147: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.WindowController = void 0;
-            const s = r(4482), l = i(r(47419)), c = r(13984), u = r(36343), d = a(r(6600)), p = r(27683), h = r(51916),
-                f = r(60522), m = r(18503), g = r(21852), b = r(29902), v = r(28192), y = r(69340), w = r(54417),
-                _ = r(772), k = r(52728), T = (0, u.defineMessages)({
-                    loadingErrorMessage: {
-                        id: "window.loadingError.message",
-                        defaultMessage: "Error loading Notion, connect to the internet to get started.",
-                        description: "Dialog message shown to the user when there's an error loading a page."
-                    },
-                    loadingErrorReload: {
-                        id: "window.loadingError.reload",
-                        defaultMessage: "Reload",
-                        description: "Dialog action allowing the user to reload page that previous had a loading error"
-                    },
-                    loadingErrorCancel: {
-                        id: "window.tabLoadingError.cancel",
-                        defaultMessage: "Cancel",
-                        description: "Dialog action allowing the user to dismiss the loading error dialog"
-                    },
-                    tabMenuCopyLink: {
-                        id: "window.tabMenu.copyLink",
-                        defaultMessage: "Copy Link",
-                        description: "Right-click menu item to copy the URL for a Notion page"
-                    },
-                    tabMenuRefreshTab: {
-                        id: "window.tabMenu.refresh",
-                        defaultMessage: "Refresh Tab",
-                        description: "Right-click menu item to refresh a tab's page contents"
-                    },
-                    tabMenuDuplicateTab: {
-                        id: "window.tabMenu.duplicateTab",
-                        defaultMessage: "Duplicate Tab",
-                        description: "Right-click menu item to make a new tab with the same page (i.e. duplicate it)"
-                    },
-                    tabMenuMoveToNewWindow: {
-                        id: "window.tabMenu.moveToNewWindow",
-                        defaultMessage: "Move Tab to New Window",
-                        description: "Right-click menu item to make open a new window with this tab"
-                    },
-                    tabMenuCloseTab: {
-                        id: "window.tabMenu.closeTab",
-                        defaultMessage: "Close Tab",
-                        description: "Right-click menu item to close a tab"
-                    },
-                    tabMenuCloseOtherTabs: {
-                        id: "window.tabMenu.closeOtherTabs",
-                        defaultMessage: "Close Other Tabs",
-                        description: "Right-click menu item to close all tabs except for the one clicked"
-                    },
-                    tabMenuCloseTabsToLeft: {
-                        id: "window.tabMenu.closeTabsToLeft",
-                        defaultMessage: "Close Tabs to the Left",
-                        description: "Right-click menu item to close tabs to the left of the current one"
-                    },
-                    tabMenuCloseTabsToRight: {
-                        id: "window.tabMenu.closeTabsToRight",
-                        defaultMessage: "Close Tabs to the Right",
-                        description: "Right-click menu item to close tabs to the right of the current one"
-                    }
-                });
+        },
 
-            class E {
+        // WindowController
+        1147: function (module, exports, __require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = __require(4482),
+                l = i(__require(47419)),
+                c = __require(13984),
+                u = __require(36343),
+                d = a(__require(6600)),
+                p = __require(27683),
+                h = __require(51916),
+                f = __require(60522),
+                m = __require(18503),
+                g = __require(21852),
+                b = __require(29902),
+                v = __require(28192),
+                y = __require(69340),
+                w = __require(54417),
+                _ = __require(772),
+                k = __require(52728)
+
+            const T = u.defineMessages({
+                loadingErrorMessage: {
+                    id: "window.loadingError.message",
+                    defaultMessage: "Error loading Notion, connect to the internet to get started.",
+                    description: "Dialog message shown to the user when there's an error loading a page."
+                },
+                loadingErrorReload: {
+                    id: "window.loadingError.reload",
+                    defaultMessage: "Reload",
+                    description: "Dialog action allowing the user to reload page that previous had a loading error"
+                },
+                loadingErrorCancel: {
+                    id: "window.tabLoadingError.cancel",
+                    defaultMessage: "Cancel",
+                    description: "Dialog action allowing the user to dismiss the loading error dialog"
+                },
+                tabMenuCopyLink: {
+                    id: "window.tabMenu.copyLink",
+                    defaultMessage: "Copy Link",
+                    description: "Right-click menu item to copy the URL for a Notion page"
+                },
+                tabMenuRefreshTab: {
+                    id: "window.tabMenu.refresh",
+                    defaultMessage: "Refresh Tab",
+                    description: "Right-click menu item to refresh a tab's page contents"
+                },
+                tabMenuDuplicateTab: {
+                    id: "window.tabMenu.duplicateTab",
+                    defaultMessage: "Duplicate Tab",
+                    description: "Right-click menu item to make a new tab with the same page (i.e. duplicate it)"
+                },
+                tabMenuMoveToNewWindow: {
+                    id: "window.tabMenu.moveToNewWindow",
+                    defaultMessage: "Move Tab to New Window",
+                    description: "Right-click menu item to make open a new window with this tab"
+                },
+                tabMenuCloseTab: {
+                    id: "window.tabMenu.closeTab",
+                    defaultMessage: "Close Tab",
+                    description: "Right-click menu item to close a tab"
+                },
+                tabMenuCloseOtherTabs: {
+                    id: "window.tabMenu.closeOtherTabs",
+                    defaultMessage: "Close Other Tabs",
+                    description: "Right-click menu item to close all tabs except for the one clicked"
+                },
+                tabMenuCloseTabsToLeft: {
+                    id: "window.tabMenu.closeTabsToLeft",
+                    defaultMessage: "Close Tabs to the Left",
+                    description: "Right-click menu item to close tabs to the left of the current one"
+                },
+                tabMenuCloseTabsToRight: {
+                    id: "window.tabMenu.closeTabsToRight",
+                    defaultMessage: "Close Tabs to the Right",
+                    description: "Right-click menu item to close tabs to the right of the current one"
+                }
+            });
+
+            class WindowController {
                 static newInstanceWithUrl(e) {
                     const t = k.TabController.newInstance({
                         id: e.initialTabId || (0, w.createTabId)(),
                         initialUrl: e.initialTabUrl
                     });
-                    return new E({
+                    return new WindowController({
                         windowId: e.windowId,
                         intl: e.intl,
                         displayState: e.displayState,
@@ -1839,7 +2291,7 @@
                 }
 
                 static newInstanceWithController(e) {
-                    return new E(e)
+                    return new WindowController(e)
                 }
 
                 set backgroundColor(e) {
@@ -1847,23 +2299,30 @@
                 }
 
                 constructor({
-                                windowId: e,
-                                intl: t,
-                                initialTabController: r,
-                                initialParentTabId: n,
-                                displayState: o,
-                                showWhenLoaded: a = !0
+                                windowId: windowId,
+                                intl: intl,
+                                initialTabController: initialTabController,
+                                initialParentTabId: initialParentTabId,
+                                displayState: displayState,
+                                showWhenLoaded: showWhenLoaded = true
                             }) {
-                    this.tabControllers = [], this.tabStateUnsubscribe = void 0, this.windowId = e, this.intl = t;
-                    const i = E.getDesiredWindowDisplayState(o), u = y.Store.getState().app,
-                        d = u.theme.mode, {isVibrancyEnabled: h} = u.preferences, g = {
+                    this.tabControllers = []
+                    this.tabStateUnsubscribe = void 0
+                    this.windowId = windowId
+                    this.intl = intl;
+                    const i = WindowController.getDesiredWindowDisplayState(displayState),
+                        u = y.Store.getState().app,
+                        d = u.theme.mode,
+                        {isVibrancyEnabled: h} = u.preferences,
+                        g = {
                             titleBarStyle: "win32" === process.platform ? "hidden" : "hiddenInset",
                             titleBarOverlay: "win32" === process.platform ? {
                                 height: (this.hasMultipleTabs() ? f.TAB_BAR_HEIGHT_PX : (0, c.getTopbarHeight)(!1)) * u.zoomFactor,
                                 color: p.electronColors.titleBarOverlayBackground[d],
                                 symbolColor: p.electronColors.enabledButtonColor[d]
                             } : void 0
-                        }, b = {
+                        },
+                        b = {
                             ...i.normalBounds,
                             show: !1,
                             titleBarStyle: "hiddenInset",
@@ -1875,50 +2334,79 @@
                             vibrancy: h ? "sidebar" : void 0,
                             backgroundColor: h ? "#00000000" : p.electronColors.notionBackground[d], ...u.preferences.isUnifiedTitleBarEnabled ? g : {}
                         };
-                    this.browserWindow = new s.BrowserWindow(b), i.isFullScreen && a && this.browserWindow.setFullScreen(!0), i.isMaximized && this.browserWindow.maximize(), this.browserWindow.addListener("app-command", ((e, t) => this.handleAppCommandNavigation(e, t))), this.browserWindow.addListener("swipe", ((e, t) => this.handleSwipeNavigation(e, t))), this.browserWindow.addListener("enter-full-screen", (() => {
+                    this.browserWindow = new s.BrowserWindow(b)
+                    i.isFullScreen && showWhenLoaded && this.browserWindow.setFullScreen(!0)
+                    i.isMaximized && this.browserWindow.maximize()
+                    this.browserWindow.addListener("app-command", ((e, t) => this.handleAppCommandNavigation(e, t)))
+                    this.browserWindow.addListener("swipe", ((e, t) => this.handleSwipeNavigation(e, t)))
+                    this.browserWindow.addListener("enter-full-screen", (() => {
                         y.Store.dispatch((0, _.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isFullScreen: !0}
                         })), this.handleFullscreenEvent()
-                    })), this.browserWindow.addListener("leave-full-screen", (() => {
+                    }))
+                    this.browserWindow.addListener("leave-full-screen", (() => {
                         y.Store.dispatch((0, _.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isFullScreen: !1}
                         })), this.handleFullscreenEvent()
-                    })), this.browserWindow.addListener("enter-html-full-screen", (() => {
+                    }))
+                    this.browserWindow.addListener("enter-html-full-screen", (() => {
                         y.Store.dispatch((0, _.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isHtmlFullScreen: !0}
                         })), this.handleFullscreenEvent()
-                    })), this.browserWindow.addListener("leave-html-full-screen", (() => {
+                    }))
+                    this.browserWindow.addListener("leave-html-full-screen", (() => {
                         y.Store.dispatch((0, _.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isHtmlFullScreen: !1}
                         })), this.handleFullscreenEvent()
-                    })), this.browserWindow.addListener("focus", (() => this.handleFocus())), this.browserWindow.addListener("move", (() => this.handleMove())), this.browserWindow.addListener("resize", (() => this.handleResize())), this.browserWindow.on("close", (e => this.handleClose(e))), this.tabBar = new s.BrowserView({
+                    }))
+                    this.browserWindow.addListener("focus", (() => this.handleFocus()))
+                    this.browserWindow.addListener("move", (() => this.handleMove()))
+                    this.browserWindow.addListener("resize", (() => this.handleResize()))
+                    this.browserWindow.on("close", (e => this.handleClose(e)))
+                    this.tabBar = new s.BrowserView({
                         webPreferences: {
                             spellcheck: !1,
                             sandbox: !0,
                             contextIsolation: !0,
                             preload: require("path").resolve(__dirname, "../renderer", "tabs", "preload.js")
                         }
-                    }), "darwin" === process.platform && this.browserWindow.setWindowButtonPosition((0, m.getTrafficLightPosition)(Math.ceil(f.TAB_BAR_HEIGHT_PX * u.zoomFactor), u.zoomFactor)), this.tabBar.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "tabs", "index.html")}`).then((() => {
+                    })
+                    "darwin" === process.platform && this.browserWindow.setWindowButtonPosition((0, m.getTrafficLightPosition)(Math.ceil(f.TAB_BAR_HEIGHT_PX * u.zoomFactor), u.zoomFactor))
+                    this.tabBar.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "tabs", "index.html")}`).then((() => {
                         this.updateState()
                     })).catch((e => {
                         l.default.error("Error loading tabs URL", e)
-                    })), this.tabBar.setBackgroundColor(p.electronColors.tabBarBackground[u.theme.mode]), this.browserWindow.addBrowserView(this.tabBar), this.tabControllers.push(r), this.activeTabController = r, y.Store.dispatch((0, _.initializeWindowState)({
+                    }))
+                    this.tabBar.setBackgroundColor(p.electronColors.tabBarBackground[u.theme.mode])
+                    this.browserWindow.addBrowserView(this.tabBar)
+                    this.tabControllers.push(initialTabController)
+                    this.activeTabController = initialTabController
+                    y.Store.dispatch(_.initializeWindowState({
                         windowId: this.windowId,
-                        initialTabId: r.tabId,
-                        initialParentTabId: n,
+                        initialTabId: initialTabController.tabId,
+                        initialParentTabId: initialParentTabId,
                         displayState: i,
                         isVisible: !0
-                    })), this.activeTabController.attachToWindow(this.windowId, this.browserWindow), this.activeTabController.bringToFront(), this.activeTabController.initialReadyStatePromise.then((() => {
+                    }))
+                    this.activeTabController.attachToWindow(this.windowId, this.browserWindow)
+                    this.activeTabController.bringToFront()
+                    this.activeTabController.initialReadyStatePromise.then((() => {
                         this.browserWindow.once("show", (() => {
-                            this.activeTabController === r && this.activeTabController.focus()
-                        })), a && this.browserWindow.show()
-                    })), this.activeTabController.initialLoadingStatePromise.catch((() => {
-                        this.activeTabController === r && this.handleTabLoadingError()
-                    })), this.activeTabController.bringToFront(), this.updateState(), this.appStateUnsubscribe = (0, y.subscribeToSelector)(y.selectAppState, (() => this.updateState())), this.windowStateUnsubscribe = (0, y.subscribeToSelector)((t => (0, y.selectWindowState)(t, e)), (() => this.updateState())), this.subscribeToTabStates()
+                            this.activeTabController === initialTabController && this.activeTabController.focus()
+                        })), showWhenLoaded && this.browserWindow.show()
+                    }))
+                    this.activeTabController.initialLoadingStatePromise.catch((() => {
+                        this.activeTabController === initialTabController && this.handleTabLoadingError()
+                    }))
+                    this.activeTabController.bringToFront()
+                    this.updateState()
+                    this.appStateUnsubscribe = y.subscribeToSelector(y.selectAppState, (() => this.updateState()))
+                    this.windowStateUnsubscribe = y.subscribeToSelector((t => y.selectWindowState(t, windowId)), (() => this.updateState()))
+                    this.subscribeToTabStates()
                 }
 
                 isFullScreen() {
@@ -2443,7 +2931,7 @@
                         windowId: this.windowId,
                         update: {
                             normalBounds: this.browserWindow.getNormalBounds(),
-                            displayBounds: E.getDisplayBounds()
+                            displayBounds: WindowController.getDisplayBounds()
                         }
                     }))
                 }
@@ -2453,7 +2941,7 @@
                         windowId: this.windowId,
                         update: {
                             normalBounds: this.browserWindow.getNormalBounds(),
-                            displayBounds: E.getDisplayBounds()
+                            displayBounds: WindowController.getDisplayBounds()
                         }
                     }))
                 }
@@ -2479,7 +2967,7 @@
                         windowId: this.windowId,
                         displayState: {
                             normalBounds: this.browserWindow.getNormalBounds(),
-                            displayBounds: E.getDisplayBounds(),
+                            displayBounds: WindowController.getDisplayBounds(),
                             isMaximized: this.browserWindow.isMaximized(),
                             isFullScreen: this.browserWindow.isFullScreen(),
                             isHtmlFullScreen: !1
@@ -2537,7 +3025,7 @@
                         const e = t.browserWindow, [r, n] = e.getPosition(), [o, a] = e.getSize();
                         return {
                             normalBounds: {x: r + 20, y: n + 20, width: o, height: a},
-                            displayBounds: E.getDisplayBounds(),
+                            displayBounds: WindowController.getDisplayBounds(),
                             isFullScreen: e.isFullScreen(),
                             isHtmlFullScreen: !1,
                             isMaximized: e.isMaximized()
@@ -2558,7 +3046,7 @@
                             i = d.sortBy(t.map((e => e.bounds)), o);
                         if (n && d.isEqual(i, a) && e.width > 640 && e.height > 480) return {
                             normalBounds: e,
-                            displayBounds: E.getDisplayBounds(),
+                            displayBounds: WindowController.getDisplayBounds(),
                             isFullScreen: !1,
                             isHtmlFullScreen: !1,
                             isMaximized: !1
@@ -2582,8 +3070,10 @@
                 }
             }
 
-            t.WindowController = E
-        }, 68543: function (e, t, r) {
+            exports.WindowController = WindowController
+        },
+
+        68543: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -2619,7 +3109,8 @@
                     arch: process.arch
                 }
             }
-        }, 94774: function (e, t, r) {
+        },
+        94774: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -2667,7 +3158,8 @@
             })), p.handleEventFromRenderer.addListener("notion:check-for-app-updates", (() => {
                 t.assetCache.checkForUpdates()
             }))
-        }, 43579: function (e, t, r) {
+        },
+        43579: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -2858,7 +3350,8 @@
                     await (0, f.timeout)(864e5)
                 }
             }()
-        }, 68115: function (e, t, r) {
+        },
+        68115: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -2892,7 +3385,8 @@
                     }
                 }(e)
             }
-        }, 68516: function (e, t, r) {
+        },
+        68516: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -2936,9 +3430,12 @@
                 const {cookies: r} = (0, u.getSession)();
                 r.set({...t, url: l.default.domainBaseUrl, expirationDate: t.expires})
             }))
-        }, 84041: function (e, t, r) {
+        },
+
+        // crash reporter
+        84041: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -2949,33 +3446,50 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            })
+            let __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            })
+            let __importStar = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && __createBinding(t, e, r);
+                return __setModuleDefault(t, e), t
+            }
+            let __importDefault = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const s = r(4482), l = i(r(11239)), c = a(r(10454));
-            s.crashReporter.start({
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+
+            const __electron = __require(4482)
+            const __config = __importDefault(__require(11239))
+            const __notionIpc = __importStar(__require(10454))
+
+            __electron.crashReporter.start({
                 productName: "Notion",
                 companyName: "Notion",
-                submitURL: `${l.default.domainBaseUrl}/server/crash-report`,
-                uploadToServer: !0,
-                extra: {desktopEnvironment: l.default.env, desktopVersion: s.app.getVersion()}
-            }), c.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
-                for (const e in t) {
-                    const r = t[e];
-                    "string" == typeof r && s.crashReporter.addExtraParameter(e, r)
+                submitURL: `${__config.default.domainBaseUrl}/server/crash-report`,
+                uploadToServer: true,
+                extra: {
+                    desktopEnvironment: __config.default.env,
+                    desktopVersion: __electron.app.getVersion()
                 }
-            }))
-        }, 89304: function (e, t, r) {
+            })
+            __notionIpc.handleEventFromRenderer.addListener("notion:set-logger-data", (event, data) => {
+                for (const key in data) {
+                    const value = data[key];
+                    if ("string" == typeof value) {
+                        __electron.crashReporter.addExtraParameter(key, value)
+                    }
+                }
+            })
+        },
+
+        89304: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -3026,7 +3540,8 @@
                 };
                 d.handleEventFromRenderer.addListener("notion:post-message", a), o.addListener("close", i), o.loadURL(t)
             }
-        }, 43041: function (e, t, r) {
+        },
+        43041: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -3077,7 +3592,8 @@
                 };
                 d.handleEventFromRenderer.addListener("notion:post-message", f), h.addListener("close", m), h.loadURL(t)
             }
-        }, 66991: (e, t, r) => {
+        },
+        66991: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.ensureCspFrameAncestorsParityWithNotionWebsite = void 0;
             const n = r(53375);
@@ -3085,7 +3601,8 @@
                 const t = new n.CspParser(e.cspHeader), r = t.csp.directives["frame-ancestors"];
                 return r && (r.includes("https:") || r.includes("*")) ? (r.push(`${e.customProtocol}:`), t.csp.convertToString().trim()) : e.cspHeader
             }
-        }, 83789: function (e, t, r) {
+        },
+        83789: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -3306,7 +3823,8 @@
                     return d.default.info(`Waiting for webpack to build: ${n}`), await new Promise((e => setTimeout(e, 1e3))), e()
                 }
             }
-        }, 5554: function (e, t, r) {
+        },
+        5554: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -3401,49 +3919,90 @@
                     p.serverLogger.log(t)
                 }))
             }, t.setupLocalLogging = g, t.shouldLog = b
-        }, 64982: function (e, t, r) {
+        },
+
+        // 入口
+        64982: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let __importDefault = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.handleActivate = void 0;
-            const o = r(4482);
-            r(84041);
-            const a = r(21248), i = n(r(11239)), s = r(3420), l = r(21852), c = r(94774), u = r(43579), d = r(68516),
-                p = r(83789), h = r(5554), f = r(77514), m = r(26605), g = r(29902), b = r(35219), v = r(15425),
-                y = r(13387), w = r(34516), _ = r(69340), k = r(50833), T = r(98441), E = r(19628);
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __electron = __require(4482);
+
+            __require(84041); // crash reporter
+
+            const logglyHelpers = __require(21248), // shared/logglyHelpers
+                __config = __importDefault(__require(11239)), // config
+                serverLogger = __require(3420), // ServerLogger 对应老版本的 helpers/loggly.js
+                __appController = __require(21852),
+                c = __require(94774),
+                u = __require(43579),
+                d = __require(68516),
+                p = __require(83789),
+                __logging = __require(5554),
+                f = __require(77514),
+                m = __require(26605),
+                g = __require(29902),
+                b = __require(35219),
+                v = __require(15425),
+                y = __require(13387),
+                w = __require(34516),
+                _ = __require(69340),
+                k = __require(50833),
+                T = __require(98441),
+                E = __require(19628);
             let S, C;
 
-            function O() {
-                const e = l.appController.getMostRecentlyFocusedWindowController();
+            function handleActivate() {
+                const e = __appController.appController.getMostRecentlyFocusedWindowController();
                 if (e) {
-                    const t = l.appController.rehydrateEntireAppInForeground(S);
-                    S && !t && e.loadUrlInActiveTab(S), e.browserWindow.show()
-                } else (0, m.getWasOpenedAsHidden)() ? l.appController.rehydrateSingleTabInBackground(S) || l.appController.newWindow({
-                    initialUrl: S,
-                    showWhenLoaded: !1
-                }) : l.appController.rehydrateEntireAppInForeground(S) || l.appController.newWindow({initialUrl: S}).browserWindow.show();
+                    const t = __appController.appController.rehydrateEntireAppInForeground(S);
+                    S && !t && e.loadUrlInActiveTab(S)
+                    e.browserWindow.show()
+                } else if (m.getWasOpenedAsHidden()) {
+                    __appController.appController.rehydrateSingleTabInBackground(S) || __appController.appController.newWindow({
+                        initialUrl: S,
+                        showWhenLoaded: !1
+                    })
+                } else {
+                    __appController.appController.rehydrateEntireAppInForeground(S) || __appController.appController.newWindow({initialUrl: S}).browserWindow.show()
+                }
                 S = void 0
             }
 
-            o.dialog.showErrorBox = function (e, t) {
-            }, t.handleActivate = O, async function () {
-                (0, h.setupLogging)(), (0, T.maybeDisableHardwareAcceleration)(), o.app.setAsDefaultProtocolClient(i.default.protocol), "darwin" === process.platform ? o.app.on("open-url", ((e, t) => {
-                    if (e.preventDefault(), o.app.isReady()) {
-                        const e = (0, g.normalizeUrlProtocol)(t);
-                        l.appController.rehydrateEntireAppInForeground(e) || l.appController.handleProtocolUrl((0, g.normalizeUrlProtocol)(t))
-                    }
-                })) : "win32" === process.platform && (o.app.requestSingleInstanceLock() ? o.app.on("second-instance", ((e, t) => {
-                    S = (0, g.findNotionProtocolUrl)(t), O()
-                })) : o.app.quit(), S = (0, g.findNotionProtocolUrl)(process.argv)), o.Menu.setApplicationMenu(null), o.app.setAppUserModelId(i.default.desktopAppId), function () {
-                    if (C = new E.WebUpdater(o.app, c.assetCache), !i.default.isLocalhost || i.default.offline) {
-                        const e = "production" === i.default.env ? 6e5 : 6e4;
+            __electron.dialog.showErrorBox = function (title, content) {
+            }
+            exports.handleActivate = handleActivate
+
+            void async function () {
+                __logging.setupLogging()
+                T.maybeDisableHardwareAcceleration()
+                __electron.app.setAsDefaultProtocolClient(__config.default.protocol)
+                "darwin" === process.platform
+                    ? __electron.app.on("open-url", ((e, t) => {
+                        if (e.preventDefault(), __electron.app.isReady()) {
+                            const e = (0, g.normalizeUrlProtocol)(t);
+                            __appController.appController.rehydrateEntireAppInForeground(e) || __appController.appController.handleProtocolUrl((0, g.normalizeUrlProtocol)(t))
+                        }
+                    }))
+                    : "win32" === process.platform && (__electron.app.requestSingleInstanceLock() ? __electron.app.on("second-instance", ((e, t) => {
+                    S = (0, g.findNotionProtocolUrl)(t), handleActivate()
+                })) : __electron.app.quit(), S = (0, g.findNotionProtocolUrl)(process.argv))
+                __electron.Menu.setApplicationMenu(null)
+                __electron.app.setAppUserModelId(__config.default.desktopAppId)
+                void function () {
+                    if (C = new E.WebUpdater(__electron.app, c.assetCache), !__config.default.isLocalhost || __config.default.offline) {
+                        const e = "production" === __config.default.env ? 6e5 : 6e4;
                         setInterval((async () => {
                             try {
                                 await c.assetCache.checkForUpdates()
                             } catch (e) {
-                                const t = (0, a.convertErrorToLog)(e);
-                                s.serverLogger.log({
+                                const t = (0, logglyHelpers.convertErrorToLog)(e);
+                                serverLogger.serverLogger.log({
                                     level: "error",
                                     from: "AssetCache",
                                     type: "topLevelAssetPollingError",
@@ -3452,11 +4011,15 @@
                             }
                         }), e)
                     }
-                }(), await o.app.whenReady(), await (0, p.waitForWebpack)(), async function () {
-                    (0, u.initializeAutoUpdater)(), (0, k.setupSystemMenu)(), await c.assetCache.initialize(), await (0, w.setupSqliteServer)(), (0, v.setupSecurity)(), (0, y.setupSessionListeners)(), (0, b.setupRendererListeners)(), _.Store.getState().app.preferences.isUsingHttps || (0, f.handleNotionProtocol)(), O(), await (0, d.wipeTransientCsrfCookie)(), l.appController.onAppReady(), o.app.on("before-quit", (() => l.appController.handleQuit())), o.app.on("activate", O)
+                }()
+                await __electron.app.whenReady()
+                await p.waitForWebpack()
+                void async function () {
+                    (0, u.initializeAutoUpdater)(), (0, k.setupSystemMenu)(), await c.assetCache.initialize(), await (0, w.setupSqliteServer)(), (0, v.setupSecurity)(), (0, y.setupSessionListeners)(), (0, b.setupRendererListeners)(), _.Store.getState().app.preferences.isUsingHttps || (0, f.handleNotionProtocol)(), handleActivate(), await (0, d.wipeTransientCsrfCookie)(), __appController.appController.onAppReady(), __electron.app.on("before-quit", (() => __appController.appController.handleQuit())), __electron.app.on("activate", handleActivate)
                 }()
             }()
-        }, 10454: function (e, t, r) {
+        },
+        10454: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -3484,7 +4047,8 @@
                     o.default.ipcMain.removeHandler(e)
                 }
             }
-        }, 77514: function (e, t, r) {
+        },
+        77514: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -3583,7 +4147,8 @@
                     }
                 }))
             }
-        }, 26605: function (e, t, r) {
+        },
+        26605: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -3602,7 +4167,8 @@
                     args: [i]
                 }))
             }
-        }, 88493: (e, t, r) => {
+        },
+        88493: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.showOpenAtLoginErrorDialog = void 0;
             const n = r(4482), o = r(36343), a = r(49960), i = r(21852), s = (0, o.defineMessages)({
@@ -3627,29 +4193,42 @@
                     buttons: ["OK"]
                 })
             }
-        }, 29902: function (e, t, r) {
+        },
+
+        29902: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.findNotionProtocolUrl = t.normalizeUrlProtocolWithDefault = t.normalizeUrlProtocol = t.initialBaseUrl = t.getIsProtocolRegistered = void 0;
-            const o = n(r(47419)), a = r(32289), i = r(60411), s = n(r(11239)), l = r(31957), c = r(69340);
 
-            function u() {
-                return c.Store.getState().app.preferences.isUsingHttps ? s.default.domainBaseUrl : (0, a.getSchemeUrl)({
-                    httpUrl: s.default.domainBaseUrl,
-                    protocol: s.default.protocol,
-                    includePort: !0
-                })
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = n(__require(47419)),
+                a = __require(32289),
+                i = __require(60411),
+                __config = n(__require(11239)),
+                l = __require(31957),
+                __store = __require(69340);
+
+            function initialBaseUrl() {
+                return __store.Store.getState().app.preferences.isUsingHttps
+                    ? __config.default.domainBaseUrl
+                    : a.getSchemeUrl({
+                        httpUrl: __config.default.domainBaseUrl,
+                        protocol: __config.default.protocol,
+                        includePort: true
+                    })
             }
 
-            function d(e) {
+            function normalizeUrlProtocol(e) {
                 if (!e) return;
-                const t = (0, i.isStrictRelativeUrl)(e) ? e : (0, i.removeBaseUrl)(e), r = u();
+                const t = i.isStrictRelativeUrl(e) ? e : i.removeBaseUrl(e),
+                    r = initialBaseUrl();
                 return t.startsWith("/") ? `${r}${t}` : `${r}/${t}`
             }
 
-            t.getIsProtocolRegistered = async function (e) {
+            exports.getIsProtocolRegistered = async function (e) {
                 return !!function (e) {
                     const t = i.allowedProtocols.map((e => e.replace(/:$/, "")));
                     return t.includes(e)
@@ -3668,12 +4247,18 @@
                         return o.default.error(`Error checking for protocol registration: ${e}`), !1
                     }
                 }(e))
-            }, t.initialBaseUrl = u, t.normalizeUrlProtocol = d, t.normalizeUrlProtocolWithDefault = function (e) {
-                return d(e) || u()
-            }, t.findNotionProtocolUrl = function (e) {
-                return d(e.find((e => e.startsWith(`${s.default.protocol}:`))))
             }
-        }, 35219: function (e, t, r) {
+            exports.initialBaseUrl = initialBaseUrl
+            exports.normalizeUrlProtocol = normalizeUrlProtocol
+            exports.normalizeUrlProtocolWithDefault = function (e) {
+                return normalizeUrlProtocol(e) || initialBaseUrl()
+            }
+            exports.findNotionProtocolUrl = function (e) {
+                return normalizeUrlProtocol(e.find((e => e.startsWith(`${__config.default.protocol}:`))))
+            }
+        },
+
+        35219: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -3894,7 +4479,8 @@
                     f.appController.updateMediaIndicator(e.sender, t)
                 }))
             }
-        }, 15425: function (e, t, r) {
+        },
+        15425: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -3940,7 +4526,8 @@
                     e.preventDefault()
                 }))
             }))
-        }, 56116: function (e, t, r) {
+        },
+        56116: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -3980,7 +4567,8 @@
             }, t.capture = function (e) {
                 "local" !== l.default.env && s.captureException(e, {extra: {assetsJsVersionAtErrorTime: c.assetCache.version}})
             }
-        }, 13387: (e, t, r) => {
+        },
+        13387: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.setupSessionListeners = t.getSession = t.electronSessionPartition = void 0;
             const n = r(4482), o = r(21852);
@@ -4004,7 +4592,8 @@
                     }))
                 }(n.session.fromPartition(t.electronSessionPartition))
             }
-        }, 34516: function (e, t, r) {
+        },
+        34516: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -4055,307 +4644,525 @@
                     b.info("Killing child process"), m?.kill()
                 })), b.info(`Child process running on ${g}`))
             }
-        }, 73553: function (e, t, r) {
+        },
+
+        // app slice
+        73553: function (module, exports, __require) {
             "use strict";
-            var n, o = this && this.__importDefault || function (e) {
+            let o = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.updateNotificationCount = t.updatePreferences = t.updateTheme = t.updateZoomFactor = t.appSlice = t.DEFAULT_PERSISTED_PREFERENCES = t.ALWAYS_SET_ELECTRON_APP_FEATURES = t.NAVIGATION_HISTORY_ENABLED = t.IS_USING_HTTPS = t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED = t.QUICK_SEARCH_ENABLED = void 0;
-            const a = r(6354), i = r(50019), s = o(r(11239)), l = r(26605), c = r(30506);
-            t.QUICK_SEARCH_ENABLED = !0, t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED = !0, t.IS_USING_HTTPS = !1, t.NAVIGATION_HISTORY_ENABLED = "local" === s.default.env, t.ALWAYS_SET_ELECTRON_APP_FEATURES = {
-                isElectronUsingCommandNumber: !0,
-                isNotionProtocolBugFixed: !1,
-                isElectronHandlingZoom: !0,
-                isQuickSearchSupported: t.QUICK_SEARCH_ENABLED,
-                isMenuBarIconSupported: t.QUICK_SEARCH_ENABLED,
-                isTabPositionSupported: !0,
-                isNavigationHistorySupported: !1
-            }, t.DEFAULT_PERSISTED_PREFERENCES = {
-                isClosingBrowserTabs: !1,
-                isHardwareAccelerationDisabled: !1,
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const redux = __require(6354),
+                i = __require(50019),
+                __config = o(__require(11239)),
+                l = __require(26605),
+                c = __require(30506);
+
+            exports.QUICK_SEARCH_ENABLED = true
+            exports.WINDOWS_UNIFIED_TITLE_BAR_ENABLED = true
+            exports.IS_USING_HTTPS = false
+            exports.NAVIGATION_HISTORY_ENABLED = "local" === __config.default.env
+            exports.ALWAYS_SET_ELECTRON_APP_FEATURES = {
+                isElectronUsingCommandNumber: true,
+                isNotionProtocolBugFixed: false,
+                isElectronHandlingZoom: true,
+                isQuickSearchSupported: exports.QUICK_SEARCH_ENABLED,
+                isMenuBarIconSupported: exports.QUICK_SEARCH_ENABLED,
+                isTabPositionSupported: true,
+                isNavigationHistorySupported: false
+            }
+            exports.DEFAULT_PERSISTED_PREFERENCES = {
+                isClosingBrowserTabs: false,
+                isHardwareAccelerationDisabled: false,
                 updaterChannel: null,
-                isQuickSearchEnabled: !!t.QUICK_SEARCH_ENABLED || void 0,
-                isAutoUpdaterDisabled: !1,
-                isOpenAtLoginEnabled: !0,
-                isHideLastWindowOnCloseEnabled: !0,
-                isUnifiedTitleBarEnabled: !!t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED || void 0,
-                isNewSidebarToggleEnabled: !1,
-                isUsingHttps: !!t.IS_USING_HTTPS || void 0,
+                isQuickSearchEnabled: !!exports.QUICK_SEARCH_ENABLED || void 0,
+                isAutoUpdaterDisabled: false,
+                isOpenAtLoginEnabled: true,
+                isHideLastWindowOnCloseEnabled: true,
+                isUnifiedTitleBarEnabled: !!exports.WINDOWS_UNIFIED_TITLE_BAR_ENABLED || void 0,
+                isNewSidebarToggleEnabled: false,
+                isUsingHttps: !!exports.IS_USING_HTTPS || void 0,
                 isVibrancyEnabled: null,
-                isNavigationHistoryEnabled: !!t.NAVIGATION_HISTORY_ENABLED || void 0
-            }, t.appSlice = (0, a.createSlice)({
-                name: "app", initialState: function () {
-                    const e = c.appStatePersister.get("appState", {
+                isNavigationHistoryEnabled: !!exports.NAVIGATION_HISTORY_ENABLED || void 0
+            }
+
+            exports.appSlice = redux.createSlice({
+                name: "app",
+                initialState: function () {
+                    const initialState = c.appStatePersister.get("appState", {
                         zoomFactor: 1,
-                        theme: (0, i.getElectronTheme)("light", !1),
-                        preferences: t.DEFAULT_PERSISTED_PREFERENCES,
+                        theme: i.getElectronTheme("light", false),
+                        preferences: exports.DEFAULT_PERSISTED_PREFERENCES,
                         notificationCount: 0
                     });
-                    return function (e) {
-                        if (void 0 === e.preferences) return void (e.preferences = t.DEFAULT_PERSISTED_PREFERENCES);
+                    void function (e) {
+                        if (void 0 === e.preferences) {
+                            return void (e.preferences = exports.DEFAULT_PERSISTED_PREFERENCES);
+                        }
                         const r = e.preferences;
-                        void 0 === r.isOpenAtLoginEnabled ? (r.isOpenAtLoginEnabled = !0, (0, l.setIsOpenAtLogin)(!0)) : r.isOpenAtLoginEnabled = (0, l.getIsOpenAtLogin)(), void 0 === r.isHideLastWindowOnCloseEnabled && (r.isHideLastWindowOnCloseEnabled = !0), void 0 === r.isQuickSearchEnabled && t.QUICK_SEARCH_ENABLED && (r.isQuickSearchEnabled = !0), void 0 === r.quickSearchShortcut && t.QUICK_SEARCH_ENABLED && (r.quickSearchShortcut = "darwin" === process.platform ? "shift+command+k" : "shift+ctrl+k"), void 0 === r.isMenuBarIconEnabled && t.QUICK_SEARCH_ENABLED && (r.isMenuBarIconEnabled = !0), void 0 === r.isUnifiedTitleBarEnabled && t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED && (r.isUnifiedTitleBarEnabled = !0), void 0 === r.isUsingHttps && t.IS_USING_HTTPS && (r.isUsingHttps = !0), void 0 === r.isNavigationHistoryEnabled && t.NAVIGATION_HISTORY_ENABLED && (r.isNavigationHistoryEnabled = !0)
-                    }(e), void 0 === e.notificationCount && (e.notificationCount = 0), e
-                }(), reducers: {
-                    updateZoomFactor(e, t) {
-                        e.zoomFactor = t.payload
-                    }, updateTheme(e, t) {
-                        e.theme = t.payload
-                    }, updatePreferences(e, t) {
-                        e.preferences = {...e.preferences, ...t.payload}
-                    }, updateNotificationCount(e, t) {
-                        e.notificationCount = t.payload
+                        void 0 === r.isOpenAtLoginEnabled
+                            ? (r.isOpenAtLoginEnabled = true, l.setIsOpenAtLogin(true))
+                            : r.isOpenAtLoginEnabled = l.getIsOpenAtLogin()
+                        void 0 === r.isHideLastWindowOnCloseEnabled && (r.isHideLastWindowOnCloseEnabled = !0)
+                        void 0 === r.isQuickSearchEnabled && exports.QUICK_SEARCH_ENABLED && (r.isQuickSearchEnabled = !0)
+                        void 0 === r.quickSearchShortcut && exports.QUICK_SEARCH_ENABLED && (r.quickSearchShortcut = "darwin" === process.platform ? "shift+command+k" : "shift+ctrl+k")
+                        void 0 === r.isMenuBarIconEnabled && exports.QUICK_SEARCH_ENABLED && (r.isMenuBarIconEnabled = !0)
+                        void 0 === r.isUnifiedTitleBarEnabled && exports.WINDOWS_UNIFIED_TITLE_BAR_ENABLED && (r.isUnifiedTitleBarEnabled = !0)
+                        void 0 === r.isUsingHttps && exports.IS_USING_HTTPS && (r.isUsingHttps = !0)
+                        void 0 === r.isNavigationHistoryEnabled && exports.NAVIGATION_HISTORY_ENABLED && (r.isNavigationHistoryEnabled = true)
+                    }(initialState)
+                    void 0 === initialState.notificationCount && (initialState.notificationCount = 0)
+                    return initialState
+                }(),
+                reducers: {
+                    updateZoomFactor(state, action) {
+                        state.zoomFactor = action.payload
+                    },
+                    updateTheme(state, action) {
+                        state.theme = action.payload
+                    },
+                    updatePreferences(state, action) {
+                        state.preferences = {...state.preferences, ...action.payload}
+                    },
+                    updateNotificationCount(state, action) {
+                        state.notificationCount = action.payload
                     }
                 }
-            }), n = t.appSlice.actions, t.updateZoomFactor = n.updateZoomFactor, t.updateTheme = n.updateTheme, t.updatePreferences = n.updatePreferences, t.updateNotificationCount = n.updateNotificationCount
-        }, 28192: (e, t, r) => {
+            })
+
+            let actions = exports.appSlice.actions
+            exports.updateZoomFactor = actions.updateZoomFactor
+            exports.updateTheme = actions.updateTheme
+            exports.updatePreferences = actions.updatePreferences
+            exports.updateNotificationCount = actions.updateNotificationCount
+        },
+
+        // history slice
+        28192: (module, exports, __require) => {
             "use strict";
-            var n;
-            Object.defineProperty(t, "__esModule", {value: !0}), t.resetHistoryState = t.setAppRestorationState = t.insertCloseEvent = t.popCloseEvent = t.updateLastFocusedWindowDisplayState = t.historySlice = void 0;
-            const o = r(6354), a = r(30506), i = {};
-            t.historySlice = (0, o.createSlice)({
-                name: "history", initialState: function () {
-                    const e = a.appStatePersister.get("history", i);
-                    var t;
-                    return void 0 !== (t = e).lastFocusedWindowDisplayState && (void 0 === t.lastFocusedWindowDisplayState.isFullScreen && (t.lastFocusedWindowDisplayState.isFullScreen = !1), void 0 === t.lastFocusedWindowDisplayState.isHtmlFullScreen && (t.lastFocusedWindowDisplayState.isHtmlFullScreen = !1)), e
-                }(), reducers: {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = __require(6354),
+                a = __require(30506),
+                i = {};
+
+            exports.historySlice = o.createSlice({
+                name: "history",
+                initialState: function () {
+                    const initialState = a.appStatePersister.get("history", i);
+                    let t = initialState;
+                    if (void 0 !== t.lastFocusedWindowDisplayState) {
+                        void 0 === t.lastFocusedWindowDisplayState.isFullScreen && (t.lastFocusedWindowDisplayState.isFullScreen = !1)
+                        void 0 === t.lastFocusedWindowDisplayState.isHtmlFullScreen && (t.lastFocusedWindowDisplayState.isHtmlFullScreen = !1)
+                    }
+                    return initialState
+                }(),
+                reducers: {
                     updateLastFocusedWindowDisplayState(e, t) {
                         e.lastFocusedWindowDisplayState = t.payload
-                    }, popCloseEvent(e) {
+                    },
+                    popCloseEvent(e) {
                         e.closeEvents = e.closeEvents?.slice(1)
-                    }, insertCloseEvent(e, t) {
+                    },
+                    insertCloseEvent(e, t) {
                         const r = e.closeEvents;
                         r ? r.length < 10 ? e.closeEvents = [t.payload, ...r] : e.closeEvents = [t.payload, ...r.slice(0, 10)] : e.closeEvents = [t.payload]
-                    }, setAppRestorationState(e, t) {
+                    },
+                    setAppRestorationState(e, t) {
                         e.appRestorationState = t.payload
-                    }, resetHistoryState: () => i
+                    },
+                    resetHistoryState: () => i
                 }
-            }), n = t.historySlice.actions, t.updateLastFocusedWindowDisplayState = n.updateLastFocusedWindowDisplayState, t.popCloseEvent = n.popCloseEvent, t.insertCloseEvent = n.insertCloseEvent, t.setAppRestorationState = n.setAppRestorationState, t.resetHistoryState = n.resetHistoryState
-        }, 14473: (e, t, r) => {
+            })
+
+            let actions = exports.historySlice.actions
+            exports.updateLastFocusedWindowDisplayState = actions.updateLastFocusedWindowDisplayState
+            exports.popCloseEvent = actions.popCloseEvent
+            exports.insertCloseEvent = actions.insertCloseEvent
+            exports.setAppRestorationState = actions.setAppRestorationState
+            exports.resetHistoryState = actions.resetHistoryState
+        },
+
+        // quick search slice
+        14473: (module, exports, __require) => {
             "use strict";
-            var n;
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setReadyState = t.toggleVisibilityStateIfReady = t.quickSearchSlice = void 0;
-            const o = r(6354);
-            t.quickSearchSlice = (0, o.createSlice)({
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.setReadyState = exports.toggleVisibilityStateIfReady = exports.quickSearchSlice = void 0;
+            const o = __require(6354);
+
+            exports.quickSearchSlice = o.createSlice({
                 name: "quickSearch",
-                initialState: {visibilityState: {type: "not-visible"}, readyState: {type: "not-ready"}},
+                initialState: {
+                    visibilityState: {
+                        type: "not-visible"
+                    },
+                    readyState: {
+                        type: "not-ready"
+                    }
+                },
                 reducers: {
-                    toggleVisibilityStateIfReady(e, t) {
-                        "ready" !== e.readyState.type || "visible" === e.visibilityState.type ? e.visibilityState = {
-                            type: "not-visible",
-                            source: t.payload
-                        } : e.visibilityState = {type: "visible", source: t.payload}
-                    }, setReadyState(e, t) {
-                        e.readyState = t.payload
+                    toggleVisibilityStateIfReady(state, action) {
+                        "ready" !== state.readyState.type || "visible" === state.visibilityState.type
+                            ? state.visibilityState = {
+                                type: "not-visible",
+                                source: action.payload
+                            }
+                            : state.visibilityState = {type: "visible", source: action.payload}
+                    },
+                    setReadyState(state, action) {
+                        state.readyState = action.payload
                     }
                 }
-            }), n = t.quickSearchSlice.actions, t.toggleVisibilityStateIfReady = n.toggleVisibilityStateIfReady, t.setReadyState = n.setReadyState
-        }, 69340: function (e, t, r) {
+            })
+
+            let actions = exports.quickSearchSlice.actions
+            exports.toggleVisibilityStateIfReady = actions.toggleVisibilityStateIfReady
+            exports.setReadyState = actions.setReadyState
+        },
+
+        // redux store
+        69340: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getElectronAppFeatures = t.subscribeToSelector = t.Store = t.selectQuickSearchState = t.selectHistory = t.selectTabSearchingState = t.selectTabStates = t.selectTabState = t.selectAppVisibilityBaseOnRenderers = t.selectFocusedWindowDisplayState = t.selectWindowState = t.selectAppState = void 0;
-            const s = r(6354), l = a(r(6600)), c = i(r(80637)), u = r(73553), d = r(28192), p = r(14473), h = r(54417),
-                f = r(772), m = (0, s.combineReducers)({
-                    windows: f.windowSlice.reducer,
-                    tabs: h.tabSlice.reducer,
-                    app: u.appSlice.reducer,
-                    history: d.historySlice.reducer,
-                    quickSearch: p.quickSearchSlice.reducer
-                });
-
-            function g(e, t) {
-                return e.tabs[t]
-            }
-
-            function b(e) {
-                return e => t => e(t)
-            }
-
-            t.selectAppState = function (e) {
-                return e.app
-            }, t.selectWindowState = function (e, t) {
-                return e.windows[t]
-            }, t.selectFocusedWindowDisplayState = function (e) {
-                const t = l.maxBy(Object.values(e.windows), (e => e.focusOrder));
-                return t?.displayState
-            }, t.selectAppVisibilityBaseOnRenderers = function (e) {
-                return Object.values(e.windows).some((e => e.isVisible))
-            }, t.selectTabState = g, t.selectTabStates = function (e, t) {
-                return l.compact(t.map((t => e.tabs[t])))
-            }, t.selectTabSearchingState = function (e, t) {
-                return g(e, t)?.searching
-            }, t.selectHistory = function (e) {
-                return e.history
-            }, t.selectQuickSearchState = function (e) {
-                return e.quickSearch
-            }, t.Store = (0, s.configureStore)({
-                reducer: m,
-                middleware: e => e().concat(b)
-            }), t.subscribeToSelector = function (e, r, n) {
-                let o = e(t.Store.getState()), a = o;
-                const i = () => {
-                    const n = e(t.Store.getState());
-                    (0, c.default)(o, n) || (a = o, o = n, r(o, a))
+            let __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                __importStar = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && __createBinding(t, e, r);
+                    return __setModuleDefault(t, e), t
+                },
+                __importDefault = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
                 };
-                if (n) {
-                    const e = void 0 === n.leading || n.leading, r = void 0 === n.trailing || n.trailing,
-                        o = l.throttle(i, n.wait, {leading: e, trailing: r}), a = t.Store.subscribe(o);
-                    return () => {
-                        r ? o.flush() : o.cancel(), a()
-                    }
-                }
-                return t.Store.subscribe(i)
-            }, t.getElectronAppFeatures = function (e = {}) {
-                const r = {...u.DEFAULT_PERSISTED_PREFERENCES, ...t.Store.getState().app.preferences || {}, ...e.preferences},
-                    n = t.Store.getState().app.zoomFactor;
-                return {...u.ALWAYS_SET_ELECTRON_APP_FEATURES, ...e, preferences: r, zoomFactor: n}
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __reduxToolkit = __require(6354),
+                l = __importStar(__require(6600)),
+                c = __importDefault(__require(80637)),
+                __appSlice = __require(73553),
+                __historySlice = __require(28192),
+                __quickSearchSlice = __require(14473),
+                __tabSlice = __require(54417),
+                __windowSlice = __require(772)
+
+            const reducer = __reduxToolkit.combineReducers({
+                windows: __windowSlice.windowSlice.reducer,
+                tabs: __tabSlice.tabSlice.reducer,
+                app: __appSlice.appSlice.reducer,
+                history: __historySlice.historySlice.reducer,
+                quickSearch: __quickSearchSlice.quickSearchSlice.reducer
+            });
+
+            function selectTabState(rootState, tabId) {
+                return rootState.tabs[tabId]
             }
-        }, 54417: function (e, t, r) {
+
+            function middleware(storeAPI) {
+                return next => action => next(action)
+            }
+
+            exports.selectAppState = function (rootState) {
+                return rootState.app
+            }
+            exports.selectWindowState = function (rootState, windowId) {
+                return rootState.windows[windowId]
+            }
+            exports.selectFocusedWindowDisplayState = function (rootState) {
+                const t = l.maxBy(Object.values(rootState.windows), (e => e.focusOrder));
+                return t?.displayState
+            }
+            exports.selectAppVisibilityBaseOnRenderers = function (rootState) {
+                return Object.values(rootState.windows).some((e => e.isVisible))
+            }
+            exports.selectTabState = selectTabState
+            exports.selectTabStates = function (rootState, t) {
+                return l.compact(t.map((t => rootState.tabs[t])))
+            }
+            exports.selectTabSearchingState = function (e, t) {
+                return selectTabState(e, t)?.searching
+            }
+            exports.selectHistory = function (rootState) {
+                return rootState.history
+            }
+            exports.selectQuickSearchState = function (rootState) {
+                return rootState.quickSearch
+            }
+            exports.Store = __reduxToolkit.configureStore({
+                reducer: reducer,
+                middleware: getDefaultMiddleware => getDefaultMiddleware().concat(middleware)
+            })
+            exports.subscribeToSelector = function (select, callback, options) {
+                let currentValue = select(exports.Store.getState())
+                let previousValue = currentValue;
+                const listener = () => {
+                    const newValue = select(exports.Store.getState());
+                    if (!c.default(currentValue, newValue)) {
+                        previousValue = currentValue
+                        currentValue = newValue
+                        callback(currentValue, previousValue)
+                    }
+                };
+                if (options) {
+                    let leading = void 0 === options.leading || options.leading
+                    let trailing = void 0 === options.trailing || options.trailing
+                    let throttledListener = l.throttle(listener, options.wait, {leading: leading, trailing: trailing})
+                    let unsubscribe = exports.Store.subscribe(throttledListener);
+                    return () => {
+                        trailing
+                            ? throttledListener.flush()
+                            : throttledListener.cancel()
+                        unsubscribe()
+                    }
+                }
+                return exports.Store.subscribe(listener)
+            }
+            exports.getElectronAppFeatures = function (features = {}) {
+                const preferences = {
+                    ...__appSlice.DEFAULT_PERSISTED_PREFERENCES,
+                    ...exports.Store.getState().app.preferences || {},
+                    ...features.preferences
+                }
+                const zoomFactor = exports.Store.getState().app.zoomFactor;
+                return {
+                    ...__appSlice.ALWAYS_SET_ELECTRON_APP_FEATURES,
+                    ...features,
+                    preferences: preferences,
+                    zoomFactor: zoomFactor,
+                }
+            }
+        },
+
+        // tab slice
+        54417: function (module, exports, __require) {
             "use strict";
-            var n, o = this && this.__importDefault || function (e) {
+            let o = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.resetTabState = t.removeTabState = t.updateAppStoreState = t.updateTabIsMediaInputActive = t.updateTabIsOverlayActive = t.updateTabColors = t.updateTabUrl = t.updateTabSearchingState = t.updatePageHistoryFaviconMap = t.updateTabTitle = t.initializeTabState = t.tabSlice = t.createTabId = void 0;
-            const a = o(r(76982)), i = r(6354);
-            t.createTabId = function () {
-                return a.default.randomUUID()
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = o(__require(76982)),
+                i = __require(6354);
+
+            exports.createTabId = function () {
+                return crypto.default.randomUUID()
             };
-            const s = {};
-            t.tabSlice = (0, i.createSlice)({
-                name: "tabs", initialState: s, reducers: {
-                    initializeTabState(e, t) {
-                        e[t.payload.tabId] = {...t.payload, pageHistoryFaviconMap: {}}
-                    }, updateTabTitle(e, t) {
-                        e[t.payload.tabId].title = t.payload.title
-                    }, updatePageHistoryFaviconMap(e, t) {
-                        e[t.payload.tabId].pageHistoryFaviconMap[t.payload.url] = t.payload.favicon, e[t.payload.tabId].favicon = t.payload.favicon
-                    }, updateTabSearchingState(e, t) {
-                        e[t.payload.tabId].searching = {
-                            isSearching: t.payload.isSearching,
-                            isSearchingCenterPeek: t.payload.isSearchingCenterPeek,
-                            isFirstQuery: t.payload.isFirstQuery
+
+            const initialState = {};
+            exports.tabSlice = i.createSlice({
+                name: "tabs",
+                initialState: initialState,
+                reducers: {
+                    initializeTabState(state, action) {
+                        state[action.payload.tabId] = {...action.payload, pageHistoryFaviconMap: {}}
+                    },
+                    updateTabTitle(state, action) {
+                        state[action.payload.tabId].title = action.payload.title
+                    },
+                    updatePageHistoryFaviconMap(state, action) {
+                        state[action.payload.tabId].pageHistoryFaviconMap[action.payload.url] = action.payload.favicon, state[action.payload.tabId].favicon = action.payload.favicon
+                    },
+                    updateTabSearchingState(state, action) {
+                        state[action.payload.tabId].searching = {
+                            isSearching: action.payload.isSearching,
+                            isSearchingCenterPeek: action.payload.isSearchingCenterPeek,
+                            isFirstQuery: action.payload.isFirstQuery
                         }
-                    }, updateTabUrl(e, t) {
-                        e[t.payload.tabId].url = t.payload.url
-                    }, updateTabColors(e, t) {
-                        e[t.payload.tabId].tabColors = t.payload.colors
-                    }, updateTabIsOverlayActive(e, t) {
+                    },
+                    updateTabUrl(state, action) {
+                        state[action.payload.tabId].url = action.payload.url
+                    },
+                    updateTabColors(state, action) {
+                        state[action.payload.tabId].tabColors = action.payload.colors
+                    },
+                    updateTabIsOverlayActive(e, t) {
                         e[t.payload.tabId].isOverlayActive = t.payload.isOverlayActive
-                    }, updateTabIsMediaInputActive(e, t) {
+                    },
+                    updateTabIsMediaInputActive(e, t) {
                         e[t.payload.tabId].isMediaInputActive = t.payload.isMediaInputActive
-                    }, updateAppStoreState(e, t) {
+                    },
+                    updateAppStoreState(e, t) {
                         e[t.payload.tabId].appStoreState = t.payload.appStoreState
-                    }, removeTabState(e, t) {
+                    },
+                    removeTabState(e, t) {
                         delete e[t.payload.tabId]
-                    }, resetTabState: () => s
+                    },
+                    resetTabState: () => initialState
                 }
-            }), n = t.tabSlice.actions, t.initializeTabState = n.initializeTabState, t.updateTabTitle = n.updateTabTitle, t.updatePageHistoryFaviconMap = n.updatePageHistoryFaviconMap, t.updateTabSearchingState = n.updateTabSearchingState, t.updateTabUrl = n.updateTabUrl, t.updateTabColors = n.updateTabColors, t.updateTabIsOverlayActive = n.updateTabIsOverlayActive, t.updateTabIsMediaInputActive = n.updateTabIsMediaInputActive, t.updateAppStoreState = n.updateAppStoreState, t.removeTabState = n.removeTabState, t.resetTabState = n.resetTabState
-        }, 772: function (e, t, r) {
+            })
+
+            let actions = exports.tabSlice.actions
+            exports.initializeTabState = actions.initializeTabState
+            exports.updateTabTitle = actions.updateTabTitle
+            exports.updatePageHistoryFaviconMap = actions.updatePageHistoryFaviconMap
+            exports.updateTabSearchingState = actions.updateTabSearchingState
+            exports.updateTabUrl = actions.updateTabUrl
+            exports.updateTabColors = actions.updateTabColors
+            exports.updateTabIsOverlayActive = actions.updateTabIsOverlayActive
+            exports.updateTabIsMediaInputActive = actions.updateTabIsMediaInputActive
+            exports.updateAppStoreState = actions.updateAppStoreState
+            exports.removeTabState = actions.removeTabState
+            exports.resetTabState = actions.resetTabState
+        },
+
+        // window slice
+        772: function (module, exports, __require) {
             "use strict";
-            var n, o = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), a = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), i = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && o(t, e, r);
-                return a(t, e), t
-            }, s = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setShouldShowAppMenuFromAlt = t.resetWindowState = t.setTabOrder = t.removeWindowState = t.focusWindow = t.updateIsWindowVisible = t.updateDisplayState = t.closeAllNonActiveTabs = t.sliceTabRange = t.removeTabFromWindow = t.addTabToWindow = t.updateActiveTabId = t.updateWindowSidebarState = t.initializeWindowState = t.windowSlice = t.createWindowId = void 0;
-            const l = s(r(76982)), c = r(6354), u = i(r(6600));
-            t.createWindowId = function () {
-                return l.default.randomUUID()
-            };
-            const d = {};
-            t.windowSlice = (0, c.createSlice)({
-                name: "windows", initialState: d, reducers: {
-                    initializeWindowState(e, t) {
-                        const r = t.payload;
-                        e[r.windowId] = {
-                            windowId: r.windowId,
-                            tabs: [{tabId: r.initialTabId, parentTabId: r.initialParentTabId}],
-                            activeTabId: r.initialTabId,
-                            displayState: r.displayState,
-                            isVisible: r.isVisible,
-                            focusOrder: 0,
-                            shouldShowAppMenuFromAltKey: !1
+            let o = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
                         }
-                    }, updateWindowSidebarState(e, t) {
-                        e[t.payload.windowId].sidebarState = t.payload.sidebarState
-                    }, updateActiveTabId(e, t) {
-                        e[t.payload.windowId].activeTabId = t.payload.activeTabId
-                    }, addTabToWindow(e, t) {
-                        const r = t.payload;
-                        e[r.windowId].tabs.splice(r.index, 0, {
-                            tabId: r.tabId,
-                            parentTabId: r.parentTabId
-                        }), r.makeActiveTab && (e[r.windowId].activeTabId = r.tabId)
-                    }, removeTabFromWindow(e, t) {
-                        const r = t.payload;
-                        e[r.windowId].tabs.splice(r.index, 1), r.newActiveTabId && (e[r.windowId].activeTabId = r.newActiveTabId)
-                    }, sliceTabRange(e, t) {
-                        const r = t.payload, n = e[t.payload.windowId];
-                        n.tabs = n.tabs.slice(r.startIndex, r.endIndex)
-                    }, closeAllNonActiveTabs(e, t) {
-                        const r = e[t.payload.windowId];
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                a = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                i = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && o(t, e, r);
+                    return a(t, e), t
+                },
+                s = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = s(__require(76982)),
+                c = __require(6354),
+                u = i(__require(6600));
+
+            exports.createWindowId = function () {
+                return crypto.default.randomUUID()
+            };
+
+            const initialState = {};
+            exports.windowSlice = c.createSlice({
+                name: "windows",
+                initialState: initialState,
+                reducers: {
+                    initializeWindowState(state, action) {
+                        const payload = action.payload;
+                        state[payload.windowId] = {
+                            windowId: payload.windowId,
+                            tabs: [{tabId: payload.initialTabId, parentTabId: payload.initialParentTabId}],
+                            activeTabId: payload.initialTabId,
+                            displayState: payload.displayState,
+                            isVisible: payload.isVisible,
+                            focusOrder: 0,
+                            shouldShowAppMenuFromAltKey: false
+                        }
+                    },
+                    updateWindowSidebarState(state, action) {
+                        state[action.payload.windowId].sidebarState = action.payload.sidebarState
+                    },
+                    updateActiveTabId(state, action) {
+                        state[action.payload.windowId].activeTabId = action.payload.activeTabId
+                    },
+                    addTabToWindow(state, action) {
+                        const payload = action.payload;
+                        state[payload.windowId].tabs.splice(payload.index, 0, {
+                            tabId: payload.tabId,
+                            parentTabId: payload.parentTabId
+                        })
+                        payload.makeActiveTab && (state[payload.windowId].activeTabId = payload.tabId)
+                    },
+                    removeTabFromWindow(state, action) {
+                        const payload = action.payload;
+                        state[payload.windowId].tabs.splice(payload.index, 1)
+                        payload.newActiveTabId && (state[payload.windowId].activeTabId = payload.newActiveTabId)
+                    },
+                    sliceTabRange(state, action) {
+                        const payload = action.payload, n = state[action.payload.windowId];
+                        n.tabs = n.tabs.slice(payload.startIndex, payload.endIndex)
+                    },
+                    closeAllNonActiveTabs(state, action) {
+                        const r = state[action.payload.windowId];
                         r.tabs = r.tabs.filter((e => e.tabId === r.activeTabId))
-                    }, updateDisplayState(e, t) {
-                        const r = e[t.payload.windowId];
-                        r.displayState = {...r.displayState, ...t.payload.update}
-                    }, updateIsWindowVisible(e, t) {
-                        e[t.payload.windowId].isVisible = t.payload.isVisible
-                    }, focusWindow(e, t) {
-                        const r = u.max(Object.values(e).map((e => e.focusOrder))) || 0;
-                        e[t.payload.windowId].focusOrder = r + 1
-                    }, removeWindowState(e, t) {
-                        delete e[t.payload.windowId]
-                    }, setTabOrder(e, t) {
+                    },
+                    updateDisplayState(state, action) {
+                        const r = state[action.payload.windowId];
+                        r.displayState = {...r.displayState, ...action.payload.update}
+                    },
+                    updateIsWindowVisible(state, action) {
+                        state[action.payload.windowId].isVisible = action.payload.isVisible
+                    },
+                    focusWindow(state, action) {
+                        const r = u.max(Object.values(state).map((e => e.focusOrder))) || 0;
+                        state[action.payload.windowId].focusOrder = r + 1
+                    },
+                    removeWindowState(state, action) {
+                        delete state[action.payload.windowId]
+                    },
+                    setTabOrder(state, action) {
                         const r = {};
-                        e[t.payload.windowId].tabs.forEach((e => {
+                        state[action.payload.windowId].tabs.forEach(e => {
                             r[e.tabId] = e
-                        })), e[t.payload.windowId].tabs = t.payload.tabs.map((e => r[e]))
-                    }, resetWindowState: () => d, setShouldShowAppMenuFromAlt: (e, t) => {
-                        e[t.payload.windowId].shouldShowAppMenuFromAltKey = t.payload.shouldShowAppMenuFromAltKey
+                        })
+                        state[action.payload.windowId].tabs = action.payload.tabs.map(e => r[e])
+                    },
+                    resetWindowState: () => initialState,
+                    setShouldShowAppMenuFromAlt: (state, action) => {
+                        state[action.payload.windowId].shouldShowAppMenuFromAltKey = action.payload.shouldShowAppMenuFromAltKey
                     }
                 }
-            }), n = t.windowSlice.actions, t.initializeWindowState = n.initializeWindowState, t.updateWindowSidebarState = n.updateWindowSidebarState, t.updateActiveTabId = n.updateActiveTabId, t.addTabToWindow = n.addTabToWindow, t.removeTabFromWindow = n.removeTabFromWindow, t.sliceTabRange = n.sliceTabRange, t.closeAllNonActiveTabs = n.closeAllNonActiveTabs, t.updateDisplayState = n.updateDisplayState, t.updateIsWindowVisible = n.updateIsWindowVisible, t.focusWindow = n.focusWindow, t.removeWindowState = n.removeWindowState, t.setTabOrder = n.setTabOrder, t.resetWindowState = n.resetWindowState, t.setShouldShowAppMenuFromAlt = n.setShouldShowAppMenuFromAlt
-        }, 30506: function (e, t, r) {
+            })
+
+            const actions = exports.windowSlice.actions
+
+            exports.initializeWindowState = actions.initializeWindowState
+            exports.updateWindowSidebarState = actions.updateWindowSidebarState
+            exports.updateActiveTabId = actions.updateActiveTabId
+            exports.addTabToWindow = actions.addTabToWindow
+            exports.removeTabFromWindow = actions.removeTabFromWindow
+            exports.sliceTabRange = actions.sliceTabRange
+            exports.closeAllNonActiveTabs = actions.closeAllNonActiveTabs
+            exports.updateDisplayState = actions.updateDisplayState
+            exports.updateIsWindowVisible = actions.updateIsWindowVisible
+            exports.focusWindow = actions.focusWindow
+            exports.removeWindowState = actions.removeWindowState
+            exports.setTabOrder = actions.setTabOrder
+            exports.resetWindowState = actions.resetWindowState
+            exports.setShouldShowAppMenuFromAlt = actions.setShouldShowAppMenuFromAlt
+        },
+
+        30506: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -4363,7 +5170,8 @@
             Object.defineProperty(t, "__esModule", {value: !0}), t.appStatePersister = void 0;
             const o = n(r(9245));
             t.appStatePersister = new o.default({name: "state"})
-        }, 50833: function (e, t, r) {
+        },
+        50833: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -4983,7 +5791,8 @@
             }
 
             t.setupSystemMenu = w
-        }, 48021: function (e, t, r) {
+        },
+        48021: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -5057,7 +5866,8 @@
                     l.default.error("recordTraceAndPackage(): Failed to write zip file", e)
                 }
             }
-        }, 63374: (e, t, r) => {
+        },
+        63374: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.buildTrayMenuTemplate = void 0;
             const n = r(4482), o = r(36343), a = r(21852), i = r(73553), s = r(14473), l = r(69340),
@@ -5163,7 +5973,8 @@
                     }
                 }(e)), o
             }
-        }, 98441: function (e, t, r) {
+        },
+        98441: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -5269,7 +6080,8 @@
                     c.app.relaunch(), c.app.exit()
                 }))
             }
-        }, 49248: function (e, t, r) {
+        },
+        49248: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -5287,7 +6099,8 @@
                     i.default.warn(`Error setting quarantine: ${e}`)
                 }
             }
-        }, 50263: function (e, t, r) {
+        },
+        50263: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -5324,7 +6137,8 @@
                     return a(l).default
                 }
             }), o(r(69467), t)
-        }, 78302: (e, t) => {
+        },
+        78302: (e, t) => {
             "use strict";
 
             function r(e) {
@@ -5348,17 +6162,20 @@
                 const f = [t, n, o, a, i, s, l, c, u, d, p, h].filter(r).join(" ");
                 return f ? `{${e}, number, :: ${f}}` : `{${e}, number}`
             }
-        }, 81453: (e, t) => {
+        },
+        81453: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.default = function (e, t) {
                 return `{${e}, plural, ${Object.entries(t).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
             }
-        }, 69467: (e, t) => {
+        },
+        69467: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.default = function (e, {other: t, ...r}) {
                 return `{${e}, select, ${Object.entries({...r, other: t}).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
             }
-        }, 36343: function (e, t, r) {
+        },
+        36343: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -5415,40 +6232,54 @@
                     return i.createIntlCache
                 }
             })
-        }, 4058: function (e, t, r) {
+        },
+
+        // AsyncQueue
+        4058: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.mutatePromiseIntoAsyncQueuePromise = t.AsyncQueue = void 0;
-            const i = a(r(43067));
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
 
-            class s {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const i = a(__require(43067));
+
+            class AsyncQueue {
                 static async map(e, t, r) {
-                    const n = new s(e);
+                    const n = new AsyncQueue(e);
                     return await Promise.all(t.map(((e, t, o) => n.enqueue((() => r(e, t, o))))))
                 }
 
-                constructor(e) {
-                    this.parallel = e, this.queue = [], this.waitingList = [], this.running = [], this.afterFlushes = [], this.afterClogs = [], this.waiting = !1
+                constructor(parallel) {
+                    this.parallel = parallel
+                    this.queue = []
+                    this.waitingList = []
+                    this.running = []
+                    this.afterFlushes = []
+                    this.afterClogs = []
+                    this.waiting = false
                 }
 
                 getStats() {
@@ -5478,7 +6309,7 @@
                     return this.waiting ? this.waitingList.push({
                         deferred: t,
                         action: r
-                    }) : this.queue.push({deferred: t, action: r}), this.flush(), l({
+                    }) : this.queue.push({deferred: t, action: r}), this.flush(), mutatePromiseIntoAsyncQueuePromise({
                         promise: t.promise,
                         canCancel: () => this.queue.some((e => e.deferred === t)) || this.waitingList.some((e => e.deferred === t)),
                         cancel: e => {
@@ -5570,43 +6401,56 @@
                 }
             }
 
-            function l(e) {
+            function mutatePromiseIntoAsyncQueuePromise(e) {
                 const {promise: t, canCancel: r, cancel: n} = e, o = t;
                 return o.canCancel = r, o.cancel = n, o
             }
 
-            t.AsyncQueue = s, t.mutatePromiseIntoAsyncQueuePromise = l
-        }, 43067: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.rethrow = t.tap = t.asyncFilter = t.allSettledAndThrow = t.LazyPromise = t.PromiseWithState = t.concurrentAsyncIterable = t.batchAsyncIterable = t.Waitable = t.retryOnTimeout = t.requestTimeout = t.raceWithTimeout = t.deferred = t.raceSettled = t.race = t.timeoutResolve = t.timeout = t.allBatched = t.batch = t.isPromise = t.eventLoopNextTick = t.awaitAtMost = void 0;
-            const i = r(78862), s = r(66614), l = a(r(6600)), c = r(30072), u = r(45321), d = r(80004);
+            exports.AsyncQueue = AsyncQueue
+            exports.mutatePromiseIntoAsyncQueuePromise = mutatePromiseIntoAsyncQueuePromise
+        },
 
-            function p(e) {
+        43067: function (module, exports, __require) {
+            "use strict";
+            let __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                __setModuleDefault = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                __importStar = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && __createBinding(t, e, r);
+                    return __setModuleDefault(t, e), t
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const i = __require(78862),
+                s = __require(66614),
+                l = __importStar(__require(6600)),
+                c = __require(30072),
+                u = __require(45321),
+                d = __require(80004);
+
+            function isPromise(e) {
                 return e && "then" in e && "function" == typeof e.then
             }
 
-            async function h(e, t, r) {
+            async function allBatched(e, t, r) {
                 const n = [];
                 if (t <= 0) throw new Error(`Invalid batch size: ${t}`);
                 let o = 0;
@@ -5618,7 +6462,7 @@
                 return n
             }
 
-            function f(e, t = u.SYSTEM_TIME_SOURCE) {
+            function timeout(e, t = u.SYSTEM_TIME_SOURCE) {
                 return new Promise((r => {
                     t.setTimeout((() => {
                         r()
@@ -5626,7 +6470,7 @@
                 }))
             }
 
-            function m() {
+            function deferred() {
                 let e, t;
                 const r = new Promise(((r, n) => {
                     e = r, t = n
@@ -5634,29 +6478,37 @@
                 return {resolve: e, reject: t, promise: r}
             }
 
-            async function g(e, t) {
-                let r;
-                const n = new Promise((t => {
-                    r = setTimeout((() => {
-                        r = void 0, t({result: void 0, timeout: !0})
-                    }), e)
-                })), o = p(t) ? t : Promise.race(t);
-                return await Promise.race([n, o.then((e => ({result: e, timeout: !1}))).finally((() => {
-                    r && clearTimeout(r)
-                }))])
+            async function raceWithTimeout(timeout, t) {
+                let timer;
+                const timeoutPromise = new Promise(resolve => {
+                    timer = setTimeout(() => {
+                        timer = void 0
+                        resolve({result: void 0, timeout: true})
+                    }, timeout)
+                })
+                const o = isPromise(t) ? t : Promise.race(t);
+                return await Promise.race([
+                    timeoutPromise,
+                    o.then(data => ({result: data, timeout: false})).finally(() => {
+                        timer && clearTimeout(timer)
+                    })
+                ])
             }
 
-            function b(e, t) {
-                return g(t, e)
+            function requestTimeout(e, t) {
+                return raceWithTimeout(t, e)
             }
 
-            t.awaitAtMost = async function (e, t, r = {}) {
-                const n = await g(t, e);
+            exports.awaitAtMost = async function (e, t, r = {}) {
+                const n = await raceWithTimeout(t, e);
                 if (n.timeout) throw r.customError?.() || new Error(`Promise failed to resolve within ${t}ms.`);
                 return n.result
-            }, t.eventLoopNextTick = function () {
+            }
+            exports.eventLoopNextTick = function () {
                 return new Promise((e => setImmediate(e)))
-            }, t.isPromise = p, t.batch = function (e, t, r) {
+            }
+            exports.isPromise = isPromise
+            exports.batch = function (e, t, r) {
                 return new Promise(((n, o) => {
                     let a = 0;
                     const i = [], s = () => {
@@ -5667,40 +6519,51 @@
                     };
                     s()
                 }))
-            }, t.allBatched = h, t.timeout = f, t.timeoutResolve = function (e, t) {
+            }
+            exports.allBatched = allBatched
+            exports.timeout = timeout
+            exports.timeoutResolve = function (e, t) {
                 return new Promise((r => {
                     setTimeout((() => {
                         r(t)
                     }), e)
                 }))
-            }, t.race = async function (e) {
-                const t = m(), r = Promise.all(e.map((async (e, r) => {
+            }
+            exports.race = async function (e) {
+                const t = deferred(), r = Promise.all(e.map((async (e, r) => {
                     await e, t.resolve(r)
                 })));
                 return {winner: await t.promise, rest: r}
-            }, t.raceSettled = function (e) {
+            }
+            exports.raceSettled = function (e) {
                 return Promise.race(e).then((e => ({status: "fulfilled", value: e})), (e => ({
                     status: "rejected",
                     reason: e
                 })))
-            }, t.deferred = m, t.raceWithTimeout = g, t.requestTimeout = b, t.retryOnTimeout = async function e(t, r, n) {
-                const o = await b(n(), r);
+            }
+            exports.deferred = deferred
+            exports.raceWithTimeout = raceWithTimeout
+            exports.requestTimeout = requestTimeout
+            exports.retryOnTimeout = async function e(t, r, n) {
+                const o = await requestTimeout(n(), r);
                 return t <= 1 || !o.timeout ? o : e(t - 1, r, n)
-            }, t.Waitable = class {
+            }
+            exports.Waitable = class {
                 constructor(e = u.SYSTEM_TIME_SOURCE) {
-                    this.timeSource = e, this.deferredPromise = m(), this.isCompleted = !1
+                    this.timeSource = e, this.deferredPromise = deferred(), this.isCompleted = !1
                 }
 
                 async wait(e, t) {
-                    e > 0 && await f(e, this.timeSource);
+                    e > 0 && await timeout(e, this.timeSource);
                     const r = t - e;
-                    r > 0 && await Promise.race([this.deferredPromise.promise, f(r, this.timeSource)]), this.isCompleted || (this.isCompleted = !0, this.deferredPromise.resolve(void 0))
+                    r > 0 && await Promise.race([this.deferredPromise.promise, timeout(r, this.timeSource)]), this.isCompleted || (this.isCompleted = !0, this.deferredPromise.resolve(void 0))
                 }
 
                 trigger() {
                     this.isCompleted || this.deferredPromise.resolve(void 0), this.isCompleted = !0
                 }
-            }, t.batchAsyncIterable = async function* (e, t, r) {
+            }
+            exports.batchAsyncIterable = async function* (e, t, r) {
                 let n = [], o = !1;
                 for (; !o;) {
                     for (; n.length < t;) {
@@ -5715,7 +6578,8 @@
                     n = [];
                     for (const e of a) yield e
                 }
-            }, t.concurrentAsyncIterable = async function* (e, t = 1 / 0) {
+            }
+            exports.concurrentAsyncIterable = async function* (e, t = 1 / 0) {
                 let r = 0;
                 const n = new Map;
                 do {
@@ -5726,7 +6590,8 @@
                     const [o, a] = await Promise.race([...n].map((async ([e, t]) => [e, await t])));
                     a.done ? n.delete(o) : n.set(o, o.next()), yield a
                 } while (n.size > 0)
-            }, t.PromiseWithState = class {
+            }
+            exports.PromiseWithState = class {
                 constructor(e) {
                     this.wrappedPromise = e, this._state = {status: "pending"}, e.then((e => {
                         this._state = {status: "resolved", value: e}
@@ -5738,7 +6603,8 @@
                 get state() {
                     return this._state
                 }
-            }, t.LazyPromise = class {
+            }
+            exports.LazyPromise = class {
                 constructor(e) {
                     this.runTask = e, this.state = {status: "not_started"}
                 }
@@ -5787,25 +6653,31 @@
                             (0, d.unreachable)(e)
                     }
                 }
-            }, t.allSettledAndThrow = async function (e) {
+            }
+            exports.allSettledAndThrow = async function (e) {
                 const t = await Promise.allSettled(e), r = [];
                 for (const e of t) {
                     if ("rejected" === e.status) throw e.reason;
                     r.push(e.value)
                 }
                 return r
-            }, t.asyncFilter = async function (e, t, r) {
-                return h(e, t, r).then((t => e.filter(((e, r) => t[r]))))
-            }, t.tap = function (e) {
+            }
+            exports.asyncFilter = async function (e, t, r) {
+                return allBatched(e, t, r).then((t => e.filter(((e, r) => t[r]))))
+            }
+            exports.tap = function (e) {
                 return async function (t) {
                     return await e(t), t
                 }
-            }, t.rethrow = function (e) {
+            }
+            exports.rethrow = function (e) {
                 return async function (t) {
                     throw await e(t), t
                 }
             }
-        }, 30072: (e, t) => {
+        },
+
+        30072: (e, t) => {
             "use strict";
 
             function r(e) {
@@ -5858,14 +6730,16 @@
                 },
                 catchErrors: r
             }, t.catchErrors = r
-        }, 45321: (e, t) => {
+        },
+        45321: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.SYSTEM_TIME_SOURCE = void 0, t.SYSTEM_TIME_SOURCE = new class {
                 setTimeout(e, t, ...r) {
                     setTimeout(e, t, ...r)
                 }
             }
-        }, 37318: function (e, t, r) {
+        },
+        37318: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -5916,7 +6790,8 @@
                     return o
                 }
             }
-        }, 33824: function (e, t, r) {
+        },
+        33824: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -5944,7 +6819,8 @@
                     return u.colord
                 }
             })
-        }, 52869: function (e, t, r) {
+        },
+        52869: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -7571,7 +8447,8 @@
             }, t.getHighlightColorStyle = function (e, t) {
                 return "default" === e ? {color: t.regularTextColor} : O(e, t)
             }, t.default = t.colors
-        }, 78862: (e, t) => {
+        },
+        78862: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getErrorCode = t.parseUnknownError = void 0, t.parseUnknownError = function (e) {
                 return e instanceof Error ? e : "object" == typeof e && null !== e ? Object.assign(new Error("Expected error, but caught non-error object"), e) : "string" == typeof e ? Object.assign(new Error(e), {cause: e}) : Object.assign(new Error(`Expected error, but caught \`${String(e)}\` (${typeof e})`), {cause: e})
@@ -7579,7 +8456,8 @@
                 const {code: t} = e;
                 if ("number" == typeof t || "string" == typeof t) return t
             }
-        }, 66614: (e, t) => {
+        },
+        66614: (e, t) => {
             "use strict";
 
             function r(e) {
@@ -7725,7 +8603,8 @@
             }, t.tracking = function (e, n) {
                 return r(e) ? t.AsyncIter.tracking(e, n) : t.Iter.tracking(e, n)
             }
-        }, 28902: (e, t) => {
+        },
+        28902: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getContentfulSupportedLocale = t.getContentfulLocale = t.localeFormatter = t.allLocales = t.deprecatedLocales = t.defaultLocale = t.getLocaleFromCookie = t.externalLocaleToNotionLocale = t.isSupportedLanguageCode = t.isPreferredLanguageCode = t.isPreferredLocaleOrigin = t.isPreferredLocaleExtended = t.isPreferredLocale = t.isBetaLocale = t.isDevelopmentLocale = t.languageCodeToPreferredLocaleExtended = t.languageCodeToPreferredLocale = t.countryToPreferredLocale = t.preferredContentfulLocales = t.ALL_LOCALE_ROUTES = t.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = t.ALL_LOCALES = t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = t.PSEUDOLOCALES = t.VALID_PREFERRED_LOCALES_IN_BETA = t.VALID_PREFERRED_LOCALES = t.VALID_PREFERRED_LOCALES_FOR_MARKETING = void 0, t.VALID_PREFERRED_LOCALES_FOR_MARKETING = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR"], t.VALID_PREFERRED_LOCALES = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"], t.VALID_PREFERRED_LOCALES_IN_BETA = ["ja-JP", "zh-CN", "zh-TW", "da-DK", "nl-NL", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"], t.PSEUDOLOCALES = ["pseudo"], t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = ["zh-CN", "zh-TW", ...t.PSEUDOLOCALES], t.ALL_LOCALES = [...t.VALID_PREFERRED_LOCALES, ...t.VALID_PREFERRED_LOCALES_IN_BETA, ...t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT], t.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.map((e => {
                 const t = e.split("-").join(""), r = e.toLocaleLowerCase();
@@ -7839,7 +8718,8 @@
                 const r = u(e);
                 return [...t.VALID_PREFERRED_LOCALES, ...t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT, ...t.VALID_PREFERRED_LOCALES_IN_BETA].includes(r) ? r : t.defaultLocale
             }
-        }, 6600: function (e, t, r) {
+        },
+        6600: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -8735,26 +9615,36 @@
             }), t.stubTrue = function () {
                 return !0
             }
-        }, 21248: (e, t, r) => {
-            "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.stringifyMiscData = t.convertErrorToLog = t.safelyConvertAnyToString = t.shouldLog = void 0;
-            const n = r(37318), o = ["silent", "error", "warning", "info", "debug"];
+        },
 
-            function a(e, t = JSON.stringify) {
+        // shared/logglyHelpers
+        21248: (module, exports, _require) => {
+            "use strict";
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            // shared/cleanObjectForSerialization
+            const n = _require(37318)
+            const logLevelOrder = ["silent", "error", "warning", "info", "debug"];
+
+            function safelyConvertAnyToString(toConvert, stringify = JSON.stringify) {
                 try {
-                    return "object" == typeof e && null !== e ? t((0, n.cleanObjectForSerialization)(e, 10)) : String(e)
+                    return "object" == typeof toConvert && null !== toConvert
+                        ? stringify(n.cleanObjectForSerialization(toConvert, 10))
+                        : String(toConvert)
                 } catch (e) {
-                    const t = e;
-                    return `Unable to safely convert to string: "${t.stack ? t.stack : ""}"`
+                    return `Unable to safely convert to string: "${e.stack ? e.stack : ""}"`
                 }
             }
 
-            t.shouldLog = function (e) {
-                return o.indexOf(e.messageLevel) <= o.indexOf(e.loggerLevel)
-            }, t.safelyConvertAnyToString = a, t.convertErrorToLog = function (e, t = JSON.stringify, r = !1) {
+            exports.shouldLog = function (args) {
+                return logLevelOrder.indexOf(args.messageLevel) <= logLevelOrder.indexOf(args.loggerLevel)
+            }
+            exports.safelyConvertAnyToString = safelyConvertAnyToString
+            exports.convertErrorToLog = function (toConvert, stringify = JSON.stringify, shouldFallBackToReason = false) {
                 try {
-                    if ("object" == typeof e && null !== e) {
-                        const n = e, {
+                    if ("object" == typeof toConvert && null !== toConvert) {
+                        const n = toConvert, {
                             statusCode: o,
                             name: i,
                             message: s,
@@ -8764,27 +9654,30 @@
                             body: d,
                             reason: p
                         } = n, h = {};
-                        if (o && (h.statusCode = Number(o)), i && (h.name = String(i)), s && (h.message = a(s, t)), p && !h.message && r && (h.message = a(p, t)), l && (h.miscDataString = a(l, t)), c) {
-                            h.miscErrorString = a(c, t);
+                        if (o && (h.statusCode = Number(o)), i && (h.name = String(i)), s && (h.message = safelyConvertAnyToString(s, stringify)), p && !h.message && shouldFallBackToReason && (h.message = safelyConvertAnyToString(p, stringify)), l && (h.miscDataString = safelyConvertAnyToString(l, stringify)), c) {
+                            h.miscErrorString = safelyConvertAnyToString(c, stringify);
                             const e = c.code;
                             void 0 !== e && (h.code = String(e))
                         }
                         if (u && (h.stack = String(u)), d) if (h.body = {}, "object" == typeof d && null !== d) {
                             const e = d, {errorId: r, name: n, message: o, clientData: i} = e;
-                            r && (h.body.errorId = String(r)), n && (h.body.name = String(n)), o && (h.body.message = a(o, t)), i && (h.body.clientDataString = a(i, t))
-                        } else h.body.message = a(d, t);
+                            r && (h.body.errorId = String(r)), n && (h.body.name = String(n)), o && (h.body.message = safelyConvertAnyToString(o, stringify)), i && (h.body.clientDataString = safelyConvertAnyToString(i, stringify))
+                        } else h.body.message = safelyConvertAnyToString(d, stringify);
                         return h
                     }
-                    return {miscErrorString: a(e, t)}
+                    return {miscErrorString: safelyConvertAnyToString(toConvert, stringify)}
                 } catch (e) {
                     const t = e;
-                    return {miscErrorString: `Unable to safely convert error to log: "${t.stack ? t.stack : ""}"`}
+                    return {miscErrorString: `Unable to safely convert error to log: "${e.stack ? e.stack : ""}"`}
                 }
-            }, t.stringifyMiscData = function (e, t = JSON.stringify) {
-                const {miscDataToConvertToString: r, ...n} = e, o = n;
-                return void 0 !== r && (o.miscDataString = a(r, t)), o
             }
-        }, 32289: function (e, t, r) {
+            exports.stringifyMiscData = function (e, t = JSON.stringify) {
+                const {miscDataToConvertToString: r, ...n} = e, o = n;
+                return void 0 !== r && (o.miscDataString = safelyConvertAnyToString(r, t)), o
+            }
+        },
+
+        32289: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -8818,7 +9711,8 @@
             }, t.normalizeToHttpUrl = function (e) {
                 return e.url.startsWith(e.protocol) ? i({schemeUrl: e.url, baseUrl: e.domainBaseUrl}) : e.url
             }
-        }, 73720: (e, t, r) => {
+        },
+        73720: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.themeShadows = void 0;
             const n = r(33824);
@@ -9012,7 +9906,8 @@
                     }
                 }
             }
-        }, 80637: (e, t, r) => {
+        },
+        80637: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(6600);
@@ -9048,7 +9943,8 @@
                 }
                 return !1
             }
-        }, 80004: (e, t) => {
+        },
+        80004: (e, t) => {
             "use strict";
 
             function r(e) {
@@ -9099,7 +9995,8 @@
             }, t.arrayPush = function (e, t) {
                 for (const r of t) e.push(r)
             }
-        }, 60411: function (e, t, r) {
+        },
+        60411: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -9276,7 +10173,8 @@
                     return !1
                 }
             }
-        }, 65076: function (e, t, r) {
+        },
+        65076: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -9419,41 +10317,56 @@
                     [i.snakeCase(n)]: "object" == typeof t[n] ? e(t[n]) : t[n]
                 })), {})
             }
-        }, 45437: (e, t) => {
+        },
+
+        // events
+        45437: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.default = class {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.default = class {
                 constructor() {
                     this.listeners = {}
                 }
 
-                addListener(e, t) {
-                    let r = this.listeners[e];
-                    r || (r = new Set, this.listeners[e] = r), r.add(t)
+                addListener(type, handler) {
+                    let set = this.listeners[type];
+                    if (!set) {
+                        set = new Set()
+                        this.listeners[type] = set
+                    }
+                    set.add(handler)
                 }
 
-                addOnceListener(e, t) {
-                    const r = (...n) => {
-                        this.removeListener(e, r), t(...n)
+                addOnceListener(type, handler) {
+                    const handler_1 = (...args) => {
+                        this.removeListener(type, handler_1)
+                        handler(...args)
                     };
-                    this.addListener(e, r)
+                    this.addListener(type, handler_1)
                 }
 
-                removeListener(e, t) {
-                    const r = this.listeners[e];
-                    r && (r.delete(t), 0 === r.size && delete this.listeners[e])
+                removeListener(type, handler) {
+                    const set = this.listeners[type];
+                    if (set) {
+                        set.delete(handler)
+                        0 === set.size && delete this.listeners[type]
+                    }
                 }
 
-                emit(e, ...t) {
-                    const r = this.listeners[e];
-                    r && r.forEach((e => e(...t)))
+                emit(type, ...args) {
+                    const set = this.listeners[type];
+                    set && set.forEach(handler => handler(...args))
                 }
 
-                listenerCount(e) {
-                    const t = this.listeners[e];
-                    return t ? t.size : 0
+                listenerCount(type) {
+                    const set = this.listeners[type];
+                    return set ? set.size : 0
                 }
             }
-        }, 5508: (e, t) => {
+        },
+
+        5508: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
 
@@ -9515,10 +10428,12 @@
             }
 
             t.default = r
-        }, 43277: (e, t) => {
+        },
+        43277: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.peekViewQueryParam = t.configureOpenInDesktopAppQueryParam = t.deepLinkOpenNewTabQueryParam = void 0, t.deepLinkOpenNewTabQueryParam = "deepLinkOpenNewTab", t.configureOpenInDesktopAppQueryParam = "configureOpenInDesktopApp", t.peekViewQueryParam = "p"
-        }, 83704: function (e, t, r) {
+        },
+        83704: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -9589,7 +10504,8 @@
                         return Math.max(85 - Math.floor(10 * (r - 1.6) * 5), 0)
                 }
             }
-        }, 50019: function (e, t, r) {
+        },
+        50019: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -9630,7 +10546,8 @@
                     shadowOpacity: r.shadowOpacity
                 }
             }
-        }, 13984: (e, t, r) => {
+        },
+        13984: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getSpaceBetweenWindowLeftEdgeAndSidebarIcon = t.getSpaceBetweenTopbarAndModal = t.getTopbarHeight = t.MAC_DESKTOP_TOPBAR_HEIGHT = t.NEW_DEFAULT_TOPBAR_HEIGHT = t.DEFAULT_TOPBAR_HEIGHT = t.TEMPLATE_GALLERY_TOPBAR_HEIGHT = void 0;
             const n = r(83704);
@@ -9644,7 +10561,9 @@
             }, t.getSpaceBetweenWindowLeftEdgeAndSidebarIcon = function (e, t, r) {
                 return (e && !t ? (0, n.getPaddingLeftForDesktopMac)(r) : 12) + 30
             }
-        }, 6354: (e, t, r) => {
+        },
+
+        6354: (module, exports, __require) => {
             "use strict";
 
             function n(e) {
@@ -9880,7 +10799,8 @@
                 return m(e)
             }
 
-            r.r(t), r.d(t, {
+            __require.r(exports)
+            __require.d(exports, {
                 MiddlewareArray: () => He,
                 TaskAbortError: () => Ft,
                 __DO_NOT_USE__ActionTypes: () => ce,
@@ -9926,6 +10846,7 @@
                 removeListener: () => tr,
                 unwrapResult: () => gt
             });
+
             var j, $, F = "undefined" != typeof Symbol && "symbol" == typeof Symbol("x"), B = "undefined" != typeof Map,
                 U = "undefined" != typeof Set,
                 H = "undefined" != typeof Proxy && void 0 !== Proxy.revocable && "undefined" != typeof Reflect,
@@ -9986,11 +10907,14 @@
                 X[e] = function () {
                     return arguments[0] = arguments[0][0], t.apply(this, arguments)
                 }
-            })), X.deleteProperty = function (e, t) {
+            }))
+            X.deleteProperty = function (e, t) {
                 return X.set.call(this, e, t, void 0)
-            }, X.set = function (e, t, r) {
+            }
+            X.set = function (e, t, r) {
                 return J.set.call(this, e[0], t, r, e[0])
             };
+
             var Z = function () {
                 function e(e) {
                     var t = this;
@@ -10075,7 +10999,12 @@
                     }))
                 }, e
             }(), Q = new Z, ee = Q.produce;
-            Q.produceWithPatches.bind(Q), Q.setAutoFreeze.bind(Q), Q.setUseProxies.bind(Q), Q.applyPatches.bind(Q), Q.createDraft.bind(Q), Q.finishDraft.bind(Q);
+            Q.produceWithPatches.bind(Q)
+            Q.setAutoFreeze.bind(Q)
+            Q.setUseProxies.bind(Q)
+            Q.applyPatches.bind(Q)
+            Q.createDraft.bind(Q)
+            Q.finishDraft.bind(Q);
             const te = ee;
 
             function re(e) {
@@ -10414,7 +11343,8 @@
             var Te = ke();
             Te.withExtraArgument = ke;
             const Ee = Te;
-            var Se, Ce = (Se = function (e, t) {
+            var Se,
+                Ce = (Se = function (e, t) {
                     return Se = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (e, t) {
                         e.__proto__ = t
                     } || function (e, t) {
@@ -10428,7 +11358,8 @@
                     }
 
                     Se(e, t), e.prototype = null === t ? Object.create(t) : (r.prototype = t.prototype, new r)
-                }), Oe = function (e, t) {
+                }),
+                Oe = function (e, t) {
                     var r, n, o, a, i = {
                         label: 0, sent: function () {
                             if (1 & o[0]) throw o[1];
@@ -10493,20 +11424,29 @@
                             }([a, s])
                         }
                     }
-                }, Me = function (e, t) {
+                },
+                Me = function (e, t) {
                     for (var r = 0, n = t.length, o = e.length; r < n; r++, o++) e[o] = t[r];
                     return e
-                }, Ie = Object.defineProperty, Ae = Object.defineProperties, Pe = Object.getOwnPropertyDescriptors,
-                xe = Object.getOwnPropertySymbols, Ne = Object.prototype.hasOwnProperty,
-                Re = Object.prototype.propertyIsEnumerable, Le = function (e, t, r) {
+                },
+                Ie = Object.defineProperty,
+                Ae = Object.defineProperties,
+                Pe = Object.getOwnPropertyDescriptors,
+                xe = Object.getOwnPropertySymbols,
+                Ne = Object.prototype.hasOwnProperty,
+                Re = Object.prototype.propertyIsEnumerable,
+                Le = function (e, t, r) {
                     return t in e ? Ie(e, t, {enumerable: !0, configurable: !0, writable: !0, value: r}) : e[t] = r
-                }, De = function (e, t) {
+                },
+                De = function (e, t) {
                     for (var r in t || (t = {})) Ne.call(t, r) && Le(e, r, t[r]);
                     if (xe) for (var n = 0, o = xe(t); n < o.length; n++) r = o[n], Re.call(t, r) && Le(e, r, t[r]);
                     return e
-                }, je = function (e, t) {
+                },
+                je = function (e, t) {
                     return Ae(e, Pe(t))
-                }, $e = function (e, t, r) {
+                },
+                $e = function (e, t, r) {
                     return new Promise((function (n, o) {
                         var a = function (e) {
                             try {
@@ -10525,7 +11465,8 @@
                         };
                         s((r = r.apply(e, t)).next())
                     }))
-                }, Fe = function () {
+                },
+                Fe = function () {
                     for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
                     var r = _e.apply(void 0, e);
                     return function (e) {
@@ -10533,9 +11474,11 @@
                         return r.apply(void 0, Me([o(e) ? L(e) : e], t))
                     }
                 },
-                Be = "undefined" != typeof window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : function () {
-                    if (0 !== arguments.length) return "object" == typeof arguments[0] ? me : me.apply(null, arguments)
-                };
+                Be = "undefined" != typeof window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+                    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+                    : function () {
+                        if (0 !== arguments.length) return "object" == typeof arguments[0] ? me : me.apply(null, arguments)
+                    };
 
             function Ue(e) {
                 if ("object" != typeof e || null === e) return !1;
@@ -11202,12 +12145,16 @@
 
             var Ot = function (e, t) {
                     if ("function" != typeof e) throw new TypeError(t + " is not a function")
-                }, Mt = function () {
-                }, It = function (e, t) {
+                },
+                Mt = function () {
+                },
+                It = function (e, t) {
                     return void 0 === t && (t = Mt), e.catch(t), e
-                }, At = function (e, t) {
+                },
+                At = function (e, t) {
                     e.addEventListener("abort", t, {once: !0})
-                }, Pt = function (e, t) {
+                },
+                Pt = function (e, t) {
                     var r = e.signal;
                     r.aborted || ("reason" in r || Object.defineProperty(r, "reason", {
                         enumerable: !0,
@@ -11215,32 +12162,47 @@
                         configurable: !0,
                         writable: !0
                     }), e.abort(t))
-                }, xt = "listener", Nt = "completed", Rt = "cancelled", Lt = "task-" + Rt, Dt = "task-" + Nt,
-                jt = xt + "-" + Rt, $t = xt + "-" + Nt, Ft = function (e) {
+                },
+                xt = "listener",
+                Nt = "completed",
+                Rt = "cancelled",
+                Lt = "task-" + Rt,
+                Dt = "task-" + Nt,
+                jt = xt + "-" + Rt,
+                $t = xt + "-" + Nt,
+                Ft = function (e) {
                     this.code = e, this.name = "TaskAbortError", this.message = "task " + Rt + " (reason: " + e + ")"
-                }, Bt = function (e) {
+                },
+                Bt = function (e) {
                     if (e.aborted) throw new Ft(e.reason)
-                }, Ut = function (e) {
+                },
+                Ut = function (e) {
                     return It(new Promise((function (t, r) {
                         var n = function () {
                             return r(new Ft(e.reason))
                         };
                         e.aborted ? n() : At(e, n)
                     })))
-                }, Ht = function (e) {
+                },
+                Ht = function (e) {
                     return function (t) {
                         return It(Promise.race([Ut(e), t]).then((function (t) {
                             return Bt(e), t
                         })))
                     }
-                }, Wt = function (e) {
+                },
+                Wt = function (e) {
                     var t = Ht(e);
                     return function (e) {
                         return t(new Promise((function (t) {
                             return setTimeout(t, e)
                         })))
                     }
-                }, zt = Object.assign, qt = {}, Vt = "listenerMiddleware", Gt = function (e) {
+                },
+                zt = Object.assign,
+                qt = {},
+                Vt = "listenerMiddleware",
+                Gt = function (e) {
                     return function (t) {
                         Ot(t, "taskExecutor");
                         var r, n = new AbortController;
@@ -11293,7 +12255,8 @@
                             }
                         }
                     }
-                }, Kt = function (e, t) {
+                },
+                Kt = function (e, t) {
                     return function (r, n) {
                         return It(function (r, n) {
                             return $e(void 0, null, (function () {
@@ -11324,22 +12287,26 @@
                             }))
                         }(r, n))
                     }
-                }, Yt = function (e) {
+                },
+                Yt = function (e) {
                     var t = e.type, r = e.actionCreator, n = e.matcher, o = e.predicate, a = e.effect;
                     if (t) o = Ze(t).match; else if (r) t = r.type, o = r.match; else if (n) o = n; else if (!o) throw new Error("Creating or removing a listener requires one of the known fields for matching an action");
                     return Ot(a, "options.listener"), {predicate: o, type: t, effect: a}
-                }, Jt = function (e) {
+                },
+                Jt = function (e) {
                     var t = Yt(e), r = t.type, n = t.predicate, o = t.effect;
                     return {
                         id: ut(), effect: o, type: r, predicate: n, pending: new Set, unsubscribe: function () {
                             throw new Error("Unsubscribe not initialized")
                         }
                     }
-                }, Xt = function (e) {
+                },
+                Xt = function (e) {
                     return function () {
                         e.forEach(nr), e.clear()
                     }
-                }, Zt = function (e, t, r) {
+                },
+                Zt = function (e, t, r) {
                     try {
                         e(t, r)
                     } catch (e) {
@@ -11347,10 +12314,15 @@
                             throw e
                         }), 0)
                     }
-                }, Qt = Ze(Vt + "/add"), er = Ze(Vt + "/removeAll"), tr = Ze(Vt + "/remove"), rr = function () {
+                },
+                Qt = Ze(Vt + "/add"),
+                er = Ze(Vt + "/removeAll"),
+                tr = Ze(Vt + "/remove"),
+                rr = function () {
                     for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
                     console.error.apply(console, Me([Vt + "/error"], e))
-                }, nr = function (e) {
+                },
+                nr = function (e) {
                     e.pending.forEach((function (e) {
                         Pt(e, jt)
                     }))
@@ -11559,7 +12531,8 @@
                     }
                 })
             }()
-        }, 66130: (e, t, r) => {
+        },
+        66130: (e, t, r) => {
             "use strict";
             r.r(t), r.d(t, {
                 ElectronIntegrations: () => _r,
@@ -14769,7 +15742,8 @@
                     }))
                 }))
             }
-        }, 57577: (e, t, r) => {
+        },
+        57577: (e, t, r) => {
             "use strict";
             r.d(t, {YZ: () => h, BF: () => g, Me: () => v, EU: () => f});
             var n = r(34642), o = r(83776), a = r(91666), i = r(3771), s = r(4870), l = r(61110), c = r(12098),
@@ -14990,7 +15964,8 @@
             function y(e, t) {
                 return !!e && (e.__SENTRY__ = e.__SENTRY__ || {}, e.__SENTRY__.hub = t, !0)
             }
-        }, 12098: (e, t, r) => {
+        },
+        12098: (e, t, r) => {
             "use strict";
             r.d(t, {H: () => l, l: () => u});
             var n = r(34642), o = r(53390), a = r(3771), i = r(78336), s = r(91666), l = function () {
@@ -15098,7 +16073,8 @@
             function u(e) {
                 c().push(e)
             }
-        }, 34642: (e, t, r) => {
+        },
+        34642: (e, t, r) => {
             "use strict";
             r.d(t, {Cl: () => n, gz: () => a});
             var n = function () {
@@ -15130,7 +16106,8 @@
                 for (var e = [], t = 0; t < arguments.length; t++) e = e.concat(o(arguments[t]));
                 return e
             }
-        }, 26936: (e, t, r) => {
+        },
+        26936: (e, t, r) => {
             "use strict";
             r.d(t, {lk: () => v, pd: () => b});
             var n, o = r(82697), a = r(57577);
@@ -15220,7 +16197,8 @@
             }
 
             e = r.hmd(e)
-        }, 71137: (e, t, r) => {
+        },
+        71137: (e, t, r) => {
             "use strict";
             r.d(t, {$F: () => c, zX: () => d});
             var n = r(82697), o = r(3771), a = r(4870), i = r(91975), s = r(90677), l = r(9751), c = 1e3,
@@ -15311,7 +16289,8 @@
                     t && t.getTransaction() && t.setSpan(void 0)
                 }
             }
-        }, 91975: (e, t, r) => {
+        },
+        91975: (e, t, r) => {
             "use strict";
             r.d(t, {L: () => c, l: () => l});
             var n = r(82697), o = r(91666), a = r(3771), i = r(41509), s = r(90677), l = function () {
@@ -15399,7 +16378,8 @@
                     })
                 }, e
             }()
-        }, 90677: (e, t, r) => {
+        },
+        90677: (e, t, r) => {
             "use strict";
             var n;
             r.d(t, {F: () => n}), function (e) {
@@ -15436,7 +16416,8 @@
                     return e.UnknownError
                 }
             }(n || (n = {}))
-        }, 9751: (e, t, r) => {
+        },
+        9751: (e, t, r) => {
             "use strict";
             r.d(t, {Z: () => c});
             var n = r(82697), o = r(57577), a = r(53390), i = r(4870), s = r(41509), l = r(91975), c = function (e) {
@@ -15485,7 +16466,8 @@
                     return e.prototype.updateWithContext.call(this, t), this.name = null != (r = t.name) ? r : "", this._trimEnd = t.trimEnd, this
                 }, t
             }(l.L)
-        }, 35038: (e, t, r) => {
+        },
+        35038: (e, t, r) => {
             "use strict";
             r.d(t, {Z7: () => s, nc: () => i, rv: () => l, vO: () => c, wt: () => a});
             var n = r(57577), o = new RegExp("^[ \\t]*([0-9a-f]{32})?-?([0-9a-f]{16})?-?([01])?[ \\t]*$");
@@ -15519,7 +16501,8 @@
             function c(e) {
                 return 1e3 * e
             }
-        }, 82697: (e, t, r) => {
+        },
+        82697: (e, t, r) => {
             "use strict";
             r.d(t, {C6: () => o, Cl: () => a, Ju: () => s, Tt: () => i, gz: () => c, zs: () => l});
             var n = function (e, t) {
@@ -15588,7 +16571,8 @@
                 for (var e = [], t = 0; t < arguments.length; t++) e = e.concat(l(arguments[t]));
                 return e
             }
-        }, 83776: (e, t, r) => {
+        },
+        83776: (e, t, r) => {
             "use strict";
             var n, o;
             r.d(t, {P: () => n, m: () => o}), function (e) {
@@ -15596,7 +16580,8 @@
             }(n || (n = {})), function (e) {
                 e.Ok = "ok", e.Errored = "errored", e.Crashed = "crashed"
             }(o || (o = {}))
-        }, 18660: (e, t, r) => {
+        },
+        18660: (e, t, r) => {
             "use strict";
             r.d(t, {H: () => o});
             var n = r(53390);
@@ -15620,7 +16605,8 @@
                 for (s = 0; s < d.length; s++) a = d[s], (i = l.getAttribute(a)) && c.push("[" + a + '="' + i + '"]');
                 return c.join("")
             }
-        }, 86936: (e, t, r) => {
+        },
+        86936: (e, t, r) => {
             "use strict";
             r.d(t, {O: () => m});
             var n = r(23840), o = r(53390), a = r(4870), i = r(91666), s = r(41509), l = r(46819);
@@ -15897,7 +16883,8 @@
             }
 
             var k = null, T = null
-        }, 53390: (e, t, r) => {
+        },
+        53390: (e, t, r) => {
             "use strict";
 
             function n(e) {
@@ -15963,7 +16950,8 @@
                 vq: () => l,
                 xH: () => s
             })
-        }, 4870: (e, t, r) => {
+        },
+        4870: (e, t, r) => {
             "use strict";
             r.d(t, {v: () => s});
             var n = r(91666), o = (0, n.VZ)(), a = "Sentry Logger ", i = function () {
@@ -15994,7 +16982,8 @@
             }();
             o.__SENTRY__ = o.__SENTRY__ || {};
             var s = o.__SENTRY__.logger || (o.__SENTRY__.logger = new i)
-        }, 91666: (e, t, r) => {
+        },
+        91666: (e, t, r) => {
             "use strict";
             r.d(t, {
                 $X: () => l,
@@ -16098,7 +17087,8 @@
                     return (0, o.nC)(e, 0)
                 }))
             }
-        }, 61110: (e, t, r) => {
+        },
+        61110: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -16124,7 +17114,8 @@
             }
 
             r.d(t, {Vw: () => a, fj: () => o, wD: () => n}), e = r.hmd(e)
-        }, 41509: (e, t, r) => {
+        },
+        41509: (e, t, r) => {
             "use strict";
             r.d(t, {Ce: () => b, HF: () => g, GS: () => c, S8: () => m, cd: () => p, u4: () => u});
             var n = r(23840), o = r(18660), a = r(53390), i = function () {
@@ -16265,7 +17256,8 @@
                 }
                 return Array.isArray(e) ? e.map(b) : e
             }
-        }, 46819: (e, t, r) => {
+        },
+        46819: (e, t, r) => {
             "use strict";
             r.d(t, {q: () => o});
             var n = "<anonymous>";
@@ -16277,7 +17269,8 @@
                     return n
                 }
             }
-        }, 58647: (e, t, r) => {
+        },
+        58647: (e, t, r) => {
             "use strict";
             r.d(t, {_c: () => i, nC: () => a, xv: () => o});
             var n = r(53390);
@@ -16299,7 +17292,8 @@
             function i(e, t) {
                 return !!(0, n.Kg)(e) && ((0, n.gd)(t) ? t.test(e) : "string" == typeof t && -1 !== e.indexOf(t))
             }
-        }, 78336: (e, t, r) => {
+        },
+        78336: (e, t, r) => {
             "use strict";
             r.d(t, {T: () => a});
             var n, o = r(53390);
@@ -16390,7 +17384,8 @@
                     return "[object SyncPromise]"
                 }, e
             }()
-        }, 3771: (e, t, r) => {
+        },
+        3771: (e, t, r) => {
             "use strict";
             r.d(t, {LU: () => u, k3: () => d, lu: () => l, zf: () => c});
             var n = r(91666), o = r(61110);
@@ -16425,7 +17420,8 @@
                     return i || l < t ? a <= l ? e.timeOrigin : s : o
                 }
             }()
-        }, 23840: (e, t, r) => {
+        },
+        23840: (e, t, r) => {
             "use strict";
             r.d(t, {C6: () => o, Cl: () => a, Ju: () => i, zs: () => s});
             var n = function (e, t) {
@@ -16479,7 +17475,8 @@
                 }
                 return i
             }
-        }, 69642: function (e, t, r) {
+        },
+        69642: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -16566,7 +17563,8 @@
 
                 e.Agent = t, e.prototype = e.Agent.prototype
             }(c || (c = {})), e.exports = c
-        }, 70: (e, t) => {
+        },
+        70: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.default = function (e) {
                 return function (t, r) {
@@ -16577,7 +17575,8 @@
                     }))
                 }
             }
-        }, 67904: (e, t) => {
+        },
+        67904: (e, t) => {
             "use strict";
 
             function r(e, t) {
@@ -16688,7 +17687,8 @@
             }
 
             const v = /[^\\]\\Z/
-        }, 42368: (e, t, r) => {
+        },
+        42368: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(67904), o = r(5019), a = r(82975), i = new a.Name("fullFormats"), s = new a.Name("fastFormats"),
@@ -16709,7 +17709,8 @@
                 if (!r) throw new Error(`Unknown format "${e}"`);
                 return r
             }, e.exports = t = l, Object.defineProperty(t, "__esModule", {value: !0}), t.default = l
-        }, 5019: (e, t, r) => {
+        },
+        5019: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.formatLimitDefinition = void 0;
             const n = r(68896), o = r(82975), a = o.operators, i = {
@@ -16754,7 +17755,8 @@
                 },
                 dependencies: ["format"]
             }, t.default = e => (e.addKeyword(t.formatLimitDefinition), e)
-        }, 68896: (e, t, r) => {
+        },
+        68896: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.MissingRefError = t.ValidationError = t.CodeGen = t.Name = t.nil = t.stringify = t.str = t._ = t.KeywordCxt = void 0;
             const n = r(30520), o = r(85790), a = r(65611), i = r(92455), s = ["/properties"],
@@ -16821,7 +17823,8 @@
                     return h.default
                 }
             })
-        }, 22002: (e, t) => {
+        },
+        22002: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.regexpCode = t.getEsmExportName = t.getProperty = t.safeStringify = t.stringify = t.strConcat = t.addCodeArg = t.str = t._ = t.nil = t._Code = t.Name = t.IDENTIFIER = t._CodeOrName = void 0;
 
@@ -16938,7 +17941,8 @@
             }, t.regexpCode = function (e) {
                 return new o(e.toString())
             }
-        }, 82975: (e, t, r) => {
+        },
+        82975: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.or = t.and = t.not = t.CodeGen = t.operators = t.varKinds = t.ValueScopeName = t.ValueScope = t.Scope = t.Name = t.regexpCode = t.stringify = t.getProperty = t.nil = t.strConcat = t.str = t._ = void 0;
             const n = r(22002), o = r(88487);
@@ -17572,7 +18576,8 @@
             t.or = function (...e) {
                 return e.reduce(L)
             }
-        }, 88487: (e, t, r) => {
+        },
+        88487: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.ValueScope = t.ValueScopeName = t.Scope = t.varKinds = t.UsedValueState = void 0;
             const n = r(22002);
@@ -17699,7 +18704,8 @@
                     return l
                 }
             }
-        }, 34214: (e, t, r) => {
+        },
+        34214: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.extendErrors = t.resetErrorsCount = t.reportExtraError = t.reportError = t.keyword$DataError = t.keywordError = void 0;
             const n = r(82975), o = r(46809), a = r(80441);
@@ -17769,7 +18775,8 @@
                 let i = a ? t : n.str`${t}/${e}`;
                 return r && (i = n.str`${i}${(0, o.getErrorPath)(r, o.Type.Str)}`), [l.schemaPath, i]
             }
-        }, 12945: (e, t, r) => {
+        },
+        12945: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.resolveSchema = t.getCompilingSchema = t.resolveRef = t.compileSchema = t.SchemaEnv = void 0;
             const n = r(82975), o = r(93236), a = r(80441), i = r(21365), s = r(46809), l = r(18132);
@@ -17927,7 +18934,8 @@
                     baseId: t
                 }), a.schema !== a.root.schema ? a : void 0
             }
-        }, 80441: (e, t, r) => {
+        },
+        80441: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = {
@@ -17949,7 +18957,8 @@
                 jsonPart: new n.Name("jsonPart")
             };
             t.default = o
-        }, 38477: (e, t, r) => {
+        },
+        38477: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(21365);
@@ -17961,7 +18970,8 @@
             }
 
             t.default = o
-        }, 21365: (e, t, r) => {
+        },
+        21365: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getSchemaRefs = t.resolveUrl = t.normalizeId = t._getFullPath = t.getFullPath = t.inlineRef = void 0;
             const n = r(46809), o = r(88719), a = r(91484),
@@ -18046,7 +19056,8 @@
                     return new Error(`reference "${e}" resolves to more than one schema`)
                 }
             }
-        }, 71078: (e, t) => {
+        },
+        71078: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getRules = t.isJSONType = void 0;
             const r = new Set(["string", "number", "integer", "boolean", "null", "object", "array"]);
@@ -18067,7 +19078,8 @@
                     keywords: {}
                 }
             }
-        }, 46809: (e, t, r) => {
+        },
+        46809: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.checkStrictMode = t.getErrorPath = t.Type = t.useFunc = t.setEvaluated = t.evaluatedPropsToName = t.mergeEvaluated = t.eachItem = t.unescapeJsonPointer = t.escapeJsonPointer = t.escapeFragment = t.unescapeFragment = t.schemaRefOrVal = t.schemaHasRulesButRef = t.schemaHasRules = t.checkUnknownRules = t.alwaysValidSchema = t.toHash = void 0;
             const n = r(82975), o = r(22002);
@@ -18169,7 +19181,8 @@
                 }
                 return r ? (0, n.getProperty)(e).toString() : "/" + s(e)
             }, t.checkStrictMode = f
-        }, 21629: (e, t) => {
+        },
+        21629: (e, t) => {
             "use strict";
 
             function r(e, t) {
@@ -18188,7 +19201,8 @@
                 const o = t.RULES.types[n];
                 return o && !0 !== o && r(e, o)
             }, t.shouldUseGroup = r, t.shouldUseRule = n
-        }, 89949: (e, t, r) => {
+        },
+        89949: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.boolOrEmptySchema = t.topBoolOrEmptySchema = void 0;
             const n = r(34214), o = r(82975), a = r(80441), i = {message: "boolean schema is false"};
@@ -18214,7 +19228,8 @@
                 const {gen: r, schema: n} = e;
                 !1 === n ? (r.var(t, !1), s(e)) : r.var(t, !0)
             }
-        }, 86098: (e, t, r) => {
+        },
+        86098: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.reportTypeError = t.checkDataTypes = t.checkDataType = t.coerceAndCheckDataType = t.getJSONTypes = t.getSchemaTypes = t.DataType = void 0;
             const n = r(71078), o = r(21629), a = r(34214), i = r(82975), s = r(46809);
@@ -18349,7 +19364,8 @@
             }
 
             t.reportTypeError = f
-        }, 54936: (e, t, r) => {
+        },
+        54936: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.assignDefaults = void 0;
             const n = r(82975), o = r(46809);
@@ -18367,7 +19383,8 @@
                 const {properties: r, items: n} = e.schema;
                 if ("object" === t && r) for (const t in r) a(e, t, r[t].default); else "array" === t && Array.isArray(n) && n.forEach(((t, r) => a(e, r, t.default)))
             }
-        }, 18132: (e, t, r) => {
+        },
+        18132: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getData = t.KeywordCxt = t.validateFunctionCode = void 0;
             const n = r(89949), o = r(86098), a = r(21629), i = r(86098), s = r(54936), l = r(78175), c = r(11925),
@@ -18651,7 +19668,8 @@
             }
 
             t.getData = A
-        }, 78175: (e, t, r) => {
+        },
+        78175: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateKeywordUsage = t.validSchemaType = t.funcKeywordCode = t.macroKeywordCode = void 0;
             const n = r(82975), o = r(80441), a = r(9487), i = r(34214);
@@ -18727,7 +19745,8 @@
                     r.logger.error(e)
                 }
             }
-        }, 11925: (e, t, r) => {
+        },
+        11925: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.extendSubschemaMode = t.extendSubschemaData = t.getSubschema = void 0;
             const n = r(82975), o = r(46809);
@@ -18785,7 +19804,8 @@
             }) {
                 void 0 !== n && (e.compositeRule = n), void 0 !== o && (e.createErrors = o), void 0 !== a && (e.allErrors = a), e.jtdDiscriminator = t, e.jtdMetadata = r
             }
-        }, 30520: (e, t, r) => {
+        },
+        30520: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.CodeGen = t.Name = t.nil = t.stringify = t.str = t._ = t.KeywordCxt = void 0;
             var n = r(18132);
@@ -19217,12 +20237,14 @@
             function L(e) {
                 return {anyOf: [e, R]}
             }
-        }, 42364: (e, t, r) => {
+        },
+        42364: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(88719);
             n.code = 'require("ajv/dist/runtime/equal").default', t.default = n
-        }, 81719: (e, t) => {
+        },
+        81719: (e, t) => {
             "use strict";
 
             function r(e) {
@@ -19233,12 +20255,14 @@
             }
 
             Object.defineProperty(t, "__esModule", {value: !0}), t.default = r, r.code = 'require("ajv/dist/runtime/ucs2length").default'
-        }, 74174: (e, t, r) => {
+        },
+        74174: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(72905);
             n.code = 'require("ajv/dist/runtime/uri").default', t.default = n
-        }, 93236: (e, t) => {
+        },
+        93236: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
 
@@ -19249,7 +20273,8 @@
             }
 
             t.default = r
-        }, 93567: (e, t, r) => {
+        },
+        93567: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateAdditionalItems = void 0;
             const n = r(82975), o = r(46809), a = {
@@ -19286,7 +20311,8 @@
             }
 
             t.validateAdditionalItems = i, t.default = a
-        }, 39770: (e, t, r) => {
+        },
+        39770: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(9487), o = r(82975), a = r(80441), i = r(46809), s = {
@@ -19345,7 +20371,8 @@
                 }
             };
             t.default = s
-        }, 95662: (e, t, r) => {
+        },
+        95662: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(46809), o = {
@@ -19361,7 +20388,8 @@
                 }
             };
             t.default = o
-        }, 20079: (e, t, r) => {
+        },
+        20079: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = {
@@ -19372,7 +20400,8 @@
                 error: {message: "must match a schema in anyOf"}
             };
             t.default = n
-        }, 11015: (e, t, r) => {
+        },
+        11015: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = {
@@ -19435,7 +20464,8 @@
                 }
             };
             t.default = a
-        }, 53743: (e, t, r) => {
+        },
+        53743: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateSchemaDeps = t.validatePropertyDeps = t.error = void 0;
             const n = r(82975), o = r(46809), a = r(9487);
@@ -19482,7 +20512,8 @@
             }
 
             t.validatePropertyDeps = s, t.validateSchemaDeps = l, t.default = i
-        }, 54089: (e, t, r) => {
+        },
+        54089: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = {
@@ -19524,7 +20555,8 @@
             }
 
             t.default = a
-        }, 67040: (e, t, r) => {
+        },
+        67040: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(93567), o = r(65608), a = r(91884), i = r(57132), s = r(11015), l = r(53743), c = r(71551),
@@ -19534,7 +20566,8 @@
                 const t = [h.default, f.default, m.default, g.default, b.default, v.default, c.default, u.default, l.default, d.default, p.default];
                 return e ? t.push(o.default, i.default) : t.push(n.default, a.default), t.push(s.default), t
             }
-        }, 91884: (e, t, r) => {
+        },
+        91884: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateTuple = void 0;
             const n = r(82975), o = r(46809), a = r(9487), i = {
@@ -19570,7 +20603,8 @@
             }
 
             t.validateTuple = s, t.default = i
-        }, 57132: (e, t, r) => {
+        },
+        57132: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = r(9487), i = r(93567), s = {
@@ -19588,7 +20622,8 @@
                 }
             };
             t.default = s
-        }, 88989: (e, t, r) => {
+        },
+        88989: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(46809), o = {
@@ -19605,7 +20640,8 @@
                 }, error: {message: "must NOT be valid"}
             };
             t.default = o
-        }, 23317: (e, t, r) => {
+        },
+        23317: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = {
@@ -19636,7 +20672,8 @@
                 }
             };
             t.default = a
-        }, 85655: (e, t, r) => {
+        },
+        85655: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(9487), o = r(82975), a = r(46809), i = r(46809), s = {
@@ -19672,7 +20709,8 @@
                 }
             };
             t.default = s
-        }, 65608: (e, t, r) => {
+        },
+        65608: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(91884), o = {
@@ -19683,7 +20721,8 @@
                 code: e => (0, n.validateTuple)(e, "items")
             };
             t.default = o
-        }, 74979: (e, t, r) => {
+        },
+        74979: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(18132), o = r(9487), a = r(46809), i = r(39770), s = {
@@ -19708,7 +20747,8 @@
                 }
             };
             t.default = s
-        }, 71551: (e, t, r) => {
+        },
+        71551: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = {
@@ -19737,7 +20777,8 @@
                 }
             };
             t.default = a
-        }, 64984: (e, t, r) => {
+        },
+        64984: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(46809), o = {
@@ -19748,7 +20789,8 @@
                 }
             };
             t.default = o
-        }, 9487: (e, t, r) => {
+        },
+        9487: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateUnion = t.validateArray = t.usePattern = t.callValidateCode = t.schemaProperties = t.allSchemaProperties = t.noPropertyInData = t.propertyInData = t.isOwnProperty = t.hasPropFunc = t.reportMissingProp = t.checkMissingProp = t.checkReportMissingProp = void 0;
             const n = r(82975), o = r(46809), a = r(80441), i = r(46809);
@@ -19831,7 +20873,8 @@
                     t.assign(s, n._`${s} || ${l}`), e.mergeValidEvaluated(i, l) || t.if((0, n.not)(s))
                 })))), e.result(s, (() => e.reset()), (() => e.error(!0)))
             }
-        }, 15517: (e, t) => {
+        },
+        15517: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const r = {
@@ -19840,13 +20883,15 @@
                 }
             };
             t.default = r
-        }, 15750: (e, t, r) => {
+        },
+        15750: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(15517), o = r(48903),
                 a = ["$schema", "$id", "$defs", "$vocabulary", {keyword: "$comment"}, "definitions", n.default, o.default];
             t.default = a
-        }, 48903: (e, t, r) => {
+        },
+        48903: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.callRef = t.getValidate = void 0;
             const n = r(38477), o = r(9487), a = r(82975), i = r(80441), s = r(12945), l = r(46809), c = {
@@ -19924,7 +20969,8 @@
             }
 
             t.getValidate = u, t.callRef = d, t.default = c
-        }, 65611: (e, t, r) => {
+        },
+        65611: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(8842), a = r(12945), i = r(46809), s = {
@@ -19998,17 +21044,20 @@
                 }
             };
             t.default = s
-        }, 8842: (e, t) => {
+        },
+        8842: (e, t) => {
             "use strict";
             var r;
             Object.defineProperty(t, "__esModule", {value: !0}), t.DiscrError = void 0, (r = t.DiscrError || (t.DiscrError = {})).Tag = "tag", r.Mapping = "mapping"
-        }, 85790: (e, t, r) => {
+        },
+        85790: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(15750), o = r(18634), a = r(67040), i = r(89010), s = r(51779),
                 l = [n.default, o.default, (0, a.default)(), i.default, s.metadataVocabulary, s.contentVocabulary];
             t.default = l
-        }, 11811: (e, t, r) => {
+        },
+        11811: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = {
@@ -20063,15 +21112,18 @@
                 }
             };
             t.default = o
-        }, 89010: (e, t, r) => {
+        },
+        89010: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = [r(11811).default];
             t.default = n
-        }, 51779: (e, t) => {
+        },
+        51779: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.contentVocabulary = t.metadataVocabulary = void 0, t.metadataVocabulary = ["title", "description", "default", "deprecated", "readOnly", "writeOnly", "examples"], t.contentVocabulary = ["contentMediaType", "contentEncoding", "contentSchema"]
-        }, 57073: (e, t, r) => {
+        },
+        57073: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = r(42364), i = {
@@ -20084,7 +21136,8 @@
                 }
             };
             t.default = i
-        }, 99605: (e, t, r) => {
+        },
+        99605: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = r(42364), i = {
@@ -20116,7 +21169,8 @@
                 }
             };
             t.default = i
-        }, 18634: (e, t, r) => {
+        },
+        18634: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(95048), o = r(34093), a = r(34941), i = r(91552), s = r(87592), l = r(65697), c = r(62149),
@@ -20126,7 +21180,8 @@
                     schemaType: ["string", "array"]
                 }, {keyword: "nullable", schemaType: "boolean"}, d.default, p.default];
             t.default = h
-        }, 62149: (e, t, r) => {
+        },
+        62149: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = {
@@ -20147,7 +21202,8 @@
                 }
             };
             t.default = o
-        }, 34941: (e, t, r) => {
+        },
+        34941: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = r(46809), a = r(81719), i = {
@@ -20169,7 +21225,8 @@
                 }
             };
             t.default = i
-        }, 95048: (e, t, r) => {
+        },
+        95048: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = n.operators, a = {
@@ -20187,7 +21244,8 @@
                 }
             };
             t.default = s
-        }, 87592: (e, t, r) => {
+        },
+        87592: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = {
@@ -20208,7 +21266,8 @@
                 }
             };
             t.default = o
-        }, 34093: (e, t, r) => {
+        },
+        34093: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(82975), o = {
@@ -20227,7 +21286,8 @@
                 }
             };
             t.default = o
-        }, 91552: (e, t, r) => {
+        },
+        91552: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(9487), o = r(82975), a = {
@@ -20246,7 +21306,8 @@
                 }
             };
             t.default = a
-        }, 65697: (e, t, r) => {
+        },
+        65697: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(9487), o = r(82975), a = r(46809), i = {
@@ -20292,7 +21353,8 @@
                 }
             };
             t.default = i
-        }, 16323: (e, t, r) => {
+        },
+        16323: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(86098), o = r(82975), a = r(46809), i = r(42364), s = {
@@ -20342,7 +21404,8 @@
                 }
             };
             t.default = s
-        }, 91484: e => {
+        },
+        91484: e => {
             "use strict";
             var t = e.exports = function (e, t, n) {
                 "function" == typeof t && (n = t, t = {}), r(t, "function" == typeof (n = t.cb || n) ? n : n.pre || function () {
@@ -20400,7 +21463,8 @@
                 maxProperties: !0,
                 minProperties: !0
             }
-        }, 3453: (e, t) => {
+        },
+        3453: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.NOOP = t.LIMIT_FILES_DESCRIPTORS = t.LIMIT_BASENAME_LENGTH = t.IS_USER_ROOT = t.IS_POSIX = t.DEFAULT_TIMEOUT_SYNC = t.DEFAULT_TIMEOUT_ASYNC = t.DEFAULT_WRITE_OPTIONS = t.DEFAULT_READ_OPTIONS = t.DEFAULT_FOLDER_MODE = t.DEFAULT_FILE_MODE = t.DEFAULT_ENCODING = void 0, t.DEFAULT_ENCODING = "utf8", t.DEFAULT_FILE_MODE = 438, t.DEFAULT_FOLDER_MODE = 511, t.DEFAULT_READ_OPTIONS = {}, t.DEFAULT_WRITE_OPTIONS = {}, t.DEFAULT_TIMEOUT_ASYNC = 5e3, t.DEFAULT_TIMEOUT_SYNC = 100;
             const r = !!process.getuid;
@@ -20408,7 +21472,8 @@
             const n = !!process.getuid && !process.getuid();
             t.IS_USER_ROOT = n, t.LIMIT_BASENAME_LENGTH = 128, t.LIMIT_FILES_DESCRIPTORS = 1e4, t.NOOP = () => {
             }
-        }, 37221: (e, t, r) => {
+        },
+        37221: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.writeFileSync = t.writeFile = t.readFileSync = t.readFile = void 0;
             const n = r(16928), o = r(3453), a = r(31484), i = r(63911), s = r(63538), l = r(2213);
@@ -20485,7 +21550,8 @@
                 }
             };
             t.writeFileSync = d
-        }, 72654: (e, t, r) => {
+        },
+        72654: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.attemptifySync = t.attemptifyAsync = void 0;
             const n = r(3453);
@@ -20498,7 +21564,8 @@
                     return t(e)
                 }
             }
-        }, 31484: (e, t, r) => {
+        },
+        31484: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(79896), o = r(39023), a = r(72654), i = r(88990), s = r(19983), l = {
@@ -20533,7 +21600,8 @@
                 writeSyncRetry: s.retryifySync(n.writeSync, i.default.isRetriableError)
             };
             t.default = l
-        }, 88990: (e, t, r) => {
+        },
+        88990: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(3453), o = {
@@ -20548,14 +21616,16 @@
                 }
             };
             t.default = o
-        }, 63911: (e, t) => {
+        },
+        63911: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.default = {
                 isFunction: e => "function" == typeof e,
                 isString: e => "string" == typeof e,
                 isUndefined: e => void 0 === e
             }
-        }, 19983: (e, t, r) => {
+        },
+        19983: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.retryifySync = t.retryifyAsync = void 0;
             const n = r(68583);
@@ -20581,7 +21651,8 @@
                     }
                 }
             }
-        }, 68583: (e, t, r) => {
+        },
+        68583: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = {
@@ -20617,7 +21688,8 @@
                 }
             };
             t.default = n
-        }, 63538: (e, t) => {
+        },
+        63538: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const r = {}, n = {
@@ -20633,7 +21705,8 @@
                 }))
             };
             t.default = n
-        }, 2213: (e, t, r) => {
+        },
+        2213: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(16928), o = r(3453), a = r(31484), i = {
@@ -20659,7 +21732,8 @@
                 }
             };
             process.on("exit", i.purgeSyncAll), t.default = i
-        }, 61654: (e, t) => {
+        },
+        61654: (e, t) => {
             Object.defineProperty(t, "__esModule", {value: !0});
             var r = {grad: .9, turn: 360, rad: 360 / (2 * Math.PI)}, n = function (e) {
                     return "string" == typeof e ? e.length > 0 : "number" == typeof e
@@ -20845,7 +21919,8 @@
             }, t.random = function () {
                 return new O({r: 255 * Math.random(), g: 255 * Math.random(), b: 255 * Math.random()})
             }
-        }, 69198: e => {
+        },
+        69198: e => {
             var t = function (e) {
                 return "string" == typeof e ? e.length > 0 : "number" == typeof e
             }, r = function (e, t, r) {
@@ -20935,7 +22010,8 @@
                     return n(r(a, 3))
                 }, t.object.push([p, "lab"])
             }
-        }, 12659: e => {
+        },
+        12659: e => {
             e.exports = function (e) {
                 var t = function (e) {
                     return e > 0 && e < 1 ? e.toString().replace("0.", ".") : e
@@ -20967,7 +22043,8 @@
                     }(p)
                 }
             }
-        }, 16351: e => {
+        },
+        16351: e => {
             var t = function (e, t, r) {
                 return void 0 === t && (t = 0), void 0 === r && (r = 1), e > r ? r : e > t ? e : t
             }, r = function (e) {
@@ -21048,7 +22125,8 @@
                     return t(this, "#808080", e)
                 }
             }
-        }, 98693: e => {
+        },
+        98693: e => {
             e.exports = function (e, t) {
                 var r = {
                     white: "#ffffff",
@@ -21220,7 +22298,8 @@
                     return o ? new e(o).toRgb() : null
                 }, "name"])
             }
-        }, 25054: function (e, t, r) {
+        },
+        25054: function (e, t, r) {
             "use strict";
             e = r.nmd(e);
             var n, o, a, i, s, l, c = this && this.__classPrivateFieldSet || function (e, t, r, n, o) {
@@ -21469,7 +22548,8 @@
             }
 
             t.default = P, e.exports = P, e.exports.default = P
-        }, 73210: (e, t, r) => {
+        },
+        73210: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.MissingRefError = t.ValidationError = t.CodeGen = t.Name = t.nil = t.stringify = t.str = t._ = t.KeywordCxt = void 0;
             const n = r(4994), o = r(53880), a = r(78645), i = r(89049), s = ["/properties"],
@@ -21536,7 +22616,8 @@
                     return h.default
                 }
             })
-        }, 45608: (e, t) => {
+        },
+        45608: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.regexpCode = t.getEsmExportName = t.getProperty = t.safeStringify = t.stringify = t.strConcat = t.addCodeArg = t.str = t._ = t.nil = t._Code = t.Name = t.IDENTIFIER = t._CodeOrName = void 0;
 
@@ -21653,7 +22734,8 @@
             }, t.regexpCode = function (e) {
                 return new o(e.toString())
             }
-        }, 97309: (e, t, r) => {
+        },
+        97309: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.or = t.and = t.not = t.CodeGen = t.operators = t.varKinds = t.ValueScopeName = t.ValueScope = t.Scope = t.Name = t.regexpCode = t.stringify = t.getProperty = t.nil = t.strConcat = t.str = t._ = void 0;
             const n = r(45608), o = r(80157);
@@ -22287,7 +23369,8 @@
             t.or = function (...e) {
                 return e.reduce(L)
             }
-        }, 80157: (e, t, r) => {
+        },
+        80157: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.ValueScope = t.ValueScopeName = t.Scope = t.varKinds = t.UsedValueState = void 0;
             const n = r(45608);
@@ -22414,7 +23497,8 @@
                     return l
                 }
             }
-        }, 67084: (e, t, r) => {
+        },
+        67084: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.extendErrors = t.resetErrorsCount = t.reportExtraError = t.reportError = t.keyword$DataError = t.keywordError = void 0;
             const n = r(97309), o = r(31435), a = r(40527);
@@ -22484,7 +23568,8 @@
                 let i = a ? t : n.str`${t}/${e}`;
                 return r && (i = n.str`${i}${(0, o.getErrorPath)(r, o.Type.Str)}`), [l.schemaPath, i]
             }
-        }, 96579: (e, t, r) => {
+        },
+        96579: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.resolveSchema = t.getCompilingSchema = t.resolveRef = t.compileSchema = t.SchemaEnv = void 0;
             const n = r(97309), o = r(97518), a = r(40527), i = r(95779), s = r(31435), l = r(8338);
@@ -22642,7 +23727,8 @@
                     baseId: t
                 }), a.schema !== a.root.schema ? a : void 0
             }
-        }, 40527: (e, t, r) => {
+        },
+        40527: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = {
@@ -22664,7 +23750,8 @@
                 jsonPart: new n.Name("jsonPart")
             };
             t.default = o
-        }, 30655: (e, t, r) => {
+        },
+        30655: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(95779);
@@ -22676,7 +23763,8 @@
             }
 
             t.default = o
-        }, 95779: (e, t, r) => {
+        },
+        95779: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getSchemaRefs = t.resolveUrl = t.normalizeId = t._getFullPath = t.getFullPath = t.inlineRef = void 0;
             const n = r(31435), o = r(88719), a = r(5354),
@@ -22761,7 +23849,8 @@
                     return new Error(`reference "${e}" resolves to more than one schema`)
                 }
             }
-        }, 92468: (e, t) => {
+        },
+        92468: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getRules = t.isJSONType = void 0;
             const r = new Set(["string", "number", "integer", "boolean", "null", "object", "array"]);
@@ -22782,7 +23871,8 @@
                     keywords: {}
                 }
             }
-        }, 31435: (e, t, r) => {
+        },
+        31435: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.checkStrictMode = t.getErrorPath = t.Type = t.useFunc = t.setEvaluated = t.evaluatedPropsToName = t.mergeEvaluated = t.eachItem = t.unescapeJsonPointer = t.escapeJsonPointer = t.escapeFragment = t.unescapeFragment = t.schemaRefOrVal = t.schemaHasRulesButRef = t.schemaHasRules = t.checkUnknownRules = t.alwaysValidSchema = t.toHash = void 0;
             const n = r(97309), o = r(45608);
@@ -22884,7 +23974,8 @@
                 }
                 return r ? (0, n.getProperty)(e).toString() : "/" + s(e)
             }, t.checkStrictMode = f
-        }, 31255: (e, t) => {
+        },
+        31255: (e, t) => {
             "use strict";
 
             function r(e, t) {
@@ -22903,7 +23994,8 @@
                 const o = t.RULES.types[n];
                 return o && !0 !== o && r(e, o)
             }, t.shouldUseGroup = r, t.shouldUseRule = n
-        }, 92767: (e, t, r) => {
+        },
+        92767: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.boolOrEmptySchema = t.topBoolOrEmptySchema = void 0;
             const n = r(67084), o = r(97309), a = r(40527), i = {message: "boolean schema is false"};
@@ -22929,7 +24021,8 @@
                 const {gen: r, schema: n} = e;
                 !1 === n ? (r.var(t, !1), s(e)) : r.var(t, !0)
             }
-        }, 50984: (e, t, r) => {
+        },
+        50984: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.reportTypeError = t.checkDataTypes = t.checkDataType = t.coerceAndCheckDataType = t.getJSONTypes = t.getSchemaTypes = t.DataType = void 0;
             const n = r(92468), o = r(31255), a = r(67084), i = r(97309), s = r(31435);
@@ -23064,7 +24157,8 @@
             }
 
             t.reportTypeError = f
-        }, 15334: (e, t, r) => {
+        },
+        15334: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.assignDefaults = void 0;
             const n = r(97309), o = r(31435);
@@ -23082,7 +24176,8 @@
                 const {properties: r, items: n} = e.schema;
                 if ("object" === t && r) for (const t in r) a(e, t, r[t].default); else "array" === t && Array.isArray(n) && n.forEach(((t, r) => a(e, r, t.default)))
             }
-        }, 8338: (e, t, r) => {
+        },
+        8338: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getData = t.KeywordCxt = t.validateFunctionCode = void 0;
             const n = r(92767), o = r(50984), a = r(31255), i = r(50984), s = r(15334), l = r(15169), c = r(29623),
@@ -23366,7 +24461,8 @@
             }
 
             t.getData = A
-        }, 15169: (e, t, r) => {
+        },
+        15169: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateKeywordUsage = t.validSchemaType = t.funcKeywordCode = t.macroKeywordCode = void 0;
             const n = r(97309), o = r(40527), a = r(27709), i = r(67084);
@@ -23442,7 +24538,8 @@
                     r.logger.error(e)
                 }
             }
-        }, 29623: (e, t, r) => {
+        },
+        29623: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.extendSubschemaMode = t.extendSubschemaData = t.getSubschema = void 0;
             const n = r(97309), o = r(31435);
@@ -23500,7 +24597,8 @@
             }) {
                 void 0 !== n && (e.compositeRule = n), void 0 !== o && (e.createErrors = o), void 0 !== a && (e.allErrors = a), e.jtdDiscriminator = t, e.jtdMetadata = r
             }
-        }, 4994: (e, t, r) => {
+        },
+        4994: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.CodeGen = t.Name = t.nil = t.stringify = t.str = t._ = t.KeywordCxt = void 0;
             var n = r(8338);
@@ -23932,12 +25030,14 @@
             function L(e) {
                 return {anyOf: [e, R]}
             }
-        }, 73986: (e, t, r) => {
+        },
+        73986: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(88719);
             n.code = 'require("ajv/dist/runtime/equal").default', t.default = n
-        }, 2581: (e, t) => {
+        },
+        2581: (e, t) => {
             "use strict";
 
             function r(e) {
@@ -23948,12 +25048,14 @@
             }
 
             Object.defineProperty(t, "__esModule", {value: !0}), t.default = r, r.code = 'require("ajv/dist/runtime/ucs2length").default'
-        }, 33360: (e, t, r) => {
+        },
+        33360: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(72905);
             n.code = 'require("ajv/dist/runtime/uri").default', t.default = n
-        }, 97518: (e, t) => {
+        },
+        97518: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
 
@@ -23964,7 +25066,8 @@
             }
 
             t.default = r
-        }, 95977: (e, t, r) => {
+        },
+        95977: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateAdditionalItems = void 0;
             const n = r(97309), o = r(31435), a = {
@@ -24001,7 +25104,8 @@
             }
 
             t.validateAdditionalItems = i, t.default = a
-        }, 57948: (e, t, r) => {
+        },
+        57948: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(27709), o = r(97309), a = r(40527), i = r(31435), s = {
@@ -24060,7 +25164,8 @@
                 }
             };
             t.default = s
-        }, 684: (e, t, r) => {
+        },
+        684: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(31435), o = {
@@ -24076,7 +25181,8 @@
                 }
             };
             t.default = o
-        }, 68353: (e, t, r) => {
+        },
+        68353: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = {
@@ -24087,7 +25193,8 @@
                 error: {message: "must match a schema in anyOf"}
             };
             t.default = n
-        }, 54045: (e, t, r) => {
+        },
+        54045: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = {
@@ -24150,7 +25257,8 @@
                 }
             };
             t.default = a
-        }, 72233: (e, t, r) => {
+        },
+        72233: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateSchemaDeps = t.validatePropertyDeps = t.error = void 0;
             const n = r(97309), o = r(31435), a = r(27709);
@@ -24197,7 +25305,8 @@
             }
 
             t.validatePropertyDeps = s, t.validateSchemaDeps = l, t.default = i
-        }, 91951: (e, t, r) => {
+        },
+        91951: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = {
@@ -24239,7 +25348,8 @@
             }
 
             t.default = a
-        }, 81058: (e, t, r) => {
+        },
+        81058: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(95977), o = r(7106), a = r(84134), i = r(83398), s = r(54045), l = r(72233), c = r(5817),
@@ -24249,7 +25359,8 @@
                 const t = [h.default, f.default, m.default, g.default, b.default, v.default, c.default, u.default, l.default, d.default, p.default];
                 return e ? t.push(o.default, i.default) : t.push(n.default, a.default), t.push(s.default), t
             }
-        }, 84134: (e, t, r) => {
+        },
+        84134: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateTuple = void 0;
             const n = r(97309), o = r(31435), a = r(27709), i = {
@@ -24285,7 +25396,8 @@
             }
 
             t.validateTuple = s, t.default = i
-        }, 83398: (e, t, r) => {
+        },
+        83398: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = r(27709), i = r(95977), s = {
@@ -24303,7 +25415,8 @@
                 }
             };
             t.default = s
-        }, 74171: (e, t, r) => {
+        },
+        74171: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(31435), o = {
@@ -24320,7 +25433,8 @@
                 }, error: {message: "must NOT be valid"}
             };
             t.default = o
-        }, 78379: (e, t, r) => {
+        },
+        78379: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = {
@@ -24351,7 +25465,8 @@
                 }
             };
             t.default = a
-        }, 53117: (e, t, r) => {
+        },
+        53117: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(27709), o = r(97309), a = r(31435), i = r(31435), s = {
@@ -24387,7 +25502,8 @@
                 }
             };
             t.default = s
-        }, 7106: (e, t, r) => {
+        },
+        7106: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(84134), o = {
@@ -24398,7 +25514,8 @@
                 code: e => (0, n.validateTuple)(e, "items")
             };
             t.default = o
-        }, 5245: (e, t, r) => {
+        },
+        5245: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(8338), o = r(27709), a = r(31435), i = r(57948), s = {
@@ -24423,7 +25540,8 @@
                 }
             };
             t.default = s
-        }, 5817: (e, t, r) => {
+        },
+        5817: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = {
@@ -24452,7 +25570,8 @@
                 }
             };
             t.default = a
-        }, 60530: (e, t, r) => {
+        },
+        60530: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(31435), o = {
@@ -24463,7 +25582,8 @@
                 }
             };
             t.default = o
-        }, 27709: (e, t, r) => {
+        },
+        27709: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.validateUnion = t.validateArray = t.usePattern = t.callValidateCode = t.schemaProperties = t.allSchemaProperties = t.noPropertyInData = t.propertyInData = t.isOwnProperty = t.hasPropFunc = t.reportMissingProp = t.checkMissingProp = t.checkReportMissingProp = void 0;
             const n = r(97309), o = r(31435), a = r(40527), i = r(31435);
@@ -24546,7 +25666,8 @@
                     t.assign(s, n._`${s} || ${l}`), e.mergeValidEvaluated(i, l) || t.if((0, n.not)(s))
                 })))), e.result(s, (() => e.reset()), (() => e.error(!0)))
             }
-        }, 7583: (e, t) => {
+        },
+        7583: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const r = {
@@ -24555,13 +25676,15 @@
                 }
             };
             t.default = r
-        }, 25576: (e, t, r) => {
+        },
+        25576: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(7583), o = r(53749),
                 a = ["$schema", "$id", "$defs", "$vocabulary", {keyword: "$comment"}, "definitions", n.default, o.default];
             t.default = a
-        }, 53749: (e, t, r) => {
+        },
+        53749: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.callRef = t.getValidate = void 0;
             const n = r(30655), o = r(27709), a = r(97309), i = r(40527), s = r(96579), l = r(31435), c = {
@@ -24639,7 +25762,8 @@
             }
 
             t.getValidate = u, t.callRef = d, t.default = c
-        }, 78645: (e, t, r) => {
+        },
+        78645: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(29052), a = r(96579), i = r(31435), s = {
@@ -24713,17 +25837,20 @@
                 }
             };
             t.default = s
-        }, 29052: (e, t) => {
+        },
+        29052: (e, t) => {
             "use strict";
             var r;
             Object.defineProperty(t, "__esModule", {value: !0}), t.DiscrError = void 0, (r = t.DiscrError || (t.DiscrError = {})).Tag = "tag", r.Mapping = "mapping"
-        }, 53880: (e, t, r) => {
+        },
+        53880: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(25576), o = r(21180), a = r(81058), i = r(15668), s = r(76425),
                 l = [n.default, o.default, (0, a.default)(), i.default, s.metadataVocabulary, s.contentVocabulary];
             t.default = l
-        }, 84009: (e, t, r) => {
+        },
+        84009: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = {
@@ -24778,15 +25905,18 @@
                 }
             };
             t.default = o
-        }, 15668: (e, t, r) => {
+        },
+        15668: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = [r(84009).default];
             t.default = n
-        }, 76425: (e, t) => {
+        },
+        76425: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.contentVocabulary = t.metadataVocabulary = void 0, t.metadataVocabulary = ["title", "description", "default", "deprecated", "readOnly", "writeOnly", "examples"], t.contentVocabulary = ["contentMediaType", "contentEncoding", "contentSchema"]
-        }, 58391: (e, t, r) => {
+        },
+        58391: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = r(73986), i = {
@@ -24799,7 +25929,8 @@
                 }
             };
             t.default = i
-        }, 33643: (e, t, r) => {
+        },
+        33643: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = r(73986), i = {
@@ -24831,7 +25962,8 @@
                 }
             };
             t.default = i
-        }, 21180: (e, t, r) => {
+        },
+        21180: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(72034), o = r(9063), a = r(2563), i = r(5886), s = r(6446), l = r(85611), c = r(1683),
@@ -24841,7 +25973,8 @@
                     schemaType: ["string", "array"]
                 }, {keyword: "nullable", schemaType: "boolean"}, d.default, p.default];
             t.default = h
-        }, 1683: (e, t, r) => {
+        },
+        1683: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = {
@@ -24862,7 +25995,8 @@
                 }
             };
             t.default = o
-        }, 2563: (e, t, r) => {
+        },
+        2563: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = r(31435), a = r(2581), i = {
@@ -24884,7 +26018,8 @@
                 }
             };
             t.default = i
-        }, 72034: (e, t, r) => {
+        },
+        72034: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = n.operators, a = {
@@ -24902,7 +26037,8 @@
                 }
             };
             t.default = s
-        }, 6446: (e, t, r) => {
+        },
+        6446: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = {
@@ -24923,7 +26059,8 @@
                 }
             };
             t.default = o
-        }, 9063: (e, t, r) => {
+        },
+        9063: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(97309), o = {
@@ -24942,7 +26079,8 @@
                 }
             };
             t.default = o
-        }, 5886: (e, t, r) => {
+        },
+        5886: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(27709), o = r(97309), a = {
@@ -24961,7 +26099,8 @@
                 }
             };
             t.default = a
-        }, 85611: (e, t, r) => {
+        },
+        85611: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(27709), o = r(97309), a = r(31435), i = {
@@ -25007,7 +26146,8 @@
                 }
             };
             t.default = i
-        }, 98561: (e, t, r) => {
+        },
+        98561: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
             const n = r(50984), o = r(97309), a = r(31435), i = r(73986), s = {
@@ -25057,7 +26197,8 @@
                 }
             };
             t.default = s
-        }, 5354: e => {
+        },
+        5354: e => {
             "use strict";
             var t = e.exports = function (e, t, n) {
                 "function" == typeof t && (n = t, t = {}), r(t, "function" == typeof (n = t.cb || n) ? n : n.pre || function () {
@@ -25115,10 +26256,12 @@
                 maxProperties: !0,
                 minProperties: !0
             }
-        }, 72941: (e, t) => {
+        },
+        72941: (e, t) => {
             "use strict";
             decodeURIComponent, encodeURIComponent
-        }, 81884: (e, t, r) => {
+        },
+        81884: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.CspError = t.isHash = t.HASH_PATTERN = t.STRICT_HASH_PATTERN = t.isNonce = t.NONCE_PATTERN = t.STRICT_NONCE_PATTERN = t.isUrlScheme = t.isKeyword = t.isDirective = t.Version = t.FETCH_DIRECTIVES = t.Directive = t.TrustedTypesSink = t.Keyword = t.Csp = void 0;
             const n = r(57443);
@@ -25213,7 +26356,8 @@
             }
 
             t.CspError = u
-        }, 57443: (e, t) => {
+        },
+        57443: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.Type = t.Severity = t.Finding = void 0;
 
@@ -25235,7 +26379,8 @@
             t.Finding = r, function (e) {
                 e[e.HIGH = 10] = "HIGH", e[e.SYNTAX = 20] = "SYNTAX", e[e.MEDIUM = 30] = "MEDIUM", e[e.HIGH_MAYBE = 40] = "HIGH_MAYBE", e[e.STRICT_CSP = 45] = "STRICT_CSP", e[e.MEDIUM_MAYBE = 50] = "MEDIUM_MAYBE", e[e.INFO = 60] = "INFO", e[e.NONE = 100] = "NONE"
             }(n = t.Severity || (t.Severity = {})), (o = t.Type || (t.Type = {}))[o.MISSING_SEMICOLON = 100] = "MISSING_SEMICOLON", o[o.UNKNOWN_DIRECTIVE = 101] = "UNKNOWN_DIRECTIVE", o[o.INVALID_KEYWORD = 102] = "INVALID_KEYWORD", o[o.NONCE_CHARSET = 106] = "NONCE_CHARSET", o[o.MISSING_DIRECTIVES = 300] = "MISSING_DIRECTIVES", o[o.SCRIPT_UNSAFE_INLINE = 301] = "SCRIPT_UNSAFE_INLINE", o[o.SCRIPT_UNSAFE_EVAL = 302] = "SCRIPT_UNSAFE_EVAL", o[o.PLAIN_URL_SCHEMES = 303] = "PLAIN_URL_SCHEMES", o[o.PLAIN_WILDCARD = 304] = "PLAIN_WILDCARD", o[o.SCRIPT_ALLOWLIST_BYPASS = 305] = "SCRIPT_ALLOWLIST_BYPASS", o[o.OBJECT_ALLOWLIST_BYPASS = 306] = "OBJECT_ALLOWLIST_BYPASS", o[o.NONCE_LENGTH = 307] = "NONCE_LENGTH", o[o.IP_SOURCE = 308] = "IP_SOURCE", o[o.DEPRECATED_DIRECTIVE = 309] = "DEPRECATED_DIRECTIVE", o[o.SRC_HTTP = 310] = "SRC_HTTP", o[o.STRICT_DYNAMIC = 400] = "STRICT_DYNAMIC", o[o.STRICT_DYNAMIC_NOT_STANDALONE = 401] = "STRICT_DYNAMIC_NOT_STANDALONE", o[o.NONCE_HASH = 402] = "NONCE_HASH", o[o.UNSAFE_INLINE_FALLBACK = 403] = "UNSAFE_INLINE_FALLBACK", o[o.ALLOWLIST_FALLBACK = 404] = "ALLOWLIST_FALLBACK", o[o.IGNORED = 405] = "IGNORED", o[o.REQUIRE_TRUSTED_TYPES_FOR_SCRIPTS = 500] = "REQUIRE_TRUSTED_TYPES_FOR_SCRIPTS", o[o.REPORTING_DESTINATION_MISSING = 600] = "REPORTING_DESTINATION_MISSING", o[o.REPORT_TO_ONLY = 601] = "REPORT_TO_ONLY"
-        }, 53375: function (e, t, r) {
+        },
+        53375: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r), Object.defineProperty(e, n, {
@@ -25285,7 +26430,8 @@
                     return this.csp
                 }
             }, t.TEST_ONLY = {normalizeDirectiveValue: s}
-        }, 23659: (e, t, r) => {
+        },
+        23659: (e, t, r) => {
             "use strict";
             const n = r(14119);
             e.exports = (e, t = {}) => {
@@ -25303,7 +26449,8 @@
                     i && (clearTimeout(i), i = void 0)
                 }, l
             }
-        }, 99163: (e, t, r) => {
+        },
+        99163: (e, t, r) => {
             t.formatArgs = function (t) {
                 if (t[0] = (this.useColors ? "%c" : "") + this.namespace + (this.useColors ? " %c" : " ") + t[0] + (this.useColors ? "%c " : " ") + "+" + e.exports.humanize(this.diff), !this.useColors) return;
                 const r = "color: " + this.color;
@@ -25346,7 +26493,8 @@
                     return "[UnexpectedJSONParseError]: " + e.message
                 }
             }
-        }, 39942: (e, t, r) => {
+        },
+        39942: (e, t, r) => {
             e.exports = function (e) {
                 function t(e) {
                     let r, o, a, i = null;
@@ -25413,9 +26561,11 @@
                     return t.colors[Math.abs(r) % t.colors.length]
                 }, t.enable(t.load()), t
             }
-        }, 55623: (e, t, r) => {
+        },
+        55623: (e, t, r) => {
             "undefined" == typeof process || "renderer" === process.type || !0 === process.browser || process.__nwjs ? e.exports = r(99163) : e.exports = r(81047)
-        }, 81047: (e, t, r) => {
+        },
+        81047: (e, t, r) => {
             const n = r(52018), o = r(39023);
             t.init = function (e) {
                 e.inspectOpts = {};
@@ -25453,7 +26603,8 @@
             }, a.O = function (e) {
                 return this.inspectOpts.colors = this.useColors, o.inspect(e, this.inspectOpts)
             }
-        }, 85444: (e, t, r) => {
+        },
+        85444: (e, t, r) => {
             "use strict";
             const n = r(30623), o = new Set(["__proto__", "prototype", "constructor"]);
 
@@ -25506,7 +26657,8 @@
                     return !0
                 }
             }
-        }, 77259: (e, t, r) => {
+        },
+        77259: (e, t, r) => {
             "use strict";
             var n = r(21789), o = r(83480), a = !1;
             e.exports = function (e) {
@@ -25557,7 +26709,8 @@
                     n.openUrl(a, e.log)
                 }
             }
-        }, 21789: (e, t, r) => {
+        },
+        21789: (e, t, r) => {
             "use strict";
             var n, o = r(16928);
             try {
@@ -25640,40 +26793,73 @@
                     r && r.showErrorBox(e, t)
                 }
             }
-        }, 47419: (e, t, r) => {
+        },
+
+        // electron-log
+        47419: (module, exports, __require) => {
             "use strict";
-            var n = r(77259), o = r(21789), a = r(58189), i = r(41083), s = r(65067), l = r(36209), c = r(19636),
-                u = r(55190);
-            e.exports = function e(t) {
-                var r = {
-                    catchErrors: function (e) {
-                        var t = Object.assign({}, {log: r.error, showDialog: "browser" === process.type}, e || {});
-                        n(t)
+            let catchErrors = __require(77259),
+                electronApi = __require(21789),
+                log = __require(58189),
+                scopeFactory = __require(41083),
+                transportConsole = __require(65067),
+                transportFile = __require(36209),
+                transportIpc = __require(19636),
+                transportRemote = __require(55190);
+
+            module.exports = function create(logId) {
+                const instance = {
+                    catchErrors: function (options) {
+                        let opts = Object.assign({}, {
+                            log: instance.error,
+                            showDialog: "browser" === process.type
+                        }, options || {});
+
+                        catchErrors(opts)
                     },
-                    create: e,
+                    create: create,
                     functions: {},
                     hooks: [],
-                    isDev: o.isDev(),
+                    isDev: electronApi.isDev(),
                     levels: [],
-                    logId: t,
+                    logId: logId,
                     variables: {processType: process.type}
                 };
-                return r.scope = i(r), r.transports = {
-                    console: s(r),
-                    file: l(r),
-                    remote: u(r),
-                    ipc: c(r)
-                }, Object.defineProperty(r.levels, "add", {
-                    enumerable: !1, value: function (e, t) {
-                        t = void 0 === t ? r.levels.length : t, r.levels.splice(t, 0, e), r[e] = a.log.bind(null, r, {level: e}), r.functions[e] = r[e]
+                instance.scope = scopeFactory(instance)
+                instance.transports = {
+                    console: transportConsole(instance),
+                    file: transportFile(instance),
+                    remote: transportRemote(instance),
+                    ipc: transportIpc(instance)
+                }
+                Object.defineProperty(instance.levels, "add", {
+                    enumerable: false,
+                    value: function (name, index) {
+                        index = void 0 === index
+                            ? instance.levels.length
+                            : index
+                        instance.levels.splice(index, 0, name)
+                        instance[name] = log.log.bind(null, instance, {level: name})
+                        instance.functions[name] = instance[name]
                     }
-                }), ["error", "warn", "info", "verbose", "debug", "silly"].forEach((function (e) {
-                    r.levels.add(e)
-                })), r.log = a.log.bind(null, r, {level: "info"}), r.functions.log = r.log, r.logMessageWithTransports = function (e, t) {
-                    return void 0 === e.date && (e.date = new Date), void 0 === e.variables && (e.variables = r.variables), a.runTransports(t, e, r)
-                }, r
-            }("default"), e.exports.default = e.exports
-        }, 58189: e => {
+                })
+                void ["error", "warn", "info", "verbose", "debug", "silly"].forEach(function (level) {
+                    instance.levels.add(level)
+                })
+                instance.log = log.log.bind(null, instance, {level: "info"})
+                instance.functions.log = instance.log
+                instance.logMessageWithTransports = function (message, transports) {
+                    void 0 === message.date && (message.date = new Date)
+                    void 0 === message.variables && (message.variables = instance.variables)
+                    return log.runTransports(transports, message, instance)
+                }
+
+                return instance
+            }("default")
+            module.exports.default = module.exports
+        },
+
+        58189: e => {
             "use strict";
 
             function t(e, t, n) {
@@ -25704,7 +26890,8 @@
                     }, e)
                 }, runTransport: r, runTransports: t
             }
-        }, 41083: (e, t, r) => {
+        },
+        41083: (e, t, r) => {
             "use strict";
             var n = r(58189).log;
             e.exports = function (e) {
@@ -25726,7 +26913,8 @@
                     })), o.log = o.info, t.maxLabelLength = Math.max(t.maxLabelLength, r.length), o
                 }
             }
-        }, 33396: (e, t, r) => {
+        },
+        33396: (e, t, r) => {
             "use strict";
             var n = r(15665), o = r(77157), a = r(29556);
 
@@ -25755,7 +26943,8 @@
                 toStringFactory: n.toStringFactory,
                 transform: i
             }
-        }, 15665: (e, t, r) => {
+        },
+        15665: (e, t, r) => {
             "use strict";
             var n = r(39023);
 
@@ -25825,7 +27014,8 @@
                     }
                 }
             }
-        }, 77157: e => {
+        },
+        77157: e => {
             "use strict";
             e.exports = {
                 applyAnsiStyles: function (e) {
@@ -25872,7 +27062,8 @@
                     return e.push(o), e
                 }), [])
             }
-        }, 29556: e => {
+        },
+        29556: e => {
             "use strict";
 
             function t(e, t) {
@@ -25917,7 +27108,8 @@
                     return "" !== r[0] && n.push(r[0]), n = n.concat(e.slice(1)), "" !== r[1] && n.push(r[1]), n
                 }
             }
-        }, 65067: (e, t, r) => {
+        },
+        65067: (e, t, r) => {
             "use strict";
             var n = r(33396), o = {
                 context: console,
@@ -25970,7 +27162,8 @@
                         return "unset"
                 }
             }
-        }, 17235: (e, t, r) => {
+        },
+        17235: (e, t, r) => {
             "use strict";
             var n = r(24434), o = r(79896), a = r(70857), i = r(16928), s = r(16857), l = r(39023);
 
@@ -26073,7 +27266,8 @@
             }, d.prototype.testFileWriting = function (e) {
                 p(i.dirname(e)), o.writeFileSync(e, "", {flag: "a"})
             }
-        }, 36209: (e, t, r) => {
+        },
+        36209: (e, t, r) => {
             "use strict";
             var n = r(79896), o = r(16928), a = r(70857), i = r(39023), s = r(33396), l = r(17235).FileRegistry,
                 c = r(61820);
@@ -26166,7 +27360,8 @@
                 }
             };
             var u = new l
-        }, 97251: (e, t, r) => {
+        },
+        97251: (e, t, r) => {
             "use strict";
             var n = r(79896), o = r(16928);
 
@@ -26201,7 +27396,8 @@
                     var e
                 }, tryReadJsonAt: a
             }
-        }, 61820: (e, t, r) => {
+        },
+        61820: (e, t, r) => {
             "use strict";
             var n = r(70857), o = r(16928), a = r(21789), i = r(97251);
 
@@ -26263,7 +27459,8 @@
                 },
                 getUserData: p
             }
-        }, 19636: (e, t, r) => {
+        },
+        19636: (e, t, r) => {
             "use strict";
             var n = r(33396), o = r(21789), a = r(58189);
             e.exports = function (e) {
@@ -26277,7 +27474,8 @@
                     o.sendIpc(t.eventId, r)
                 }
             }
-        }, 55190: (e, t, r) => {
+        },
+        55190: (e, t, r) => {
             "use strict";
             var n = r(58611), o = r(65692), a = r(16857), i = r(33396);
             e.exports = function (e) {
@@ -26309,7 +27507,8 @@
                     }
                 }
             }
-        }, 9245: (e, t, r) => {
+        },
+        9245: (e, t, r) => {
             "use strict";
             const n = r(16928), {app: o, ipcMain: a, ipcRenderer: i, shell: s} = r(4482), l = r(25054);
             let c = !1;
@@ -26339,7 +27538,8 @@
                     s.openPath(this.path)
                 }
             }
-        }, 75593: (e, t, r) => {
+        },
+        75593: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -26420,7 +27620,8 @@
             }
 
             t.CancellationError = a
-        }, 60193: (e, t, r) => {
+        },
+        60193: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -26462,7 +27663,8 @@
             }
 
             t.ProgressCallbackTransform = o
-        }, 85064: (e, t, r) => {
+        },
+        85064: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -26507,7 +27709,8 @@
                     return this.bintrayRequest(`${this.basePath}/versions/${e}`, this.auth, null, this.cancellationToken, "DELETE")
                 }
             }
-        }, 59664: (e, t, r) => {
+        },
+        59664: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -26764,7 +27967,8 @@
             }
 
             t.DigestTransform = y
-        }, 79529: (e, t, r) => {
+        },
+        79529: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -26898,7 +28102,8 @@
                     return c().XElement
                 }
             }), t.CURRENT_APP_PACKAGE_FILE_NAME = t.CURRENT_APP_INSTALLER_FILE_NAME = void 0, t.CURRENT_APP_INSTALLER_FILE_NAME = "installer.exe", t.CURRENT_APP_PACKAGE_FILE_NAME = "package.7z"
-        }, 45074: (e, t) => {
+        },
+        45074: (e, t) => {
             "use strict";
 
             function r(e, t) {
@@ -26924,7 +28129,8 @@
                 }(e);
                 throw new Error(`Not supported provider: ${t}`)
             }
-        }, 89707: (e, t) => {
+        },
+        89707: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.parseDn = function (e) {
                 let t = !1, r = null, n = "", o = 0;
@@ -26977,7 +28183,8 @@
                 }
                 return a
             }
-        }, 98062: (e, t, r) => {
+        },
+        98062: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -27094,7 +28301,8 @@
             }(u || (u = {}));
             const d = new l("00000000-0000-0000-0000-000000000000");
             t.nil = d
-        }, 46348: (e, t, r) => {
+        },
+        46348: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -27188,11 +28396,13 @@
                 const n = e.name;
                 return n === t || !0 === r && n.length === t.length && n.toLowerCase() === t.toLowerCase()
             }
-        }, 69866: (e, t, r) => {
+        },
+        69866: (e, t, r) => {
             "use strict";
             var n = r(70027);
             e.exports = n
-        }, 70027: (e, t, r) => {
+        },
+        70027: (e, t, r) => {
             "use strict";
             var n = r(88633), o = r(48359);
 
@@ -27203,7 +28413,8 @@
             }
 
             e.exports.Type = r(57842), e.exports.Schema = r(37909), e.exports.FAILSAFE_SCHEMA = r(52617), e.exports.JSON_SCHEMA = r(75030), e.exports.CORE_SCHEMA = r(49859), e.exports.DEFAULT_SAFE_SCHEMA = r(51879), e.exports.DEFAULT_FULL_SCHEMA = r(62899), e.exports.load = n.load, e.exports.loadAll = n.loadAll, e.exports.safeLoad = n.safeLoad, e.exports.safeLoadAll = n.safeLoadAll, e.exports.dump = o.dump, e.exports.safeDump = o.safeDump, e.exports.YAMLException = r(54885), e.exports.MINIMAL_SCHEMA = r(52617), e.exports.SAFE_SCHEMA = r(51879), e.exports.DEFAULT_SCHEMA = r(62899), e.exports.scan = a("scan"), e.exports.parse = a("parse"), e.exports.compose = a("compose"), e.exports.addConstructor = a("addConstructor")
-        }, 43007: e => {
+        },
+        43007: e => {
             "use strict";
 
             function t(e) {
@@ -27225,7 +28436,8 @@
                 if (t) for (r = 0, n = (a = Object.keys(t)).length; r < n; r += 1) e[o = a[r]] = t[o];
                 return e
             }
-        }, 48359: (e, t, r) => {
+        },
+        48359: (e, t, r) => {
             "use strict";
             var n = r(43007), o = r(54885), a = r(62899), i = r(51879), s = Object.prototype.toString,
                 l = Object.prototype.hasOwnProperty, c = 9, u = 10, d = 13, p = 32, h = 33, f = 34, m = 35, g = 37,
@@ -27435,7 +28647,8 @@
             e.exports.dump = re, e.exports.safeDump = function (e, t) {
                 return re(e, n.extend({schema: i}, t))
             }
-        }, 54885: e => {
+        },
+        54885: e => {
             "use strict";
 
             function t(e, t) {
@@ -27446,7 +28659,8 @@
                 var t = this.name + ": ";
                 return t += this.reason || "(unknown reason)", !e && this.mark && (t += " " + this.mark.toString()), t
             }, e.exports = t
-        }, 88633: (e, t, r) => {
+        },
+        88633: (e, t, r) => {
             "use strict";
             var n = r(43007), o = r(54885), a = r(3888), i = r(51879), s = r(62899),
                 l = Object.prototype.hasOwnProperty, c = 1, u = 2, d = 3, p = 4, h = 1, f = 2, m = 3,
@@ -27761,7 +28975,8 @@
             }, e.exports.safeLoad = function (e, t) {
                 return X(e, n.extend({schema: i}, t))
             }
-        }, 3888: (e, t, r) => {
+        },
+        3888: (e, t, r) => {
             "use strict";
             var n = r(43007);
 
@@ -27785,7 +29000,8 @@
                 var t, r = "";
                 return this.name && (r += 'in "' + this.name + '" '), r += "at line " + (this.line + 1) + ", column " + (this.column + 1), e || (t = this.getSnippet()) && (r += ":\n" + t), r
             }, e.exports = o
-        }, 37909: (e, t, r) => {
+        },
+        37909: (e, t, r) => {
             "use strict";
             var n = r(43007), o = r(54885), a = r(57842);
 
@@ -27837,15 +29053,18 @@
                 }))) throw new o("Specified list of YAML types (or a single Type object) contains a non-Type object.");
                 return new s({include: e, explicit: t})
             }, e.exports = s
-        }, 49859: (e, t, r) => {
+        },
+        49859: (e, t, r) => {
             "use strict";
             var n = r(37909);
             e.exports = new n({include: [r(75030)]})
-        }, 62899: (e, t, r) => {
+        },
+        62899: (e, t, r) => {
             "use strict";
             var n = r(37909);
             e.exports = n.DEFAULT = new n({include: [r(51879)], explicit: [r(68705), r(37812), r(88569)]})
-        }, 51879: (e, t, r) => {
+        },
+        51879: (e, t, r) => {
             "use strict";
             var n = r(37909);
             e.exports = new n({
@@ -27853,15 +29072,18 @@
                 implicit: [r(56221), r(3109)],
                 explicit: [r(26288), r(67060), r(63696), r(4925)]
             })
-        }, 52617: (e, t, r) => {
+        },
+        52617: (e, t, r) => {
             "use strict";
             var n = r(37909);
             e.exports = new n({explicit: [r(10742), r(10514), r(36723)]})
-        }, 75030: (e, t, r) => {
+        },
+        75030: (e, t, r) => {
             "use strict";
             var n = r(37909);
             e.exports = new n({include: [r(52617)], implicit: [r(99688), r(90113), r(83800), r(2631)]})
-        }, 57842: (e, t, r) => {
+        },
+        57842: (e, t, r) => {
             "use strict";
             var n = r(54885),
                 o = ["kind", "resolve", "construct", "instanceOf", "predicate", "represent", "defaultStyle", "styleAliases"],
@@ -27880,7 +29102,8 @@
                     }))
                 })), i), -1 === a.indexOf(this.kind)) throw new n('Unknown kind "' + this.kind + '" is specified for "' + e + '" YAML type.')
             }
-        }, 26288: (e, t, r) => {
+        },
+        26288: (e, t, r) => {
             "use strict";
             var n;
             try {
@@ -27910,7 +29133,8 @@
                     return 0 == (r = a % 3) ? (n += s[o >> 18 & 63], n += s[o >> 12 & 63], n += s[o >> 6 & 63], n += s[63 & o]) : 2 === r ? (n += s[o >> 10 & 63], n += s[o >> 4 & 63], n += s[o << 2 & 63], n += s[64]) : 1 === r && (n += s[o >> 2 & 63], n += s[o << 4 & 63], n += s[64], n += s[64]), n
                 }
             })
-        }, 90113: (e, t, r) => {
+        },
+        90113: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:bool", {
@@ -27932,7 +29156,8 @@
                     }
                 }, defaultStyle: "lowercase"
             })
-        }, 2631: (e, t, r) => {
+        },
+        2631: (e, t, r) => {
             "use strict";
             var n = r(43007), o = r(57842),
                 a = new RegExp("^(?:[-+]?(?:0|[1-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$"),
@@ -27976,7 +29201,8 @@
                     return r = e.toString(10), i.test(r) ? r.replace("e", ".e") : r
                 }, defaultStyle: "lowercase"
             })
-        }, 83800: (e, t, r) => {
+        },
+        83800: (e, t, r) => {
             "use strict";
             var n = r(43007), o = r(57842);
 
@@ -28049,7 +29275,8 @@
                 defaultStyle: "decimal",
                 styleAliases: {binary: [2, "bin"], octal: [8, "oct"], decimal: [10, "dec"], hexadecimal: [16, "hex"]}
             })
-        }, 88569: (e, t, r) => {
+        },
+        88569: (e, t, r) => {
             "use strict";
             var n;
             try {
@@ -28080,7 +29307,8 @@
                     return e.toString()
                 }
             })
-        }, 37812: (e, t, r) => {
+        },
+        37812: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:js/regexp", {
@@ -28103,7 +29331,8 @@
                     return e.global && (t += "g"), e.multiline && (t += "m"), e.ignoreCase && (t += "i"), t
                 }
             })
-        }, 68705: (e, t, r) => {
+        },
+        68705: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:js/undefined", {
@@ -28116,7 +29345,8 @@
                     return ""
                 }
             })
-        }, 36723: (e, t, r) => {
+        },
+        36723: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:map", {
@@ -28124,7 +29354,8 @@
                     return null !== e ? e : {}
                 }
             })
-        }, 3109: (e, t, r) => {
+        },
+        3109: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:merge", {
@@ -28132,7 +29363,8 @@
                     return "<<" === e || null === e
                 }
             })
-        }, 99688: (e, t, r) => {
+        },
+        99688: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:null", {
@@ -28156,7 +29388,8 @@
                     }
                 }, defaultStyle: "lowercase"
             })
-        }, 67060: (e, t, r) => {
+        },
+        67060: (e, t, r) => {
             "use strict";
             var n = r(57842), o = Object.prototype.hasOwnProperty, a = Object.prototype.toString;
             e.exports = new n("tag:yaml.org,2002:omap", {
@@ -28178,7 +29411,8 @@
                     return null !== e ? e : []
                 }
             })
-        }, 63696: (e, t, r) => {
+        },
+        63696: (e, t, r) => {
             "use strict";
             var n = r(57842), o = Object.prototype.toString;
             e.exports = new n("tag:yaml.org,2002:pairs", {
@@ -28198,7 +29432,8 @@
                     return a
                 }
             })
-        }, 10514: (e, t, r) => {
+        },
+        10514: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:seq", {
@@ -28206,7 +29441,8 @@
                     return null !== e ? e : []
                 }
             })
-        }, 4925: (e, t, r) => {
+        },
+        4925: (e, t, r) => {
             "use strict";
             var n = r(57842), o = Object.prototype.hasOwnProperty;
             e.exports = new n("tag:yaml.org,2002:set", {
@@ -28219,7 +29455,8 @@
                     return null !== e ? e : {}
                 }
             })
-        }, 10742: (e, t, r) => {
+        },
+        10742: (e, t, r) => {
             "use strict";
             var n = r(57842);
             e.exports = new n("tag:yaml.org,2002:str", {
@@ -28227,7 +29464,8 @@
                     return null !== e ? e : ""
                 }
             })
-        }, 56221: (e, t, r) => {
+        },
+        56221: (e, t, r) => {
             "use strict";
             var n = r(57842), o = new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"),
                 a = new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");
@@ -28247,7 +29485,8 @@
                     return e.toISOString()
                 }
             })
-        }, 44993: (e, t) => {
+        },
+        44993: (e, t) => {
             var r;
             t = e.exports = b, r = "object" == typeof process && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? function () {
                 var e = Array.prototype.slice.call(arguments, 0);
@@ -28742,7 +29981,8 @@
                 } else r = e.match(s[c.COERCE]);
                 return null === r ? null : g(r[2] + "." + (r[3] || "0") + "." + (r[4] || "0"), t)
             }
-        }, 64226: (e, t, r) => {
+        },
+        64226: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.getAppCacheDir = function () {
                 const e = r(70857).homedir();
@@ -28758,7 +29998,8 @@
                 }
                 return t.default = e, t
             }(r(16928))
-        }, 49619: (e, t, r) => {
+        },
+        49619: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -28868,7 +30109,8 @@
             }
 
             t.g = d
-        }, 96064: (e, t, r) => {
+        },
+        96064: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -29261,7 +30503,8 @@
             }
 
             t.NoOpLogger = y
-        }, 86216: (e, t, r) => {
+        },
+        86216: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -29318,7 +30561,8 @@
             }
 
             t.BaseUpdater = o
-        }, 17660: (e, t, r) => {
+        },
+        17660: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -29438,7 +30682,8 @@
                     return s.join(this.cacheDirForPendingUpdate, "update-info.json")
                 }
             }
-        }, 33200: (e, t, r) => {
+        },
+        33200: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.ElectronAppAdapter = void 0;
             var n = function (e) {
@@ -29499,7 +30744,8 @@
                     this.app.once("quit", ((t, r) => e(r)))
                 }
             }
-        }, 95136: (e, t, r) => {
+        },
+        95136: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -29622,7 +30868,8 @@
             }
 
             t.t = c
-        }, 35778: (e, t, r) => {
+        },
+        35778: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -29832,7 +31079,8 @@
             }
 
             t.p = m
-        }, 4558: (e, t, r) => {
+        },
+        4558: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -29962,7 +31210,8 @@
             }
 
             t.DataSplitter = u
-        }, 50847: (e, t, r) => {
+        },
+        50847: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30126,7 +31375,8 @@
                     }))
                 }
             }
-        }, 37846: (e, t, r) => {
+        },
+        37846: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30170,7 +31420,8 @@
             }
 
             t.FileWithEmbeddedBlockMapDifferentialDownloader = i
-        }, 12406: (e, t, r) => {
+        },
+        12406: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30189,7 +31440,8 @@
             }
 
             t.GenericDifferentialDownloader = o
-        }, 70491: (e, t) => {
+        },
+        70491: (e, t) => {
             "use strict";
             var r;
             Object.defineProperty(t, "__esModule", {value: !0}), t.computeOperations = function (e, t, n) {
@@ -30249,7 +31501,8 @@
                 for (const r of e) t.set(r.name, r);
                 return t
             }
-        }, 51939: (e, t, r) => {
+        },
+        51939: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30323,7 +31576,8 @@
                 };
                 return c
             }, t.checkIsRangesSupported = i
-        }, 5931: (e, t, r) => {
+        },
+        5931: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30383,7 +31637,8 @@
             }
 
             t.ElectronHttpExecutor = s
-        }, 94625: (e, t, r) => {
+        },
+        94625: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30474,7 +31729,8 @@
                     console.log("%s %s", t, e), r.apply(null, e)
                 })) : e.on(t, r)
             }
-        }, 54679: (e, t, r) => {
+        },
+        54679: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30540,7 +31796,8 @@
                         throw (0, n().newError)(`Unsupported provider: ${c}`, "ERR_UPDATER_UNSUPPORTED_PROVIDER")
                 }
             }
-        }, 19727: (e, t, r) => {
+        },
+        19727: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30610,7 +31867,8 @@
             }
 
             t.BintrayProvider = l
-        }, 2747: (e, t, r) => {
+        },
+        2747: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30673,7 +31931,8 @@
             }
 
             t.GenericProvider = i
-        }, 85193: (e, t, r) => {
+        },
+        85193: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30811,7 +32070,8 @@
                     return `${this.basePath}/download/${!1 === this.options.vPrefixedTagName ? "" : "v"}${e}/${t}`
                 }
             }
-        }, 90222: (e, t, r) => {
+        },
+        90222: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -30929,7 +32189,8 @@
             }
 
             t.PrivateGitHubProvider = u
-        }, 45414: (e, t, r) => {
+        },
+        45414: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -31021,7 +32282,8 @@
                     return null == this.requestHeaders ? null != t && (r.headers = t) : r.headers = null == t ? this.requestHeaders : Object.assign({}, this.requestHeaders, t), (0, n().configureRequestUrl)(e, r), r
                 }
             }
-        }, 55916: (e, t, r) => {
+        },
+        55916: (e, t, r) => {
             "use strict";
 
             function n() {
@@ -31089,7 +32351,8 @@
                     }))
                 }))
             }
-        }, 54719: (e, t, r) => {
+        },
+        54719: (e, t, r) => {
             "use strict";
             const n = r(16928), o = r(70857), a = o.homedir(), i = o.tmpdir(), {env: s} = process, l = (e, t) => {
                 if ("string" != typeof e) throw new TypeError("Expected string, got " + typeof e);
@@ -31124,7 +32387,8 @@
                 })(e)
             };
             e.exports = l, e.exports.default = l
-        }, 88719: e => {
+        },
+        88719: e => {
             "use strict";
             e.exports = function e(t, r) {
                 if (t === r) return !0;
@@ -31149,7 +32413,8 @@
                 }
                 return t != t && r != r
             }
-        }, 49924: (e, t, r) => {
+        },
+        49924: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(15776).mkdirsSync, i = r(57213).utimesMillisSync, s = r(84440);
 
@@ -31216,10 +32481,12 @@
                     return n.existsSync(s) || a(s), l(e, t, r, i)
                 }(c, e, t, r)
             }
-        }, 90823: (e, t, r) => {
+        },
+        90823: (e, t, r) => {
             "use strict";
             e.exports = {copySync: r(49924)}
-        }, 78464: (e, t, r) => {
+        },
+        78464: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(15776).mkdirs, i = r(18386).pathExists, s = r(57213).utimesMillis,
                 l = r(84440);
@@ -31295,11 +32562,13 @@
                     l.checkParentPaths(e, i, t, "copy", (o => o ? n(o) : r.filter ? u(c, s, e, t, r, n) : c(s, e, t, r, n)))
                 }))
             }
-        }, 95925: (e, t, r) => {
+        },
+        95925: (e, t, r) => {
             "use strict";
             const n = r(83410).S;
             e.exports = {copy: n(r(78464))}
-        }, 5721: (e, t, r) => {
+        },
+        5721: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(83641), a = r(16928), i = r(15776), s = r(88024), l = n((function (e, t) {
                 t = t || function () {
@@ -31329,7 +32598,8 @@
             }
 
             e.exports = {emptyDirSync: c, emptydirSync: c, emptyDir: l, emptydir: l}
-        }, 43726: (e, t, r) => {
+        },
+        43726: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(16928), a = r(83641), i = r(15776), s = r(18386).pathExists;
             e.exports = {
@@ -31360,7 +32630,8 @@
                     a.existsSync(r) || i.mkdirsSync(r), a.writeFileSync(e, "")
                 }
             }
-        }, 35850: (e, t, r) => {
+        },
+        35850: (e, t, r) => {
             "use strict";
             const n = r(43726), o = r(55596), a = r(30805);
             e.exports = {
@@ -31377,7 +32648,8 @@
                 ensureSymlink: a.createSymlink,
                 ensureSymlinkSync: a.createSymlinkSync
             }
-        }, 55596: (e, t, r) => {
+        },
+        55596: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(16928), a = r(83641), i = r(15776), s = r(18386).pathExists;
             e.exports = {
@@ -31408,7 +32680,8 @@
                     return a.existsSync(r) || i.mkdirsSync(r), a.linkSync(e, t)
                 }
             }
-        }, 95636: (e, t, r) => {
+        },
+        95636: (e, t, r) => {
             "use strict";
             const n = r(16928), o = r(83641), a = r(18386).pathExists;
             e.exports = {
@@ -31441,7 +32714,8 @@
                     }
                 }
             }
-        }, 89638: (e, t, r) => {
+        },
+        89638: (e, t, r) => {
             "use strict";
             const n = r(83641);
             e.exports = {
@@ -31462,7 +32736,8 @@
                     return r && r.isDirectory() ? "dir" : "file"
                 }
             }
-        }, 30805: (e, t, r) => {
+        },
+        30805: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(16928), a = r(83641), i = r(15776), s = i.mkdirs, l = i.mkdirsSync,
                 c = r(95636), u = c.symlinkPaths, d = c.symlinkPathsSync, p = r(89638), h = p.symlinkType,
@@ -31488,7 +32763,8 @@
                     return a.existsSync(i) || l(i), a.symlinkSync(e, t, r)
                 }
             }
-        }, 71284: (e, t, r) => {
+        },
+        71284: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(83641),
                 a = ["access", "appendFile", "chmod", "chown", "close", "copyFile", "fchmod", "fchown", "fdatasync", "fstat", "fsync", "ftruncate", "futimes", "lchown", "lchmod", "link", "lstat", "mkdir", "mkdtemp", "open", "readFile", "readdir", "readlink", "realpath", "rename", "rmdir", "stat", "symlink", "truncate", "unlink", "utimes", "writeFile"].filter((e => "function" == typeof o[e]));
@@ -31513,16 +32789,19 @@
                     }))
                 }))
             }, "function" == typeof o.realpath.native && (t.realpath.native = n(o.realpath.native))
-        }, 80115: (e, t, r) => {
+        },
+        80115: (e, t, r) => {
             "use strict";
             e.exports = Object.assign({}, r(71284), r(90823), r(95925), r(5721), r(35850), r(20958), r(15776), r(53167), r(16797), r(13573), r(18386), r(88024));
             const n = r(79896);
             Object.getOwnPropertyDescriptor(n, "promises") && Object.defineProperty(e.exports, "promises", {get: () => n.promises})
-        }, 20958: (e, t, r) => {
+        },
+        20958: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(52672);
             o.outputJson = n(r(4704)), o.outputJsonSync = r(76186), o.outputJSON = o.outputJson, o.outputJSONSync = o.outputJsonSync, o.writeJSON = o.writeJson, o.writeJSONSync = o.writeJsonSync, o.readJSON = o.readJson, o.readJSONSync = o.readJsonSync, e.exports = o
-        }, 52672: (e, t, r) => {
+        },
+        52672: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(61259);
             e.exports = {
@@ -31531,14 +32810,16 @@
                 writeJson: n(o.writeFile),
                 writeJsonSync: o.writeFileSync
             }
-        }, 76186: (e, t, r) => {
+        },
+        76186: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(15776), i = r(52672);
             e.exports = function (e, t, r) {
                 const s = o.dirname(e);
                 n.existsSync(s) || a.mkdirsSync(s), i.writeJsonSync(e, t, r)
             }
-        }, 4704: (e, t, r) => {
+        },
+        4704: (e, t, r) => {
             "use strict";
             const n = r(16928), o = r(15776), a = r(18386).pathExists, i = r(52672);
             e.exports = function (e, t, r, s) {
@@ -31549,11 +32830,13 @@
                     i.writeJson(e, t, r, s)
                 }))))
             }
-        }, 15776: (e, t, r) => {
+        },
+        15776: (e, t, r) => {
             "use strict";
             const n = (0, r(83410).S)(r(80794)), o = r(76348);
             e.exports = {mkdirs: n, mkdirsSync: o, mkdirp: n, mkdirpSync: o, ensureDir: n, ensureDirSync: o}
-        }, 76348: (e, t, r) => {
+        },
+        76348: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(59411).invalidWin32Path, i = parseInt("0777", 8);
             e.exports = function e(t, r, s) {
@@ -31583,7 +32866,8 @@
                 }
                 return s
             }
-        }, 80794: (e, t, r) => {
+        },
+        80794: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(59411).invalidWin32Path, i = parseInt("0777", 8);
             e.exports = function e(t, r, s, l) {
@@ -31606,7 +32890,8 @@
                     }))
                 }))
             }
-        }, 59411: (e, t, r) => {
+        },
+        59411: (e, t, r) => {
             "use strict";
             const n = r(16928);
 
@@ -31621,10 +32906,12 @@
                     return e = e.replace(t, ""), a.test(e)
                 }
             }
-        }, 53167: (e, t, r) => {
+        },
+        53167: (e, t, r) => {
             "use strict";
             e.exports = {moveSync: r(1948)}
-        }, 1948: (e, t, r) => {
+        },
+        1948: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(90823).copySync, i = r(88024).removeSync, s = r(15776).mkdirpSync,
                 l = r(84440);
@@ -31648,11 +32935,13 @@
                     return c(e, t, r)
                 }(e, t, a)
             }
-        }, 16797: (e, t, r) => {
+        },
+        16797: (e, t, r) => {
             "use strict";
             const n = r(83410).S;
             e.exports = {move: n(r(66712))}
-        }, 66712: (e, t, r) => {
+        },
+        66712: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(95925).copy, i = r(88024).remove, s = r(15776).mkdirp,
                 l = r(18386).pathExists, c = r(84440);
@@ -31678,7 +32967,8 @@
                     }))
                 }))
             }
-        }, 13573: (e, t, r) => {
+        },
+        13573: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(83641), a = r(16928), i = r(15776), s = r(18386).pathExists;
             e.exports = {
@@ -31695,7 +32985,8 @@
                     i.mkdirsSync(r), o.writeFileSync(e, ...t)
                 }
             }
-        }, 18386: (e, t, r) => {
+        },
+        18386: (e, t, r) => {
             "use strict";
             const n = r(83410).z, o = r(71284);
             e.exports = {
@@ -31703,11 +32994,13 @@
                     return o.access(e).then((() => !0)).catch((() => !1))
                 })), pathExistsSync: o.existsSync
             }
-        }, 88024: (e, t, r) => {
+        },
+        88024: (e, t, r) => {
             "use strict";
             const n = r(83410).S, o = r(74911);
             e.exports = {remove: n(o), removeSync: o.sync}
-        }, 74911: (e, t, r) => {
+        },
+        74911: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = r(42613), i = "win32" === process.platform;
 
@@ -31823,7 +33116,8 @@
             }
 
             e.exports = l, l.sync = h
-        }, 4596: e => {
+        },
+        4596: e => {
             "use strict";
             e.exports = function (e) {
                 if ("function" == typeof Buffer.allocUnsafe) try {
@@ -31833,7 +33127,8 @@
                 }
                 return new Buffer(e)
             }
-        }, 84440: (e, t, r) => {
+        },
+        84440: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(16928), a = process.versions.node.split("."), i = Number.parseInt(a[0], 10),
                 s = Number.parseInt(a[1], 10), l = Number.parseInt(a[2], 10);
@@ -31913,7 +33208,8 @@
                     return e(t, r, l, i)
                 }, isSrcSubdir: u
             }
-        }, 57213: (e, t, r) => {
+        },
+        57213: (e, t, r) => {
             "use strict";
             const n = r(83641), o = r(70857), a = r(16928);
             e.exports = {
@@ -31962,7 +33258,8 @@
                     return n.futimesSync(o, t, r), n.closeSync(o)
                 }
             }
-        }, 51359: (e, t, r) => {
+        },
+        51359: (e, t, r) => {
             "use strict";
             const n = r(69278);
 
@@ -32010,7 +33307,8 @@
                     for (let r = e; r <= t; r++) yield r
                 }(e, t)
             }
-        }, 88529: e => {
+        },
+        88529: e => {
             "use strict";
             e.exports = function (e) {
                 if (null === e || "object" != typeof e) return e;
@@ -32022,7 +33320,8 @@
             var t = Object.getPrototypeOf || function (e) {
                 return e.__proto__
             }
-        }, 83641: (e, t, r) => {
+        },
+        83641: (e, t, r) => {
             var n, o, a = r(79896), i = r(76672), s = r(8989), l = r(88529), c = r(39023);
 
             function u(e, t) {
@@ -32208,7 +33507,8 @@
             }
 
             global[n] || u(global, a[n]), e.exports = f(l(a)), process.env.TEST_GRACEFUL_FS_GLOBAL_PATCH && !a.__patched && (e.exports = f(a), a.__patched = !0)
-        }, 8989: (e, t, r) => {
+        },
+        8989: (e, t, r) => {
             var n = r(2203).Stream;
             e.exports = function (e) {
                 return {
@@ -32249,7 +33549,8 @@
                     }
                 }
             }
-        }, 76672: (e, t, r) => {
+        },
+        76672: (e, t, r) => {
             var n = r(49140), o = process.cwd, a = null, i = process.env.GRACEFUL_FS_PLATFORM || process.platform;
             process.cwd = function () {
                 return a || (a = o.call(process)), a
@@ -32414,14 +33715,16 @@
                     }
                 })
             }
-        }, 26690: e => {
+        },
+        26690: e => {
             "use strict";
             e.exports = (e, t = process.argv) => {
                 const r = e.startsWith("-") ? "" : 1 === e.length ? "-" : "--", n = t.indexOf(r + e),
                     o = t.indexOf("--");
                 return -1 !== n && (-1 === o || n < o)
             }
-        }, 94664: (e, t, r) => {
+        },
+        94664: (e, t, r) => {
             "use strict";
             var n = r(86129), o = {
                     childContextTypes: !0,
@@ -32472,7 +33775,8 @@
                 }
                 return t
             }
-        }, 56123: function (e, t, r) {
+        },
+        56123: function (e, t, r) {
             "use strict";
             var n = this && this.__awaiter || function (e, t, r, n) {
                 return new (r || (r = Promise))((function (o, a) {
@@ -32561,7 +33865,8 @@
             }
 
             t.default = h
-        }, 74958: function (e, t, r) {
+        },
+        74958: function (e, t, r) {
             "use strict";
             const n = (this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -32574,7 +33879,8 @@
             !function (e) {
                 e.HttpsProxyAgent = n.default, e.prototype = n.default.prototype
             }(o || (o = {})), e.exports = o
-        }, 50278: function (e, t, r) {
+        },
+        50278: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
@@ -32610,13 +33916,15 @@
                     })), e.on("close", s), e.on("end", l), i()
                 }))
             }
-        }, 30623: e => {
+        },
+        30623: e => {
             "use strict";
             e.exports = e => {
                 const t = typeof e;
                 return null !== e && ("object" === t || "function" === t)
             }
-        }, 61259: (e, t, r) => {
+        },
+        61259: (e, t, r) => {
             var n;
             try {
                 n = r(83641)
@@ -32674,7 +33982,8 @@
                 }
             };
             e.exports = i
-        }, 63407: (e, t) => {
+        },
+        63407: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.Lazy = void 0, t.Lazy = class {
                 constructor(e) {
@@ -32695,7 +34004,8 @@
                     this._value = e, this.creator = null
                 }
             }
-        }, 50328: (e, t, r) => {
+        },
+        50328: (e, t, r) => {
             e = r.nmd(e);
             var n = "__lodash_hash_undefined__", o = 1, a = 2, i = 9007199254740991, s = "[object Arguments]",
                 l = "[object Array]", c = "[object AsyncFunction]", u = "[object Boolean]", d = "[object Date]",
@@ -33108,10 +34418,12 @@
             e.exports = function (e, t) {
                 return Pe(e, t)
             }
-        }, 38302: (e, t, r) => {
+        },
+        38302: (e, t, r) => {
             var n = r(68112)(r(11971), "DataView");
             e.exports = n
-        }, 42139: (e, t, r) => {
+        },
+        42139: (e, t, r) => {
             var n = r(93082), o = r(22428), a = r(9199), i = r(60435), s = r(16779);
 
             function l(e) {
@@ -33123,7 +34435,8 @@
             }
 
             l.prototype.clear = n, l.prototype.delete = o, l.prototype.get = a, l.prototype.has = i, l.prototype.set = s, e.exports = l
-        }, 14849: (e, t, r) => {
+        },
+        14849: (e, t, r) => {
             var n = r(81468), o = r(6746), a = r(27125), i = r(5401), s = r(1937);
 
             function l(e) {
@@ -33135,10 +34448,12 @@
             }
 
             l.prototype.clear = n, l.prototype.delete = o, l.prototype.get = a, l.prototype.has = i, l.prototype.set = s, e.exports = l
-        }, 93213: (e, t, r) => {
+        },
+        93213: (e, t, r) => {
             var n = r(68112)(r(11971), "Map");
             e.exports = n
-        }, 59319: (e, t, r) => {
+        },
+        59319: (e, t, r) => {
             var n = r(58558), o = r(3320), a = r(18267), i = r(86711), s = r(43935);
 
             function l(e) {
@@ -33150,13 +34465,16 @@
             }
 
             l.prototype.clear = n, l.prototype.delete = o, l.prototype.get = a, l.prototype.has = i, l.prototype.set = s, e.exports = l
-        }, 59134: (e, t, r) => {
+        },
+        59134: (e, t, r) => {
             var n = r(68112)(r(11971), "Promise");
             e.exports = n
-        }, 52443: (e, t, r) => {
+        },
+        52443: (e, t, r) => {
             var n = r(68112)(r(11971), "Set");
             e.exports = n
-        }, 31849: (e, t, r) => {
+        },
+        31849: (e, t, r) => {
             var n = r(59319), o = r(31654), a = r(60385);
 
             function i(e) {
@@ -33165,7 +34483,8 @@
             }
 
             i.prototype.add = i.prototype.push = o, i.prototype.has = a, e.exports = i
-        }, 81507: (e, t, r) => {
+        },
+        81507: (e, t, r) => {
             var n = r(14849), o = r(10050), a = r(68884), i = r(43079), s = r(53083), l = r(10467);
 
             function c(e) {
@@ -33174,16 +34493,20 @@
             }
 
             c.prototype.clear = o, c.prototype.delete = a, c.prototype.get = i, c.prototype.has = s, c.prototype.set = l, e.exports = c
-        }, 89559: (e, t, r) => {
+        },
+        89559: (e, t, r) => {
             var n = r(11971).Symbol;
             e.exports = n
-        }, 34370: (e, t, r) => {
+        },
+        34370: (e, t, r) => {
             var n = r(11971).Uint8Array;
             e.exports = n
-        }, 45909: (e, t, r) => {
+        },
+        45909: (e, t, r) => {
             var n = r(68112)(r(11971), "WeakMap");
             e.exports = n
-        }, 33463: e => {
+        },
+        33463: e => {
             e.exports = function (e, t, r) {
                 switch (r.length) {
                     case 0:
@@ -33197,7 +34520,8 @@
                 }
                 return e.apply(t, r)
             }
-        }, 91031: e => {
+        },
+        91031: e => {
             e.exports = function (e, t, r, n) {
                 for (var o = -1, a = null == e ? 0 : e.length; ++o < a;) {
                     var i = e[o];
@@ -33205,17 +34529,20 @@
                 }
                 return n
             }
-        }, 75739: e => {
+        },
+        75739: e => {
             e.exports = function (e, t) {
                 for (var r = -1, n = null == e ? 0 : e.length; ++r < n && !1 !== t(e[r], r, e);) ;
                 return e
             }
-        }, 15231: e => {
+        },
+        15231: e => {
             e.exports = function (e, t) {
                 for (var r = -1, n = null == e ? 0 : e.length; ++r < n;) if (!t(e[r], r, e)) return !1;
                 return !0
             }
-        }, 20488: e => {
+        },
+        20488: e => {
             e.exports = function (e, t) {
                 for (var r = -1, n = null == e ? 0 : e.length, o = 0, a = []; ++r < n;) {
                     var i = e[r];
@@ -33223,17 +34550,20 @@
                 }
                 return a
             }
-        }, 35399: (e, t, r) => {
+        },
+        35399: (e, t, r) => {
             var n = r(29029);
             e.exports = function (e, t) {
                 return !(null == e || !e.length) && n(e, t, 0) > -1
             }
-        }, 39327: e => {
+        },
+        39327: e => {
             e.exports = function (e, t, r) {
                 for (var n = -1, o = null == e ? 0 : e.length; ++n < o;) if (r(t, e[n])) return !0;
                 return !1
             }
-        }, 9825: (e, t, r) => {
+        },
+        9825: (e, t, r) => {
             var n = r(44658), o = r(49054), a = r(3139), i = r(49550), s = r(94087), l = r(43061),
                 c = Object.prototype.hasOwnProperty;
             e.exports = function (e, t) {
@@ -33242,99 +34572,118 @@
                 for (var g in e) !t && !c.call(e, g) || h && ("length" == g || d && ("offset" == g || "parent" == g) || p && ("buffer" == g || "byteLength" == g || "byteOffset" == g) || s(g, m)) || f.push(g);
                 return f
             }
-        }, 76766: e => {
+        },
+        76766: e => {
             e.exports = function (e, t) {
                 for (var r = -1, n = null == e ? 0 : e.length, o = Array(n); ++r < n;) o[r] = t(e[r], r, e);
                 return o
             }
-        }, 32898: e => {
+        },
+        32898: e => {
             e.exports = function (e, t) {
                 for (var r = -1, n = t.length, o = e.length; ++r < n;) e[o + r] = t[r];
                 return e
             }
-        }, 98296: e => {
+        },
+        98296: e => {
             e.exports = function (e, t, r, n) {
                 var o = -1, a = null == e ? 0 : e.length;
                 for (n && a && (r = e[++o]); ++o < a;) r = t(r, e[o], o, e);
                 return r
             }
-        }, 65880: (e, t, r) => {
+        },
+        65880: (e, t, r) => {
             var n = r(24321);
             e.exports = function (e) {
                 var t = e.length;
                 return t ? e[n(0, t - 1)] : void 0
             }
-        }, 7613: (e, t, r) => {
+        },
+        7613: (e, t, r) => {
             var n = r(30879), o = r(27557), a = r(72212);
             e.exports = function (e, t) {
                 return a(o(e), n(t, 0, e.length))
             }
-        }, 3581: (e, t, r) => {
+        },
+        3581: (e, t, r) => {
             var n = r(27557), o = r(72212);
             e.exports = function (e) {
                 return o(n(e))
             }
-        }, 66718: e => {
+        },
+        66718: e => {
             e.exports = function (e, t) {
                 for (var r = -1, n = null == e ? 0 : e.length; ++r < n;) if (t(e[r], r, e)) return !0;
                 return !1
             }
-        }, 91225: (e, t, r) => {
+        },
+        91225: (e, t, r) => {
             var n = r(25811)("length");
             e.exports = n
-        }, 29112: e => {
+        },
+        29112: e => {
             e.exports = function (e) {
                 return e.split("")
             }
-        }, 11295: e => {
+        },
+        11295: e => {
             var t = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
             e.exports = function (e) {
                 return e.match(t) || []
             }
-        }, 94739: (e, t, r) => {
+        },
+        94739: (e, t, r) => {
             var n = r(20386), o = r(42698);
             e.exports = function (e, t, r) {
                 (void 0 !== r && !o(e[t], r) || void 0 === r && !(t in e)) && n(e, t, r)
             }
-        }, 90149: (e, t, r) => {
+        },
+        90149: (e, t, r) => {
             var n = r(20386), o = r(42698), a = Object.prototype.hasOwnProperty;
             e.exports = function (e, t, r) {
                 var i = e[t];
                 a.call(e, t) && o(i, r) && (void 0 !== r || t in e) || n(e, t, r)
             }
-        }, 72495: (e, t, r) => {
+        },
+        72495: (e, t, r) => {
             var n = r(42698);
             e.exports = function (e, t) {
                 for (var r = e.length; r--;) if (n(e[r][0], t)) return r;
                 return -1
             }
-        }, 64783: (e, t, r) => {
+        },
+        64783: (e, t, r) => {
             var n = r(60051);
             e.exports = function (e, t, r, o) {
                 return n(e, (function (e, n, a) {
                     t(o, e, r(e), a)
                 })), o
             }
-        }, 80303: (e, t, r) => {
+        },
+        80303: (e, t, r) => {
             var n = r(15409), o = r(21576);
             e.exports = function (e, t) {
                 return e && n(t, o(t), e)
             }
-        }, 2836: (e, t, r) => {
+        },
+        2836: (e, t, r) => {
             var n = r(15409), o = r(11940);
             e.exports = function (e, t) {
                 return e && n(t, o(t), e)
             }
-        }, 20386: (e, t, r) => {
+        },
+        20386: (e, t, r) => {
             var n = r(59873);
             e.exports = function (e, t, r) {
                 "__proto__" == t && n ? n(e, t, {configurable: !0, enumerable: !0, value: r, writable: !0}) : e[t] = r
             }
-        }, 30879: e => {
+        },
+        30879: e => {
             e.exports = function (e, t, r) {
                 return e == e && (void 0 !== r && (e = e <= r ? e : r), void 0 !== t && (e = e >= t ? e : t)), e
             }
-        }, 97345: (e, t, r) => {
+        },
+        97345: (e, t, r) => {
             var n = r(81507), o = r(75739), a = r(90149), i = r(80303), s = r(2836), l = r(51812), c = r(27557),
                 u = r(74805), d = r(11078), p = r(65232), h = r(71615), f = r(92503), m = r(2279), g = r(23913),
                 b = r(96007), v = r(3139), y = r(49550), w = r(34404), _ = r(84899), k = r(38710), T = r(21576),
@@ -33369,7 +34718,8 @@
                     U && (n = t[o = n]), a(N, o, e(n, r, I, o, t, x))
                 })), N
             }
-        }, 55450: (e, t, r) => {
+        },
+        55450: (e, t, r) => {
             var n = r(84899), o = Object.create, a = function () {
                 function e() {
                 }
@@ -33383,14 +34733,16 @@
                 }
             }();
             e.exports = a
-        }, 64675: e => {
+        },
+        64675: e => {
             e.exports = function (e, t, r) {
                 if ("function" != typeof e) throw new TypeError("Expected a function");
                 return setTimeout((function () {
                     e.apply(void 0, r)
                 }), t)
             }
-        }, 72961: (e, t, r) => {
+        },
+        72961: (e, t, r) => {
             var n = r(31849), o = r(35399), a = r(39327), i = r(76766), s = r(20251), l = r(31345);
             e.exports = function (e, t, r, c) {
                 var u = -1, d = o, p = !0, h = e.length, f = [], m = t.length;
@@ -33405,10 +34757,12 @@
                 }
                 return f
             }
-        }, 60051: (e, t, r) => {
+        },
+        60051: (e, t, r) => {
             var n = r(92843), o = r(68911)(n);
             e.exports = o
-        }, 45287: (e, t, r) => {
+        },
+        45287: (e, t, r) => {
             var n = r(60051);
             e.exports = function (e, t) {
                 var r = !0;
@@ -33416,7 +34770,8 @@
                     return r = !!t(e, n, o)
                 })), r
             }
-        }, 14981: (e, t, r) => {
+        },
+        14981: (e, t, r) => {
             var n = r(24324);
             e.exports = function (e, t, r) {
                 for (var o = -1, a = e.length; ++o < a;) {
@@ -33425,7 +34780,8 @@
                 }
                 return c
             }
-        }, 32464: (e, t, r) => {
+        },
+        32464: (e, t, r) => {
             var n = r(60051);
             e.exports = function (e, t) {
                 var r = [];
@@ -33433,19 +34789,22 @@
                     t(e, n, o) && r.push(e)
                 })), r
             }
-        }, 25717: e => {
+        },
+        25717: e => {
             e.exports = function (e, t, r, n) {
                 for (var o = e.length, a = r + (n ? 1 : -1); n ? a-- : ++a < o;) if (t(e[a], a, e)) return a;
                 return -1
             }
-        }, 102: e => {
+        },
+        102: e => {
             e.exports = function (e, t, r) {
                 var n;
                 return r(e, (function (e, r, o) {
                     if (t(e, r, o)) return n = r, !1
                 })), n
             }
-        }, 4510: (e, t, r) => {
+        },
+        4510: (e, t, r) => {
             var n = r(32898), o = r(28209);
             e.exports = function e(t, r, a, i, s) {
                 var l = -1, c = t.length;
@@ -33455,55 +34814,66 @@
                 }
                 return s
             }
-        }, 68475: (e, t, r) => {
+        },
+        68475: (e, t, r) => {
             var n = r(59703)();
             e.exports = n
-        }, 92843: (e, t, r) => {
+        },
+        92843: (e, t, r) => {
             var n = r(68475), o = r(21576);
             e.exports = function (e, t) {
                 return e && n(e, t, o)
             }
-        }, 87824: (e, t, r) => {
+        },
+        87824: (e, t, r) => {
             var n = r(45939), o = r(30123);
             e.exports = function (e, t) {
                 for (var r = 0, a = (t = n(t, e)).length; null != e && r < a;) e = e[o(t[r++])];
                 return r && r == a ? e : void 0
             }
-        }, 9733: (e, t, r) => {
+        },
+        9733: (e, t, r) => {
             var n = r(32898), o = r(3139);
             e.exports = function (e, t, r) {
                 var a = t(e);
                 return o(e) ? a : n(a, r(e))
             }
-        }, 96474: (e, t, r) => {
+        },
+        96474: (e, t, r) => {
             var n = r(89559), o = r(42345), a = r(68780), i = n ? n.toStringTag : void 0;
             e.exports = function (e) {
                 return null == e ? void 0 === e ? "[object Undefined]" : "[object Null]" : i && i in Object(e) ? o(e) : a(e)
             }
-        }, 94717: e => {
+        },
+        94717: e => {
             e.exports = function (e, t) {
                 return e > t
             }
-        }, 69844: e => {
+        },
+        69844: e => {
             var t = Object.prototype.hasOwnProperty;
             e.exports = function (e, r) {
                 return null != e && t.call(e, r)
             }
-        }, 43387: e => {
+        },
+        43387: e => {
             e.exports = function (e, t) {
                 return null != e && t in Object(e)
             }
-        }, 12092: e => {
+        },
+        12092: e => {
             var t = Math.max, r = Math.min;
             e.exports = function (e, n, o) {
                 return e >= r(n, o) && e < t(n, o)
             }
-        }, 29029: (e, t, r) => {
+        },
+        29029: (e, t, r) => {
             var n = r(25717), o = r(23241), a = r(94869);
             e.exports = function (e, t, r) {
                 return t == t ? a(e, t, r) : n(e, o, r)
             }
-        }, 9171: (e, t, r) => {
+        },
+        9171: (e, t, r) => {
             var n = r(31849), o = r(35399), a = r(39327), i = r(76766), s = r(20251), l = r(31345), c = Math.min;
             e.exports = function (e, t, r) {
                 for (var u = r ? a : o, d = e[0].length, p = e.length, h = p, f = Array(p), m = 1 / 0, g = []; h--;) {
@@ -33524,29 +34894,34 @@
                 }
                 return g
             }
-        }, 63865: (e, t, r) => {
+        },
+        63865: (e, t, r) => {
             var n = r(92843);
             e.exports = function (e, t, r, o) {
                 return n(e, (function (e, n, a) {
                     t(o, r(e), n, a)
                 })), o
             }
-        }, 58248: (e, t, r) => {
+        },
+        58248: (e, t, r) => {
             var n = r(96474), o = r(55260);
             e.exports = function (e) {
                 return o(e) && "[object Arguments]" == n(e)
             }
-        }, 60446: (e, t, r) => {
+        },
+        60446: (e, t, r) => {
             var n = r(96474), o = r(55260);
             e.exports = function (e) {
                 return o(e) && "[object Date]" == n(e)
             }
-        }, 49368: (e, t, r) => {
+        },
+        49368: (e, t, r) => {
             var n = r(91286), o = r(55260);
             e.exports = function e(t, r, a, i, s) {
                 return t === r || (null == t || null == r || !o(t) && !o(r) ? t != t && r != r : n(t, r, a, i, e, s))
             }
-        }, 91286: (e, t, r) => {
+        },
+        91286: (e, t, r) => {
             var n = r(81507), o = r(945), a = r(27028), i = r(26615), s = r(92503), l = r(3139), c = r(49550),
                 u = r(43061), d = "[object Arguments]", p = "[object Array]", h = "[object Object]",
                 f = Object.prototype.hasOwnProperty;
@@ -33567,12 +34942,14 @@
                 }
                 return !!E && (b || (b = new n), i(e, t, r, m, g, b))
             }
-        }, 95574: (e, t, r) => {
+        },
+        95574: (e, t, r) => {
             var n = r(92503), o = r(55260);
             e.exports = function (e) {
                 return o(e) && "[object Map]" == n(e)
             }
-        }, 29485: (e, t, r) => {
+        },
+        29485: (e, t, r) => {
             var n = r(81507), o = r(49368);
             e.exports = function (e, t, r, a) {
                 var i = r.length, s = i, l = !a;
@@ -33593,33 +34970,39 @@
                 }
                 return !0
             }
-        }, 23241: e => {
+        },
+        23241: e => {
             e.exports = function (e) {
                 return e != e
             }
-        }, 29433: (e, t, r) => {
+        },
+        29433: (e, t, r) => {
             var n = r(52532), o = r(96246), a = r(84899), i = r(3255), s = /^\[object .+?Constructor\]$/,
                 l = Function.prototype, c = Object.prototype, u = l.toString, d = c.hasOwnProperty,
                 p = RegExp("^" + u.call(d).replace(/[\\^$.*+?()[\]{}|]/g, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$");
             e.exports = function (e) {
                 return !(!a(e) || o(e)) && (n(e) ? p : s).test(i(e))
             }
-        }, 15268: (e, t, r) => {
+        },
+        15268: (e, t, r) => {
             var n = r(92503), o = r(55260);
             e.exports = function (e) {
                 return o(e) && "[object Set]" == n(e)
             }
-        }, 18011: (e, t, r) => {
+        },
+        18011: (e, t, r) => {
             var n = r(96474), o = r(156), a = r(55260), i = {};
             i["[object Float32Array]"] = i["[object Float64Array]"] = i["[object Int8Array]"] = i["[object Int16Array]"] = i["[object Int32Array]"] = i["[object Uint8Array]"] = i["[object Uint8ClampedArray]"] = i["[object Uint16Array]"] = i["[object Uint32Array]"] = !0, i["[object Arguments]"] = i["[object Array]"] = i["[object ArrayBuffer]"] = i["[object Boolean]"] = i["[object DataView]"] = i["[object Date]"] = i["[object Error]"] = i["[object Function]"] = i["[object Map]"] = i["[object Number]"] = i["[object Object]"] = i["[object RegExp]"] = i["[object Set]"] = i["[object String]"] = i["[object WeakMap]"] = !1, e.exports = function (e) {
                 return a(e) && o(e.length) && !!i[n(e)]
             }
-        }, 31035: (e, t, r) => {
+        },
+        31035: (e, t, r) => {
             var n = r(96629), o = r(99180), a = r(95846), i = r(3139), s = r(24661);
             e.exports = function (e) {
                 return "function" == typeof e ? e : null == e ? a : "object" == typeof e ? i(e) ? o(e[0], e[1]) : n(e) : s(e)
             }
-        }, 46954: (e, t, r) => {
+        },
+        46954: (e, t, r) => {
             var n = r(38053), o = r(8980), a = Object.prototype.hasOwnProperty;
             e.exports = function (e) {
                 if (!n(e)) return o(e);
@@ -33627,7 +35010,8 @@
                 for (var r in Object(e)) a.call(e, r) && "constructor" != r && t.push(r);
                 return t
             }
-        }, 73901: (e, t, r) => {
+        },
+        73901: (e, t, r) => {
             var n = r(84899), o = r(38053), a = r(21883), i = Object.prototype.hasOwnProperty;
             e.exports = function (e) {
                 if (!n(e)) return a(e);
@@ -33635,11 +35019,13 @@
                 for (var s in e) ("constructor" != s || !t && i.call(e, s)) && r.push(s);
                 return r
             }
-        }, 29482: e => {
+        },
+        29482: e => {
             e.exports = function (e, t) {
                 return e < t
             }
-        }, 79206: (e, t, r) => {
+        },
+        79206: (e, t, r) => {
             var n = r(60051), o = r(38844);
             e.exports = function (e, t) {
                 var r = -1, a = o(e) ? Array(e.length) : [];
@@ -33647,7 +35033,8 @@
                     a[++r] = t(e, n, o)
                 })), a
             }
-        }, 96629: (e, t, r) => {
+        },
+        96629: (e, t, r) => {
             var n = r(29485), o = r(48962), a = r(74087);
             e.exports = function (e) {
                 var t = o(e);
@@ -33655,7 +35042,8 @@
                     return r === e || n(r, e, t)
                 }
             }
-        }, 99180: (e, t, r) => {
+        },
+        99180: (e, t, r) => {
             var n = r(49368), o = r(20846), a = r(73917), i = r(78160), s = r(52598), l = r(74087), c = r(30123);
             e.exports = function (e, t) {
                 return i(e) && s(t) ? l(c(e), t) : function (r) {
@@ -33663,13 +35051,15 @@
                     return void 0 === i && i === t ? a(r, e) : n(t, i, 3)
                 }
             }
-        }, 91159: (e, t, r) => {
+        },
+        91159: (e, t, r) => {
             var n = r(92243);
             e.exports = function (e, t) {
                 var r = null == e ? 0 : e.length;
                 return r ? n(e, t) / r : NaN
             }
-        }, 70784: (e, t, r) => {
+        },
+        70784: (e, t, r) => {
             var n = r(81507), o = r(94739), a = r(68475), i = r(54558), s = r(84899), l = r(11940), c = r(37256);
             e.exports = function e(t, r, u, d, p) {
                 t !== r && a(r, (function (a, l) {
@@ -33679,7 +35069,8 @@
                     }
                 }), l)
             }
-        }, 54558: (e, t, r) => {
+        },
+        54558: (e, t, r) => {
             var n = r(94739), o = r(51812), a = r(39203), i = r(27557), s = r(96007), l = r(49054), c = r(3139),
                 u = r(80523), d = r(49550), p = r(52532), h = r(84899), f = r(2617), m = r(43061), g = r(37256),
                 b = r(63210);
@@ -33694,7 +35085,8 @@
                     C && (_.set(T, S), y(S, T, v, w, _), _.delete(T)), n(e, r, S)
                 }
             }
-        }, 40833: (e, t, r) => {
+        },
+        40833: (e, t, r) => {
             var n = r(76766), o = r(87824), a = r(31035), i = r(79206), s = r(60379), l = r(20251), c = r(94300),
                 u = r(95846), d = r(3139);
             e.exports = function (e, t, r) {
@@ -33716,14 +35108,16 @@
                     return c(e, t, r)
                 }))
             }
-        }, 82947: (e, t, r) => {
+        },
+        82947: (e, t, r) => {
             var n = r(13522), o = r(73917);
             e.exports = function (e, t) {
                 return n(e, t, (function (t, r) {
                     return o(e, r)
                 }))
             }
-        }, 13522: (e, t, r) => {
+        },
+        13522: (e, t, r) => {
             var n = r(87824), o = r(59092), a = r(45939);
             e.exports = function (e, t, r) {
                 for (var i = -1, s = t.length, l = {}; ++i < s;) {
@@ -33732,26 +35126,30 @@
                 }
                 return l
             }
-        }, 25811: e => {
+        },
+        25811: e => {
             e.exports = function (e) {
                 return function (t) {
                     return null == t ? void 0 : t[e]
                 }
             }
-        }, 29885: (e, t, r) => {
+        },
+        29885: (e, t, r) => {
             var n = r(87824);
             e.exports = function (e) {
                 return function (t) {
                     return n(t, e)
                 }
             }
-        }, 72014: e => {
+        },
+        72014: e => {
             e.exports = function (e) {
                 return function (t) {
                     return null == e ? void 0 : e[t]
                 }
             }
-        }, 14028: (e, t, r) => {
+        },
+        14028: (e, t, r) => {
             var n = r(97337), o = r(94087), a = Array.prototype.splice;
             e.exports = function (e, t) {
                 for (var r = e ? t.length : 0, i = r - 1; r--;) {
@@ -33763,24 +35161,28 @@
                 }
                 return e
             }
-        }, 24321: e => {
+        },
+        24321: e => {
             var t = Math.floor, r = Math.random;
             e.exports = function (e, n) {
                 return e + t(r() * (n - e + 1))
             }
-        }, 98801: e => {
+        },
+        98801: e => {
             var t = Math.ceil, r = Math.max;
             e.exports = function (e, n, o, a) {
                 for (var i = -1, s = r(t((n - e) / (o || 1)), 0), l = Array(s); s--;) l[a ? s : ++i] = e, e += o;
                 return l
             }
-        }, 65664: e => {
+        },
+        65664: e => {
             e.exports = function (e, t, r, n, o) {
                 return o(e, (function (e, o, a) {
                     r = n ? (n = !1, e) : t(r, e, o, a)
                 })), r
             }
-        }, 12745: e => {
+        },
+        12745: e => {
             var t = Math.floor;
             e.exports = function (e, r) {
                 var n = "";
@@ -33790,23 +35192,27 @@
                 } while (r);
                 return n
             }
-        }, 3056: (e, t, r) => {
+        },
+        3056: (e, t, r) => {
             var n = r(95846), o = r(27699), a = r(43063);
             e.exports = function (e, t) {
                 return a(o(e, t, n), e + "")
             }
-        }, 13920: (e, t, r) => {
+        },
+        13920: (e, t, r) => {
             var n = r(65880), o = r(59042);
             e.exports = function (e) {
                 return n(o(e))
             }
-        }, 98341: (e, t, r) => {
+        },
+        98341: (e, t, r) => {
             var n = r(30879), o = r(72212), a = r(59042);
             e.exports = function (e, t) {
                 var r = a(e);
                 return o(r, n(t, 0, r.length))
             }
-        }, 59092: (e, t, r) => {
+        },
+        59092: (e, t, r) => {
             var n = r(90149), o = r(45939), a = r(94087), i = r(84899), s = r(30123);
             e.exports = function (e, t, r, l) {
                 if (!i(e)) return e;
@@ -33821,30 +35227,35 @@
                 }
                 return e
             }
-        }, 2232: (e, t, r) => {
+        },
+        2232: (e, t, r) => {
             var n = r(51004), o = r(59873), a = r(95846), i = o ? function (e, t) {
                 return o(e, "toString", {configurable: !0, enumerable: !1, value: n(t), writable: !0})
             } : a;
             e.exports = i
-        }, 40309: (e, t, r) => {
+        },
+        40309: (e, t, r) => {
             var n = r(72212), o = r(59042);
             e.exports = function (e) {
                 return n(o(e))
             }
-        }, 10534: e => {
+        },
+        10534: e => {
             e.exports = function (e, t, r) {
                 var n = -1, o = e.length;
                 t < 0 && (t = -t > o ? 0 : o + t), (r = r > o ? o : r) < 0 && (r += o), o = t > r ? 0 : r - t >>> 0, t >>>= 0;
                 for (var a = Array(o); ++n < o;) a[n] = e[n + t];
                 return a
             }
-        }, 60379: e => {
+        },
+        60379: e => {
             e.exports = function (e, t) {
                 var r = e.length;
                 for (e.sort(t); r--;) e[r] = e[r].value;
                 return e
             }
-        }, 31494: (e, t, r) => {
+        },
+        31494: (e, t, r) => {
             var n = r(24324), o = Math.floor, a = Math.min;
             e.exports = function (e, t, r, i) {
                 var s = 0, l = null == e ? 0 : e.length;
@@ -33856,7 +35267,8 @@
                 }
                 return a(l, 4294967294)
             }
-        }, 78386: (e, t, r) => {
+        },
+        78386: (e, t, r) => {
             var n = r(42698);
             e.exports = function (e, t) {
                 for (var r = -1, o = e.length, a = 0, i = []; ++r < o;) {
@@ -33868,7 +35280,8 @@
                 }
                 return i
             }
-        }, 92243: e => {
+        },
+        92243: e => {
             e.exports = function (e, t) {
                 for (var r, n = -1, o = e.length; ++n < o;) {
                     var a = t(e[n]);
@@ -33876,12 +35289,14 @@
                 }
                 return r
             }
-        }, 44658: e => {
+        },
+        44658: e => {
             e.exports = function (e, t) {
                 for (var r = -1, n = Array(e); ++r < e;) n[r] = t(r);
                 return n
             }
-        }, 19874: (e, t, r) => {
+        },
+        19874: (e, t, r) => {
             var n = r(89559), o = r(76766), a = r(3139), i = r(24324), s = n ? n.prototype : void 0,
                 l = s ? s.toString : void 0;
             e.exports = function e(t) {
@@ -33891,18 +35306,21 @@
                 var r = t + "";
                 return "0" == r && 1 / t == -1 / 0 ? "-0" : r
             }
-        }, 59742: (e, t, r) => {
+        },
+        59742: (e, t, r) => {
             var n = r(17810), o = /^\s+/;
             e.exports = function (e) {
                 return e ? e.slice(0, n(e) + 1).replace(o, "") : e
             }
-        }, 20251: e => {
+        },
+        20251: e => {
             e.exports = function (e) {
                 return function (t) {
                     return e(t)
                 }
             }
-        }, 29235: (e, t, r) => {
+        },
+        29235: (e, t, r) => {
             var n = r(31849), o = r(35399), a = r(39327), i = r(31345), s = r(76047), l = r(993);
             e.exports = function (e, t, r) {
                 var c = -1, u = o, d = e.length, p = !0, h = [], f = h;
@@ -33920,19 +35338,22 @@
                 }
                 return h
             }
-        }, 97337: (e, t, r) => {
+        },
+        97337: (e, t, r) => {
             var n = r(45939), o = r(65272), a = r(37451), i = r(30123);
             e.exports = function (e, t) {
                 return t = n(t, e), null == (e = a(e, t)) || delete e[i(o(t))]
             }
-        }, 81804: (e, t, r) => {
+        },
+        81804: (e, t, r) => {
             var n = r(76766);
             e.exports = function (e, t) {
                 return n(t, (function (t) {
                     return e[t]
                 }))
             }
-        }, 85797: (e, t, r) => {
+        },
+        85797: (e, t, r) => {
             var n = r(72961), o = r(4510), a = r(29235);
             e.exports = function (e, t, r) {
                 var i = e.length;
@@ -33940,7 +35361,8 @@
                 for (var s = -1, l = Array(i); ++s < i;) for (var c = e[s], u = -1; ++u < i;) u != s && (l[s] = n(l[s] || c, e[u], t, r));
                 return a(o(l, 1), t, r)
             }
-        }, 59380: e => {
+        },
+        59380: e => {
             e.exports = function (e, t, r) {
                 for (var n = -1, o = e.length, a = t.length, i = {}; ++n < o;) {
                     var s = n < a ? t[n] : void 0;
@@ -33948,38 +35370,45 @@
                 }
                 return i
             }
-        }, 31345: e => {
+        },
+        31345: e => {
             e.exports = function (e, t) {
                 return e.has(t)
             }
-        }, 41919: (e, t, r) => {
+        },
+        41919: (e, t, r) => {
             var n = r(80523);
             e.exports = function (e) {
                 return n(e) ? e : []
             }
-        }, 46504: (e, t, r) => {
+        },
+        46504: (e, t, r) => {
             var n = r(95846);
             e.exports = function (e) {
                 return "function" == typeof e ? e : n
             }
-        }, 45939: (e, t, r) => {
+        },
+        45939: (e, t, r) => {
             var n = r(3139), o = r(78160), a = r(62024), i = r(11012);
             e.exports = function (e, t) {
                 return n(e) ? e : o(e, t) ? [e] : a(i(e))
             }
-        }, 27656: (e, t, r) => {
+        },
+        27656: (e, t, r) => {
             var n = r(10534);
             e.exports = function (e, t, r) {
                 var o = e.length;
                 return r = void 0 === r ? o : r, !t && r >= o ? e : n(e, t, r)
             }
-        }, 59283: (e, t, r) => {
+        },
+        59283: (e, t, r) => {
             var n = r(34370);
             e.exports = function (e) {
                 var t = new e.constructor(e.byteLength);
                 return new n(t).set(new n(e)), t
             }
-        }, 51812: (e, t, r) => {
+        },
+        51812: (e, t, r) => {
             e = r.nmd(e);
             var n = r(11971), o = t && !t.nodeType && t, a = o && e && !e.nodeType && e,
                 i = a && a.exports === o ? n.Buffer : void 0, s = i ? i.allocUnsafe : void 0;
@@ -33988,30 +35417,35 @@
                 var r = e.length, n = s ? s(r) : new e.constructor(r);
                 return e.copy(n), n
             }
-        }, 62763: (e, t, r) => {
+        },
+        62763: (e, t, r) => {
             var n = r(59283);
             e.exports = function (e, t) {
                 var r = t ? n(e.buffer) : e.buffer;
                 return new e.constructor(r, e.byteOffset, e.byteLength)
             }
-        }, 37579: e => {
+        },
+        37579: e => {
             var t = /\w*$/;
             e.exports = function (e) {
                 var r = new e.constructor(e.source, t.exec(e));
                 return r.lastIndex = e.lastIndex, r
             }
-        }, 93022: (e, t, r) => {
+        },
+        93022: (e, t, r) => {
             var n = r(89559), o = n ? n.prototype : void 0, a = o ? o.valueOf : void 0;
             e.exports = function (e) {
                 return a ? Object(a.call(e)) : {}
             }
-        }, 39203: (e, t, r) => {
+        },
+        39203: (e, t, r) => {
             var n = r(59283);
             e.exports = function (e, t) {
                 var r = t ? n(e.buffer) : e.buffer;
                 return new e.constructor(r, e.byteOffset, e.length)
             }
-        }, 3556: (e, t, r) => {
+        },
+        3556: (e, t, r) => {
             var n = r(24324);
             e.exports = function (e, t) {
                 if (e !== t) {
@@ -34022,7 +35456,8 @@
                 }
                 return 0
             }
-        }, 94300: (e, t, r) => {
+        },
+        94300: (e, t, r) => {
             var n = r(3556);
             e.exports = function (e, t, r) {
                 for (var o = -1, a = e.criteria, i = t.criteria, s = a.length, l = r.length; ++o < s;) {
@@ -34031,13 +35466,15 @@
                 }
                 return e.index - t.index
             }
-        }, 27557: e => {
+        },
+        27557: e => {
             e.exports = function (e, t) {
                 var r = -1, n = e.length;
                 for (t || (t = Array(n)); ++r < n;) t[r] = e[r];
                 return t
             }
-        }, 15409: (e, t, r) => {
+        },
+        15409: (e, t, r) => {
             var n = r(90149), o = r(20386);
             e.exports = function (e, t, r, a) {
                 var i = !r;
@@ -34048,20 +35485,24 @@
                 }
                 return r
             }
-        }, 74805: (e, t, r) => {
+        },
+        74805: (e, t, r) => {
             var n = r(15409), o = r(58950);
             e.exports = function (e, t) {
                 return n(e, o(e), t)
             }
-        }, 11078: (e, t, r) => {
+        },
+        11078: (e, t, r) => {
             var n = r(15409), o = r(72913);
             e.exports = function (e, t) {
                 return n(e, o(e), t)
             }
-        }, 54735: (e, t, r) => {
+        },
+        54735: (e, t, r) => {
             var n = r(11971)["__core-js_shared__"];
             e.exports = n
-        }, 10074: (e, t, r) => {
+        },
+        10074: (e, t, r) => {
             var n = r(91031), o = r(64783), a = r(31035), i = r(3139);
             e.exports = function (e, t) {
                 return function (r, s) {
@@ -34069,7 +35510,8 @@
                     return l(r, e, a(s, 2), c)
                 }
             }
-        }, 61277: (e, t, r) => {
+        },
+        61277: (e, t, r) => {
             var n = r(3056), o = r(77310);
             e.exports = function (e) {
                 return n((function (t, r) {
@@ -34081,7 +35523,8 @@
                     return t
                 }))
             }
-        }, 68911: (e, t, r) => {
+        },
+        68911: (e, t, r) => {
             var n = r(38844);
             e.exports = function (e, t) {
                 return function (r, o) {
@@ -34091,7 +35534,8 @@
                     return r
                 }
             }
-        }, 59703: e => {
+        },
+        59703: e => {
             e.exports = function (e) {
                 return function (t, r, n) {
                     for (var o = -1, a = Object(t), i = n(t), s = i.length; s--;) {
@@ -34101,7 +35545,8 @@
                     return t
                 }
             }
-        }, 46189: (e, t, r) => {
+        },
+        46189: (e, t, r) => {
             var n = r(27656), o = r(69500), a = r(20786), i = r(11012);
             e.exports = function (e) {
                 return function (t) {
@@ -34110,14 +35555,16 @@
                     return s[e]() + l
                 }
             }
-        }, 21465: (e, t, r) => {
+        },
+        21465: (e, t, r) => {
             var n = r(98296), o = r(95370), a = r(54347), i = RegExp("['’]", "g");
             e.exports = function (e) {
                 return function (t) {
                     return n(a(o(t).replace(i, "")), e, "")
                 }
             }
-        }, 53328: (e, t, r) => {
+        },
+        53328: (e, t, r) => {
             var n = r(31035), o = r(38844), a = r(21576);
             e.exports = function (e) {
                 return function (t, r, i) {
@@ -34132,14 +35579,16 @@
                     return c > -1 ? s[l ? t[c] : c] : void 0
                 }
             }
-        }, 51352: (e, t, r) => {
+        },
+        51352: (e, t, r) => {
             var n = r(63865);
             e.exports = function (e, t) {
                 return function (r, o) {
                     return n(r, e, t(o), {})
                 }
             }
-        }, 92294: (e, t, r) => {
+        },
+        92294: (e, t, r) => {
             var n = r(12745), o = r(19874), a = r(27656), i = r(69500), s = r(4931), l = r(20786), c = Math.ceil;
             e.exports = function (e, t) {
                 var r = (t = void 0 === t ? " " : o(t)).length;
@@ -34147,14 +35596,16 @@
                 var u = n(t, c(e / s(t)));
                 return i(t) ? a(l(u), 0, e).join("") : u.slice(0, e)
             }
-        }, 87454: (e, t, r) => {
+        },
+        87454: (e, t, r) => {
             var n = r(98801), o = r(77310), a = r(29918);
             e.exports = function (e) {
                 return function (t, r, i) {
                     return i && "number" != typeof i && o(t, r, i) && (r = i = void 0), t = a(t), void 0 === r ? (r = t, t = 0) : r = a(r), i = void 0 === i ? t < r ? 1 : -1 : a(i), n(t, r, i, e)
                 }
             }
-        }, 97463: (e, t, r) => {
+        },
+        97463: (e, t, r) => {
             var n = r(11971), o = r(47015), a = r(40640), i = r(11012), s = n.isFinite, l = Math.min;
             e.exports = function (e) {
                 var t = Math[e];
@@ -34166,17 +35617,20 @@
                     return t(e)
                 }
             }
-        }, 76047: (e, t, r) => {
+        },
+        76047: (e, t, r) => {
             var n = r(52443), o = r(6820), a = r(993), i = n && 1 / a(new n([, -0]))[1] == 1 / 0 ? function (e) {
                 return new n(e)
             } : o;
             e.exports = i
-        }, 21260: (e, t, r) => {
+        },
+        21260: (e, t, r) => {
             var n = r(2617);
             e.exports = function (e) {
                 return n(e) ? void 0 : e
             }
-        }, 46401: (e, t, r) => {
+        },
+        46401: (e, t, r) => {
             var n = r(72014)({
                 À: "A",
                 Á: "A",
@@ -34370,7 +35824,8 @@
                 ſ: "s"
             });
             e.exports = n
-        }, 59873: (e, t, r) => {
+        },
+        59873: (e, t, r) => {
             var n = r(68112), o = function () {
                 try {
                     var e = n(Object, "defineProperty");
@@ -34379,7 +35834,8 @@
                 }
             }();
             e.exports = o
-        }, 945: (e, t, r) => {
+        },
+        945: (e, t, r) => {
             var n = r(31849), o = r(66718), a = r(31345);
             e.exports = function (e, t, r, i, s, l) {
                 var c = 1 & r, u = e.length, d = t.length;
@@ -34409,7 +35865,8 @@
                 }
                 return l.delete(e), l.delete(t), m
             }
-        }, 27028: (e, t, r) => {
+        },
+        27028: (e, t, r) => {
             var n = r(89559), o = r(34370), a = r(42698), i = r(945), s = r(98219), l = r(993),
                 c = n ? n.prototype : void 0, u = c ? c.valueOf : void 0;
             e.exports = function (e, t, r, n, c, d, p) {
@@ -34443,7 +35900,8 @@
                 }
                 return !1
             }
-        }, 26615: (e, t, r) => {
+        },
+        26615: (e, t, r) => {
             var n = r(65232), o = Object.prototype.hasOwnProperty;
             e.exports = function (e, t, r, a, i, s) {
                 var l = 1 & r, c = n(e), u = c.length;
@@ -34471,34 +35929,41 @@
                 }
                 return s.delete(e), s.delete(t), m
             }
-        }, 20769: (e, t, r) => {
+        },
+        20769: (e, t, r) => {
             var n = r(72014)({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"});
             e.exports = n
-        }, 25334: (e, t, r) => {
+        },
+        25334: (e, t, r) => {
             var n = r(71136), o = r(27699), a = r(43063);
             e.exports = function (e) {
                 return a(o(e, void 0, n), e + "")
             }
-        }, 4750: e => {
+        },
+        4750: e => {
             var t = "object" == typeof global && global && global.Object === Object && global;
             e.exports = t
-        }, 65232: (e, t, r) => {
+        },
+        65232: (e, t, r) => {
             var n = r(9733), o = r(58950), a = r(21576);
             e.exports = function (e) {
                 return n(e, a, o)
             }
-        }, 71615: (e, t, r) => {
+        },
+        71615: (e, t, r) => {
             var n = r(9733), o = r(72913), a = r(11940);
             e.exports = function (e) {
                 return n(e, a, o)
             }
-        }, 35473: (e, t, r) => {
+        },
+        35473: (e, t, r) => {
             var n = r(94948);
             e.exports = function (e, t) {
                 var r = e.__data__;
                 return n(t) ? r["string" == typeof t ? "string" : "hash"] : r.map
             }
-        }, 48962: (e, t, r) => {
+        },
+        48962: (e, t, r) => {
             var n = r(52598), o = r(21576);
             e.exports = function (e) {
                 for (var t = o(e), r = t.length; r--;) {
@@ -34507,16 +35972,19 @@
                 }
                 return t
             }
-        }, 68112: (e, t, r) => {
+        },
+        68112: (e, t, r) => {
             var n = r(29433), o = r(28466);
             e.exports = function (e, t) {
                 var r = o(e, t);
                 return n(r) ? r : void 0
             }
-        }, 77393: (e, t, r) => {
+        },
+        77393: (e, t, r) => {
             var n = r(54777)(Object.getPrototypeOf, Object);
             e.exports = n
-        }, 42345: (e, t, r) => {
+        },
+        42345: (e, t, r) => {
             var n = r(89559), o = Object.prototype, a = o.hasOwnProperty, i = o.toString,
                 s = n ? n.toStringTag : void 0;
             e.exports = function (e) {
@@ -34529,7 +35997,8 @@
                 var o = i.call(e);
                 return n && (t ? e[s] = r : delete e[s]), o
             }
-        }, 58950: (e, t, r) => {
+        },
+        58950: (e, t, r) => {
             var n = r(20488), o = r(16468), a = Object.prototype.propertyIsEnumerable, i = Object.getOwnPropertySymbols,
                 s = i ? function (e) {
                     return null == e ? [] : (e = Object(e), n(i(e), (function (t) {
@@ -34537,14 +36006,16 @@
                     })))
                 } : o;
             e.exports = s
-        }, 72913: (e, t, r) => {
+        },
+        72913: (e, t, r) => {
             var n = r(32898), o = r(77393), a = r(58950), i = r(16468),
                 s = Object.getOwnPropertySymbols ? function (e) {
                     for (var t = []; e;) n(t, a(e)), e = o(e);
                     return t
                 } : i;
             e.exports = s
-        }, 92503: (e, t, r) => {
+        },
+        92503: (e, t, r) => {
             var n = r(38302), o = r(93213), a = r(59134), i = r(52443), s = r(45909), l = r(96474), c = r(3255),
                 u = "[object Map]", d = "[object Promise]", p = "[object Set]", h = "[object WeakMap]",
                 f = "[object DataView]", m = c(n), g = c(o), b = c(a), v = c(i), y = c(s), w = l;
@@ -34564,11 +36035,13 @@
                 }
                 return t
             }), e.exports = w
-        }, 28466: e => {
+        },
+        28466: e => {
             e.exports = function (e, t) {
                 return null == e ? void 0 : e[t]
             }
-        }, 296: (e, t, r) => {
+        },
+        296: (e, t, r) => {
             var n = r(45939), o = r(49054), a = r(3139), i = r(94087), s = r(156), l = r(30123);
             e.exports = function (e, t, r) {
                 for (var c = -1, u = (t = n(t, e)).length, d = !1; ++c < u;) {
@@ -34578,27 +36051,32 @@
                 }
                 return d || ++c != u ? d : !!(u = null == e ? 0 : e.length) && s(u) && i(p, u) && (a(e) || o(e))
             }
-        }, 69500: e => {
+        },
+        69500: e => {
             var t = RegExp("[\\u200d\\ud800-\\udfff\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff\\ufe0e\\ufe0f]");
             e.exports = function (e) {
                 return t.test(e)
             }
-        }, 1648: e => {
+        },
+        1648: e => {
             var t = /[a-z][A-Z]|[A-Z]{2}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
             e.exports = function (e) {
                 return t.test(e)
             }
-        }, 93082: (e, t, r) => {
+        },
+        93082: (e, t, r) => {
             var n = r(61372);
             e.exports = function () {
                 this.__data__ = n ? n(null) : {}, this.size = 0
             }
-        }, 22428: e => {
+        },
+        22428: e => {
             e.exports = function (e) {
                 var t = this.has(e) && delete this.__data__[e];
                 return this.size -= t ? 1 : 0, t
             }
-        }, 9199: (e, t, r) => {
+        },
+        9199: (e, t, r) => {
             var n = r(61372), o = Object.prototype.hasOwnProperty;
             e.exports = function (e) {
                 var t = this.__data__;
@@ -34608,25 +36086,29 @@
                 }
                 return o.call(t, e) ? t[e] : void 0
             }
-        }, 60435: (e, t, r) => {
+        },
+        60435: (e, t, r) => {
             var n = r(61372), o = Object.prototype.hasOwnProperty;
             e.exports = function (e) {
                 var t = this.__data__;
                 return n ? void 0 !== t[e] : o.call(t, e)
             }
-        }, 16779: (e, t, r) => {
+        },
+        16779: (e, t, r) => {
             var n = r(61372);
             e.exports = function (e, t) {
                 var r = this.__data__;
                 return this.size += this.has(e) ? 0 : 1, r[e] = n && void 0 === t ? "__lodash_hash_undefined__" : t, this
             }
-        }, 2279: e => {
+        },
+        2279: e => {
             var t = Object.prototype.hasOwnProperty;
             e.exports = function (e) {
                 var r = e.length, n = new e.constructor(r);
                 return r && "string" == typeof e[0] && t.call(e, "index") && (n.index = e.index, n.input = e.input), n
             }
-        }, 23913: (e, t, r) => {
+        },
+        23913: (e, t, r) => {
             var n = r(59283), o = r(62763), a = r(37579), i = r(93022), s = r(39203);
             e.exports = function (e, t, r) {
                 var l = e.constructor;
@@ -34660,131 +36142,154 @@
                         return i(e)
                 }
             }
-        }, 96007: (e, t, r) => {
+        },
+        96007: (e, t, r) => {
             var n = r(55450), o = r(77393), a = r(38053);
             e.exports = function (e) {
                 return "function" != typeof e.constructor || a(e) ? {} : n(o(e))
             }
-        }, 28209: (e, t, r) => {
+        },
+        28209: (e, t, r) => {
             var n = r(89559), o = r(49054), a = r(3139), i = n ? n.isConcatSpreadable : void 0;
             e.exports = function (e) {
                 return a(e) || o(e) || !!(i && e && e[i])
             }
-        }, 94087: e => {
+        },
+        94087: e => {
             var t = /^(?:0|[1-9]\d*)$/;
             e.exports = function (e, r) {
                 var n = typeof e;
                 return !!(r = null == r ? 9007199254740991 : r) && ("number" == n || "symbol" != n && t.test(e)) && e > -1 && e % 1 == 0 && e < r
             }
-        }, 77310: (e, t, r) => {
+        },
+        77310: (e, t, r) => {
             var n = r(42698), o = r(38844), a = r(94087), i = r(84899);
             e.exports = function (e, t, r) {
                 if (!i(r)) return !1;
                 var s = typeof t;
                 return !!("number" == s ? o(r) && a(t, r.length) : "string" == s && t in r) && n(r[t], e)
             }
-        }, 78160: (e, t, r) => {
+        },
+        78160: (e, t, r) => {
             var n = r(3139), o = r(24324), a = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/, i = /^\w*$/;
             e.exports = function (e, t) {
                 if (n(e)) return !1;
                 var r = typeof e;
                 return !("number" != r && "symbol" != r && "boolean" != r && null != e && !o(e)) || i.test(e) || !a.test(e) || null != t && e in Object(t)
             }
-        }, 94948: e => {
+        },
+        94948: e => {
             e.exports = function (e) {
                 var t = typeof e;
                 return "string" == t || "number" == t || "symbol" == t || "boolean" == t ? "__proto__" !== e : null === e
             }
-        }, 96246: (e, t, r) => {
+        },
+        96246: (e, t, r) => {
             var n, o = r(54735),
                 a = (n = /[^.]+$/.exec(o && o.keys && o.keys.IE_PROTO || "")) ? "Symbol(src)_1." + n : "";
             e.exports = function (e) {
                 return !!a && a in e
             }
-        }, 38053: e => {
+        },
+        38053: e => {
             var t = Object.prototype;
             e.exports = function (e) {
                 var r = e && e.constructor;
                 return e === ("function" == typeof r && r.prototype || t)
             }
-        }, 52598: (e, t, r) => {
+        },
+        52598: (e, t, r) => {
             var n = r(84899);
             e.exports = function (e) {
                 return e == e && !n(e)
             }
-        }, 29359: e => {
+        },
+        29359: e => {
             e.exports = function (e) {
                 for (var t, r = []; !(t = e.next()).done;) r.push(t.value);
                 return r
             }
-        }, 81468: e => {
+        },
+        81468: e => {
             e.exports = function () {
                 this.__data__ = [], this.size = 0
             }
-        }, 6746: (e, t, r) => {
+        },
+        6746: (e, t, r) => {
             var n = r(72495), o = Array.prototype.splice;
             e.exports = function (e) {
                 var t = this.__data__, r = n(t, e);
                 return !(r < 0 || (r == t.length - 1 ? t.pop() : o.call(t, r, 1), --this.size, 0))
             }
-        }, 27125: (e, t, r) => {
+        },
+        27125: (e, t, r) => {
             var n = r(72495);
             e.exports = function (e) {
                 var t = this.__data__, r = n(t, e);
                 return r < 0 ? void 0 : t[r][1]
             }
-        }, 5401: (e, t, r) => {
+        },
+        5401: (e, t, r) => {
             var n = r(72495);
             e.exports = function (e) {
                 return n(this.__data__, e) > -1
             }
-        }, 1937: (e, t, r) => {
+        },
+        1937: (e, t, r) => {
             var n = r(72495);
             e.exports = function (e, t) {
                 var r = this.__data__, o = n(r, e);
                 return o < 0 ? (++this.size, r.push([e, t])) : r[o][1] = t, this
             }
-        }, 58558: (e, t, r) => {
+        },
+        58558: (e, t, r) => {
             var n = r(42139), o = r(14849), a = r(93213);
             e.exports = function () {
                 this.size = 0, this.__data__ = {hash: new n, map: new (a || o), string: new n}
             }
-        }, 3320: (e, t, r) => {
+        },
+        3320: (e, t, r) => {
             var n = r(35473);
             e.exports = function (e) {
                 var t = n(this, e).delete(e);
                 return this.size -= t ? 1 : 0, t
             }
-        }, 18267: (e, t, r) => {
+        },
+        18267: (e, t, r) => {
             var n = r(35473);
             e.exports = function (e) {
                 return n(this, e).get(e)
             }
-        }, 86711: (e, t, r) => {
+        },
+        86711: (e, t, r) => {
             var n = r(35473);
             e.exports = function (e) {
                 return n(this, e).has(e)
             }
-        }, 43935: (e, t, r) => {
+        },
+        43935: (e, t, r) => {
             var n = r(35473);
             e.exports = function (e, t) {
                 var r = n(this, e), o = r.size;
                 return r.set(e, t), this.size += r.size == o ? 0 : 1, this
             }
-        }, 98219: e => {
+        },
+        98219: e => {
             e.exports = function (e) {
                 var t = -1, r = Array(e.size);
                 return e.forEach((function (e, n) {
                     r[++t] = [n, e]
                 })), r
             }
-        }, 74087: e => {
+        },
+        74087: e => {
             e.exports = function (e, t) {
                 return function (r) {
                     return null != r && r[e] === t && (void 0 !== t || e in Object(r))
                 }
             }
-        }, 36842: (e, t, r) => {
+        },
+        36842: (e, t, r) => {
             var n = r(36982);
             e.exports = function (e) {
                 var t = n(e, (function (e) {
@@ -34792,19 +36297,23 @@
                 })), r = t.cache;
                 return t
             }
-        }, 61372: (e, t, r) => {
+        },
+        61372: (e, t, r) => {
             var n = r(68112)(Object, "create");
             e.exports = n
-        }, 8980: (e, t, r) => {
+        },
+        8980: (e, t, r) => {
             var n = r(54777)(Object.keys, Object);
             e.exports = n
-        }, 21883: e => {
+        },
+        21883: e => {
             e.exports = function (e) {
                 var t = [];
                 if (null != e) for (var r in Object(e)) t.push(r);
                 return t
             }
-        }, 66395: (e, t, r) => {
+        },
+        66395: (e, t, r) => {
             e = r.nmd(e);
             var n = r(4750), o = t && !t.nodeType && t, a = o && e && !e.nodeType && e,
                 i = a && a.exports === o && n.process, s = function () {
@@ -34814,18 +36323,21 @@
                     }
                 }();
             e.exports = s
-        }, 68780: e => {
+        },
+        68780: e => {
             var t = Object.prototype.toString;
             e.exports = function (e) {
                 return t.call(e)
             }
-        }, 54777: e => {
+        },
+        54777: e => {
             e.exports = function (e, t) {
                 return function (r) {
                     return e(t(r))
                 }
             }
-        }, 27699: (e, t, r) => {
+        },
+        27699: (e, t, r) => {
             var n = r(33463), o = Math.max;
             e.exports = function (e, t, r) {
                 return t = o(void 0 === t ? e.length - 1 : t, 0), function () {
@@ -34835,38 +36347,46 @@
                     return c[t] = r(l), n(e, this, c)
                 }
             }
-        }, 37451: (e, t, r) => {
+        },
+        37451: (e, t, r) => {
             var n = r(87824), o = r(10534);
             e.exports = function (e, t) {
                 return t.length < 2 ? e : n(e, o(t, 0, -1))
             }
-        }, 11971: (e, t, r) => {
+        },
+        11971: (e, t, r) => {
             var n = r(4750), o = "object" == typeof self && self && self.Object === Object && self,
                 a = n || o || Function("return this")();
             e.exports = a
-        }, 37256: e => {
+        },
+        37256: e => {
             e.exports = function (e, t) {
                 if (("constructor" !== t || "function" != typeof e[t]) && "__proto__" != t) return e[t]
             }
-        }, 31654: e => {
+        },
+        31654: e => {
             e.exports = function (e) {
                 return this.__data__.set(e, "__lodash_hash_undefined__"), this
             }
-        }, 60385: e => {
+        },
+        60385: e => {
             e.exports = function (e) {
                 return this.__data__.has(e)
             }
-        }, 993: e => {
+        },
+        993: e => {
             e.exports = function (e) {
                 var t = -1, r = Array(e.size);
                 return e.forEach((function (e) {
                     r[++t] = e
                 })), r
             }
-        }, 43063: (e, t, r) => {
+        },
+        43063: (e, t, r) => {
             var n = r(2232), o = r(33869)(n);
             e.exports = o
-        }, 33869: e => {
+        },
+        33869: e => {
             var t = Date.now;
             e.exports = function (e) {
                 var r = 0, n = 0;
@@ -34878,7 +36398,8 @@
                     return e.apply(void 0, arguments)
                 }
             }
-        }, 72212: (e, t, r) => {
+        },
+        72212: (e, t, r) => {
             var n = r(24321);
             e.exports = function (e, t) {
                 var r = -1, o = e.length, a = o - 1;
@@ -34888,25 +36409,30 @@
                 }
                 return e.length = t, e
             }
-        }, 10050: (e, t, r) => {
+        },
+        10050: (e, t, r) => {
             var n = r(14849);
             e.exports = function () {
                 this.__data__ = new n, this.size = 0
             }
-        }, 68884: e => {
+        },
+        68884: e => {
             e.exports = function (e) {
                 var t = this.__data__, r = t.delete(e);
                 return this.size = t.size, r
             }
-        }, 43079: e => {
+        },
+        43079: e => {
             e.exports = function (e) {
                 return this.__data__.get(e)
             }
-        }, 53083: e => {
+        },
+        53083: e => {
             e.exports = function (e) {
                 return this.__data__.has(e)
             }
-        }, 10467: (e, t, r) => {
+        },
+        10467: (e, t, r) => {
             var n = r(14849), o = r(93213), a = r(59319);
             e.exports = function (e, t) {
                 var r = this.__data__;
@@ -34917,22 +36443,26 @@
                 }
                 return r.set(e, t), this.size = r.size, this
             }
-        }, 94869: e => {
+        },
+        94869: e => {
             e.exports = function (e, t, r) {
                 for (var n = r - 1, o = e.length; ++n < o;) if (e[n] === t) return n;
                 return -1
             }
-        }, 4931: (e, t, r) => {
+        },
+        4931: (e, t, r) => {
             var n = r(91225), o = r(69500), a = r(6481);
             e.exports = function (e) {
                 return o(e) ? a(e) : n(e)
             }
-        }, 20786: (e, t, r) => {
+        },
+        20786: (e, t, r) => {
             var n = r(29112), o = r(69500), a = r(74368);
             e.exports = function (e) {
                 return o(e) ? a(e) : n(e)
             }
-        }, 62024: (e, t, r) => {
+        },
+        62024: (e, t, r) => {
             var n = r(36842),
                 o = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
                 a = /\\(\\)?/g, i = n((function (e) {
@@ -34942,14 +36472,16 @@
                     })), t
                 }));
             e.exports = i
-        }, 30123: (e, t, r) => {
+        },
+        30123: (e, t, r) => {
             var n = r(24324);
             e.exports = function (e) {
                 if ("string" == typeof e || n(e)) return e;
                 var t = e + "";
                 return "0" == t && 1 / e == -1 / 0 ? "-0" : t
             }
-        }, 3255: e => {
+        },
+        3255: e => {
             var t = Function.prototype.toString;
             e.exports = function (e) {
                 if (null != e) {
@@ -34964,16 +36496,19 @@
                 }
                 return ""
             }
-        }, 17810: e => {
+        },
+        17810: e => {
             var t = /\s/;
             e.exports = function (e) {
                 for (var r = e.length; r-- && t.test(e.charAt(r));) ;
                 return r
             }
-        }, 4974: (e, t, r) => {
+        },
+        4974: (e, t, r) => {
             var n = r(72014)({"&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"', "&#39;": "'"});
             e.exports = n
-        }, 6481: e => {
+        },
+        6481: e => {
             var t = "\\ud800-\\udfff", r = "[" + t + "]", n = "[\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]",
                 o = "\\ud83c[\\udffb-\\udfff]", a = "[^" + t + "]", i = "(?:\\ud83c[\\udde6-\\uddff]){2}",
                 s = "[\\ud800-\\udbff][\\udc00-\\udfff]", l = "(?:" + n + "|" + o + ")?", c = "[\\ufe0e\\ufe0f]?",
@@ -34983,7 +36518,8 @@
                 for (var t = p.lastIndex = 0; p.test(e);) ++t;
                 return t
             }
-        }, 74368: e => {
+        },
+        74368: e => {
             var t = "\\ud800-\\udfff", r = "[" + t + "]", n = "[\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]",
                 o = "\\ud83c[\\udffb-\\udfff]", a = "[^" + t + "]", i = "(?:\\ud83c[\\udde6-\\uddff]){2}",
                 s = "[\\ud800-\\udbff][\\udc00-\\udfff]", l = "(?:" + n + "|" + o + ")?", c = "[\\ufe0e\\ufe0f]?",
@@ -34992,7 +36528,8 @@
             e.exports = function (e) {
                 return e.match(p) || []
             }
-        }, 19479: e => {
+        },
+        19479: e => {
             var t = "\\ud800-\\udfff", r = "\\u2700-\\u27bf", n = "a-z\\xdf-\\xf6\\xf8-\\xff",
                 o = "A-Z\\xc0-\\xd6\\xd8-\\xde",
                 a = "\\xac\\xb1\\xd7\\xf7\\x00-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7b-\\xbf\\u2000-\\u206f \\t\\x0b\\f\\xa0\\ufeff\\n\\r\\u2028\\u2029\\u1680\\u180e\\u2000\\u2001\\u2002\\u2003\\u2004\\u2005\\u2006\\u2007\\u2008\\u2009\\u200a\\u202f\\u205f\\u3000",
@@ -35008,23 +36545,27 @@
             e.exports = function (e) {
                 return e.match(k) || []
             }
-        }, 12093: (e, t, r) => {
+        },
+        12093: (e, t, r) => {
             var n = r(90149), o = r(15409), a = r(61277), i = r(38844), s = r(38053), l = r(21576),
                 c = Object.prototype.hasOwnProperty, u = a((function (e, t) {
                     if (s(t) || i(t)) o(t, l(t), e); else for (var r in t) c.call(t, r) && n(e, r, t[r])
                 }));
             e.exports = u
-        }, 67022: (e, t, r) => {
+        },
+        67022: (e, t, r) => {
             var n = r(15409), o = r(61277), a = r(11940), i = o((function (e, t) {
                 n(t, a(t), e)
             }));
             e.exports = i
-        }, 83889: (e, t, r) => {
+        },
+        83889: (e, t, r) => {
             var n = r(15409), o = r(61277), a = r(21576), i = o((function (e, t, r, o) {
                 n(t, a(t), e, o)
             }));
             e.exports = i
-        }, 77651: (e, t, r) => {
+        },
+        77651: (e, t, r) => {
             var n = r(47015);
             e.exports = function (e, t) {
                 var r;
@@ -35033,20 +36574,24 @@
                     return --e > 0 && (r = t.apply(this, arguments)), e <= 1 && (t = void 0), r
                 }
             }
-        }, 71780: (e, t, r) => {
+        },
+        71780: (e, t, r) => {
             var n = r(15018), o = r(21465)((function (e, t, r) {
                 return t = t.toLowerCase(), e + (r ? n(t) : t)
             }));
             e.exports = o
-        }, 15018: (e, t, r) => {
+        },
+        15018: (e, t, r) => {
             var n = r(11012), o = r(33610);
             e.exports = function (e) {
                 return o(n(e).toLowerCase())
             }
-        }, 81149: (e, t, r) => {
+        },
+        81149: (e, t, r) => {
             var n = r(97463)("ceil");
             e.exports = n
-        }, 2023: (e, t, r) => {
+        },
+        2023: (e, t, r) => {
             var n = r(10534), o = r(77310), a = r(47015), i = Math.ceil, s = Math.max;
             e.exports = function (e, t, r) {
                 t = (r ? o(e, t, r) : void 0 === t) ? 1 : s(a(t), 0);
@@ -35055,27 +36600,32 @@
                 for (var c = 0, u = 0, d = Array(i(l / t)); c < l;) d[u++] = n(e, c, c += t);
                 return d
             }
-        }, 55309: (e, t, r) => {
+        },
+        55309: (e, t, r) => {
             var n = r(30879), o = r(40640);
             e.exports = function (e, t, r) {
                 return void 0 === r && (r = t, t = void 0), void 0 !== r && (r = (r = o(r)) == r ? r : 0), void 0 !== t && (t = (t = o(t)) == t ? t : 0), n(o(e), t, r)
             }
-        }, 42431: (e, t, r) => {
+        },
+        42431: (e, t, r) => {
             var n = r(97345);
             e.exports = function (e) {
                 return n(e, 4)
             }
-        }, 90993: (e, t, r) => {
+        },
+        90993: (e, t, r) => {
             var n = r(97345);
             e.exports = function (e) {
                 return n(e, 5)
             }
-        }, 13125: (e, t, r) => {
+        },
+        13125: (e, t, r) => {
             var n = r(97345);
             e.exports = function (e, t) {
                 return n(e, 5, t = "function" == typeof t ? t : void 0)
             }
-        }, 75507: e => {
+        },
+        75507: e => {
             e.exports = function (e) {
                 for (var t = -1, r = null == e ? 0 : e.length, n = 0, o = []; ++t < r;) {
                     var a = e[t];
@@ -35083,7 +36633,8 @@
                 }
                 return o
             }
-        }, 98440: (e, t, r) => {
+        },
+        98440: (e, t, r) => {
             var n = r(32898), o = r(4510), a = r(27557), i = r(3139);
             e.exports = function () {
                 var e = arguments.length;
@@ -35091,18 +36642,21 @@
                 for (var t = Array(e - 1), r = arguments[0], s = e; s--;) t[s - 1] = arguments[s];
                 return n(i(r) ? a(r) : [r], o(t, 1))
             }
-        }, 51004: e => {
+        },
+        51004: e => {
             e.exports = function (e) {
                 return function () {
                     return e
                 }
             }
-        }, 86504: (e, t, r) => {
+        },
+        86504: (e, t, r) => {
             var n = r(20386), o = r(10074), a = Object.prototype.hasOwnProperty, i = o((function (e, t, r) {
                 a.call(e, r) ? ++e[r] : n(e, r, 1)
             }));
             e.exports = i
-        }, 26535: (e, t, r) => {
+        },
+        26535: (e, t, r) => {
             var n = r(84899), o = r(37534), a = r(40640), i = Math.max, s = Math.min;
             e.exports = function (e, t, r) {
                 var l, c, u, d, p, h, f = 0, m = !1, g = !1, b = !0;
@@ -35148,66 +36702,79 @@
                     return void 0 === p ? d : _(o())
                 }, k
             }
-        }, 95370: (e, t, r) => {
+        },
+        95370: (e, t, r) => {
             var n = r(46401), o = r(11012), a = /[\xc0-\xd6\xd8-\xf6\xf8-\xff\u0100-\u017f]/g,
                 i = RegExp("[\\u0300-\\u036f\\ufe20-\\ufe2f\\u20d0-\\u20ff]", "g");
             e.exports = function (e) {
                 return (e = o(e)) && e.replace(a, n).replace(i, "")
             }
-        }, 7813: (e, t, r) => {
+        },
+        7813: (e, t, r) => {
             var n = r(64675), o = r(3056), a = r(40640), i = o((function (e, t, r) {
                 return n(e, a(t) || 0, r)
             }));
             e.exports = i
-        }, 83547: (e, t, r) => {
+        },
+        83547: (e, t, r) => {
             var n = r(72961), o = r(4510), a = r(3056), i = r(80523), s = a((function (e, t) {
                 return i(e) ? n(e, o(t, 1, i, !0)) : []
             }));
             e.exports = s
-        }, 83194: (e, t, r) => {
+        },
+        83194: (e, t, r) => {
             var n = r(72961), o = r(4510), a = r(31035), i = r(3056), s = r(80523), l = r(65272),
                 c = i((function (e, t) {
                     var r = l(t);
                     return s(r) && (r = void 0), s(e) ? n(e, o(t, 1, s, !0), a(r, 2)) : []
                 }));
             e.exports = c
-        }, 25199: (e, t, r) => {
+        },
+        25199: (e, t, r) => {
             var n = r(10534), o = r(47015);
             e.exports = function (e, t, r) {
                 var a = null == e ? 0 : e.length;
                 return a ? (t = r || void 0 === t ? 1 : o(t), n(e, 0, (t = a - t) < 0 ? 0 : t)) : []
             }
-        }, 22397: (e, t, r) => {
+        },
+        22397: (e, t, r) => {
             e.exports = r(95328)
-        }, 42698: e => {
+        },
+        42698: e => {
             e.exports = function (e, t) {
                 return e === t || e != e && t != t
             }
-        }, 79019: (e, t, r) => {
+        },
+        79019: (e, t, r) => {
             var n = r(20769), o = r(11012), a = /[&<>"']/g, i = RegExp(a.source);
             e.exports = function (e) {
                 return (e = o(e)) && i.test(e) ? e.replace(a, n) : e
             }
-        }, 10842: (e, t, r) => {
+        },
+        10842: (e, t, r) => {
             var n = r(11012), o = /[\\^$.*+?()[\]{}|]/g, a = RegExp(o.source);
             e.exports = function (e) {
                 return (e = n(e)) && a.test(e) ? e.replace(o, "\\$&") : e
             }
-        }, 60561: (e, t, r) => {
+        },
+        60561: (e, t, r) => {
             var n = r(15231), o = r(45287), a = r(31035), i = r(3139), s = r(77310);
             e.exports = function (e, t, r) {
                 var l = i(e) ? n : o;
                 return r && s(e, t, r) && (t = void 0), l(e, a(t, 3))
             }
-        }, 55950: (e, t, r) => {
+        },
+        55950: (e, t, r) => {
             var n = r(20488), o = r(32464), a = r(31035), i = r(3139);
             e.exports = function (e, t) {
                 return (i(e) ? n : o)(e, a(t, 3))
             }
-        }, 69575: (e, t, r) => {
+        },
+        69575: (e, t, r) => {
             var n = r(53328)(r(1387));
             e.exports = n
-        }, 1387: (e, t, r) => {
+        },
+        1387: (e, t, r) => {
             var n = r(25717), o = r(31035), a = r(47015), i = Math.max;
             e.exports = function (e, t, r) {
                 var s = null == e ? 0 : e.length;
@@ -35215,15 +36782,18 @@
                 var l = null == r ? 0 : a(r);
                 return l < 0 && (l = i(s + l, 0)), n(e, o(t, 3), l)
             }
-        }, 55060: (e, t, r) => {
+        },
+        55060: (e, t, r) => {
             var n = r(102), o = r(92843), a = r(31035);
             e.exports = function (e, t) {
                 return n(e, a(t, 3), o)
             }
-        }, 72071: (e, t, r) => {
+        },
+        72071: (e, t, r) => {
             var n = r(53328)(r(25611));
             e.exports = n
-        }, 25611: (e, t, r) => {
+        },
+        25611: (e, t, r) => {
             var n = r(25717), o = r(31035), a = r(47015), i = Math.max, s = Math.min;
             e.exports = function (e, t, r) {
                 var l = null == e ? 0 : e.length;
@@ -35231,34 +36801,41 @@
                 var c = l - 1;
                 return void 0 !== r && (c = a(r), c = r < 0 ? i(l + c, 0) : s(c, l - 1)), n(e, o(t, 3), c, !0)
             }
-        }, 24172: (e, t, r) => {
+        },
+        24172: (e, t, r) => {
             e.exports = r(54338)
-        }, 41781: (e, t, r) => {
+        },
+        41781: (e, t, r) => {
             var n = r(4510), o = r(20824);
             e.exports = function (e, t) {
                 return n(o(e, t), 1)
             }
-        }, 71136: (e, t, r) => {
+        },
+        71136: (e, t, r) => {
             var n = r(4510);
             e.exports = function (e) {
                 return null != e && e.length ? n(e, 1) : []
             }
-        }, 67710: (e, t, r) => {
+        },
+        67710: (e, t, r) => {
             var n = r(4510), o = 1 / 0;
             e.exports = function (e) {
                 return null != e && e.length ? n(e, o) : []
             }
-        }, 95328: (e, t, r) => {
+        },
+        95328: (e, t, r) => {
             var n = r(75739), o = r(60051), a = r(46504), i = r(3139);
             e.exports = function (e, t) {
                 return (i(e) ? n : o)(e, a(t))
             }
-        }, 13953: (e, t, r) => {
+        },
+        13953: (e, t, r) => {
             var n = r(92843), o = r(46504);
             e.exports = function (e, t) {
                 return e && n(e, o(t))
             }
-        }, 33707: e => {
+        },
+        33707: e => {
             e.exports = function (e) {
                 for (var t = -1, r = null == e ? 0 : e.length, n = {}; ++t < r;) {
                     var o = e[t];
@@ -35266,76 +36843,90 @@
                 }
                 return n
             }
-        }, 20846: (e, t, r) => {
+        },
+        20846: (e, t, r) => {
             var n = r(87824);
             e.exports = function (e, t, r) {
                 var o = null == e ? void 0 : n(e, t);
                 return void 0 === o ? r : o
             }
-        }, 61448: (e, t, r) => {
+        },
+        61448: (e, t, r) => {
             var n = r(20386), o = r(10074), a = Object.prototype.hasOwnProperty, i = o((function (e, t, r) {
                 a.call(e, r) ? e[r].push(t) : n(e, r, [t])
             }));
             e.exports = i
-        }, 85210: (e, t, r) => {
+        },
+        85210: (e, t, r) => {
             var n = r(69844), o = r(296);
             e.exports = function (e, t) {
                 return null != e && o(e, t, n)
             }
-        }, 73917: (e, t, r) => {
+        },
+        73917: (e, t, r) => {
             var n = r(43387), o = r(296);
             e.exports = function (e, t) {
                 return null != e && o(e, t, n)
             }
-        }, 54338: e => {
+        },
+        54338: e => {
             e.exports = function (e) {
                 return e && e.length ? e[0] : void 0
             }
-        }, 95846: e => {
+        },
+        95846: e => {
             e.exports = function (e) {
                 return e
             }
-        }, 10014: (e, t, r) => {
+        },
+        10014: (e, t, r) => {
             var n = r(12092), o = r(29918), a = r(40640);
             e.exports = function (e, t, r) {
                 return t = o(t), void 0 === r ? (r = t, t = 0) : r = o(r), e = a(e), n(e, t, r)
             }
-        }, 27225: (e, t, r) => {
+        },
+        27225: (e, t, r) => {
             var n = r(29029), o = r(38844), a = r(48749), i = r(47015), s = r(59042), l = Math.max;
             e.exports = function (e, t, r, c) {
                 e = o(e) ? e : s(e), r = r && !c ? i(r) : 0;
                 var u = e.length;
                 return r < 0 && (r = l(u + r, 0)), a(e) ? r <= u && e.indexOf(t, r) > -1 : !!u && n(e, t, r) > -1
             }
-        }, 11578: (e, t, r) => {
+        },
+        11578: (e, t, r) => {
             var n = r(10534);
             e.exports = function (e) {
                 return null != e && e.length ? n(e, 0, -1) : []
             }
-        }, 17729: (e, t, r) => {
+        },
+        17729: (e, t, r) => {
             var n = r(76766), o = r(9171), a = r(3056), i = r(41919), s = a((function (e) {
                 var t = n(e, i);
                 return t.length && t[0] === e[0] ? o(t) : []
             }));
             e.exports = s
-        }, 65900: (e, t, r) => {
+        },
+        65900: (e, t, r) => {
             var n = r(76766), o = r(9171), a = r(31035), i = r(3056), s = r(41919), l = r(65272), c = i((function (e) {
                 var t = l(e), r = n(e, s);
                 return t === l(r) ? t = void 0 : r.pop(), r.length && r[0] === e[0] ? o(r, a(t, 2)) : []
             }));
             e.exports = c
-        }, 96533: (e, t, r) => {
+        },
+        96533: (e, t, r) => {
             var n = r(76766), o = r(9171), a = r(3056), i = r(41919), s = r(65272), l = a((function (e) {
                 var t = s(e), r = n(e, i);
                 return (t = "function" == typeof t ? t : void 0) && r.pop(), r.length && r[0] === e[0] ? o(r, void 0, t) : []
             }));
             e.exports = l
-        }, 6632: (e, t, r) => {
+        },
+        6632: (e, t, r) => {
             var n = r(51004), o = r(51352), a = r(95846), i = Object.prototype.toString, s = o((function (e, t, r) {
                 null != t && "function" != typeof t.toString && (t = i.call(t)), e[t] = r
             }), n(a));
             e.exports = s
-        }, 49054: (e, t, r) => {
+        },
+        49054: (e, t, r) => {
             var n = r(58248), o = r(55260), a = Object.prototype, i = a.hasOwnProperty, s = a.propertyIsEnumerable,
                 l = n(function () {
                     return arguments
@@ -35343,33 +36934,40 @@
                     return o(e) && i.call(e, "callee") && !s.call(e, "callee")
                 };
             e.exports = l
-        }, 3139: e => {
+        },
+        3139: e => {
             var t = Array.isArray;
             e.exports = t
-        }, 38844: (e, t, r) => {
+        },
+        38844: (e, t, r) => {
             var n = r(52532), o = r(156);
             e.exports = function (e) {
                 return null != e && o(e.length) && !n(e)
             }
-        }, 80523: (e, t, r) => {
+        },
+        80523: (e, t, r) => {
             var n = r(38844), o = r(55260);
             e.exports = function (e) {
                 return o(e) && n(e)
             }
-        }, 83830: (e, t, r) => {
+        },
+        83830: (e, t, r) => {
             var n = r(96474), o = r(55260);
             e.exports = function (e) {
                 return !0 === e || !1 === e || o(e) && "[object Boolean]" == n(e)
             }
-        }, 49550: (e, t, r) => {
+        },
+        49550: (e, t, r) => {
             e = r.nmd(e);
             var n = r(11971), o = r(54925), a = t && !t.nodeType && t, i = a && e && !e.nodeType && e,
                 s = i && i.exports === a ? n.Buffer : void 0, l = (s ? s.isBuffer : void 0) || o;
             e.exports = l
-        }, 17936: (e, t, r) => {
+        },
+        17936: (e, t, r) => {
             var n = r(60446), o = r(20251), a = r(66395), i = a && a.isDate, s = i ? o(i) : n;
             e.exports = s
-        }, 88091: (e, t, r) => {
+        },
+        88091: (e, t, r) => {
             var n = r(46954), o = r(92503), a = r(49054), i = r(3139), s = r(38844), l = r(49550), c = r(38053),
                 u = r(43061), d = Object.prototype.hasOwnProperty;
             e.exports = function (e) {
@@ -35381,65 +36979,78 @@
                 for (var r in e) if (d.call(e, r)) return !1;
                 return !0
             }
-        }, 31230: (e, t, r) => {
+        },
+        31230: (e, t, r) => {
             var n = r(49368);
             e.exports = function (e, t) {
                 return n(e, t)
             }
-        }, 10204: (e, t, r) => {
+        },
+        10204: (e, t, r) => {
             var n = r(96474), o = r(55260), a = r(2617);
             e.exports = function (e) {
                 if (!o(e)) return !1;
                 var t = n(e);
                 return "[object Error]" == t || "[object DOMException]" == t || "string" == typeof e.message && "string" == typeof e.name && !a(e)
             }
-        }, 28631: (e, t, r) => {
+        },
+        28631: (e, t, r) => {
             var n = r(11971).isFinite;
             e.exports = function (e) {
                 return "number" == typeof e && n(e)
             }
-        }, 52532: (e, t, r) => {
+        },
+        52532: (e, t, r) => {
             var n = r(96474), o = r(84899);
             e.exports = function (e) {
                 if (!o(e)) return !1;
                 var t = n(e);
                 return "[object Function]" == t || "[object GeneratorFunction]" == t || "[object AsyncFunction]" == t || "[object Proxy]" == t
             }
-        }, 156: e => {
+        },
+        156: e => {
             e.exports = function (e) {
                 return "number" == typeof e && e > -1 && e % 1 == 0 && e <= 9007199254740991
             }
-        }, 34404: (e, t, r) => {
+        },
+        34404: (e, t, r) => {
             var n = r(95574), o = r(20251), a = r(66395), i = a && a.isMap, s = i ? o(i) : n;
             e.exports = s
-        }, 13895: (e, t, r) => {
+        },
+        13895: (e, t, r) => {
             var n = r(32129);
             e.exports = function (e) {
                 return n(e) && e != +e
             }
-        }, 67489: e => {
+        },
+        67489: e => {
             e.exports = function (e) {
                 return null == e
             }
-        }, 2621: e => {
+        },
+        2621: e => {
             e.exports = function (e) {
                 return null === e
             }
-        }, 32129: (e, t, r) => {
+        },
+        32129: (e, t, r) => {
             var n = r(96474), o = r(55260);
             e.exports = function (e) {
                 return "number" == typeof e || o(e) && "[object Number]" == n(e)
             }
-        }, 84899: e => {
+        },
+        84899: e => {
             e.exports = function (e) {
                 var t = typeof e;
                 return null != e && ("object" == t || "function" == t)
             }
-        }, 55260: e => {
+        },
+        55260: e => {
             e.exports = function (e) {
                 return null != e && "object" == typeof e
             }
-        }, 2617: (e, t, r) => {
+        },
+        2617: (e, t, r) => {
             var n = r(96474), o = r(77393), a = r(55260), i = Function.prototype, s = Object.prototype, l = i.toString,
                 c = s.hasOwnProperty, u = l.call(Object);
             e.exports = function (e) {
@@ -35449,62 +37060,75 @@
                 var r = c.call(t, "constructor") && t.constructor;
                 return "function" == typeof r && r instanceof r && l.call(r) == u
             }
-        }, 38710: (e, t, r) => {
+        },
+        38710: (e, t, r) => {
             var n = r(15268), o = r(20251), a = r(66395), i = a && a.isSet, s = i ? o(i) : n;
             e.exports = s
-        }, 48749: (e, t, r) => {
+        },
+        48749: (e, t, r) => {
             var n = r(96474), o = r(3139), a = r(55260);
             e.exports = function (e) {
                 return "string" == typeof e || !o(e) && a(e) && "[object String]" == n(e)
             }
-        }, 24324: (e, t, r) => {
+        },
+        24324: (e, t, r) => {
             var n = r(96474), o = r(55260);
             e.exports = function (e) {
                 return "symbol" == typeof e || o(e) && "[object Symbol]" == n(e)
             }
-        }, 43061: (e, t, r) => {
+        },
+        43061: (e, t, r) => {
             var n = r(18011), o = r(20251), a = r(66395), i = a && a.isTypedArray, s = i ? o(i) : n;
             e.exports = s
-        }, 92094: e => {
+        },
+        92094: e => {
             e.exports = function (e) {
                 return void 0 === e
             }
-        }, 34328: e => {
+        },
+        34328: e => {
             var t = Array.prototype.join;
             e.exports = function (e, r) {
                 return null == e ? "" : t.call(e, r)
             }
-        }, 87240: (e, t, r) => {
+        },
+        87240: (e, t, r) => {
             var n = r(20386), o = r(10074)((function (e, t, r) {
                 n(e, r, t)
             }));
             e.exports = o
-        }, 21576: (e, t, r) => {
+        },
+        21576: (e, t, r) => {
             var n = r(9825), o = r(46954), a = r(38844);
             e.exports = function (e) {
                 return a(e) ? n(e) : o(e)
             }
-        }, 11940: (e, t, r) => {
+        },
+        11940: (e, t, r) => {
             var n = r(9825), o = r(73901), a = r(38844);
             e.exports = function (e) {
                 return a(e) ? n(e, !0) : o(e)
             }
-        }, 65272: e => {
+        },
+        65272: e => {
             e.exports = function (e) {
                 var t = null == e ? 0 : e.length;
                 return t ? e[t - 1] : void 0
             }
-        }, 53523: (e, t, r) => {
+        },
+        53523: (e, t, r) => {
             var n = r(21465)((function (e, t, r) {
                 return e + (r ? " " : "") + t.toLowerCase()
             }));
             e.exports = n
-        }, 20824: (e, t, r) => {
+        },
+        20824: (e, t, r) => {
             var n = r(76766), o = r(31035), a = r(79206), i = r(3139);
             e.exports = function (e, t) {
                 return (i(e) ? n : a)(e, o(t, 3))
             }
-        }, 23752: (e, t, r) => {
+        },
+        23752: (e, t, r) => {
             var n = r(20386), o = r(92843), a = r(31035);
             e.exports = function (e, t) {
                 var r = {};
@@ -35512,7 +37136,8 @@
                     n(r, t(e, o, a), e)
                 })), r
             }
-        }, 33378: (e, t, r) => {
+        },
+        33378: (e, t, r) => {
             var n = r(20386), o = r(92843), a = r(31035);
             e.exports = function (e, t) {
                 var r = {};
@@ -35520,27 +37145,32 @@
                     n(r, o, t(e, o, a))
                 })), r
             }
-        }, 78736: (e, t, r) => {
+        },
+        78736: (e, t, r) => {
             var n = r(14981), o = r(94717), a = r(95846);
             e.exports = function (e) {
                 return e && e.length ? n(e, a, o) : void 0
             }
-        }, 62305: (e, t, r) => {
+        },
+        62305: (e, t, r) => {
             var n = r(14981), o = r(94717), a = r(31035);
             e.exports = function (e, t) {
                 return e && e.length ? n(e, a(t, 2), o) : void 0
             }
-        }, 65633: (e, t, r) => {
+        },
+        65633: (e, t, r) => {
             var n = r(91159), o = r(95846);
             e.exports = function (e) {
                 return n(e, o)
             }
-        }, 20812: (e, t, r) => {
+        },
+        20812: (e, t, r) => {
             var n = r(31035), o = r(91159);
             e.exports = function (e, t) {
                 return o(e, n(t, 2))
             }
-        }, 36982: (e, t, r) => {
+        },
+        36982: (e, t, r) => {
             var n = r(59319);
 
             function o(e, t) {
@@ -35555,27 +37185,32 @@
             }
 
             o.Cache = n, e.exports = o
-        }, 46930: (e, t, r) => {
+        },
+        46930: (e, t, r) => {
             var n = r(70784), o = r(61277)((function (e, t, r) {
                 n(e, t, r)
             }));
             e.exports = o
-        }, 88494: (e, t, r) => {
+        },
+        88494: (e, t, r) => {
             var n = r(70784), o = r(61277)((function (e, t, r, o) {
                 n(e, t, r, o)
             }));
             e.exports = o
-        }, 44014: (e, t, r) => {
+        },
+        44014: (e, t, r) => {
             var n = r(14981), o = r(29482), a = r(95846);
             e.exports = function (e) {
                 return e && e.length ? n(e, a, o) : void 0
             }
-        }, 37651: (e, t, r) => {
+        },
+        37651: (e, t, r) => {
             var n = r(14981), o = r(31035), a = r(29482);
             e.exports = function (e, t) {
                 return e && e.length ? n(e, o(t, 2), a) : void 0
             }
-        }, 84170: e => {
+        },
+        84170: e => {
             e.exports = function (e) {
                 if ("function" != typeof e) throw new TypeError("Expected a function");
                 return function () {
@@ -35593,15 +37228,18 @@
                     return !e.apply(this, t)
                 }
             }
-        }, 6820: e => {
+        },
+        6820: e => {
             e.exports = function () {
             }
-        }, 37534: (e, t, r) => {
+        },
+        37534: (e, t, r) => {
             var n = r(11971);
             e.exports = function () {
                 return n.Date.now()
             }
-        }, 76793: (e, t, r) => {
+        },
+        76793: (e, t, r) => {
             var n = r(76766), o = r(97345), a = r(97337), i = r(45939), s = r(15409), l = r(21260), c = r(25334),
                 u = r(71615), d = c((function (e, t) {
                     var r = {};
@@ -35614,22 +37252,26 @@
                     return r
                 }));
             e.exports = d
-        }, 78676: (e, t, r) => {
+        },
+        78676: (e, t, r) => {
             var n = r(31035), o = r(84170), a = r(85596);
             e.exports = function (e, t) {
                 return a(e, o(n(t)))
             }
-        }, 58841: (e, t, r) => {
+        },
+        58841: (e, t, r) => {
             var n = r(77651);
             e.exports = function (e) {
                 return n(2, e)
             }
-        }, 84283: (e, t, r) => {
+        },
+        84283: (e, t, r) => {
             var n = r(40833), o = r(3139);
             e.exports = function (e, t, r, a) {
                 return null == e ? [] : (o(t) || (t = null == t ? [] : [t]), o(r = a ? void 0 : r) || (r = null == r ? [] : [r]), n(e, t, r))
             }
-        }, 32123: (e, t, r) => {
+        },
+        32123: (e, t, r) => {
             var n = r(92294), o = r(4931), a = r(47015), i = r(11012), s = Math.ceil, l = Math.floor;
             e.exports = function (e, t, r) {
                 e = i(e);
@@ -35638,31 +37280,36 @@
                 var u = (t - c) / 2;
                 return n(l(u), r) + e + n(s(u), r)
             }
-        }, 65007: (e, t, r) => {
+        },
+        65007: (e, t, r) => {
             var n = r(92294), o = r(4931), a = r(47015), i = r(11012);
             e.exports = function (e, t, r) {
                 e = i(e);
                 var s = (t = a(t)) ? o(e) : 0;
                 return t && s < t ? n(t - s, r) + e : e
             }
-        }, 79628: (e, t, r) => {
+        },
+        79628: (e, t, r) => {
             var n = r(11971), o = r(11012), a = /^\s+/, i = n.parseInt;
             e.exports = function (e, t, r) {
                 return r || null == t ? t = 0 : t && (t = +t), i(o(e).replace(a, ""), t || 0)
             }
-        }, 5660: (e, t, r) => {
+        },
+        5660: (e, t, r) => {
             var n = r(10074)((function (e, t, r) {
                 e[r ? 0 : 1].push(t)
             }), (function () {
                 return [[], []]
             }));
             e.exports = n
-        }, 88145: (e, t, r) => {
+        },
+        88145: (e, t, r) => {
             var n = r(82947), o = r(25334)((function (e, t) {
                 return null == e ? {} : n(e, t)
             }));
             e.exports = o
-        }, 85596: (e, t, r) => {
+        },
+        85596: (e, t, r) => {
             var n = r(76766), o = r(31035), a = r(13522), i = r(71615);
             e.exports = function (e, t) {
                 if (null == e) return {};
@@ -35673,12 +37320,14 @@
                     return t(e, r[0])
                 }))
             }
-        }, 24661: (e, t, r) => {
+        },
+        24661: (e, t, r) => {
             var n = r(25811), o = r(29885), a = r(78160), i = r(30123);
             e.exports = function (e) {
                 return a(e) ? n(i(e)) : o(e)
             }
-        }, 87899: (e, t, r) => {
+        },
+        87899: (e, t, r) => {
             var n = r(24321), o = r(77310), a = r(29918), i = parseFloat, s = Math.min, l = Math.random;
             e.exports = function (e, t, r) {
                 if (r && "boolean" != typeof r && o(e, t, r) && (t = r = void 0), void 0 === r && ("boolean" == typeof t ? (r = t, t = void 0) : "boolean" == typeof e && (r = e, e = void 0)), void 0 === e && void 0 === t ? (e = 0, t = 1) : (e = a(e), void 0 === t ? (t = e, e = 0) : t = a(t)), e > t) {
@@ -35691,21 +37340,25 @@
                 }
                 return n(e, t)
             }
-        }, 62423: (e, t, r) => {
+        },
+        62423: (e, t, r) => {
             var n = r(87454)();
             e.exports = n
-        }, 61990: (e, t, r) => {
+        },
+        61990: (e, t, r) => {
             var n = r(98296), o = r(60051), a = r(31035), i = r(65664), s = r(3139);
             e.exports = function (e, t, r) {
                 var l = s(e) ? n : i, c = arguments.length < 3;
                 return l(e, a(t, 4), r, c, o)
             }
-        }, 65215: (e, t, r) => {
+        },
+        65215: (e, t, r) => {
             var n = r(20488), o = r(32464), a = r(31035), i = r(3139), s = r(84170);
             e.exports = function (e, t) {
                 return (i(e) ? n : o)(e, s(a(t, 3)))
             }
-        }, 3860: (e, t, r) => {
+        },
+        3860: (e, t, r) => {
             var n = r(31035), o = r(14028);
             e.exports = function (e, t) {
                 var r = [];
@@ -35717,45 +37370,54 @@
                 }
                 return o(e, i), r
             }
-        }, 17539: (e, t, r) => {
+        },
+        17539: (e, t, r) => {
             var n = r(12745), o = r(77310), a = r(47015), i = r(11012);
             e.exports = function (e, t, r) {
                 return t = (r ? o(e, t, r) : void 0 === t) ? 1 : a(t), n(i(e), t)
             }
-        }, 62748: e => {
+        },
+        62748: e => {
             var t = Array.prototype.reverse;
             e.exports = function (e) {
                 return null == e ? e : t.call(e)
             }
-        }, 84954: (e, t, r) => {
+        },
+        84954: (e, t, r) => {
             var n = r(97463)("round");
             e.exports = n
-        }, 31050: (e, t, r) => {
+        },
+        31050: (e, t, r) => {
             var n = r(65880), o = r(13920), a = r(3139);
             e.exports = function (e) {
                 return (a(e) ? n : o)(e)
             }
-        }, 61895: (e, t, r) => {
+        },
+        61895: (e, t, r) => {
             var n = r(7613), o = r(98341), a = r(3139), i = r(77310), s = r(47015);
             e.exports = function (e, t, r) {
                 return t = (r ? i(e, t, r) : void 0 === t) ? 1 : s(t), (a(e) ? n : o)(e, t)
             }
-        }, 48290: (e, t, r) => {
+        },
+        48290: (e, t, r) => {
             var n = r(59092);
             e.exports = function (e, t, r) {
                 return null == e ? e : n(e, t, r)
             }
-        }, 89534: (e, t, r) => {
+        },
+        89534: (e, t, r) => {
             var n = r(59092);
             e.exports = function (e, t, r, o) {
                 return o = "function" == typeof o ? o : void 0, null == e ? e : n(e, t, r, o)
             }
-        }, 53627: (e, t, r) => {
+        },
+        53627: (e, t, r) => {
             var n = r(3581), o = r(40309), a = r(3139);
             e.exports = function (e) {
                 return (a(e) ? n : o)(e)
             }
-        }, 79453: (e, t, r) => {
+        },
+        79453: (e, t, r) => {
             var n = r(46954), o = r(92503), a = r(38844), i = r(48749), s = r(4931);
             e.exports = function (e) {
                 if (null == e) return 0;
@@ -35763,75 +37425,89 @@
                 var t = o(e);
                 return "[object Map]" == t || "[object Set]" == t ? e.size : n(e).length
             }
-        }, 28280: (e, t, r) => {
+        },
+        28280: (e, t, r) => {
             var n = r(10534), o = r(77310), a = r(47015);
             e.exports = function (e, t, r) {
                 var i = null == e ? 0 : e.length;
                 return i ? (r && "number" != typeof r && o(e, t, r) ? (t = 0, r = i) : (t = null == t ? 0 : a(t), r = void 0 === r ? i : a(r)), n(e, t, r)) : []
             }
-        }, 65910: (e, t, r) => {
+        },
+        65910: (e, t, r) => {
             var n = r(21465)((function (e, t, r) {
                 return e + (r ? "_" : "") + t.toLowerCase()
             }));
             e.exports = n
-        }, 9185: (e, t, r) => {
+        },
+        9185: (e, t, r) => {
             var n = r(4510), o = r(40833), a = r(3056), i = r(77310), s = a((function (e, t) {
                 if (null == e) return [];
                 var r = t.length;
                 return r > 1 && i(e, t[0], t[1]) ? t = [] : r > 2 && i(t[0], t[1], t[2]) && (t = [t[0]]), o(e, n(t, 1), [])
             }));
             e.exports = s
-        }, 68692: (e, t, r) => {
+        },
+        68692: (e, t, r) => {
             var n = r(31035), o = r(31494);
             e.exports = function (e, t, r) {
                 return o(e, t, n(r, 2))
             }
-        }, 92345: (e, t, r) => {
+        },
+        92345: (e, t, r) => {
             var n = r(31035), o = r(78386);
             e.exports = function (e, t) {
                 return e && e.length ? o(e, n(t, 2)) : []
             }
-        }, 59126: (e, t, r) => {
+        },
+        59126: (e, t, r) => {
             var n = r(21465), o = r(33610), a = n((function (e, t, r) {
                 return e + (r ? " " : "") + o(t)
             }));
             e.exports = a
-        }, 16468: e => {
+        },
+        16468: e => {
             e.exports = function () {
                 return []
             }
-        }, 54925: e => {
+        },
+        54925: e => {
             e.exports = function () {
                 return !1
             }
-        }, 62377: (e, t, r) => {
+        },
+        62377: (e, t, r) => {
             var n = r(92243), o = r(95846);
             e.exports = function (e) {
                 return e && e.length ? n(e, o) : 0
             }
-        }, 75332: (e, t, r) => {
+        },
+        75332: (e, t, r) => {
             var n = r(31035), o = r(92243);
             e.exports = function (e, t) {
                 return e && e.length ? o(e, n(t, 2)) : 0
             }
-        }, 52690: (e, t, r) => {
+        },
+        52690: (e, t, r) => {
             var n = r(10534);
             e.exports = function (e) {
                 var t = null == e ? 0 : e.length;
                 return t ? n(e, 1, t) : []
             }
-        }, 3439: (e, t, r) => {
+        },
+        3439: (e, t, r) => {
             var n = r(10534), o = r(47015);
             e.exports = function (e, t, r) {
                 return e && e.length ? (t = r || void 0 === t ? 1 : o(t), n(e, 0, t < 0 ? 0 : t)) : []
             }
-        }, 54301: (e, t, r) => {
+        },
+        54301: (e, t, r) => {
             var n = r(10534), o = r(47015);
             e.exports = function (e, t, r) {
                 var a = null == e ? 0 : e.length;
                 return a ? (t = r || void 0 === t ? 1 : o(t), n(e, (t = a - t) < 0 ? 0 : t, a)) : []
             }
-        }, 56496: (e, t, r) => {
+        },
+        56496: (e, t, r) => {
             var n = r(26535), o = r(84899);
             e.exports = function (e, t, r) {
                 var a = !0, i = !0;
@@ -35842,7 +37518,8 @@
                     trailing: i
                 })
             }
-        }, 11520: (e, t, r) => {
+        },
+        11520: (e, t, r) => {
             var n = r(44658), o = r(46504), a = r(47015), i = 4294967295, s = Math.min;
             e.exports = function (e, t) {
                 if ((e = a(e)) < 1 || e > 9007199254740991) return [];
@@ -35851,7 +37528,8 @@
                 for (var c = n(l, t); ++r < e;) t(r);
                 return c
             }
-        }, 69868: (e, t, r) => {
+        },
+        69868: (e, t, r) => {
             var n = r(89559), o = r(27557), a = r(92503), i = r(38844), s = r(48749), l = r(29359), c = r(98219),
                 u = r(993), d = r(20786), p = r(59042), h = n ? n.iterator : void 0;
             e.exports = function (e) {
@@ -35861,23 +37539,27 @@
                 var t = a(e);
                 return ("[object Map]" == t ? c : "[object Set]" == t ? u : p)(e)
             }
-        }, 29918: (e, t, r) => {
+        },
+        29918: (e, t, r) => {
             var n = r(40640), o = 1 / 0;
             e.exports = function (e) {
                 return e ? (e = n(e)) === o || e === -1 / 0 ? 17976931348623157e292 * (e < 0 ? -1 : 1) : e == e ? e : 0 : 0 === e ? e : 0
             }
-        }, 47015: (e, t, r) => {
+        },
+        47015: (e, t, r) => {
             var n = r(29918);
             e.exports = function (e) {
                 var t = n(e), r = t % 1;
                 return t == t ? r ? t - r : t : 0
             }
-        }, 58096: (e, t, r) => {
+        },
+        58096: (e, t, r) => {
             var n = r(11012);
             e.exports = function (e) {
                 return n(e).toLowerCase()
             }
-        }, 40640: (e, t, r) => {
+        },
+        40640: (e, t, r) => {
             var n = r(59742), o = r(84899), a = r(24324), i = /^[-+]0x[0-9a-f]+$/i, s = /^0b[01]+$/i, l = /^0o[0-7]+$/i,
                 c = parseInt;
             e.exports = function (e) {
@@ -35892,59 +37574,70 @@
                 var r = s.test(e);
                 return r || l.test(e) ? c(e.slice(2), r ? 2 : 8) : i.test(e) ? NaN : +e
             }
-        }, 63210: (e, t, r) => {
+        },
+        63210: (e, t, r) => {
             var n = r(15409), o = r(11940);
             e.exports = function (e) {
                 return n(e, o(e))
             }
-        }, 11012: (e, t, r) => {
+        },
+        11012: (e, t, r) => {
             var n = r(19874);
             e.exports = function (e) {
                 return null == e ? "" : n(e)
             }
-        }, 31652: (e, t, r) => {
+        },
+        31652: (e, t, r) => {
             var n = r(11012), o = r(4974), a = /&(?:amp|lt|gt|quot|#39);/g, i = RegExp(a.source);
             e.exports = function (e) {
                 return (e = n(e)) && i.test(e) ? e.replace(a, o) : e
             }
-        }, 63965: (e, t, r) => {
+        },
+        63965: (e, t, r) => {
             var n = r(4510), o = r(3056), a = r(29235), i = r(80523), s = o((function (e) {
                 return a(n(e, 1, i, !0))
             }));
             e.exports = s
-        }, 19032: (e, t, r) => {
+        },
+        19032: (e, t, r) => {
             var n = r(4510), o = r(31035), a = r(3056), i = r(29235), s = r(80523), l = r(65272), c = a((function (e) {
                 var t = l(e);
                 return s(t) && (t = void 0), i(n(e, 1, s, !0), o(t, 2))
             }));
             e.exports = c
-        }, 48581: (e, t, r) => {
+        },
+        48581: (e, t, r) => {
             var n = r(29235);
             e.exports = function (e) {
                 return e && e.length ? n(e) : []
             }
-        }, 50704: (e, t, r) => {
+        },
+        50704: (e, t, r) => {
             var n = r(31035), o = r(29235);
             e.exports = function (e, t) {
                 return e && e.length ? o(e, n(t, 2)) : []
             }
-        }, 15929: (e, t, r) => {
+        },
+        15929: (e, t, r) => {
             var n = r(29235);
             e.exports = function (e, t) {
                 return t = "function" == typeof t ? t : void 0, e && e.length ? n(e, void 0, t) : []
             }
-        }, 12742: (e, t, r) => {
+        },
+        12742: (e, t, r) => {
             var n = r(11012), o = 0;
             e.exports = function (e) {
                 var t = ++o;
                 return n(e) + t
             }
-        }, 61419: (e, t, r) => {
+        },
+        61419: (e, t, r) => {
             var n = r(97337);
             e.exports = function (e, t) {
                 return null == e || n(e, t)
             }
-        }, 6808: (e, t, r) => {
+        },
+        6808: (e, t, r) => {
             var n = r(20488), o = r(76766), a = r(25811), i = r(44658), s = r(80523), l = Math.max;
             e.exports = function (e) {
                 if (!e || !e.length) return [];
@@ -35955,7 +37648,8 @@
                     return o(e, a(t))
                 }))
             }
-        }, 96448: (e, t, r) => {
+        },
+        96448: (e, t, r) => {
             var n = r(33463), o = r(76766), a = r(6808);
             e.exports = function (e, t) {
                 if (!e || !e.length) return [];
@@ -35964,50 +37658,60 @@
                     return n(t, void 0, e)
                 }))
             }
-        }, 33610: (e, t, r) => {
+        },
+        33610: (e, t, r) => {
             var n = r(46189)("toUpperCase");
             e.exports = n
-        }, 59042: (e, t, r) => {
+        },
+        59042: (e, t, r) => {
             var n = r(81804), o = r(21576);
             e.exports = function (e) {
                 return null == e ? [] : n(e, o(e))
             }
-        }, 20526: (e, t, r) => {
+        },
+        20526: (e, t, r) => {
             var n = r(72961), o = r(3056), a = r(80523), i = o((function (e, t) {
                 return a(e) ? n(e, t) : []
             }));
             e.exports = i
-        }, 54347: (e, t, r) => {
+        },
+        54347: (e, t, r) => {
             var n = r(11295), o = r(1648), a = r(11012), i = r(19479);
             e.exports = function (e, t, r) {
                 return e = a(e), void 0 === (t = r ? void 0 : t) ? o(e) ? i(e) : n(e) : e.match(t) || []
             }
-        }, 71239: (e, t, r) => {
+        },
+        71239: (e, t, r) => {
             var n = r(20488), o = r(3056), a = r(85797), i = r(80523), s = o((function (e) {
                 return a(n(e, i))
             }));
             e.exports = s
-        }, 47622: (e, t, r) => {
+        },
+        47622: (e, t, r) => {
             var n = r(20488), o = r(31035), a = r(3056), i = r(85797), s = r(80523), l = r(65272), c = a((function (e) {
                 var t = l(e);
                 return s(t) && (t = void 0), i(n(e, s), o(t, 2))
             }));
             e.exports = c
-        }, 6973: (e, t, r) => {
+        },
+        6973: (e, t, r) => {
             var n = r(3056)(r(6808));
             e.exports = n
-        }, 34674: (e, t, r) => {
+        },
+        34674: (e, t, r) => {
             var n = r(90149), o = r(59380);
             e.exports = function (e, t) {
                 return o(e || [], t || [], n)
             }
-        }, 26865: (e, t, r) => {
+        },
+        26865: (e, t, r) => {
             var n = r(3056), o = r(96448), a = n((function (e) {
                 var t = e.length, r = t > 1 ? e[t - 1] : void 0;
                 return r = "function" == typeof r ? (e.pop(), r) : void 0, o(e, r)
             }));
             e.exports = a
-        }, 56319: (e, t, r) => {
+        },
+        56319: (e, t, r) => {
             "use strict";
             const n = r(76625), o = Symbol("max"), a = Symbol("length"), i = Symbol("lengthCalculator"),
                 s = Symbol("allowStale"), l = Symbol("maxAge"), c = Symbol("dispose"), u = Symbol("noDisposeOnSet"),
@@ -36191,7 +37895,8 @@
                     this[p].forEach(((e, t) => m(this, t, !1)))
                 }
             }
-        }, 81268: function (e, t) {
+        },
+        81268: function (e, t) {
             !function (e, r) {
                 const n = t;
                 !function (e) {
@@ -36286,7 +37991,8 @@
                     }
                 }(n), "function" == typeof define && define.amd && define("lru", n)
             }()
-        }, 14119: e => {
+        },
+        14119: e => {
             "use strict";
             const t = (e, t, n, o) => {
                     if ("length" === n || "prototype" === n) return;
@@ -36309,7 +38015,8 @@
                     Object.defineProperty(s, "name", a), Object.defineProperty(e, "toString", {...o, value: s})
                 })(e, r, s), e
             }
-        }, 71159: e => {
+        },
+        71159: e => {
             var t = 1e3, r = 60 * t, n = 60 * r, o = 24 * n, a = 7 * o;
 
             function i(e, t, r, n) {
@@ -36376,7 +38083,8 @@
                 }(e);
                 throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(e))
             }
-        }, 40688: (e, t, r) => {
+        },
+        40688: (e, t, r) => {
             "use strict";
             const n = r(86e3), o = new WeakMap, a = (e, t = {}) => {
                 if ("function" != typeof e) throw new TypeError("Expected a function");
@@ -36391,24 +38099,28 @@
                 if (!o.has(e)) throw new Error(`The given function \`${e.name}\` is not wrapped by the \`onetime\` package`);
                 return o.get(e)
             }
-        }, 86e3: e => {
+        },
+        86e3: e => {
             "use strict";
             const t = (e, t) => {
                 for (const r of Reflect.ownKeys(t)) Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
                 return e
             };
             e.exports = t, e.exports.default = t
-        }, 81861: e => {
+        },
+        81861: e => {
             "use strict";
             const t = (e, ...t) => new Promise((r => {
                 r(e(...t))
             }));
             e.exports = t, e.exports.default = t
-        }, 47406: (e, t, r) => {
+        },
+        47406: (e, t, r) => {
             "use strict";
             var n = {};
             (0, r(31767).assign)(n, r(12561), r(71273), r(78103)), e.exports = n
-        }, 12561: (e, t, r) => {
+        },
+        12561: (e, t, r) => {
             "use strict";
             var n = r(5469), o = r(31767), a = r(58662), i = r(36436), s = r(76012), l = Object.prototype.toString,
                 c = 0, u = -1, d = 0, p = 8;
@@ -36459,7 +38171,8 @@
             }, t.gzip = function (e, t) {
                 return (t = t || {}).gzip = !0, f(e, t)
             }
-        }, 71273: (e, t, r) => {
+        },
+        71273: (e, t, r) => {
             "use strict";
             var n = r(15629), o = r(31767), a = r(58662), i = r(78103), s = r(36436), l = r(76012), c = r(14692),
                 u = Object.prototype.toString;
@@ -36496,7 +38209,8 @@
             }, t.Inflate = d, t.inflate = p, t.inflateRaw = function (e, t) {
                 return (t = t || {}).raw = !0, p(e, t)
             }, t.ungzip = p
-        }, 31767: (e, t) => {
+        },
+        31767: (e, t) => {
             "use strict";
             var r = "undefined" != typeof Uint8Array && "undefined" != typeof Uint16Array && "undefined" != typeof Int32Array;
 
@@ -36535,7 +38249,8 @@
             t.setTyped = function (e) {
                 e ? (t.Buf8 = Uint8Array, t.Buf16 = Uint16Array, t.Buf32 = Int32Array, t.assign(t, o)) : (t.Buf8 = Array, t.Buf16 = Array, t.Buf32 = Array, t.assign(t, a))
             }, t.setTyped(r)
-        }, 58662: (e, t, r) => {
+        },
+        58662: (e, t, r) => {
             "use strict";
             var n = r(31767), o = !0, a = !0;
             try {
@@ -36578,7 +38293,8 @@
                 for ((t = t || e.length) > e.length && (t = e.length), r = t - 1; r >= 0 && 128 == (192 & e[r]);) r--;
                 return r < 0 || 0 === r ? t : r + i[e[r]] > t ? r : t
             }
-        }, 86383: e => {
+        },
+        86383: e => {
             "use strict";
             e.exports = function (e, t, r, n) {
                 for (var o = 65535 & e, a = e >>> 16 & 65535, i = 0; 0 !== r;) {
@@ -36590,7 +38306,8 @@
                 }
                 return o | a << 16
             }
-        }, 78103: e => {
+        },
+        78103: e => {
             "use strict";
             e.exports = {
                 Z_NO_FLUSH: 0,
@@ -36621,7 +38338,8 @@
                 Z_UNKNOWN: 2,
                 Z_DEFLATED: 8
             }
-        }, 32249: e => {
+        },
+        32249: e => {
             "use strict";
             var t = function () {
                 for (var e, t = [], r = 0; r < 256; r++) {
@@ -36637,7 +38355,8 @@
                 for (var s = o; s < i; s++) e = e >>> 8 ^ a[255 & (e ^ r[s])];
                 return ~e
             }
-        }, 5469: (e, t, r) => {
+        },
+        5469: (e, t, r) => {
             "use strict";
             var n, o = r(31767), a = r(39183), i = r(86383), s = r(32249), l = r(36436), c = 0, u = 0, d = -2, p = 2,
                 h = 8, f = 286, m = 30, g = 19, b = 2 * f + 1, v = 15, y = 3, w = 258, _ = w + y + 1, k = 42, T = 103,
@@ -36875,12 +38594,14 @@
                 }
                 return r.strstart += r.lookahead, r.block_start = r.strstart, r.insert = r.lookahead, r.lookahead = 0, r.match_length = r.prev_length = y - 1, r.match_available = 0, e.next_in = c, e.input = p, e.avail_in = l, r.wrap = s, u
             }, t.deflateInfo = "pako deflate (from Nodeca project)"
-        }, 14692: e => {
+        },
+        14692: e => {
             "use strict";
             e.exports = function () {
                 this.text = 0, this.time = 0, this.xflags = 0, this.os = 0, this.extra = null, this.extra_len = 0, this.name = "", this.comment = "", this.hcrc = 0, this.done = !1
             }
-        }, 86395: e => {
+        },
+        86395: e => {
             "use strict";
             e.exports = function (e, t) {
                 var r, n, o, a, i, s, l, c, u, d, p, h, f, m, g, b, v, y, w, _, k, T, E, S, C;
@@ -36964,7 +38685,8 @@
                 } while (n < o && a < s);
                 n -= _ = f >> 3, h &= (1 << (f -= _ << 3)) - 1, e.next_in = n, e.next_out = a, e.avail_in = n < o ? o - n + 5 : 5 - (n - o), e.avail_out = a < s ? s - a + 257 : 257 - (a - s), r.hold = h, r.bits = f
             }
-        }, 15629: (e, t, r) => {
+        },
+        15629: (e, t, r) => {
             "use strict";
             var n = r(31767), o = r(86383), a = r(32249), i = r(86395), s = r(76456), l = 0, c = -2, u = 1, d = 12,
                 p = 30, h = 852, f = 592;
@@ -37395,7 +39117,8 @@
                 var r, n = t.length;
                 return e && e.state ? 0 !== (r = e.state).wrap && 11 !== r.mode ? c : 11 === r.mode && o(1, t, n, 0) !== r.check ? -3 : S(e, t, n, n) ? (r.mode = 31, -4) : (r.havedict = 1, l) : c
             }, t.inflateInfo = "pako inflate (from Nodeca project)"
-        }, 76456: (e, t, r) => {
+        },
+        76456: (e, t, r) => {
             "use strict";
             var n = r(31767),
                 o = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31, 35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258, 0, 0],
@@ -37433,7 +39156,8 @@
                 }
                 return 0 !== x && (c[b + x] = T - I << 24 | 64 << 16), p.bits = O, 0
             }
-        }, 36436: e => {
+        },
+        36436: e => {
             "use strict";
             e.exports = {
                 2: "need dictionary",
@@ -37446,7 +39170,8 @@
                 "-5": "buffer error",
                 "-6": "incompatible version"
             }
-        }, 39183: (e, t, r) => {
+        },
+        39183: (e, t, r) => {
             "use strict";
             var n = r(31767);
 
@@ -37629,16 +39354,19 @@
                     16 === e.bi_valid ? (C(e, e.bi_buf), e.bi_buf = 0, e.bi_valid = 0) : e.bi_valid >= 8 && (e.pending_buf[e.pending++] = 255 & e.bi_buf, e.bi_buf >>= 8, e.bi_valid -= 8)
                 }(e)
             }
-        }, 76012: e => {
+        },
+        76012: e => {
             "use strict";
             e.exports = function () {
                 this.input = null, this.next_in = 0, this.avail_in = 0, this.total_in = 0, this.output = null, this.next_out = 0, this.avail_out = 0, this.total_out = 0, this.msg = "", this.state = null, this.data_type = 2, this.adler = 0
             }
-        }, 87339: (e, t, r) => {
+        },
+        87339: (e, t, r) => {
             "use strict";
             const n = r(44566);
             e.exports = async ({cwd: e} = {}) => n("package.json", {cwd: e}), e.exports.sync = ({cwd: e} = {}) => n.sync("package.json", {cwd: e})
-        }, 44566: (e, t, r) => {
+        },
+        44566: (e, t, r) => {
             "use strict";
             const n = r(16928), o = r(92363);
             e.exports = (e, t = {}) => {
@@ -37660,14 +39388,16 @@
                     r = n.dirname(r)
                 }
             }
-        }, 92363: (e, t, r) => {
+        },
+        92363: (e, t, r) => {
             "use strict";
             const n = r(16928), o = r(35095), a = r(48098);
             e.exports = (e, t) => (t = Object.assign({cwd: process.cwd()}, t), a(e, (e => o(n.resolve(t.cwd, e))), t)), e.exports.sync = (e, t) => {
                 t = Object.assign({cwd: process.cwd()}, t);
                 for (const r of e) if (o.sync(n.resolve(t.cwd, r))) return r
             }
-        }, 86979: (e, t, r) => {
+        },
+        86979: (e, t, r) => {
             "use strict";
             const n = r(81861), o = e => {
                 if (!Number.isInteger(e) && e !== 1 / 0 || !(e > 0)) return Promise.reject(new TypeError("Expected `concurrency` to be a number from 1 and up"));
@@ -37693,7 +39423,8 @@
                 }), i
             };
             e.exports = o, e.exports.default = o
-        }, 48098: (e, t, r) => {
+        },
+        48098: (e, t, r) => {
             "use strict";
             const n = r(86979);
 
@@ -37711,7 +39442,8 @@
                 return Promise.all(l.map((e => c(i, e)))).then((() => {
                 })).catch((e => e instanceof o ? e.value : Promise.reject(e)))
             }
-        }, 35095: (e, t, r) => {
+        },
+        35095: (e, t, r) => {
             "use strict";
             const n = r(79896);
             e.exports = e => new Promise((t => {
@@ -37725,7 +39457,8 @@
                     return !1
                 }
             }
-        }, 85425: (e, t, r) => {
+        },
+        85425: (e, t, r) => {
             "use strict";
             r.r(t), r.d(t, {
                 FormattedDate: () => Zt,
@@ -39691,7 +41424,8 @@
 
             var Zt = rt("formatDate"), Qt = rt("formatTime"), er = rt("formatNumber"), tr = rt("formatList"),
                 rr = rt("formatDisplayName"), nr = tt("formatDate"), or = tt("formatTime")
-        }, 14653: (e, t) => {
+        },
+        14653: (e, t) => {
             "use strict";
             var r = "function" == typeof Symbol && Symbol.for, n = r ? Symbol.for("react.element") : 60103,
                 o = r ? Symbol.for("react.portal") : 60106, a = r ? Symbol.for("react.fragment") : 60107,
@@ -39766,10 +41500,12 @@
             }, t.isValidElementType = function (e) {
                 return "string" == typeof e || "function" == typeof e || e === a || e === d || e === s || e === i || e === h || e === f || "object" == typeof e && null !== e && (e.$$typeof === g || e.$$typeof === m || e.$$typeof === l || e.$$typeof === c || e.$$typeof === p || e.$$typeof === v || e.$$typeof === y || e.$$typeof === w || e.$$typeof === b)
             }, t.typeOf = _
-        }, 86129: (e, t, r) => {
+        },
+        86129: (e, t, r) => {
             "use strict";
             e.exports = r(14653)
-        }, 38157: (e, t) => {
+        },
+        38157: (e, t) => {
             "use strict";
             var r = Symbol.for("react.element"), n = Symbol.for("react.portal"), o = Symbol.for("react.fragment"),
                 a = (Symbol.for("react.strict_mode"), Symbol.for("react.profiler"), Symbol.for("react.provider")),
@@ -39910,10 +41646,12 @@
             }, t.useState = function (e) {
                 return C.current.useState(e)
             }
-        }, 81794: (e, t, r) => {
+        },
+        81794: (e, t, r) => {
             "use strict";
             e.exports = r(38157)
-        }, 86165: (e, t, r) => {
+        },
+        86165: (e, t, r) => {
             !function (e) {
                 e.parser = function (e, t) {
                     return new o(e, t)
@@ -40636,7 +42374,8 @@
                     writable: !0
                 }) : String.fromCodePoint = T)
             }(t)
-        }, 6342: (e, t, r) => {
+        },
+        6342: (e, t, r) => {
             const n = Symbol("SemVer ANY");
 
             class o {
@@ -40680,7 +42419,8 @@
 
             e.exports = o;
             const a = r(10329), {safeRe: i, t: s} = r(92964), l = r(57657), c = r(32158), u = r(58338), d = r(39689)
-        }, 39689: (e, t, r) => {
+        },
+        39689: (e, t, r) => {
             class n {
                 constructor(e, t) {
                     if (t = a(t), e instanceof n) return e.loose === !!t.loose && e.includePrerelease === !!t.includePrerelease ? e : new n(e.raw, t);
@@ -40791,7 +42531,8 @@
                     }
                     return !0
                 }
-        }, 58338: (e, t, r) => {
+        },
+        58338: (e, t, r) => {
             const n = r(32158), {MAX_LENGTH: o, MAX_SAFE_INTEGER: a} = r(27912), {safeRe: i, t: s} = r(92964),
                 l = r(10329), {compareIdentifiers: c} = r(43065);
 
@@ -40911,13 +42652,15 @@
             }
 
             e.exports = u
-        }, 5036: (e, t, r) => {
+        },
+        5036: (e, t, r) => {
             const n = r(47910);
             e.exports = (e, t) => {
                 const r = n(e.trim().replace(/^[=v]+/, ""), t);
                 return r ? r.version : null
             }
-        }, 57657: (e, t, r) => {
+        },
+        57657: (e, t, r) => {
             const n = r(37387), o = r(54761), a = r(810), i = r(68195), s = r(50205), l = r(68350);
             e.exports = (e, t, r, c) => {
                 switch (t) {
@@ -40943,7 +42686,8 @@
                         throw new TypeError(`Invalid operator: ${t}`)
                 }
             }
-        }, 56020: (e, t, r) => {
+        },
+        56020: (e, t, r) => {
             const n = r(58338), o = r(47910), {safeRe: a, t: i} = r(92964);
             e.exports = (e, t) => {
                 if (e instanceof n) return e;
@@ -40960,19 +42704,23 @@
                     d = t.includePrerelease && r[6] ? `+${r[6]}` : "";
                 return o(`${s}.${l}.${c}${u}${d}`, t)
             }
-        }, 72771: (e, t, r) => {
+        },
+        72771: (e, t, r) => {
             const n = r(58338);
             e.exports = (e, t, r) => {
                 const o = new n(e, r), a = new n(t, r);
                 return o.compare(a) || o.compareBuild(a)
             }
-        }, 38001: (e, t, r) => {
+        },
+        38001: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t) => n(e, t, !0)
-        }, 9586: (e, t, r) => {
+        },
+        9586: (e, t, r) => {
             const n = r(58338);
             e.exports = (e, t, r) => new n(e, r).compare(new n(t, r))
-        }, 89146: (e, t, r) => {
+        },
+        89146: (e, t, r) => {
             const n = r(47910);
             e.exports = (e, t) => {
                 const r = n(e, null, !0), o = n(t, null, !0), a = r.compare(o);
@@ -40982,16 +42730,20 @@
                 const u = c ? "pre" : "";
                 return r.major !== o.major ? u + "major" : r.minor !== o.minor ? u + "minor" : r.patch !== o.patch ? u + "patch" : "prerelease"
             }
-        }, 37387: (e, t, r) => {
+        },
+        37387: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t, r) => 0 === n(e, t, r)
-        }, 810: (e, t, r) => {
+        },
+        810: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t, r) => n(e, t, r) > 0
-        }, 68195: (e, t, r) => {
+        },
+        68195: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t, r) => n(e, t, r) >= 0
-        }, 98781: (e, t, r) => {
+        },
+        98781: (e, t, r) => {
             const n = r(58338);
             e.exports = (e, t, r, o, a) => {
                 "string" == typeof r && (a = o, o = r, r = void 0);
@@ -41001,22 +42753,28 @@
                     return null
                 }
             }
-        }, 50205: (e, t, r) => {
+        },
+        50205: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t, r) => n(e, t, r) < 0
-        }, 68350: (e, t, r) => {
+        },
+        68350: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t, r) => n(e, t, r) <= 0
-        }, 83052: (e, t, r) => {
+        },
+        83052: (e, t, r) => {
             const n = r(58338);
             e.exports = (e, t) => new n(e, t).major
-        }, 33472: (e, t, r) => {
+        },
+        33472: (e, t, r) => {
             const n = r(58338);
             e.exports = (e, t) => new n(e, t).minor
-        }, 54761: (e, t, r) => {
+        },
+        54761: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t, r) => 0 !== n(e, t, r)
-        }, 47910: (e, t, r) => {
+        },
+        47910: (e, t, r) => {
             const n = r(58338);
             e.exports = (e, t, r = !1) => {
                 if (e instanceof n) return e;
@@ -41027,22 +42785,27 @@
                     throw e
                 }
             }
-        }, 45895: (e, t, r) => {
+        },
+        45895: (e, t, r) => {
             const n = r(58338);
             e.exports = (e, t) => new n(e, t).patch
-        }, 14047: (e, t, r) => {
+        },
+        14047: (e, t, r) => {
             const n = r(47910);
             e.exports = (e, t) => {
                 const r = n(e, t);
                 return r && r.prerelease.length ? r.prerelease : null
             }
-        }, 2276: (e, t, r) => {
+        },
+        2276: (e, t, r) => {
             const n = r(9586);
             e.exports = (e, t, r) => n(t, e, r)
-        }, 891: (e, t, r) => {
+        },
+        891: (e, t, r) => {
             const n = r(72771);
             e.exports = (e, t) => e.sort(((e, r) => n(r, e, t)))
-        }, 17116: (e, t, r) => {
+        },
+        17116: (e, t, r) => {
             const n = r(39689);
             e.exports = (e, t, r) => {
                 try {
@@ -41052,16 +42815,19 @@
                 }
                 return t.test(e)
             }
-        }, 95429: (e, t, r) => {
+        },
+        95429: (e, t, r) => {
             const n = r(72771);
             e.exports = (e, t) => e.sort(((e, r) => n(e, r, t)))
-        }, 4523: (e, t, r) => {
+        },
+        4523: (e, t, r) => {
             const n = r(47910);
             e.exports = (e, t) => {
                 const r = n(e, t);
                 return r ? r.version : null
             }
-        }, 86659: (e, t, r) => {
+        },
+        86659: (e, t, r) => {
             const n = r(92964), o = r(27912), a = r(58338), i = r(43065), s = r(47910), l = r(4523), c = r(5036),
                 u = r(98781), d = r(89146), p = r(83052), h = r(33472), f = r(45895), m = r(14047), g = r(9586),
                 b = r(2276), v = r(38001), y = r(72771), w = r(95429), _ = r(891), k = r(810), T = r(50205),
@@ -41115,7 +42881,8 @@
                 compareIdentifiers: i.compareIdentifiers,
                 rcompareIdentifiers: i.rcompareIdentifiers
             }
-        }, 27912: e => {
+        },
+        27912: e => {
             const t = Number.MAX_SAFE_INTEGER || 9007199254740991;
             e.exports = {
                 MAX_LENGTH: 256,
@@ -41127,20 +42894,24 @@
                 FLAG_INCLUDE_PRERELEASE: 1,
                 FLAG_LOOSE: 2
             }
-        }, 32158: e => {
+        },
+        32158: e => {
             const t = "object" == typeof process && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? (...e) => console.error("SEMVER", ...e) : () => {
             };
             e.exports = t
-        }, 43065: e => {
+        },
+        43065: e => {
             const t = /^[0-9]+$/, r = (e, r) => {
                 const n = t.test(e), o = t.test(r);
                 return n && o && (e = +e, r = +r), e === r ? 0 : n && !o ? -1 : o && !n ? 1 : e < r ? -1 : 1
             };
             e.exports = {compareIdentifiers: r, rcompareIdentifiers: (e, t) => r(t, e)}
-        }, 10329: e => {
+        },
+        10329: e => {
             const t = Object.freeze({loose: !0}), r = Object.freeze({});
             e.exports = e => e ? "object" != typeof e ? t : e : r
-        }, 92964: (e, t, r) => {
+        },
+        92964: (e, t, r) => {
             const {MAX_SAFE_COMPONENT_LENGTH: n, MAX_SAFE_BUILD_LENGTH: o, MAX_LENGTH: a} = r(27912), i = r(32158),
                 s = (t = e.exports = {}).re = [], l = t.safeRe = [], c = t.src = [], u = t.t = {};
             let d = 0;
@@ -41152,16 +42923,20 @@
                 i(e, o, t), u[e] = o, c[o] = t, s[o] = new RegExp(t, r ? "g" : void 0), l[o] = new RegExp(n, r ? "g" : void 0)
             };
             f("NUMERICIDENTIFIER", "0|[1-9]\\d*"), f("NUMERICIDENTIFIERLOOSE", "\\d+"), f("NONNUMERICIDENTIFIER", `\\d*[a-zA-Z-]${p}*`), f("MAINVERSION", `(${c[u.NUMERICIDENTIFIER]})\\.(${c[u.NUMERICIDENTIFIER]})\\.(${c[u.NUMERICIDENTIFIER]})`), f("MAINVERSIONLOOSE", `(${c[u.NUMERICIDENTIFIERLOOSE]})\\.(${c[u.NUMERICIDENTIFIERLOOSE]})\\.(${c[u.NUMERICIDENTIFIERLOOSE]})`), f("PRERELEASEIDENTIFIER", `(?:${c[u.NUMERICIDENTIFIER]}|${c[u.NONNUMERICIDENTIFIER]})`), f("PRERELEASEIDENTIFIERLOOSE", `(?:${c[u.NUMERICIDENTIFIERLOOSE]}|${c[u.NONNUMERICIDENTIFIER]})`), f("PRERELEASE", `(?:-(${c[u.PRERELEASEIDENTIFIER]}(?:\\.${c[u.PRERELEASEIDENTIFIER]})*))`), f("PRERELEASELOOSE", `(?:-?(${c[u.PRERELEASEIDENTIFIERLOOSE]}(?:\\.${c[u.PRERELEASEIDENTIFIERLOOSE]})*))`), f("BUILDIDENTIFIER", `${p}+`), f("BUILD", `(?:\\+(${c[u.BUILDIDENTIFIER]}(?:\\.${c[u.BUILDIDENTIFIER]})*))`), f("FULLPLAIN", `v?${c[u.MAINVERSION]}${c[u.PRERELEASE]}?${c[u.BUILD]}?`), f("FULL", `^${c[u.FULLPLAIN]}$`), f("LOOSEPLAIN", `[v=\\s]*${c[u.MAINVERSIONLOOSE]}${c[u.PRERELEASELOOSE]}?${c[u.BUILD]}?`), f("LOOSE", `^${c[u.LOOSEPLAIN]}$`), f("GTLT", "((?:<|>)?=?)"), f("XRANGEIDENTIFIERLOOSE", `${c[u.NUMERICIDENTIFIERLOOSE]}|x|X|\\*`), f("XRANGEIDENTIFIER", `${c[u.NUMERICIDENTIFIER]}|x|X|\\*`), f("XRANGEPLAIN", `[v=\\s]*(${c[u.XRANGEIDENTIFIER]})(?:\\.(${c[u.XRANGEIDENTIFIER]})(?:\\.(${c[u.XRANGEIDENTIFIER]})(?:${c[u.PRERELEASE]})?${c[u.BUILD]}?)?)?`), f("XRANGEPLAINLOOSE", `[v=\\s]*(${c[u.XRANGEIDENTIFIERLOOSE]})(?:\\.(${c[u.XRANGEIDENTIFIERLOOSE]})(?:\\.(${c[u.XRANGEIDENTIFIERLOOSE]})(?:${c[u.PRERELEASELOOSE]})?${c[u.BUILD]}?)?)?`), f("XRANGE", `^${c[u.GTLT]}\\s*${c[u.XRANGEPLAIN]}$`), f("XRANGELOOSE", `^${c[u.GTLT]}\\s*${c[u.XRANGEPLAINLOOSE]}$`), f("COERCEPLAIN", `(^|[^\\d])(\\d{1,${n}})(?:\\.(\\d{1,${n}}))?(?:\\.(\\d{1,${n}}))?`), f("COERCE", `${c[u.COERCEPLAIN]}(?:$|[^\\d])`), f("COERCEFULL", c[u.COERCEPLAIN] + `(?:${c[u.PRERELEASE]})?` + `(?:${c[u.BUILD]})?(?:$|[^\\d])`), f("COERCERTL", c[u.COERCE], !0), f("COERCERTLFULL", c[u.COERCEFULL], !0), f("LONETILDE", "(?:~>?)"), f("TILDETRIM", `(\\s*)${c[u.LONETILDE]}\\s+`, !0), t.tildeTrimReplace = "$1~", f("TILDE", `^${c[u.LONETILDE]}${c[u.XRANGEPLAIN]}$`), f("TILDELOOSE", `^${c[u.LONETILDE]}${c[u.XRANGEPLAINLOOSE]}$`), f("LONECARET", "(?:\\^)"), f("CARETTRIM", `(\\s*)${c[u.LONECARET]}\\s+`, !0), t.caretTrimReplace = "$1^", f("CARET", `^${c[u.LONECARET]}${c[u.XRANGEPLAIN]}$`), f("CARETLOOSE", `^${c[u.LONECARET]}${c[u.XRANGEPLAINLOOSE]}$`), f("COMPARATORLOOSE", `^${c[u.GTLT]}\\s*(${c[u.LOOSEPLAIN]})$|^$`), f("COMPARATOR", `^${c[u.GTLT]}\\s*(${c[u.FULLPLAIN]})$|^$`), f("COMPARATORTRIM", `(\\s*)${c[u.GTLT]}\\s*(${c[u.LOOSEPLAIN]}|${c[u.XRANGEPLAIN]})`, !0), t.comparatorTrimReplace = "$1$2$3", f("HYPHENRANGE", `^\\s*(${c[u.XRANGEPLAIN]})\\s+-\\s+(${c[u.XRANGEPLAIN]})\\s*$`), f("HYPHENRANGELOOSE", `^\\s*(${c[u.XRANGEPLAINLOOSE]})\\s+-\\s+(${c[u.XRANGEPLAINLOOSE]})\\s*$`), f("STAR", "(<|>)?=?\\s*\\*"), f("GTE0", "^\\s*>=\\s*0\\.0\\.0\\s*$"), f("GTE0PRE", "^\\s*>=\\s*0\\.0\\.0-0\\s*$")
-        }, 44253: (e, t, r) => {
+        },
+        44253: (e, t, r) => {
             const n = r(52029);
             e.exports = (e, t, r) => n(e, t, ">", r)
-        }, 38350: (e, t, r) => {
+        },
+        38350: (e, t, r) => {
             const n = r(39689);
             e.exports = (e, t, r) => (e = new n(e, r), t = new n(t, r), e.intersects(t, r))
-        }, 14596: (e, t, r) => {
+        },
+        14596: (e, t, r) => {
             const n = r(52029);
             e.exports = (e, t, r) => n(e, t, "<", r)
-        }, 19214: (e, t, r) => {
+        },
+        19214: (e, t, r) => {
             const n = r(58338), o = r(39689);
             e.exports = (e, t, r) => {
                 let a = null, i = null, s = null;
@@ -41174,7 +42949,8 @@
                     s.test(e) && (a && -1 !== i.compare(e) || (a = e, i = new n(a, r)))
                 })), a
             }
-        }, 4524: (e, t, r) => {
+        },
+        4524: (e, t, r) => {
             const n = r(58338), o = r(39689);
             e.exports = (e, t, r) => {
                 let a = null, i = null, s = null;
@@ -41187,7 +42963,8 @@
                     s.test(e) && (a && 1 !== i.compare(e) || (a = e, i = new n(a, r)))
                 })), a
             }
-        }, 35183: (e, t, r) => {
+        },
+        35183: (e, t, r) => {
             const n = r(58338), o = r(39689), a = r(810);
             e.exports = (e, t) => {
                 e = new o(e, t);
@@ -41217,7 +42994,8 @@
                 }
                 return r && e.test(r) ? r : null
             }
-        }, 52029: (e, t, r) => {
+        },
+        52029: (e, t, r) => {
             const n = r(58338), o = r(6342), {ANY: a} = o, i = r(39689), s = r(17116), l = r(810), c = r(50205),
                 u = r(68350), d = r(68195);
             e.exports = (e, t, r, p) => {
@@ -41244,7 +43022,8 @@
                 }
                 return !0
             }
-        }, 32627: (e, t, r) => {
+        },
+        32627: (e, t, r) => {
             const n = r(17116), o = r(9586);
             e.exports = (e, t, r) => {
                 const a = [];
@@ -41257,7 +43036,8 @@
                 const u = c.join(" || "), d = "string" == typeof t.raw ? t.raw : String(t);
                 return u.length < d.length ? u : t
             }
-        }, 70226: (e, t, r) => {
+        },
+        70226: (e, t, r) => {
             const n = r(39689), o = r(6342), {ANY: a} = o, i = r(17116), s = r(9586), l = [new o(">=0.0.0-0")],
                 c = [new o(">=0.0.0")], u = (e, t, r) => {
                     if (e === t) return !0;
@@ -41318,10 +43098,12 @@
                 }
                 return !0
             }
-        }, 88513: (e, t, r) => {
+        },
+        88513: (e, t, r) => {
             const n = r(39689);
             e.exports = (e, t) => new n(e, t).set.map((e => e.map((e => e.value)).join(" ").trim().split(" ")))
-        }, 66720: (e, t, r) => {
+        },
+        66720: (e, t, r) => {
             const n = r(39689);
             e.exports = (e, t) => {
                 try {
@@ -41330,7 +43112,8 @@
                     return null
                 }
             }
-        }, 96809: (e, t, r) => {
+        },
+        96809: (e, t, r) => {
             "use strict";
             const n = r(70857), o = r(52018), a = r(26690), {env: i} = process;
             let s;
@@ -41370,7 +43153,8 @@
                     return l(c(e, e && e.isTTY))
                 }, stdout: l(c(!0, o.isatty(1))), stderr: l(c(!0, o.isatty(2)))
             }
-        }, 83410: (e, t) => {
+        },
+        83410: (e, t) => {
             "use strict";
             t.S = function (e) {
                 return Object.defineProperty((function () {
@@ -41389,7 +43173,8 @@
                     e.apply(this, arguments).then((e => t(null, e)), t)
                 }), "name", {value: e.name})
             }
-        }, 72905: function (e, t) {
+        },
+        72905: function (e, t) {
             !function (e) {
                 "use strict";
 
@@ -41882,14 +43667,16 @@
                     return e && e.toString().replace(t && t.iri ? s.ESCAPE : i.ESCAPE, C)
                 }, e.unescapeComponent = H, Object.defineProperty(e, "__esModule", {value: !0})
             }(t)
-        }, 99209: e => {
+        },
+        99209: e => {
             "use strict";
             e.exports = function (e) {
                 e.prototype[Symbol.iterator] = function* () {
                     for (let e = this.head; e; e = e.next) yield e.value
                 }
             }
-        }, 76625: (e, t, r) => {
+        },
+        76625: (e, t, r) => {
             "use strict";
 
             function n(e) {
@@ -42026,77 +43813,127 @@
                 r(99209)(n)
             } catch (e) {
             }
-        }, 4482: e => {
+        },
+        
+        
+        // electron
+        4482: e => {
             "use strict";
             e.exports = require("electron")
-        }, 34681: e => {
+        },
+        // node-mac-window
+        34681: e => {
             "use strict";
             e.exports = require("node-mac-window")
-        }, 16857: e => {
+        },
+        // node:url
+        16857: e => {
             "use strict";
             e.exports = require("url")
-        }, 42613: e => {
+        },
+        // node:assert
+        42613: e => {
             "use strict";
             e.exports = require("assert")
-        }, 35317: e => {
+        },
+        // node:child_process
+        35317: e => {
             "use strict";
             e.exports = require("child_process")
-        }, 49140: e => {
+        },
+        // constants
+        49140: e => {
             "use strict";
             e.exports = require("constants")
-        }, 76982: e => {
+        },
+        // node:crypto
+        76982: e => {
             "use strict";
             e.exports = require("crypto")
-        }, 24434: e => {
+        },
+        // node:events
+        24434: e => {
             "use strict";
             e.exports = require("events")
-        }, 79896: e => {
+        },
+        // node:fs
+        79896: e => {
             "use strict";
             e.exports = require("fs")
-        }, 58611: e => {
+        },
+        // node:http
+        58611: e => {
             "use strict";
             e.exports = require("http")
-        }, 65692: e => {
+        },
+        // node:https
+        65692: e => {
             "use strict";
             e.exports = require("https")
-        }, 69278: e => {
+        },
+        // node:net
+        69278: e => {
             "use strict";
             e.exports = require("net")
-        }, 57075: e => {
+        },
+        // node:stream
+        57075: e => {
             "use strict";
             e.exports = require("node:stream")
-        }, 70857: e => {
+        },
+        // node:os
+        70857: e => {
             "use strict";
             e.exports = require("os")
-        }, 16928: e => {
+        },
+        // node:path
+        16928: e => {
             "use strict";
             e.exports = require("path")
-        }, 83480: e => {
+        },
+        // node:querystring
+        83480: e => {
             "use strict";
             e.exports = require("querystring")
-        }, 2203: e => {
+        },
+        // node:stream
+        2203: e => {
             "use strict";
             e.exports = require("stream")
-        }, 13193: e => {
+        },
+        // node:string_decoder
+        13193: e => {
             "use strict";
             e.exports = require("string_decoder")
-        }, 64756: e => {
+        },
+        // node:tls
+        64756: module => {
             "use strict";
-            e.exports = require("tls")
-        }, 52018: e => {
+            module.exports = require("tls")
+        },
+        // node:tty
+        52018: module => {
             "use strict";
-            e.exports = require("tty")
-        }, 39023: e => {
+            module.exports = require("tty")
+        },
+        // node:util
+        39023: module => {
             "use strict";
-            e.exports = require("util")
-        }, 28167: e => {
+            module.exports = require("util")
+        },
+        // node:worker_threads
+        28167: module => {
             "use strict";
-            e.exports = require("worker_threads")
-        }, 40041: (e, t, r) => {
+            module.exports = require("worker_threads")
+        },
+
+
+        // zip
+        40041: (module, exports, __require) => {
             "use strict";
             var n;
             try {
-                n = r(28167).Worker
+                n = __require(28167).Worker
             } catch (e) {
             }
             var o = {};
@@ -42151,23 +43988,32 @@
             for (y = 280; y < 288; ++y) k[y] = 8;
             var T = new a(32);
             for (y = 0; y < 32; ++y) T[y] = 5;
-            var E = _(k, 9, 0), S = _(k, 9, 1), C = _(T, 5, 0), O = _(T, 5, 1), M = function (e) {
+            var E = _(k, 9, 0),
+                S = _(k, 9, 1),
+                C = _(T, 5, 0),
+                O = _(T, 5, 1),
+                M = function (e) {
                 for (var t = e[0], r = 1; r < e.length; ++r) e[r] > t && (t = e[r]);
                 return t
-            }, I = function (e, t, r) {
+            },
+                I = function (e, t, r) {
                 var n = t / 8 | 0;
                 return (e[n] | e[n + 1] << 8) >> (7 & t) & r
-            }, A = function (e, t) {
+            },
+                A = function (e, t) {
                 var r = t / 8 | 0;
                 return (e[r] | e[r + 1] << 8 | e[r + 2] << 16) >> (7 & t)
-            }, P = function (e) {
+            },
+                P = function (e) {
                 return (e + 7) / 8 | 0
-            }, x = function (e, t, r) {
+            },
+                x = function (e, t, r) {
                 (null == t || t < 0) && (t = 0), (null == r || r > e.length) && (r = e.length);
                 var n = new (2 == e.BYTES_PER_ELEMENT ? i : 4 == e.BYTES_PER_ELEMENT ? s : a)(r - t);
                 return n.set(e.subarray(t, r)), n
             };
-            t.FlateErrorCode = {
+
+            exports.FlateErrorCode = {
                 UnexpectedEOF: 0,
                 InvalidBlockType: 1,
                 InvalidLengthLiteral: 2,
@@ -42184,12 +44030,14 @@
                 InvalidZipData: 13,
                 UnknownCompressionMethod: 14
             };
+
             var N = ["unexpected EOF", "invalid block type", "invalid length/literal", "invalid distance", "stream finished", "no stream handler", , "no callback", "invalid UTF-8 data", "extra field too long", "date not in range 1980-2099", "filename too long", "stream finishing", "invalid zip data"],
                 R = function (e, t, r) {
                     var n = new Error(t || N[e]);
                     if (n.code = e, Error.captureStackTrace && Error.captureStackTrace(n, R), !r) throw n;
                     return n
-                }, L = function (e, t, r) {
+                },
+                L = function (e, t, r) {
                     var n = e.length;
                     if (!n || r && r.f && !r.l) return t || new a(0);
                     var o = !t || r, i = !r || r.i;
@@ -42265,15 +44113,18 @@
                         r.l = m, r.p = J, r.b = f, r.f = d, m && (d = 1, r.m = v, r.d = b, r.n = y)
                     } while (!d);
                     return f == t.length ? t : x(t, 0, f)
-                }, D = function (e, t, r) {
+                },
+                D = function (e, t, r) {
                     r <<= 7 & t;
                     var n = t / 8 | 0;
                     e[n] |= r, e[n + 1] |= r >>> 8
-                }, j = function (e, t, r) {
+                },
+                j = function (e, t, r) {
                     r <<= 7 & t;
                     var n = t / 8 | 0;
                     e[n] |= r, e[n + 1] |= r >>> 8, e[n + 2] |= r >>> 16
-                }, $ = function (e, t) {
+                },
+                $ = function (e, t) {
                     for (var r = [], n = 0; n < e.length; ++n) e[n] && r.push({s: n, f: e[n]});
                     var o = r.length, s = r.slice();
                     if (!o) return [q, 0];
@@ -42320,9 +44171,11 @@
                         g = t
                     }
                     return [new a(m), g]
-                }, F = function (e, t, r) {
+                },
+                F = function (e, t, r) {
                     return -1 == e.s ? Math.max(F(e.l, t, r + 1), F(e.r, t, r + 1)) : t[e.s] = r
-                }, B = function (e) {
+                },
+                B = function (e) {
                     for (var t = e.length; t && !e[--t];) ;
                     for (var r = new i(++t), n = 0, o = e[0], a = 1, s = function (e) {
                         r[n++] = e
@@ -42338,15 +44191,18 @@
                         a = 1, o = e[l]
                     }
                     return [r.subarray(0, n), t]
-                }, U = function (e, t) {
+                },
+                U = function (e, t) {
                     for (var r = 0, n = 0; n < t.length; ++n) r += e[n] * t[n];
                     return r
-                }, H = function (e, t, r) {
+                },
+                H = function (e, t, r) {
                     var n = r.length, o = P(t + 2);
                     e[o] = 255 & n, e[o + 1] = n >>> 8, e[o + 2] = 255 ^ e[o], e[o + 3] = 255 ^ e[o + 1];
                     for (var a = 0; a < n; ++a) e[o + a + 4] = r[a];
                     return 8 * (o + 4 + n)
-                }, W = function (e, t, r, n, o, a, s, d, p, h, f) {
+                },
+                W = function (e, t, r, n, o, a, s, d, p, h, f) {
                     D(t, f++, r), ++o[256];
                     for (var m = $(o, 15), g = m[0], b = m[1], v = $(a, 15), y = v[0], w = v[1], S = B(g), O = S[0], M = S[1], I = B(y), A = I[0], P = I[1], x = new i(19), N = 0; N < O.length; ++N) x[31 & O[N]]++;
                     for (N = 0; N < A.length; ++N) x[31 & A[N]]++;
@@ -42373,7 +44229,9 @@
                         j(t, f, V[re]), f += G[re], re > 3 && (j(t, f, n[N] >>> 5 & 8191), f += c[re])
                     } else j(t, f, z[n[N]]), f += q[n[N]];
                     return j(t, f, z[256]), f + q[256]
-                }, z = new s([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]), q = new a(0),
+                },
+                z = new s([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]),
+                q = new a(0),
                 V = function (e, t, r, n, o, u) {
                     var d = e.length, p = new a(n + d + 5 * (1 + Math.ceil(d / 7e3)) + o),
                         h = p.subarray(n, p.length - o), m = 0;
@@ -42417,13 +44275,15 @@
                         m = W(e, h, u, M, I, A, R, L, j, g - j, m), !u && 7 & m && (m = H(h, m + 1, q))
                     }
                     return x(p, 0, n + P(m) + o)
-                }, G = function () {
+                },
+                G = function () {
                     for (var e = new Int32Array(256), t = 0; t < 256; ++t) {
                         for (var r = t, n = 9; --n;) r = (1 & r && -306674912) ^ r >>> 1;
                         e[t] = r
                     }
                     return e
-                }(), K = function () {
+                }(),
+                K = function () {
                     var e = -1;
                     return {
                         p: function (t) {
@@ -42433,7 +44293,8 @@
                             return ~e
                         }
                     }
-                }, Y = function () {
+                },
+                Y = function () {
                     var e = 1, t = 0;
                     return {
                         p: function (r) {
@@ -42446,14 +44307,17 @@
                             return (255 & (e %= 65521)) << 24 | e >>> 8 << 16 | (255 & (t %= 65521)) << 8 | t >>> 8
                         }
                     }
-                }, J = function (e, t, r, n, o) {
+                },
+                J = function (e, t, r, n, o) {
                     return V(e, null == t.level ? 6 : t.level, null == t.mem ? Math.ceil(1.5 * Math.max(8, Math.min(13, Math.log(e.length)))) : 12 + t.mem, r, n, !o)
-                }, X = function (e, t) {
+                },
+                X = function (e, t) {
                     var r = {};
                     for (var n in e) r[n] = e[n];
                     for (var n in t) r[n] = t[n];
                     return r
-                }, Z = function (e, t, r) {
+                },
+                Z = function (e, t, r) {
                     for (var n = e(), o = e.toString(), a = o.slice(o.indexOf("[") + 1, o.lastIndexOf("]")).replace(/\s+/g, "").split(","), i = 0; i < n.length; ++i) {
                         var s = n[i], l = a[i];
                         if ("function" == typeof s) {
@@ -42466,7 +44330,9 @@
                         } else r[l] = s
                     }
                     return [t, r]
-                }, Q = [], ee = function (e, t, r, n) {
+                },
+                Q = [],
+                ee = function (e, t, r, n) {
                     var a;
                     if (!Q[r]) {
                         for (var i = "", s = {}, l = e.length - 1, c = 0; c < l; ++c) i = (a = Z(e[c], i, s))[0], s = a[1];
@@ -42478,36 +44344,47 @@
                         for (var r in e) e[r].buffer && t.push((e[r] = new e[r].constructor(e[r])).buffer);
                         return t
                     }(u), n)
-                }, te = function () {
+                },
+                te = function () {
                     return [a, i, s, l, c, u, h, g, S, O, v, N, _, M, I, A, P, x, R, L, Ae, se, le]
-                }, re = function () {
+                },
+                re = function () {
                     return [a, i, s, l, c, u, f, b, E, k, C, T, v, z, q, _, D, j, $, F, B, U, H, W, P, x, V, J, Ce, se]
-                }, ne = function () {
+                },
+                ne = function () {
                     return [ge, ye, me, K, G]
-                }, oe = function () {
+                },
+                oe = function () {
                     return [be, ve]
-                }, ae = function () {
+                },
+                ae = function () {
                     return [we, me, Y]
-                }, ie = function () {
+                },
+                ie = function () {
                     return [_e]
-                }, se = function (e) {
+                },
+                se = function (e) {
                     return postMessage(e, [e.buffer])
-                }, le = function (e) {
+                },
+                le = function (e) {
                     return e && e.size && new a(e.size)
-                }, ce = function (e, t, r, n, o, a) {
+                },
+                ce = function (e, t, r, n, o, a) {
                     var i = ee(r, n, o, (function (e, t) {
                         i.terminate(), a(e, t)
                     }));
                     return i.postMessage([e, t], t.consume ? [e.buffer] : []), function () {
                         i.terminate()
                     }
-                }, ue = function (e) {
+                },
+                ue = function (e) {
                     return e.ondata = function (e, t) {
                         return postMessage([e, t], [e.buffer])
                     }, function (t) {
                         return e.push(t.data[0], t.data[1])
                     }
-                }, de = function (e, t, r, n, o) {
+                },
+                de = function (e, t, r, n, o) {
                     var a, i = ee(e, n, o, (function (e, r) {
                         e ? (i.terminate(), t.ondata.call(t, e)) : (r[1] && i.terminate(), t.ondata.call(t, e, r[0], r[1]))
                     }));
@@ -42516,35 +44393,45 @@
                     }, t.terminate = function () {
                         i.terminate()
                     }
-                }, pe = function (e, t) {
+                },
+                pe = function (e, t) {
                     return e[t] | e[t + 1] << 8
-                }, he = function (e, t) {
+                },
+                he = function (e, t) {
                     return (e[t] | e[t + 1] << 8 | e[t + 2] << 16 | e[t + 3] << 24) >>> 0
-                }, fe = function (e, t) {
+                },
+                fe = function (e, t) {
                     return he(e, t) + 4294967296 * he(e, t + 4)
-                }, me = function (e, t, r) {
+                },
+                me = function (e, t, r) {
                     for (; r; ++t) e[t] = r, r >>>= 8
-                }, ge = function (e, t) {
+                },
+                ge = function (e, t) {
                     var r = t.filename;
                     if (e[0] = 31, e[1] = 139, e[2] = 8, e[8] = t.level < 2 ? 4 : 9 == t.level ? 2 : 0, e[9] = 3, 0 != t.mtime && me(e, 4, Math.floor(new Date(t.mtime || Date.now()) / 1e3)), r) {
                         e[3] = 8;
                         for (var n = 0; n <= r.length; ++n) e[n + 10] = r.charCodeAt(n)
                     }
-                }, be = function (e) {
+                },
+                be = function (e) {
                     31 == e[0] && 139 == e[1] && 8 == e[2] || R(6, "invalid gzip data");
                     var t = e[3], r = 10;
                     4 & t && (r += e[10] | 2 + (e[11] << 8));
                     for (var n = (t >> 3 & 1) + (t >> 4 & 1); n > 0; n -= !e[r++]) ;
                     return r + (2 & t)
-                }, ve = function (e) {
+                },
+                ve = function (e) {
                     var t = e.length;
                     return (e[t - 4] | e[t - 3] << 8 | e[t - 2] << 16 | e[t - 1] << 24) >>> 0
-                }, ye = function (e) {
+                },
+                ye = function (e) {
                     return 10 + (e.filename && e.filename.length + 1 || 0)
-                }, we = function (e, t) {
+                },
+                we = function (e, t) {
                     var r = t.level, n = 0 == r ? 0 : r < 6 ? 1 : 9 == r ? 3 : 2;
                     e[0] = 120, e[1] = n << 6 | (n ? 32 - 2 * n : 1)
-                }, _e = function (e) {
+                },
+                _e = function (e) {
                     (8 != (15 & e[0]) || e[0] >>> 4 > 7 || (e[0] << 8 | e[1]) % 31) && R(6, "invalid zlib data"), 32 & e[1] && R(6, "invalid zlib data: preset dictionaries not supported")
                 };
 
@@ -42563,7 +44450,7 @@
                     this.ondata || R(5), this.d && R(4), this.d = t, this.p(e, t || !1)
                 }, e
             }();
-            t.Deflate = Te;
+            exports.Deflate = Te;
             var Ee = function () {
                 return function (e, t) {
                     de([re, function () {
@@ -42585,7 +44472,9 @@
                 return J(e, t || {}, 0, 0)
             }
 
-            t.AsyncDeflate = Ee, t.deflate = Se, t.deflateSync = Ce;
+            exports.AsyncDeflate = Ee
+            exports.deflate = Se
+            exports.deflateSync = Ce;
             var Oe = function () {
                 function e(e) {
                     this.s = {}, this.p = new a(0), this.ondata = e
@@ -42603,7 +44492,7 @@
                     this.e(e), this.c(t)
                 }, e
             }();
-            t.Inflate = Oe;
+            exports.Inflate = Oe;
             var Me = function () {
                 return function (e) {
                     this.ondata = e, de([te, function () {
@@ -42625,7 +44514,9 @@
                 return L(e, t)
             }
 
-            t.AsyncInflate = Me, t.inflate = Ie, t.inflateSync = Ae;
+            exports.AsyncInflate = Me
+            exports.inflate = Ie
+            exports.inflateSync = Ae;
             var Pe = function () {
                 function e(e, t) {
                     this.c = K(), this.l = 0, this.v = 1, Te.call(this, e, t)
@@ -42639,7 +44530,8 @@
                     this.v && (ge(r, this.o), this.v = 0), t && (me(r, r.length - 8, this.c.d()), me(r, r.length - 4, this.l)), this.ondata(r, t)
                 }, e
             }();
-            t.Gzip = Pe, t.Compress = Pe;
+            exports.Gzip = Pe
+            exports.Compress = Pe;
             var xe = function () {
                 return function (e, t) {
                     de([re, ne, function () {
@@ -42667,7 +44559,12 @@
                 return ge(o, t), me(o, a - 8, r.d()), me(o, a - 4, n), o
             }
 
-            t.AsyncGzip = xe, t.AsyncCompress = xe, t.gzip = Ne, t.compress = Ne, t.gzipSync = Re, t.compressSync = Re;
+            exports.AsyncGzip = xe
+            exports.AsyncCompress = xe
+            exports.gzip = Ne
+            exports.compress = Ne
+            exports.gzipSync = Re
+            exports.compressSync = Re;
             var Le = function () {
                 function e(e) {
                     this.v = 1, Oe.call(this, e)
@@ -42682,7 +44579,7 @@
                     t && (this.p.length < 8 && R(6, "invalid gzip data"), this.p = this.p.subarray(0, -8)), Oe.prototype.c.call(this, t)
                 }, e
             }();
-            t.Gunzip = Le;
+            exports.Gunzip = Le;
             var De = function () {
                 return function (e) {
                     this.ondata = e, de([te, oe, function () {
@@ -42706,7 +44603,9 @@
                 return L(e.subarray(be(e), -8), t || new a(ve(e)))
             }
 
-            t.AsyncGunzip = De, t.gunzip = je, t.gunzipSync = $e;
+            exports.AsyncGunzip = De
+            exports.gunzip = je
+            exports.gunzipSync = $e;
             var Fe = function () {
                 function e(e, t) {
                     this.c = Y(), this.v = 1, Te.call(this, e, t)
@@ -42720,7 +44619,7 @@
                     this.v && (we(r, this.o), this.v = 0), t && me(r, r.length - 4, this.c.d()), this.ondata(r, t)
                 }, e
             }();
-            t.Zlib = Fe;
+            exports.Zlib = Fe;
             var Be = function () {
                 return function (e, t) {
                     de([re, ae, function () {
@@ -42740,13 +44639,15 @@
                 return we(n, t), me(n, n.length - 4, r.d()), n
             }
 
-            t.AsyncZlib = Be, t.zlib = function (e, t, r) {
+            exports.AsyncZlib = Be
+            exports.zlib = function (e, t, r) {
                 return r || (r = t, t = {}), "function" != typeof r && R(7), ce(e, t, [re, ae, function () {
                     return [Ue]
                 }], (function (e) {
                     return se(Ue(e.data[0], e.data[1]))
                 }), 4, r)
-            }, t.zlibSync = Ue;
+            }
+            exports.zlibSync = Ue;
             var He = function () {
                 function e(e) {
                     this.v = 1, Oe.call(this, e)
@@ -42760,7 +44661,7 @@
                     t && (this.p.length < 4 && R(6, "invalid zlib data"), this.p = this.p.subarray(0, -4)), Oe.prototype.c.call(this, t)
                 }, e
             }();
-            t.Unzlib = He;
+            exports.Unzlib = He;
             var We = function () {
                 return function (e) {
                     this.ondata = e, de([te, ie, function () {
@@ -42784,7 +44685,9 @@
                 return L((_e(e), e.subarray(2, -4)), t)
             }
 
-            t.AsyncUnzlib = We, t.unzlib = ze, t.unzlibSync = qe;
+            exports.AsyncUnzlib = We
+            exports.unzlib = ze
+            exports.unzlibSync = qe;
             var Ve = function () {
                 function e(e) {
                     this.G = Le, this.I = Oe, this.Z = He, this.ondata = e
@@ -42805,7 +44708,7 @@
                     }
                 }, e
             }();
-            t.Decompress = Ve;
+            exports.Decompress = Ve;
             var Ge = function () {
                 function e(e) {
                     this.G = De, this.I = Me, this.Z = We, this.ondata = e
@@ -42815,9 +44718,11 @@
                     Ve.prototype.push.call(this, e, t)
                 }, e
             }();
-            t.AsyncDecompress = Ge, t.decompress = function (e, t, r) {
+            exports.AsyncDecompress = Ge
+            exports.decompress = function (e, t, r) {
                 return r || (r = t, t = {}), "function" != typeof r && R(7), 31 == e[0] && 139 == e[1] && 8 == e[2] ? je(e, t, r) : 8 != (15 & e[0]) || e[0] >> 4 > 7 || (e[0] << 8 | e[1]) % 31 ? Ie(e, t, r) : ze(e, t, r)
-            }, t.decompressSync = function (e, t) {
+            }
+            exports.decompressSync = function (e, t) {
                 return 31 == e[0] && 139 == e[1] && 8 == e[2] ? $e(e, t) : 8 != (15 & e[0]) || e[0] >> 4 > 7 || (e[0] << 8 | e[1]) % 31 ? Ae(e, t) : qe(e, t)
             };
             var Ke = function (e, t, r, n) {
@@ -42825,8 +44730,10 @@
                         var i = e[o], s = t + o, l = n;
                         Array.isArray(i) && (l = X(n, i[1]), i = i[0]), i instanceof a ? r[s] = [i, l] : (r[s += "/"] = [new a(0), l], Ke(i, s, r, n))
                     }
-                }, Ye = "undefined" != typeof TextEncoder && new TextEncoder,
-                Je = "undefined" != typeof TextDecoder && new TextDecoder, Xe = 0;
+                },
+                Ye = "undefined" != typeof TextEncoder && new TextEncoder,
+                Je = "undefined" != typeof TextDecoder && new TextDecoder,
+                Xe = 0;
             try {
                 Je.decode(q, {stream: !0}), Xe = 1
             } catch (e) {
@@ -42837,7 +44744,8 @@
                     if (r + o > e.length) return [t, x(e, r - 1)];
                     o ? 3 == o ? (n = ((15 & n) << 18 | (63 & e[r++]) << 12 | (63 & e[r++]) << 6 | 63 & e[r++]) - 65536, t += String.fromCharCode(55296 | n >> 10, 56320 | 1023 & n)) : t += 1 & o ? String.fromCharCode((31 & n) << 6 | 63 & e[r++]) : String.fromCharCode((15 & n) << 12 | (63 & e[r++]) << 6 | 63 & e[r++]) : t += String.fromCharCode(n)
                 }
-            }, Qe = function () {
+            },
+                Qe = function () {
                 function e(e) {
                     this.ondata = e, Xe ? this.t = new TextDecoder : this.p = q
                 }
@@ -42851,7 +44759,7 @@
                     t ? (i.length && R(8), this.p = null) : this.p = i, this.ondata(o, t)
                 }, e
             }();
-            t.DecodeUTF8 = Qe;
+            exports.DecodeUTF8 = Qe;
             var et = function () {
                 function e(e) {
                     this.ondata = e
@@ -42892,27 +44800,34 @@
                 return o[1].length && R(8), a
             }
 
-            t.EncodeUTF8 = et, t.strToU8 = tt, t.strFromU8 = rt;
+            exports.EncodeUTF8 = et
+            exports.strToU8 = tt
+            exports.strFromU8 = rt;
             var nt = function (e) {
                 return 1 == e ? 3 : e < 6 ? 2 : 9 == e ? 1 : 0
-            }, ot = function (e, t) {
+            },
+                ot = function (e, t) {
                 return t + 30 + pe(e, t + 26) + pe(e, t + 28)
-            }, at = function (e, t, r) {
+            },
+                at = function (e, t, r) {
                 var n = pe(e, t + 28), o = rt(e.subarray(t + 46, t + 46 + n), !(2048 & pe(e, t + 8))), a = t + 46 + n,
                     i = he(e, t + 20), s = r && 4294967295 == i ? it(e, a) : [i, he(e, t + 24), he(e, t + 42)],
                     l = s[0], c = s[1], u = s[2];
                 return [pe(e, t + 10), l, c, o, a + pe(e, t + 30) + pe(e, t + 32), u]
-            }, it = function (e, t) {
+            },
+                it = function (e, t) {
                 for (; 1 != pe(e, t); t += 4 + pe(e, t + 2)) ;
                 return [fe(e, t + 12), fe(e, t + 4), fe(e, t + 20)]
-            }, st = function (e) {
+            },
+                st = function (e) {
                 var t = 0;
                 if (e) for (var r in e) {
                     var n = e[r].length;
                     n > 65535 && R(9), t += n + 4
                 }
                 return t
-            }, lt = function (e, t, r, n, o, a, i, s) {
+            },
+                lt = function (e, t, r, n, o, a, i, s) {
                 var l = n.length, c = r.extra, u = s && s.length, d = st(c);
                 me(e, t, null != i ? 33639248 : 67324752), t += 4, null != i && (e[t++] = 20, e[t++] = r.os), e[t] = 20, t += 2, e[t++] = r.flag << 1 | (a < 0 && 8), e[t++] = o && 8, e[t++] = 255 & r.compression, e[t++] = r.compression >> 8;
                 var p = new Date(null == r.mtime ? Date.now() : r.mtime), h = p.getFullYear() - 1980;
@@ -42921,9 +44836,11 @@
                     me(e, t, +f), me(e, t + 2, g), e.set(m, t + 4), t += 4 + g
                 }
                 return u && (e.set(s, t), t += u), t
-            }, ct = function (e, t, r, n, o) {
+            },
+                ct = function (e, t, r, n, o) {
                 me(e, t, 101010256), me(e, t + 8, r), me(e, t + 10, r), me(e, t + 12, n), me(e, t + 16, o)
-            }, ut = function () {
+            },
+                ut = function () {
                 function e(e) {
                     this.filename = e, this.c = K(), this.size = 0, this.compression = 0
                 }
@@ -42934,7 +44851,8 @@
                     this.ondata || R(5), this.c.p(e), this.size += e.length, t && (this.crc = this.c.d()), this.process(e, t || !1)
                 }, e
             }();
-            t.ZipPassThrough = ut;
+
+            exports.ZipPassThrough = ut;
             var dt = function () {
                 function e(e, t) {
                     var r = this;
@@ -42953,7 +44871,7 @@
                     ut.prototype.push.call(this, e, t)
                 }, e
             }();
-            t.ZipDeflate = dt;
+            exports.ZipDeflate = dt;
             var pt = function () {
                 function e(e, t) {
                     var r = this;
@@ -42968,7 +44886,7 @@
                     ut.prototype.push.call(this, e, t)
                 }, e
             }();
-            t.AsyncZipDeflate = pt;
+            exports.AsyncZipDeflate = pt;
             var ht = function () {
                 function e(e) {
                     this.ondata = e, this.u = [], this.d = 1
@@ -43028,7 +44946,8 @@
                     this.d = 2
                 }, e
             }();
-            t.Zip = ht, t.zip = function (e, t, r) {
+            exports.Zip = ht
+            exports.zip = function (e, t, r) {
                 r || (r = t, t = {}), "function" != typeof r && R(7);
                 var n = {};
                 Ke(e, "", n, t);
@@ -43084,7 +45003,8 @@
                     } else d.push(Se(a, c, E)); else E(null, a)
                 }, g = 0; g < c; ++g) m(g);
                 return p
-            }, t.zipSync = function (e, t) {
+            }
+            exports.zipSync = function (e, t) {
                 t || (t = {});
                 var r = {}, n = [];
                 Ke(e, "", r, t);
@@ -43121,7 +45041,7 @@
                     this.ondata(null, e, t)
                 }, e.compression = 0, e
             }();
-            t.UnzipPassThrough = ft;
+            exports.UnzipPassThrough = ft;
             var mt = function () {
                 function e() {
                     var e = this;
@@ -43138,7 +45058,7 @@
                     }
                 }, e.compression = 8, e
             }();
-            t.UnzipInflate = mt;
+            exports.UnzipInflate = mt;
             var gt = function () {
                 function e(e, t) {
                     var r = this;
@@ -43153,7 +45073,7 @@
                     this.i.terminate && (e = x(e, 0)), this.i.push(e, t)
                 }, e.compression = 8, e
             }();
-            t.AsyncUnzipInflate = gt;
+            exports.AsyncUnzipInflate = gt;
             var bt = function () {
                 function e(e) {
                     this.onfile = e, this.k = [], this.o = {0: ft}, this.p = q
@@ -43217,11 +45137,16 @@
                     this.o[e.compression] = e
                 }, e
             }();
-            t.Unzip = bt;
-            var vt = "function" == typeof queueMicrotask ? queueMicrotask : "function" == typeof setTimeout ? setTimeout : function (e) {
+            exports.Unzip = bt;
+
+            var vt = "function" == typeof queueMicrotask
+                ? queueMicrotask
+                : "function" == typeof setTimeout
+                    ? setTimeout
+                    : function (e) {
                 e()
             };
-            t.unzip = function (e, t, r) {
+            exports.unzip = function (e, t, r) {
                 r || (r = t, t = {}), "function" != typeof r && R(7);
                 var n = [], o = function () {
                     for (var e = 0; e < n.length; ++e) n[e]()
@@ -43258,7 +45183,8 @@
                     }, g = 0; g < u; ++g) m()
                 } else s(null, {});
                 return o
-            }, t.unzipSync = function (e, t) {
+            }
+            exports.unzipSync = function (e, t) {
                 for (var r = {}, n = e.length - 22; 101010256 != he(e, n); --n) (!n || e.length - n > 65558) && R(13);
                 var o = pe(e, n + 8);
                 if (!o) return {};
@@ -43278,9 +45204,10 @@
                 }
                 return r
             }
-        }, 18991: (e, t, r) => {
+        },
+        18991: (module, exports, __require) => {
             "use strict";
-            r.d(t, {
+            __require.d(exports, {
                 C6: () => o,
                 Cl: () => a,
                 Ju: () => c,
@@ -43305,7 +45232,8 @@
                     this.constructor = e
                 }
 
-                n(e, t), e.prototype = null === t ? Object.create(t) : (r.prototype = t.prototype, new r)
+                n(e, t)
+                e.prototype = null === t ? Object.create(t) : (r.prototype = t.prototype, new r)
             }
 
             var a = function () {
@@ -43455,65 +45383,869 @@
                 return e.concat(n || Array.prototype.slice.call(t))
             }
 
-            Object.create, Object.create, "function" == typeof SuppressedError && SuppressedError
-        }, 68272: e => {
+            // Object.create, Object.create, "function" == typeof SuppressedError && SuppressedError
+        },
+
+        // config
+        68272: module => {
             "use strict";
-            e.exports = JSON.parse('{"env":"production","isLocalhost":false,"domainName":"www.notion.so","domainBaseUrl":"https://www.notion.so","protocol":"notion","desktopAppId":"notion.id","offline":true,"desktopS3Url":"https://desktop-release.notion-static.com","splunkConfig":{"host":"http-inputs-notion.splunkcloud.com","path":"services/collector/raw","token":"EA76605A-F565-4B17-A496-34435622A1EB","maxBatchCount":0,"port":443}}')
-        }, 16813: e => {
+            module.exports = {
+                "env": "production",
+                "isLocalhost": false,
+                "domainName": "www.notion.so",
+                "domainBaseUrl": "https://www.notion.so",
+                "protocol": "notion",
+                "desktopAppId": "notion.id",
+                "offline": true,
+                "desktopS3Url": "https://desktop-release.notion-static.com",
+                "splunkConfig": {
+                    "host": "http-inputs-notion.splunkcloud.com",
+                    "path": "services/collector/raw",
+                    "token": "EA76605A-F565-4B17-A496-34435622A1EB",
+                    "maxBatchCount": 0,
+                    "port": 443
+                }
+            }
+        },
+
+        // da_DK
+        16813: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Kommandosøgning","desktop.tabBar.backButtonLabel":"Tilbage","desktop.tabBar.closeSidebarLabel":"Luk sidemenu","desktop.tabBar.closeTabLabel":"Luk fanen {tabTitle}","desktop.tabBar.forwardButtonLabel":"Fremad","desktop.tabBar.loadingPlaceholder":"Indlæser …","desktop.tabBar.newTabButtonLabel":"Ny fane","desktop.tabBar.openSidebarLabel":"Åbn sidemenu","desktopInstaller.failedToMove.detail":"Vi kunne ikke flytte appen til din applikationsmappe. Flyt den manuelt.","desktopInstaller.failedToMove.title":"Kunne ikke flytte app","desktopInstaller.invalidInstallDialog.cancelButton.label":"Annullér","desktopInstaller.invalidInstallDialog.confirmMove":"Din Notion-applikation er ikke installeret korrekt. Må vi flytte din Notion-app til din applikationsmappe?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ugyldig installation","desktopSearch.doneButton.label":"Færdig","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} match} andre {{matchCount} matches}}","desktopSearch.noResults.message":"Ikke fundet","desktopTopbar.appMenu.about":"Om Notion","desktopTopbar.appMenu.checkForUpdate":"Tjek for opdateringer...","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du bruger den nyeste version af Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Tjek for opdateringer","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"En ny version af Notion er tilgængelig og downloades i øjeblikket i baggrunden. Tak, fordi du holder dig opdateret!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion kunne ikke oprette forbindelse til opdateringsserveren, enten på grund af et problem med din internetforbindelse eller selve opdateringsserveren. Prøv igen senere.","desktopTopbar.appMenu.downloadingUpdate":"Downloader opdatering ({percentage} %)","desktopTopbar.appMenu.hide":"Skjul Notion","desktopTopbar.appMenu.hideOthers":"Skjul andre","desktopTopbar.appMenu.preferences":"Indstillinger...","desktopTopbar.appMenu.quit":"Afslut","desktopTopbar.appMenu.quitWithoutSavingTabs":"Afslut uden at gemme faner","desktopTopbar.appMenu.restartToApplyUpdate":"Genstart for at anvende opdateringen","desktopTopbar.appMenu.services":"Tjenester","desktopTopbar.appMenu.unhide":"Vis alle","desktopTopbar.editMenu.copy":"Kopiér","desktopTopbar.editMenu.cut":"Klip","desktopTopbar.editMenu.paste":"Indsæt","desktopTopbar.editMenu.pasteAndMatchStyle":"Indsæt og match stil","desktopTopbar.editMenu.redo":"Annullér fortryd","desktopTopbar.editMenu.selectAll":"Vælg alle","desktopTopbar.editMenu.speech":"Tale","desktopTopbar.editMenu.speech.startSpeaking":"Begynd at tale","desktopTopbar.editMenu.speech.stopSpeaking":"Stop med at tale","desktopTopbar.editMenu.title":"Rediger","desktopTopbar.editMenu.undo":"Fortryd","desktopTopbar.fileMenu.close":"Luk vindue","desktopTopbar.fileMenu.closeTab":"Luk fane","desktopTopbar.fileMenu.newTab":"Ny fane","desktopTopbar.fileMenu.newWindow":"Nyt vindue","desktopTopbar.fileMenu.print":"Udskriv ...","desktopTopbar.fileMenu.quit":"Afslut","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Afslut uden at gemme faner","desktopTopbar.fileMenu.reopenClosedTab":"Åbn den senest lukkede fane igen","desktopTopbar.fileMenu.title":"Fil","desktopTopbar.helpMenu.disableDebugLogging":"Deaktiver avanceret logning og genstart","desktopTopbar.helpMenu.disableHardwareAcceleration":"Deaktiver hardwareacceleration og genstart","desktopTopbar.helpMenu.enableDebugLogging":"Aktiver avanceret logning og genstart","desktopTopbar.helpMenu.enableHardwareAcceleration":"Aktivér hardwareacceleration og genstart","desktopTopbar.helpMenu.openConsole":"Åbn konsol...","desktopTopbar.helpMenu.openHelpAndSupport":"Åbn hjælp og dokumentation","desktopTopbar.helpMenu.recordPerformanceTrace":"Optag præstationssporing...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Ønsker du at optage en præstationssporing for de næste 30 sekunder? Når det er gjort, placeres den i din mappe Downloads.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Annullér","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Registrer præstationssporing","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Optage en præstationssporing?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Nulstil og slet alle lokale data","desktopTopbar.helpMenu.showLogsInExplorer":"Vis logfiler i Stifinder","desktopTopbar.helpMenu.showLogsInFinder":"Vis logfiler i Finder","desktopTopbar.helpMenu.title":"Hjælp","desktopTopbar.historyMenu.historyBack":"Tilbage","desktopTopbar.historyMenu.historyForward":"Fremad","desktopTopbar.historyMenu.title":"Historik","desktopTopbar.toggleDevTools":"Slå udviklerværktøjer til/fra","desktopTopbar.toggleWindowDevTools":"Slå vinduesudviklerværktøjer til/fra","desktopTopbar.troubleshootingMenu.title":"Fejlfinding","desktopTopbar.viewMenu.actualSize":"Faktisk størrelse","desktopTopbar.viewMenu.forceReload":"Tving genindlæsning","desktopTopbar.viewMenu.reload":"Genindlæs","desktopTopbar.viewMenu.showHideSidebar":"Vis/skjul sidemenu","desktopTopbar.viewMenu.title":"Visning","desktopTopbar.viewMenu.togglefullscreen":"Slå fuld skærm til/fra","desktopTopbar.viewMenu.zoomIn":"Zoom ind","desktopTopbar.viewMenu.zoomOut":"Zoom ud","desktopTopbar.whatsNewMac.title":"Åbn Nyheder i Notion til macOS","desktopTopbar.whatsNewWindows.title":"Åbn Nyheder i Notion til Windows","desktopTopbar.windowMenu.close":"Luk","desktopTopbar.windowMenu.front":"Front","desktopTopbar.windowMenu.maximize":"Maksimer","desktopTopbar.windowMenu.minimize":"Minimer","desktopTopbar.windowMenu.showNextTab":"Vis næste fane","desktopTopbar.windowMenu.showPreviousTab":"Vis forrige fane","desktopTopbar.windowMenu.title":"Vindue","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Explorer:","desktopTroubleshooting.showLogs.error.title":"Visning af logfilerne mislykkedes","menuBarIcon.menu.enableQuickSearch":"Aktiver Hurtig søgning","menuBarIcon.menu.keepInBackground":"Hold i baggrunden","menuBarIcon.menu.launchPreferences":"Åbn Indstillinger","menuBarIcon.menu.openOnLogin":"Åbn Notion ved Login","menuBarIcon.menu.quitNotion":"Afslut Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Skift genvej til Kommandosøgning","menuBarIcon.menu.showImmediately":"Vis øjeblikkeligt","menuBarIcon.menu.showNotionInMenuBar":"Vis Notion i menulinjen","menuBarIcon.menu.toggleCommandSearch":"Slå Kommandosøgning til/fra","openAtLogin.dialog.detail":"{operatingSystem} forhindrede Notion i at konfigurere indstillingen \'Åbn ved login\'. Dette sker normalt, når Notions opstart er blevet konfigureret i systemindstillingerne, eller hvis du ikke har tilstrækkelig tilladelse. Du kan stadig konfigurere denne indstilling manuelt i systemindstillingerne.","openAtLogin.dialog.title":"Åbn ved Login","updatePrompt.detail":"Vil du gerne installere det nu? Vi åbner dine vinduer og faner igen for dig.","updatePrompt.installAndRelaunch":"Installer og genstart","updatePrompt.message":"Ny version af Notion er tilgængelig!","updatePrompt.remindMeLater":"Påmind mig senere","window.loadingError.message":"Fejl ved indlæsning af Notion, opret forbindelse til internettet for at komme i gang.","window.loadingError.reload":"Genindlæs","window.tabLoadingError.cancel":"Annullér","window.tabMenu.closeOtherTabs":"Luk andre faner","window.tabMenu.closeTab":"Luk fane","window.tabMenu.closeTabsToLeft":"Luk faner til venstre","window.tabMenu.closeTabsToRight":"Luk faner til højre","window.tabMenu.copyLink":"Kopiér link","window.tabMenu.duplicateTab":"Dupliker fane","window.tabMenu.moveToNewWindow":"Flyt fanen til nyt vindue","window.tabMenu.refresh":"Opdater fane"}')
-        }, 39687: e => {
+            module.exports = {
+                "commandSearch.window.title": "Notion - Kommandosøgning",
+                "desktop.tabBar.backButtonLabel": "Tilbage",
+                "desktop.tabBar.closeSidebarLabel": "Luk sidemenu",
+                "desktop.tabBar.closeTabLabel": "Luk fanen {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Fremad",
+                "desktop.tabBar.loadingPlaceholder": "Indlæser …",
+                "desktop.tabBar.newTabButtonLabel": "Ny fane",
+                "desktop.tabBar.openSidebarLabel": "Åbn sidemenu",
+                "desktopInstaller.failedToMove.detail": "Vi kunne ikke flytte appen til din applikationsmappe. Flyt den manuelt.",
+                "desktopInstaller.failedToMove.title": "Kunne ikke flytte app",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Annullér",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Din Notion-applikation er ikke installeret korrekt. Må vi flytte din Notion-app til din applikationsmappe?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Ugyldig installation",
+                "desktopSearch.doneButton.label": "Færdig",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} match} andre {{matchCount} matches}}",
+                "desktopSearch.noResults.message": "Ikke fundet",
+                "desktopTopbar.appMenu.about": "Om Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Tjek for opdateringer...",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Du bruger den nyeste version af Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Tjek for opdateringer",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "En ny version af Notion er tilgængelig og downloades i øjeblikket i baggrunden. Tak, fordi du holder dig opdateret!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion kunne ikke oprette forbindelse til opdateringsserveren, enten på grund af et problem med din internetforbindelse eller selve opdateringsserveren. Prøv igen senere.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Downloader opdatering ({percentage} %)",
+                "desktopTopbar.appMenu.hide": "Skjul Notion",
+                "desktopTopbar.appMenu.hideOthers": "Skjul andre",
+                "desktopTopbar.appMenu.preferences": "Indstillinger...",
+                "desktopTopbar.appMenu.quit": "Afslut",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Afslut uden at gemme faner",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Genstart for at anvende opdateringen",
+                "desktopTopbar.appMenu.services": "Tjenester",
+                "desktopTopbar.appMenu.unhide": "Vis alle",
+                "desktopTopbar.editMenu.copy": "Kopiér",
+                "desktopTopbar.editMenu.cut": "Klip",
+                "desktopTopbar.editMenu.paste": "Indsæt",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Indsæt og match stil",
+                "desktopTopbar.editMenu.redo": "Annullér fortryd",
+                "desktopTopbar.editMenu.selectAll": "Vælg alle",
+                "desktopTopbar.editMenu.speech": "Tale",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Begynd at tale",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Stop med at tale",
+                "desktopTopbar.editMenu.title": "Rediger",
+                "desktopTopbar.editMenu.undo": "Fortryd",
+                "desktopTopbar.fileMenu.close": "Luk vindue",
+                "desktopTopbar.fileMenu.closeTab": "Luk fane",
+                "desktopTopbar.fileMenu.newTab": "Ny fane",
+                "desktopTopbar.fileMenu.newWindow": "Nyt vindue",
+                "desktopTopbar.fileMenu.print": "Udskriv ...",
+                "desktopTopbar.fileMenu.quit": "Afslut",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Afslut uden at gemme faner",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Åbn den senest lukkede fane igen",
+                "desktopTopbar.fileMenu.title": "Fil",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Deaktiver avanceret logning og genstart",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Deaktiver hardwareacceleration og genstart",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Aktiver avanceret logning og genstart",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Aktivér hardwareacceleration og genstart",
+                "desktopTopbar.helpMenu.openConsole": "Åbn konsol...",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Åbn hjælp og dokumentation",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Optag præstationssporing...",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Ønsker du at optage en præstationssporing for de næste 30 sekunder? Når det er gjort, placeres den i din mappe Downloads.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Annullér",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Registrer præstationssporing",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Optage en præstationssporing?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Nulstil og slet alle lokale data",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Vis logfiler i Stifinder",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Vis logfiler i Finder",
+                "desktopTopbar.helpMenu.title": "Hjælp",
+                "desktopTopbar.historyMenu.historyBack": "Tilbage",
+                "desktopTopbar.historyMenu.historyForward": "Fremad",
+                "desktopTopbar.historyMenu.title": "Historik",
+                "desktopTopbar.toggleDevTools": "Slå udviklerværktøjer til/fra",
+                "desktopTopbar.toggleWindowDevTools": "Slå vinduesudviklerværktøjer til/fra",
+                "desktopTopbar.troubleshootingMenu.title": "Fejlfinding",
+                "desktopTopbar.viewMenu.actualSize": "Faktisk størrelse",
+                "desktopTopbar.viewMenu.forceReload": "Tving genindlæsning",
+                "desktopTopbar.viewMenu.reload": "Genindlæs",
+                "desktopTopbar.viewMenu.showHideSidebar": "Vis/skjul sidemenu",
+                "desktopTopbar.viewMenu.title": "Visning",
+                "desktopTopbar.viewMenu.togglefullscreen": "Slå fuld skærm til/fra",
+                "desktopTopbar.viewMenu.zoomIn": "Zoom ind",
+                "desktopTopbar.viewMenu.zoomOut": "Zoom ud",
+                "desktopTopbar.whatsNewMac.title": "Åbn Nyheder i Notion til macOS",
+                "desktopTopbar.whatsNewWindows.title": "Åbn Nyheder i Notion til Windows",
+                "desktopTopbar.windowMenu.close": "Luk",
+                "desktopTopbar.windowMenu.front": "Front",
+                "desktopTopbar.windowMenu.maximize": "Maksimer",
+                "desktopTopbar.windowMenu.minimize": "Minimer",
+                "desktopTopbar.windowMenu.showNextTab": "Vis næste fane",
+                "desktopTopbar.windowMenu.showPreviousTab": "Vis forrige fane",
+                "desktopTopbar.windowMenu.title": "Vindue",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Explorer:",
+                "desktopTroubleshooting.showLogs.error.title": "Visning af logfilerne mislykkedes",
+                "menuBarIcon.menu.enableQuickSearch": "Aktiver Hurtig søgning",
+                "menuBarIcon.menu.keepInBackground": "Hold i baggrunden",
+                "menuBarIcon.menu.launchPreferences": "Åbn Indstillinger",
+                "menuBarIcon.menu.openOnLogin": "Åbn Notion ved Login",
+                "menuBarIcon.menu.quitNotion": "Afslut Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Skift genvej til Kommandosøgning",
+                "menuBarIcon.menu.showImmediately": "Vis øjeblikkeligt",
+                "menuBarIcon.menu.showNotionInMenuBar": "Vis Notion i menulinjen",
+                "menuBarIcon.menu.toggleCommandSearch": "Slå Kommandosøgning til/fra",
+                "openAtLogin.dialog.detail": "{operatingSystem} forhindrede Notion i at konfigurere indstillingen 'Åbn ved login'. Dette sker normalt, når Notions opstart er blevet konfigureret i systemindstillingerne, eller hvis du ikke har tilstrækkelig tilladelse. Du kan stadig konfigurere denne indstilling manuelt i systemindstillingerne.",
+                "openAtLogin.dialog.title": "Åbn ved Login",
+                "updatePrompt.detail": "Vil du gerne installere det nu? Vi åbner dine vinduer og faner igen for dig.",
+                "updatePrompt.installAndRelaunch": "Installer og genstart",
+                "updatePrompt.message": "Ny version af Notion er tilgængelig!",
+                "updatePrompt.remindMeLater": "Påmind mig senere",
+                "window.loadingError.message": "Fejl ved indlæsning af Notion, opret forbindelse til internettet for at komme i gang.",
+                "window.loadingError.reload": "Genindlæs",
+                "window.tabLoadingError.cancel": "Annullér",
+                "window.tabMenu.closeOtherTabs": "Luk andre faner",
+                "window.tabMenu.closeTab": "Luk fane",
+                "window.tabMenu.closeTabsToLeft": "Luk faner til venstre",
+                "window.tabMenu.closeTabsToRight": "Luk faner til højre",
+                "window.tabMenu.copyLink": "Kopiér link",
+                "window.tabMenu.duplicateTab": "Dupliker fane",
+                "window.tabMenu.moveToNewWindow": "Flyt fanen til nyt vindue",
+                "window.tabMenu.refresh": "Opdater fane"
+            }
+        },
+        // de_DE
+        39687: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion – Direktsuche","desktop.tabBar.backButtonLabel":"Zurück","desktop.tabBar.closeSidebarLabel":"Seitenleiste schließen","desktop.tabBar.closeTabLabel":"Tab schließen, {tabTitle}","desktop.tabBar.forwardButtonLabel":"Weiter","desktop.tabBar.loadingPlaceholder":"Wird geladen …","desktop.tabBar.newTabButtonLabel":"Neuer Tab","desktop.tabBar.openSidebarLabel":"Seitenleiste öffnen","desktopInstaller.failedToMove.detail":"Wir konnten die App nicht in deinen Anwendungsordner verschieben. Verschiebe sie bitte manuell.","desktopInstaller.failedToMove.title":"App konnte nicht verschoben werden","desktopInstaller.invalidInstallDialog.cancelButton.label":"Abbrechen","desktopInstaller.invalidInstallDialog.confirmMove":"Deine Notion-Anwendung ist nicht richtig installiert. Dürfen wir die Notion-App in deinen Anwendungsordner verschieben?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ungültige Installation","desktopSearch.doneButton.label":"Fertig","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} Treffer} other {{matchCount} Treffer}}","desktopSearch.noResults.message":"Nicht gefunden","desktopTopbar.appMenu.about":"Über Notion","desktopTopbar.appMenu.checkForUpdate":"Suche nach Updates…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du verwendest die neueste Version von Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Suche nach Updates","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Eine neue Version von Notion ist verfügbar und wird derzeit im Hintergrund heruntergeladen. Danke, dass du auf dem Laufenden bleibst!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion konnte keine Verbindung mit dem Update-Server herstellen. Dies kann an einem Problem mit deiner Internetverbindung oder dem Update-Server liegen. Bitte versuche es später erneut.","desktopTopbar.appMenu.downloadingUpdate":"Update wird heruntergeladen ({percentage}%)","desktopTopbar.appMenu.hide":"Notion verbergen","desktopTopbar.appMenu.hideOthers":"Andere verbergen","desktopTopbar.appMenu.preferences":"Einstellungen …","desktopTopbar.appMenu.quit":"Beenden","desktopTopbar.appMenu.quitWithoutSavingTabs":"Ohne Speichern von Tabs abbrechen","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Alle lokalen Daten zurücksetzen und löschen","desktopTopbar.appMenu.resetAndUpdateApp":"App zurücksetzen und aktualisieren","desktopTopbar.appMenu.restartToApplyUpdate":"Neu starten, um das Update auszuführen","desktopTopbar.appMenu.services":"Dienste","desktopTopbar.appMenu.unhide":"Alle anzeigen","desktopTopbar.editMenu.copy":"Kopieren","desktopTopbar.editMenu.cut":"Ausschneiden","desktopTopbar.editMenu.paste":"Einfügen","desktopTopbar.editMenu.pasteAndMatchStyle":"Einfügen und Stil anpassen","desktopTopbar.editMenu.redo":"Wiederholen","desktopTopbar.editMenu.selectAll":"Alles auswählen","desktopTopbar.editMenu.speech":"Sprachausgabe","desktopTopbar.editMenu.speech.startSpeaking":"Sprechen beginnen","desktopTopbar.editMenu.speech.stopSpeaking":"Sprechen beenden","desktopTopbar.editMenu.title":"Bearbeiten","desktopTopbar.editMenu.undo":"Rückgängig machen","desktopTopbar.fileMenu.close":"Fenster schließen","desktopTopbar.fileMenu.closeTab":"Tab schließen","desktopTopbar.fileMenu.newTab":"Neuer Tab","desktopTopbar.fileMenu.newWindow":"Neues Fenster","desktopTopbar.fileMenu.print":"Drucken…","desktopTopbar.fileMenu.quit":"Beenden","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Ohne Speichern von Tabs beenden","desktopTopbar.fileMenu.reopenClosedTab":"Zuletzt geschlossenen Tab erneut öffnen","desktopTopbar.fileMenu.title":"Datei","desktopTopbar.helpMenu.disableDebugLogging":"Erweitertes Anmelden deaktivieren und neu starten","desktopTopbar.helpMenu.disableHardwareAcceleration":"Hardwarebeschleunigung deaktivieren und neu starten","desktopTopbar.helpMenu.enableDebugLogging":"Erweitertes Anmelden aktivieren und neu starten","desktopTopbar.helpMenu.enableHardwareAcceleration":"Hardwarebeschleunigung aktivieren und neu starten","desktopTopbar.helpMenu.openConsole":"Konsole wird geöffnet…","desktopTopbar.helpMenu.openHelpAndSupport":"Hilfe und Dokumentation öffnen","desktopTopbar.helpMenu.recordPerformanceTrace":"Performance Trace aufzeichnen…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Möchtest du einen Leistungsnachweis für die nächsten 30 Sekunden aufzeichnen? Nach der Aufzeichnung wird dieser im Ordner „Downloads“ gespeichert.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Abbrechen","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Leistungsnachweis aufzeichnen","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Leistungsnachweis aufzeichnen?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Alle lokalen Daten zurücksetzen und löschen","desktopTopbar.helpMenu.showLogsInExplorer":"Protokolle im Explorer anzeigen","desktopTopbar.helpMenu.showLogsInFinder":"Protokolle im Finder anzeigen","desktopTopbar.helpMenu.title":"Hilfe","desktopTopbar.historyMenu.historyBack":"Zurück","desktopTopbar.historyMenu.historyForward":"Weiter","desktopTopbar.historyMenu.title":"Verlauf","desktopTopbar.toggleDevTools":"Entwicklerwerkzeuge aufklappen","desktopTopbar.toggleWindowDevTools":"Fenster-Entwicklerwerkzeuge aufklappen","desktopTopbar.troubleshootingMenu.title":"Fehlerbehebung","desktopTopbar.viewMenu.actualSize":"Tatsächliche Größe","desktopTopbar.viewMenu.forceReload":"Neuladen erzwingen","desktopTopbar.viewMenu.reload":"Neu laden","desktopTopbar.viewMenu.reloadAllTabs":"Alle Tabs neu laden","desktopTopbar.viewMenu.showHideSidebar":"Seitenleiste ein-/ausblenden","desktopTopbar.viewMenu.title":"Ansicht","desktopTopbar.viewMenu.togglefullscreen":"Vollbild umschalten","desktopTopbar.viewMenu.zoomIn":"Vergrößern","desktopTopbar.viewMenu.zoomOut":"Verkleinern","desktopTopbar.whatsNewMac.title":"Neue Funktionen in Notion für macOS ansehen","desktopTopbar.whatsNewWindows.title":"Neue Funktionen in Notion für Windows ansehen","desktopTopbar.windowMenu.close":"Schließen","desktopTopbar.windowMenu.front":"Vordergrund","desktopTopbar.windowMenu.maximize":"Maximieren","desktopTopbar.windowMenu.minimize":"Minimieren","desktopTopbar.windowMenu.showNextTab":"Nächsten Tab anzeigen","desktopTopbar.windowMenu.showPreviousTab":"Vorherigen Tab anzeigen","desktopTopbar.windowMenu.title":"Fenster","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion hat beim Versuch, die Protokolle im Finder anzuzeigen, einen Fehler festgestellt:","desktopTroubleshooting.showLogs.error.message.windows":"Notion hat beim Versuch, die Protokolle im Explorer anzuzeigen, einen Fehler festgestellt:","desktopTroubleshooting.showLogs.error.title":"Fehler beim Anzeigen der Protokolle","menuBarIcon.menu.enableQuickSearch":"Quick Search aktivieren","menuBarIcon.menu.keepInBackground":"Im Hintergrund halten","menuBarIcon.menu.launchPreferences":"Start-Einstellungen","menuBarIcon.menu.openCloseQuickSearch":"Quick Search öffnen/schließen","menuBarIcon.menu.openOnLogin":"Notion bei Anmeldung öffnen","menuBarIcon.menu.quitNotion":"Notion beenden","menuBarIcon.menu.selectCommandSearchShortcut":"Tastaturkürzel für Direktsuche ändern","menuBarIcon.menu.showImmediately":"Sofort anzeigen","menuBarIcon.menu.showNotionInMenuBar":"Notion in der Menüleiste anzeigen","menuBarIcon.menu.toggleCommandSearch":"Direktsuche umschalten","openAtLogin.dialog.detail":"{operatingSystem} hat Notion daran gehindert, die Einstellung „Bei Anmeldung öffnen“ zu konfigurieren. Dies kommt meist vor, wenn der Notion-Startvorgang in den Systemeinstellungen konfiguriert wurde oder wenn du über unzureichende Zugriffsrechte verfügst. Du kannst diese Einstellung aber manuell in den Systemeinstellungen konfigurieren.","openAtLogin.dialog.title":"Bei Anmeldung öffnen","updatePrompt.detail":"Möchtest du die Installation jetzt vornehmen? Wir öffnen dann deine Fenster und Tabs für dich erneut.","updatePrompt.installAndRelaunch":"Installieren und neu starten","updatePrompt.message":"Eine neue Version von Notion ist verfügbar!","updatePrompt.remindMeLater":"Später erinnern","window.loadingError.message":"Fehler beim Laden von Notion. Stelle eine Internet-Verbindung her, um loszulegen.","window.loadingError.reload":"Neu laden","window.tabLoadingError.cancel":"Abbrechen","window.tabMenu.closeOtherTabs":"Andere Tabs schließen","window.tabMenu.closeTab":"Tab schließen","window.tabMenu.closeTabsToLeft":"Tabs links schließen","window.tabMenu.closeTabsToRight":"Tabs rechts schließen","window.tabMenu.copyLink":"Link kopieren","window.tabMenu.duplicateTab":"Tab duplizieren","window.tabMenu.moveToNewWindow":"Tab in neues Fenster verschieben","window.tabMenu.refresh":"Tab aktualisieren"}')
-        }, 29499: e => {
+        },
+        // es_LA
+        29499: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Atajo de búsqueda","desktop.tabBar.backButtonLabel":"Atrás","desktop.tabBar.closeSidebarLabel":"Cerrar barra lateral","desktop.tabBar.closeTabLabel":"Cerrar la pestaña {tabTitle}","desktop.tabBar.forwardButtonLabel":"Adelante","desktop.tabBar.loadingPlaceholder":"Cargando…","desktop.tabBar.newTabButtonLabel":"Nueva pestaña","desktop.tabBar.openSidebarLabel":"Abrir la barra lateral","desktopInstaller.failedToMove.detail":"No pudimos mover la app a la carpeta Aplicaciones. Deberás hacerlo de forma manual.","desktopInstaller.failedToMove.title":"No se pudo mover la app","desktopInstaller.invalidInstallDialog.cancelButton.label":"Cancelar","desktopInstaller.invalidInstallDialog.confirmMove":"La aplicación de Notion no se instaló correctamente. ¿Nos das permiso para mover la app de Notion a la carpeta Aplicaciones?","desktopInstaller.invalidInstallDialog.okButton.label":"Aceptar","desktopInstaller.invalidInstallDialog.title":"Instalación no válida","desktopSearch.doneButton.label":"Listo","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} coincidencia} other {{matchCount} coincidencias}}","desktopSearch.noResults.message":"Sin resultados","desktopTopbar.appMenu.about":"Acerca de Notion","desktopTopbar.appMenu.checkForUpdate":"Buscar actualizaciones…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"¡Ya cuentas con la versión más reciente de Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Buscar actualizaciones","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Hay una nueva versión de Notion disponible y se está descargando en segundo plano. ¡Gracias por estar al día!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion no pudo conectarse con el servidor de actualización debido a un problema de la conexión a Internet o del propio servidor. Inténtalo de nuevo más tarde.","desktopTopbar.appMenu.downloadingUpdate":"Descargando actualización ({percentage} %)","desktopTopbar.appMenu.hide":"Ocultar Notion","desktopTopbar.appMenu.hideOthers":"Ocultar otros","desktopTopbar.appMenu.preferences":"Preferencias…","desktopTopbar.appMenu.quit":"Salir","desktopTopbar.appMenu.quitWithoutSavingTabs":"Cerrar sin guardar las pestañas","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Restablecer y borrar todos los datos locales","desktopTopbar.appMenu.resetAndUpdateApp":"Restablecer y actualizar la aplicación","desktopTopbar.appMenu.restartToApplyUpdate":"Reinicia para aplicar la actualización","desktopTopbar.appMenu.services":"Servicios","desktopTopbar.appMenu.unhide":"Mostrar todo","desktopTopbar.editMenu.copy":"Copiar","desktopTopbar.editMenu.cut":"Cortar","desktopTopbar.editMenu.paste":"Pegar","desktopTopbar.editMenu.pasteAndMatchStyle":"Pegar y combinar formato","desktopTopbar.editMenu.redo":"Rehacer","desktopTopbar.editMenu.selectAll":"Seleccionar todo","desktopTopbar.editMenu.speech":"Voz","desktopTopbar.editMenu.speech.startSpeaking":"Empezar locución","desktopTopbar.editMenu.speech.stopSpeaking":"Detener locución","desktopTopbar.editMenu.title":"Editar","desktopTopbar.editMenu.undo":"Deshacer","desktopTopbar.fileMenu.close":"Cerrar ventana","desktopTopbar.fileMenu.closeTab":"Cerrar pestaña","desktopTopbar.fileMenu.newTab":"Nueva pestaña","desktopTopbar.fileMenu.newWindow":"Nueva ventana","desktopTopbar.fileMenu.print":"Imprimir...","desktopTopbar.fileMenu.quit":"Salir","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Salir sin guardar las pestañas","desktopTopbar.fileMenu.reopenClosedTab":"Volver a abrir la última pestaña cerrada","desktopTopbar.fileMenu.title":"Archivo","desktopTopbar.helpMenu.disableDebugLogging":"Desactivar el inicio de sesión acelerado y reiniciar","desktopTopbar.helpMenu.disableHardwareAcceleration":"Desactivar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.enableDebugLogging":"Activar el inicio de sesión acelerado y reiniciar","desktopTopbar.helpMenu.enableHardwareAcceleration":"Activar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.openConsole":"Abrir consola…","desktopTopbar.helpMenu.openHelpAndSupport":"Abrir Ayuda y documentación","desktopTopbar.helpMenu.recordPerformanceTrace":"Grabar registro de rendimiento…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"¿Quieres grabar un registro del rendimiento de los próximos 30 segundos? Una vez que esté listo, se guardará en tu carpeta de Descargas.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Cancelar","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Grabar registro de rendimiento","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"¿Quieres grabar un registro de rendimiento?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Restablecer y borrar todos los datos locales","desktopTopbar.helpMenu.showLogsInExplorer":"Mostrar registros en Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Mostrar registros en Finder","desktopTopbar.helpMenu.title":"Ayuda","desktopTopbar.historyMenu.historyBack":"Atrás","desktopTopbar.historyMenu.historyForward":"Adelante","desktopTopbar.historyMenu.title":"Historial","desktopTopbar.toggleDevTools":"Activar/desactivar herramientas de desarrollo","desktopTopbar.toggleWindowDevTools":"Mostrar/Ocultar herramientas de desarrollo de Windows","desktopTopbar.troubleshootingMenu.title":"Solución de problemas","desktopTopbar.viewMenu.actualSize":"Tamaño original","desktopTopbar.viewMenu.forceReload":"Forzar recarga","desktopTopbar.viewMenu.reload":"Recargar","desktopTopbar.viewMenu.reloadAllTabs":"Recargar todas las pestañas","desktopTopbar.viewMenu.showHideSidebar":"Mostrar/Ocultar la barra lateral","desktopTopbar.viewMenu.title":"Ver","desktopTopbar.viewMenu.togglefullscreen":"Mostrar/ocultar pantalla completa","desktopTopbar.viewMenu.zoomIn":"Acercar","desktopTopbar.viewMenu.zoomOut":"Alejar","desktopTopbar.whatsNewMac.title":"Abrir las Novedades en Notion para macOS","desktopTopbar.whatsNewWindows.title":"Abrir las Novedades en Notion para Windows","desktopTopbar.windowMenu.close":"Cerrar","desktopTopbar.windowMenu.front":"Primer plano","desktopTopbar.windowMenu.maximize":"Maximizar","desktopTopbar.windowMenu.minimize":"Minimizar","desktopTopbar.windowMenu.showNextTab":"Mostrar pestaña siguiente","desktopTopbar.windowMenu.showPreviousTab":"Mostrar pestaña anterior","desktopTopbar.windowMenu.title":"Ventana","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion encontró un error al intentar mostrar los registros en Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion encontró un error al intentar mostrar los registros en Explorer:","desktopTroubleshooting.showLogs.error.title":"Se produjo un error al intentar mostrar los registros","menuBarIcon.menu.enableQuickSearch":"Activar búsqueda rápida","menuBarIcon.menu.keepInBackground":"Dejar en segundo plano","menuBarIcon.menu.launchPreferences":"Preferencias de inicio","menuBarIcon.menu.openCloseQuickSearch":"Abrir/cerrar búsqueda rápida","menuBarIcon.menu.openOnLogin":"Abrir Notion al iniciar sesión","menuBarIcon.menu.quitNotion":"Salir de Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Cambiar atajo del Atajo de búsqueda","menuBarIcon.menu.showImmediately":"Mostrar de inmediato","menuBarIcon.menu.showNotionInMenuBar":"Mostrar Notion en la barra de menú","menuBarIcon.menu.toggleCommandSearch":"Activar/desactivar atajo de búsqueda","openAtLogin.dialog.detail":"{operatingSystem} impidió que Notion configure la opción “Abrir al iniciar sesión”. Esto normalmente ocurre cuando el inicio de Notion se configuró desde los ajustes del sistema o no tienes permisos suficientes para hacerlo. Puedes configurar esta opción de forma manual en los ajustes del sistema.","openAtLogin.dialog.title":"Abrir al iniciar sesión","updatePrompt.detail":"¿Quieres instalarla ahora? Tus ventanas y pestañas se reabrirán de forma automática.","updatePrompt.installAndRelaunch":"Instalar y reabrir","updatePrompt.message":"¡Hay una nueva versión de Notion disponible!","updatePrompt.remindMeLater":"Recordármelo más tarde","window.loadingError.message":"Error al cargar Notion; conéctate a Internet para empezar.","window.loadingError.reload":"Recargar","window.tabLoadingError.cancel":"Cancelar","window.tabMenu.closeOtherTabs":"Cerrar las demás pestañas","window.tabMenu.closeTab":"Cerrar pestaña","window.tabMenu.closeTabsToLeft":"Cerrar pestañas a la izquierda","window.tabMenu.closeTabsToRight":"Cerrar pestañas a la derecha","window.tabMenu.copyLink":"Copiar enlace","window.tabMenu.duplicateTab":"Duplicar pestaña","window.tabMenu.moveToNewWindow":"Mover la pestaña a una nueva ventana","window.tabMenu.refresh":"Actualizar pestaña"}')
-        }, 58545: e => {
+        },
+        // es_ES
+        58545: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Atajo de búsqueda","desktop.tabBar.backButtonLabel":"Atrás","desktop.tabBar.closeSidebarLabel":"Cerrar la barra lateral","desktop.tabBar.closeTabLabel":"Cerrar pestaña {tabTitle}","desktop.tabBar.forwardButtonLabel":"Adelante","desktop.tabBar.loadingPlaceholder":"Cargando…","desktop.tabBar.newTabButtonLabel":"Nueva pestaña","desktop.tabBar.openSidebarLabel":"Abrir la barra lateral","desktopInstaller.failedToMove.detail":"No hemos podido mover la aplicación a la carpeta Aplicaciones. Intenta moverla de forma manual.","desktopInstaller.failedToMove.title":"Error al mover la aplicación","desktopInstaller.invalidInstallDialog.cancelButton.label":"Cancelar","desktopInstaller.invalidInstallDialog.confirmMove":"La aplicación de Notion no se ha instalado correctamente. ¿Quieres que movamos la aplicación de Notion a la carpeta Aplicaciones?","desktopInstaller.invalidInstallDialog.okButton.label":"Aceptar","desktopInstaller.invalidInstallDialog.title":"Instalación no válida","desktopSearch.doneButton.label":"Listo","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} coincidencia} other {{matchCount} coincidencias}}","desktopSearch.noResults.message":"Sin resultados","desktopTopbar.appMenu.about":"Acerca de Notion","desktopTopbar.appMenu.checkForUpdate":"Buscar actualizaciones...","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"¡Tienes la última versión de Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Buscar actualizaciones","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Hay una nueva versión de Notion disponible y se está descargando en segundo plano. ¡Gracias por mantenerte al día!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion no ha podido establecer una conexión con el servidor de actualizaciones debido a un problema de la conexión a Internet o del propio servidor. Inténtalo de nuevo más tarde.","desktopTopbar.appMenu.downloadingUpdate":"Descargando la actualización ({percentage} %)","desktopTopbar.appMenu.hide":"Ocultar Notion","desktopTopbar.appMenu.hideOthers":"Ocultar otros","desktopTopbar.appMenu.preferences":"Preferencias…","desktopTopbar.appMenu.quit":"Salir","desktopTopbar.appMenu.quitWithoutSavingTabs":"Cerrar sin guardar pestañas","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Reiniciar y borrar los datos locales","desktopTopbar.appMenu.resetAndUpdateApp":"Reiniciar y actualizar la aplicación","desktopTopbar.appMenu.restartToApplyUpdate":"Reiniciar para aplicar la actualización","desktopTopbar.appMenu.services":"Servicios","desktopTopbar.appMenu.unhide":"Mostrar todo","desktopTopbar.editMenu.copy":"Copiar","desktopTopbar.editMenu.cut":"Cortar","desktopTopbar.editMenu.paste":"Pegar","desktopTopbar.editMenu.pasteAndMatchStyle":"Pegar y combinar formato","desktopTopbar.editMenu.redo":"Rehacer","desktopTopbar.editMenu.selectAll":"Seleccionar todo","desktopTopbar.editMenu.speech":"Voz","desktopTopbar.editMenu.speech.startSpeaking":"Empezar locución","desktopTopbar.editMenu.speech.stopSpeaking":"Detener locución","desktopTopbar.editMenu.title":"Editar","desktopTopbar.editMenu.undo":"Deshacer","desktopTopbar.fileMenu.close":"Cerrar ventana","desktopTopbar.fileMenu.closeTab":"Cerrar pestaña","desktopTopbar.fileMenu.newTab":"Nueva pestaña","desktopTopbar.fileMenu.newWindow":"Nueva ventana","desktopTopbar.fileMenu.print":"Imprimir…","desktopTopbar.fileMenu.quit":"Salir","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Salir sin guardar pestañas","desktopTopbar.fileMenu.reopenClosedTab":"Abrir la última pestaña cerrada","desktopTopbar.fileMenu.title":"Archivo","desktopTopbar.helpMenu.disableDebugLogging":"Desactivar el registro avanzado y reiniciar","desktopTopbar.helpMenu.disableHardwareAcceleration":"Desactivar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.enableDebugLogging":"Activar el registro avanzado y reiniciar","desktopTopbar.helpMenu.enableHardwareAcceleration":"Activar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.openConsole":"Abrir consola…","desktopTopbar.helpMenu.openHelpAndSupport":"Abrir Ayuda y documentación","desktopTopbar.helpMenu.recordPerformanceTrace":"Grabar registro de rendimiento...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"¿Quieres grabar un registro de rendimiento para los próximos 30 segundos? Una vez esté listo, se guardará en tu carpeta de Descargas.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Cancelar","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Grabar registro de rendimiento","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"¿Quieres grabar un registro de rendimiento?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Reiniciar y borrar los datos locales","desktopTopbar.helpMenu.showLogsInExplorer":"Mostrar registros en Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Mostrar registros en Finder","desktopTopbar.helpMenu.title":"Ayuda","desktopTopbar.historyMenu.historyBack":"Atrás","desktopTopbar.historyMenu.historyForward":"Adelante","desktopTopbar.historyMenu.title":"Historial","desktopTopbar.toggleDevTools":"Mostrar herramientas de desarrollo","desktopTopbar.toggleWindowDevTools":"Mostrar herramientas de desarrollo","desktopTopbar.troubleshootingMenu.title":"Solución de problemas","desktopTopbar.viewMenu.actualSize":"Tamaño real","desktopTopbar.viewMenu.forceReload":"Forzar recarga","desktopTopbar.viewMenu.reload":"Actualizar","desktopTopbar.viewMenu.reloadAllTabs":"Actualizar todas las pestañas","desktopTopbar.viewMenu.showHideSidebar":"Mostrar/ocultar barra lateral","desktopTopbar.viewMenu.title":"Ver","desktopTopbar.viewMenu.togglefullscreen":"Cambiar a pantalla completa","desktopTopbar.viewMenu.zoomIn":"Acercar","desktopTopbar.viewMenu.zoomOut":"Alejar","desktopTopbar.whatsNewMac.title":"Conoce las Novedades de Notion para macOS","desktopTopbar.whatsNewWindows.title":"Conoce las novedades de Notion para Windows","desktopTopbar.windowMenu.close":"Cerrar","desktopTopbar.windowMenu.front":"Primer plano","desktopTopbar.windowMenu.maximize":"Maximizar","desktopTopbar.windowMenu.minimize":"Minimizar","desktopTopbar.windowMenu.showNextTab":"Mostrar pestaña siguiente","desktopTopbar.windowMenu.showPreviousTab":"Mostrar pestaña anterior","desktopTopbar.windowMenu.title":"Ventana","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion ha encontrado un error al intentar mostrar los registros en Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion ha encontrado un error al intentar mostrar los registros en Explorer:","desktopTroubleshooting.showLogs.error.title":"Se ha producido un error al mostrar los registros","menuBarIcon.menu.enableQuickSearch":"Activar búsqueda rápida","menuBarIcon.menu.keepInBackground":"Mantener en segundo plano","menuBarIcon.menu.launchPreferences":"Preferencias de inicio","menuBarIcon.menu.openCloseQuickSearch":"Abrir/Cerrar búsqueda rápida","menuBarIcon.menu.openOnLogin":"Abrir Notion al iniciar sesión","menuBarIcon.menu.quitNotion":"Salir de Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Cambiar acceso directo del atajo de búsqueda","menuBarIcon.menu.showImmediately":"Mostrar inmediatamente","menuBarIcon.menu.showNotionInMenuBar":"Mostrar Notion en la barra de menús","menuBarIcon.menu.toggleCommandSearch":"Activar/desactivar atajo de búsqueda","openAtLogin.dialog.detail":"{operatingSystem} ha impedido que Notion configure la opción «Abrir al iniciar sesión». Esto suele ocurrir si has configurado el inicio de Notion mediante los ajustes del sistema o si careces de los permisos necesarios. Puedes configurar esta opción de forma manual en la configuración del sistema.","openAtLogin.dialog.title":"Abrir al iniciar sesión","updatePrompt.detail":"¿Te gustaría instalarlo ahora? Volveremos a abrir tus ventanas y pestañas.","updatePrompt.installAndRelaunch":"Instalar y reiniciar","updatePrompt.message":"Hay una nueva versión de Notion disponible.","updatePrompt.remindMeLater":"Recordármelo más tarde","window.loadingError.message":"Error al cargar Notion. Conéctate a Internet para comenzar.","window.loadingError.reload":"Actualizar","window.tabLoadingError.cancel":"Cancelar","window.tabMenu.closeOtherTabs":"Cerrar otras pestañas","window.tabMenu.closeTab":"Cerrar pestaña","window.tabMenu.closeTabsToLeft":"Cerrar pestañas a la izquierda","window.tabMenu.closeTabsToRight":"Cerrar pestañas a la derecha","window.tabMenu.copyLink":"Copiar enlace","window.tabMenu.duplicateTab":"Duplicar pestaña","window.tabMenu.moveToNewWindow":"Mover pestaña a nueva ventana","window.tabMenu.refresh":"Actualizar pestaña"}')
-        }, 85395: e => {
+        },
+        // fi_FI
+        85395: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion – komentohaku","desktop.tabBar.backButtonLabel":"Takaisin","desktop.tabBar.closeSidebarLabel":"Sulje sivuvalikko","desktop.tabBar.closeTabLabel":"Sulje välilehti, {tabTitle}","desktop.tabBar.forwardButtonLabel":"Eteenpäin","desktop.tabBar.loadingPlaceholder":"Ladataan…","desktop.tabBar.newTabButtonLabel":"Uusi välilehti","desktop.tabBar.openSidebarLabel":"Avaa sivuvalikko","desktopInstaller.failedToMove.detail":"Sovelluksen siirtäminen Sovellukset-kansioon epäonnistui. Siirrä se itse.","desktopInstaller.failedToMove.title":"Sovelluksen siirtäminen epäonnistui","desktopInstaller.invalidInstallDialog.cancelButton.label":"Peruuta","desktopInstaller.invalidInstallDialog.confirmMove":"Notion-sovellustasi ei ole asennettu oikein. Voimmeko siirtää Notion-sovelluksesi Sovellukset-kansioon?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Virheellinen asennus","desktopSearch.doneButton.label":"Valmis","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} vastaavuus} other {{matchCount} vastaavuutta}}","desktopSearch.noResults.message":"Ei löytynyt","desktopTopbar.appMenu.about":"Tietoja Notionista","desktopTopbar.appMenu.checkForUpdate":"Tarkistetaan päivityksiä…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Sinulla on Notionin uusin versio käytössä!","desktopTopbar.appMenu.checkForUpdate.title":"Tarkistetaan päivityksiä","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Notionin uusi versio on saatavilla ja sitä ladataan taustalla. Kiitos, että olet ajan tasalla!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion ei onnistunut muodostamaan yhteyttä päivityspalvelimen kanssa joko Internet-yhteytesi tai itse päivityspalvelimen ongelman vuoksi. Yritä uudelleen myöhemmin.","desktopTopbar.appMenu.downloadingUpdate":"Ladataan päivitystä ({percentage} %)","desktopTopbar.appMenu.hide":"Piilota Notion","desktopTopbar.appMenu.hideOthers":"Piilota muut","desktopTopbar.appMenu.preferences":"Asetukset…","desktopTopbar.appMenu.quit":"Lopeta","desktopTopbar.appMenu.quitWithoutSavingTabs":"Sulje tallentamatta välilehtiä","desktopTopbar.appMenu.restartToApplyUpdate":"Käynnistä uudelleen päivityksen käyttöön ottamiseksi","desktopTopbar.appMenu.services":"Palvelut","desktopTopbar.appMenu.unhide":"Näytä kaikki","desktopTopbar.editMenu.copy":"Kopioi","desktopTopbar.editMenu.cut":"Leikkaa","desktopTopbar.editMenu.paste":"Liitä","desktopTopbar.editMenu.pasteAndMatchStyle":"Liitä ja muuta tyyli vastaavaksi","desktopTopbar.editMenu.redo":"Toteuta uudelleen","desktopTopbar.editMenu.selectAll":"Valitse kaikki","desktopTopbar.editMenu.speech":"Puhe","desktopTopbar.editMenu.speech.startSpeaking":"Aloita puhuminen","desktopTopbar.editMenu.speech.stopSpeaking":"Lopeta puhuminen","desktopTopbar.editMenu.title":"Muokkaa","desktopTopbar.editMenu.undo":"Kumoa","desktopTopbar.fileMenu.close":"Sulje ikkuna","desktopTopbar.fileMenu.closeTab":"Sulje välilehti","desktopTopbar.fileMenu.newTab":"Uusi välilehti","desktopTopbar.fileMenu.newWindow":"Uusi ikkuna","desktopTopbar.fileMenu.print":"Tulosta…","desktopTopbar.fileMenu.quit":"Poistu","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Poistu tallentamatta välilehtiä","desktopTopbar.fileMenu.reopenClosedTab":"Avaa viimeksi suljettu välilehti uudelleen","desktopTopbar.fileMenu.title":"Tiedosto","desktopTopbar.helpMenu.disableDebugLogging":"Poista edistynyt kirjaus käytöstä ja käynnistä uudelleen","desktopTopbar.helpMenu.disableHardwareAcceleration":"Poista laitteistokiihdytys käytöstä ja käynnistä uudelleen","desktopTopbar.helpMenu.enableDebugLogging":"Ota edistynyt kirjaus käyttöön ja käynnistä uudelleen","desktopTopbar.helpMenu.enableHardwareAcceleration":"Ota laitteistokiihdytys käyttöön ja käynnistä uudelleen","desktopTopbar.helpMenu.openConsole":"Avaa konsoli...","desktopTopbar.helpMenu.openHelpAndSupport":"Avaa ohje ja dokumentaatio","desktopTopbar.helpMenu.recordPerformanceTrace":"Tallenna suorituskyvyn seuranta...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Haluatko tallentaa suorituskyvyn seurannan seuraaville 30 sekunnille? Kun valmis, se sijoitetaan Lataukset-kansioon.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Peruuta","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Tallenna suorituskyvyn seuranta","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Tallennetaanko suorituskyvyn seuranta?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Nollaa ja poista kaikki paikalliset tiedot","desktopTopbar.helpMenu.showLogsInExplorer":"Näytä lokit resurssienhallinnassa","desktopTopbar.helpMenu.showLogsInFinder":"Näytä lokit Finderissa","desktopTopbar.helpMenu.title":"Ohje","desktopTopbar.historyMenu.historyBack":"Takaisin","desktopTopbar.historyMenu.historyForward":"Eteenpäin","desktopTopbar.historyMenu.title":"Historia","desktopTopbar.toggleDevTools":"Vaihda kehittäjän työkalujen tilaa","desktopTopbar.toggleWindowDevTools":"Vaihda ikkunoiden kehittäjän työkalujen tilaa","desktopTopbar.troubleshootingMenu.title":"Vianetsintä","desktopTopbar.viewMenu.actualSize":"Todellinen koko","desktopTopbar.viewMenu.forceReload":"Pakota uudelleenlataus","desktopTopbar.viewMenu.reload":"Lataa uudelleen","desktopTopbar.viewMenu.showHideSidebar":"Näytä/piilota sivuvalikko","desktopTopbar.viewMenu.title":"Näkymä","desktopTopbar.viewMenu.togglefullscreen":"Vaihda koko näytön tilaa","desktopTopbar.viewMenu.zoomIn":"Suurenna","desktopTopbar.viewMenu.zoomOut":"Pienennä","desktopTopbar.whatsNewMac.title":"Avaa Mitä uutta Notion macOS:lle tuo tullessaan","desktopTopbar.whatsNewWindows.title":"Avaa Mitä uutta Notion Windowsille tuo tullessaan","desktopTopbar.windowMenu.close":"Sulje","desktopTopbar.windowMenu.front":"Etuosa","desktopTopbar.windowMenu.maximize":"Suurenna","desktopTopbar.windowMenu.minimize":"Pienennä","desktopTopbar.windowMenu.showNextTab":"Näytä seuraava välilehti","desktopTopbar.windowMenu.showPreviousTab":"Näytä edellinen välilehti","desktopTopbar.windowMenu.title":"Ikkuna","desktopTopbar.windowMenu.zoom":"Zoomaa","desktopTroubleshooting.showLogs.error.message.mac":"Notion havaitsi virheen yrittäessään näyttää lokit Finderissa:","desktopTroubleshooting.showLogs.error.message.windows":"Notion havaitsi virheen yrittäessään näyttää lokit Explorerissa:","desktopTroubleshooting.showLogs.error.title":"Lokien näyttäminen epäonnistui","menuBarIcon.menu.enableQuickSearch":"Ota pikahaku käyttöön","menuBarIcon.menu.keepInBackground":"Säilytä taustalla","menuBarIcon.menu.launchPreferences":"Avaa asetukset","menuBarIcon.menu.openOnLogin":"Avaa Notion sisäänkirjautuessa","menuBarIcon.menu.quitNotion":"Lopeta Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Vaihda komentohaun pikanäppäin","menuBarIcon.menu.showImmediately":"Näytä heti","menuBarIcon.menu.showNotionInMenuBar":"Näytä Notion valikkopalkissa","menuBarIcon.menu.toggleCommandSearch":"Avaa tai sulje komentohaku","openAtLogin.dialog.detail":"{operatingSystem} esti Notionia määrittämästä ”Avaa sisäänkirjautuessa” -asetusta. Tämä tapahtuu yleensä silloin, kun Notionin käynnistys on määritetty järjestelmäasetuksissa tai jos käyttöoikeudet eivät ole riittävät. Voit silti määrittää tämän asetuksen manuaalisesti järjestelmäasetuksissa.","openAtLogin.dialog.title":"Avaa sisäänkirjautuessa","updatePrompt.detail":"Haluatko asentaa sen nyt? Avaamme ikkunat ja välilehdet uudelleen puolestasi.","updatePrompt.installAndRelaunch":"Asenna ja käynnistä uudelleen","updatePrompt.message":"Uusi Notion-versio on saatavilla!","updatePrompt.remindMeLater":"Muistuta myöhemmin","window.loadingError.message":"Virhe Notionin latauksen aikana, aloita muodostamalla yhteys Internetiin.","window.loadingError.reload":"Lataa uudelleen","window.tabLoadingError.cancel":"Peruuta","window.tabMenu.closeOtherTabs":"Sulje muut välilehdet","window.tabMenu.closeTab":"Sulje välilehti","window.tabMenu.closeTabsToLeft":"Sulje vasemmalla olevat välilehdet","window.tabMenu.closeTabsToRight":"Sulje oikealla olevat välilehdet","window.tabMenu.copyLink":"Kopioi linkki","window.tabMenu.duplicateTab":"Kopioi välilehti","window.tabMenu.moveToNewWindow":"Siirrä välilehti uuteen ikkunaan","window.tabMenu.refresh":"Päivitä välilehti"}')
-        }, 61993: e => {
+        },
+        // fr_FR
+        61993: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Recherche rapide","desktop.tabBar.backButtonLabel":"Précédent","desktop.tabBar.closeSidebarLabel":"Fermer la barre latérale","desktop.tabBar.closeTabLabel":"Fermer l’onglet {tabTitle}","desktop.tabBar.forwardButtonLabel":"Suivant","desktop.tabBar.loadingPlaceholder":"Chargement…","desktop.tabBar.newTabButtonLabel":"Nouvel onglet","desktop.tabBar.openSidebarLabel":"Ouvrir la barre latérale","desktopInstaller.failedToMove.detail":"Nous n’avons pas pu déplacer l’appli vers votre dossier « Applications ». Déplacez-la manuellement.","desktopInstaller.failedToMove.title":"Le déplacement de l’appli a échoué","desktopInstaller.invalidInstallDialog.cancelButton.label":"Annuler","desktopInstaller.invalidInstallDialog.confirmMove":"Votre application Notion n’est pas installée correctement. Pouvons-nous la déplacer vers votre dossier « Applications » ?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Installation non valide","desktopSearch.doneButton.label":"Terminé","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} correspondance} other {{matchCount} correspondances}}","desktopSearch.noResults.message":"Aucun résultat","desktopTopbar.appMenu.about":"À propos de Notion","desktopTopbar.appMenu.checkForUpdate":"Recherche de mise à jour…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Vous disposez déjà de la dernière version de Notion.","desktopTopbar.appMenu.checkForUpdate.title":"Recherche de mise à jour","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Une nouvelle version de Notion est disponible et en cours de téléchargement en arrière-plan. Merci de rester à jour !","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion n’a pas pu établir de connexion avec le serveur de mise à jour, en raison d’un problème lié à votre connexion Internet ou au serveur de mise à jour. Réessayez plus tard.","desktopTopbar.appMenu.downloadingUpdate":"Téléchargement de la mise à jour ({percentage} %)","desktopTopbar.appMenu.hide":"Masquer Notion","desktopTopbar.appMenu.hideOthers":"Masquer les autres","desktopTopbar.appMenu.preferences":"Préférences…","desktopTopbar.appMenu.quit":"Quitter","desktopTopbar.appMenu.quitWithoutSavingTabs":"Quitter sans enregistrer les onglets","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Réinitialiser et effacer toutes les données locales","desktopTopbar.appMenu.resetAndUpdateApp":"Réinitialiser et mettre à jour l’application","desktopTopbar.appMenu.restartToApplyUpdate":"Redémarrer pour appliquer la mise à jour","desktopTopbar.appMenu.services":"Services","desktopTopbar.appMenu.unhide":"Tout afficher","desktopTopbar.editMenu.copy":"Copier","desktopTopbar.editMenu.cut":"Couper","desktopTopbar.editMenu.paste":"Coller","desktopTopbar.editMenu.pasteAndMatchStyle":"Coller et harmoniser le style","desktopTopbar.editMenu.redo":"Rétablir","desktopTopbar.editMenu.selectAll":"Tout sélectionner","desktopTopbar.editMenu.speech":"Voix","desktopTopbar.editMenu.speech.startSpeaking":"Commencer à parler","desktopTopbar.editMenu.speech.stopSpeaking":"Arrêter de parler","desktopTopbar.editMenu.title":"Modifier","desktopTopbar.editMenu.undo":"Annuler","desktopTopbar.fileMenu.close":"Fermer la fenêtre","desktopTopbar.fileMenu.closeTab":"Fermer l’onglet","desktopTopbar.fileMenu.newTab":"Nouvel onglet","desktopTopbar.fileMenu.newWindow":"Nouvelle fenêtre","desktopTopbar.fileMenu.print":"Imprimer…","desktopTopbar.fileMenu.quit":"Quitter","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Quitter sans enregistrer les onglets","desktopTopbar.fileMenu.reopenClosedTab":"Rouvrir le dernier onglet fermé","desktopTopbar.fileMenu.title":"Fichier","desktopTopbar.helpMenu.disableDebugLogging":"Désactiver la journalisation avancée et redémarrer","desktopTopbar.helpMenu.disableHardwareAcceleration":"Désactiver l’accélération matérielle et redémarrer","desktopTopbar.helpMenu.enableDebugLogging":"Activer la journalisation avancée et redémarrer","desktopTopbar.helpMenu.enableHardwareAcceleration":"Activer l’accélération matérielle et redémarrer","desktopTopbar.helpMenu.openConsole":"Ouvrir la console…","desktopTopbar.helpMenu.openHelpAndSupport":"Ouvrir le site d’aide et la documentation","desktopTopbar.helpMenu.recordPerformanceTrace":"Enregistrer une trace de performance…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Voulez-vous enregistrer une trace de performance pour les 30 prochaines secondes ? Une fois l’enregistrement terminé, il sera placé dans votre dossier Téléchargements.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Annuler","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Enregistrer une trace de performance","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Enregistrer une trace de performance ?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Réinitialiser et effacer toutes les données locales","desktopTopbar.helpMenu.showLogsInExplorer":"Afficher les entrées du registre dans l’explorateur","desktopTopbar.helpMenu.showLogsInFinder":"Afficher les entrées du registre dans le Finder","desktopTopbar.helpMenu.title":"Aide","desktopTopbar.historyMenu.historyBack":"Précédent","desktopTopbar.historyMenu.historyForward":"Suivant","desktopTopbar.historyMenu.title":"Historique","desktopTopbar.toggleDevTools":"Afficher les outils de développement","desktopTopbar.toggleWindowDevTools":"Afficher la fenêtre des outils de développement","desktopTopbar.troubleshootingMenu.title":"Résolution de problèmes","desktopTopbar.viewMenu.actualSize":"Taille réelle","desktopTopbar.viewMenu.forceReload":"Forcer l’actualisation","desktopTopbar.viewMenu.reload":"Recharger","desktopTopbar.viewMenu.reloadAllTabs":"Recharger tous les onglets","desktopTopbar.viewMenu.showHideSidebar":"Afficher/masquer la barre latérale","desktopTopbar.viewMenu.title":"Afficher","desktopTopbar.viewMenu.togglefullscreen":"Basculer en plein écran","desktopTopbar.viewMenu.zoomIn":"Zoomer","desktopTopbar.viewMenu.zoomOut":"Dézoomer","desktopTopbar.whatsNewMac.title":"Ouvrir les nouveautés de Notion pour macOS","desktopTopbar.whatsNewWindows.title":"Ouvrir les nouveautés de Notion pour Windows","desktopTopbar.windowMenu.close":"Fermer","desktopTopbar.windowMenu.front":"Premier plan","desktopTopbar.windowMenu.maximize":"Agrandir","desktopTopbar.windowMenu.minimize":"Réduire","desktopTopbar.windowMenu.showNextTab":"Afficher l’onglet suivant","desktopTopbar.windowMenu.showPreviousTab":"Afficher l’onglet précédent","desktopTopbar.windowMenu.title":"Fenêtre","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion a rencontré une erreur lors de l’affichage du registre dans le Finder :","desktopTroubleshooting.showLogs.error.message.windows":"Notion a rencontré une erreur lors de l’affichage du registre dans l’explorateur :","desktopTroubleshooting.showLogs.error.title":"Impossible d’afficher les entrées du registre","menuBarIcon.menu.enableQuickSearch":"Activer la recherche rapide","menuBarIcon.menu.keepInBackground":"Garder en arrière-plan","menuBarIcon.menu.launchPreferences":"Lancer les préférences","menuBarIcon.menu.openCloseQuickSearch":"Ouvrir/fermer la recherche rapide","menuBarIcon.menu.openOnLogin":"Ouvrir Notion à l’ouverture de la session","menuBarIcon.menu.quitNotion":"Quitter Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Modifier le raccourci de la recherche rapide","menuBarIcon.menu.showImmediately":"Afficher immédiatement","menuBarIcon.menu.showNotionInMenuBar":"Afficher Notion dans la barre de menu","menuBarIcon.menu.toggleCommandSearch":"Afficher/masquer la recherche rapide","openAtLogin.dialog.detail":"{operatingSystem} a empêché Notion de configurer le paramètre « Ouvrir à l’ouverture de la session ». Cela peut se produire lorsque le démarrage de Notion est configuré dans les paramètres système ou si vous ne disposez pas des autorisations d’accès requises. Vous pouvez cependant configurer cette option manuellement dans les paramètres système.","openAtLogin.dialog.title":"Ouvrir à l’ouverture de la session","updatePrompt.detail":"Voulez-vous l’installer maintenant ? Nous nous chargerons de rouvrir vos fenêtres et onglets.","updatePrompt.installAndRelaunch":"Installer et relancer","updatePrompt.message":"Une nouvelle version de Notion est disponible !","updatePrompt.remindMeLater":"Me le rappeler plus tard","window.loadingError.message":"Erreur lors du chargement de Notion, connectez-vous à Internet pour démarrer.","window.loadingError.reload":"Recharger","window.tabLoadingError.cancel":"Annuler","window.tabMenu.closeOtherTabs":"Fermer les autres onglets","window.tabMenu.closeTab":"Fermer l’onglet","window.tabMenu.closeTabsToLeft":"Fermer les onglets à gauche","window.tabMenu.closeTabsToRight":"Fermer les onglets à droite","window.tabMenu.copyLink":"Copier le lien","window.tabMenu.duplicateTab":"Dupliquer l’onglet","window.tabMenu.moveToNewWindow":"Déplacer l’onglet vers une nouvelle fenêtre","window.tabMenu.refresh":"Actualiser l’onglet"}')
-        }, 27290: e => {
+        },
+        // ja_JP
+        27290: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion コマンド検索","desktop.tabBar.backButtonLabel":"戻る","desktop.tabBar.closeSidebarLabel":"サイドバーを閉じる","desktop.tabBar.closeTabLabel":"{tabTitle}のタブを閉じる","desktop.tabBar.forwardButtonLabel":"進む","desktop.tabBar.loadingPlaceholder":"読み込み中...","desktop.tabBar.newTabButtonLabel":"新規タブ","desktop.tabBar.openSidebarLabel":"サイドバーを開く","desktopInstaller.failedToMove.detail":"アプリをアプリケーションフォルダーに移動できませんでした。手動で移動してください。","desktopInstaller.failedToMove.title":"アプリの移動に失敗しました","desktopInstaller.invalidInstallDialog.cancelButton.label":"キャンセル","desktopInstaller.invalidInstallDialog.confirmMove":"Notionアプリが正しくインストールされていません。Notionアプリをアプリケーションフォルダーに移動してもよろしいですか？","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"インストールが無効です","desktopSearch.doneButton.label":"完了","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount}件の一致} other {{matchCount}件の一致}}","desktopSearch.noResults.message":"結果なし","desktopTopbar.appMenu.about":"Notionについて","desktopTopbar.appMenu.checkForUpdate":"アップデートを確認…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"お使いのNotionは最新バージョンです！","desktopTopbar.appMenu.checkForUpdate.title":"アップデートを確認","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Notionの新しいバージョンが利用可能なため、現在バックグラウンドでダウンロード中です。最新バージョンにアップデートしていただきありがとうございます。","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"インターネット接続の問題か、アップデートサーバー自体の問題により、アップデートサーバーに接続できませんでした。時間をおいてもう一度お試しください。","desktopTopbar.appMenu.downloadingUpdate":"アップデートをダウンロード中（{percentage}%）","desktopTopbar.appMenu.hide":"Notionを非表示","desktopTopbar.appMenu.hideOthers":"ほかを非表示","desktopTopbar.appMenu.preferences":"環境設定…","desktopTopbar.appMenu.quit":"終了","desktopTopbar.appMenu.quitWithoutSavingTabs":"タブを保存せずに終了する","desktopTopbar.appMenu.resetAndEraseAllLocalData":"すべてのローカルデータのリセットと消去","desktopTopbar.appMenu.resetAndUpdateApp":"アプリのリセットと更新","desktopTopbar.appMenu.restartToApplyUpdate":"再起動してアップデートを適用","desktopTopbar.appMenu.services":"サービス","desktopTopbar.appMenu.unhide":"すべて表示する","desktopTopbar.editMenu.copy":"コピー","desktopTopbar.editMenu.cut":"切り取り","desktopTopbar.editMenu.paste":"貼り付け","desktopTopbar.editMenu.pasteAndMatchStyle":"貼り付けてスタイルを合わせる","desktopTopbar.editMenu.redo":"やり直し","desktopTopbar.editMenu.selectAll":"すべて選択","desktopTopbar.editMenu.speech":"音声読み上げ","desktopTopbar.editMenu.speech.startSpeaking":"音声読み上げを開始","desktopTopbar.editMenu.speech.stopSpeaking":"音声読み上げを停止","desktopTopbar.editMenu.title":"編集","desktopTopbar.editMenu.undo":"元に戻す","desktopTopbar.fileMenu.close":"ウィンドウを閉じる","desktopTopbar.fileMenu.closeTab":"タブを閉じる","desktopTopbar.fileMenu.newTab":"新規タブ","desktopTopbar.fileMenu.newWindow":"新しいウィンドウ","desktopTopbar.fileMenu.print":"印刷…","desktopTopbar.fileMenu.quit":"終了","desktopTopbar.fileMenu.quitWithoutSavingTabs":"タブを保存せずに終了する","desktopTopbar.fileMenu.reopenClosedTab":"最後に閉じたタブを再び開く","desktopTopbar.fileMenu.title":"ファイル","desktopTopbar.helpMenu.disableDebugLogging":"詳細ログを無効にして再起動する","desktopTopbar.helpMenu.disableHardwareAcceleration":"ハードウェアアクセラレーションを無効化して再起動","desktopTopbar.helpMenu.enableDebugLogging":"詳細ログを有効にして再起動する","desktopTopbar.helpMenu.enableHardwareAcceleration":"ハードウェアアクセラレーションを有効化して再起動","desktopTopbar.helpMenu.openConsole":"コンソールを開く…","desktopTopbar.helpMenu.openHelpAndSupport":"ヘルプと解説を開く","desktopTopbar.helpMenu.recordPerformanceTrace":"パフォーマンストレースを記録…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"今から30秒間のパフォーマンストレースを記録しますか？完了すると、ダウンロードフォルダに保存されます。","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"キャンセル","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"パフォーマンストレースを記録","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"パフォーマンストレースを記録しますか？","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"すべてのローカルデータのリセットと消去","desktopTopbar.helpMenu.showLogsInExplorer":"エクスプローラーでログを表示","desktopTopbar.helpMenu.showLogsInFinder":"Finderでログを表示","desktopTopbar.helpMenu.title":"ヘルプ","desktopTopbar.historyMenu.historyBack":"戻る","desktopTopbar.historyMenu.historyForward":"進む","desktopTopbar.historyMenu.title":"履歴","desktopTopbar.toggleDevTools":"開発者ツールの切り替え","desktopTopbar.toggleWindowDevTools":"ウィンドウ開発者ツールの切り替え","desktopTopbar.troubleshootingMenu.title":"トラブルシューティング","desktopTopbar.viewMenu.actualSize":"100%表示","desktopTopbar.viewMenu.forceReload":"強制的に再読み込み","desktopTopbar.viewMenu.reload":"再読み込み","desktopTopbar.viewMenu.reloadAllTabs":"すべてのタブを再読み込み","desktopTopbar.viewMenu.showHideSidebar":"サイドバーの表示/非表示","desktopTopbar.viewMenu.title":"表示","desktopTopbar.viewMenu.togglefullscreen":"全画面表示のオン・オフ","desktopTopbar.viewMenu.zoomIn":"拡大","desktopTopbar.viewMenu.zoomOut":"縮小","desktopTopbar.whatsNewMac.title":"Mac版Notionの最新情報を開く","desktopTopbar.whatsNewWindows.title":"Windows版Notionの最新情報を開く","desktopTopbar.windowMenu.close":"閉じる","desktopTopbar.windowMenu.front":"前面","desktopTopbar.windowMenu.maximize":"最大化","desktopTopbar.windowMenu.minimize":"最小化","desktopTopbar.windowMenu.showNextTab":"次のタブを表示","desktopTopbar.windowMenu.showPreviousTab":"前のタブを表示","desktopTopbar.windowMenu.title":"ウィンドウ","desktopTopbar.windowMenu.zoom":"ズーム","desktopTroubleshooting.showLogs.error.message.mac":"NotionがFinderでログを表示しようとした際に次のエラーが発生しました：","desktopTroubleshooting.showLogs.error.message.windows":"Notionがエクスプローラーでログを表示しようとした際に次のエラーが発生しました：","desktopTroubleshooting.showLogs.error.title":"ログの表示に失敗しました","menuBarIcon.menu.enableQuickSearch":"クイック検索を有効化","menuBarIcon.menu.keepInBackground":"バックグラウンドで保持","menuBarIcon.menu.launchPreferences":"起動設定","menuBarIcon.menu.openCloseQuickSearch":"クイック検索を開く/閉じる","menuBarIcon.menu.openOnLogin":"ログイン時にNotionを開く","menuBarIcon.menu.quitNotion":"Notionを終了する","menuBarIcon.menu.selectCommandSearchShortcut":"コマンド検索ショートカットの変更","menuBarIcon.menu.showImmediately":"すぐに表示","menuBarIcon.menu.showNotionInMenuBar":"メニューバーにNotionを表示する","menuBarIcon.menu.toggleCommandSearch":"コマンド検索の表示/非表示","openAtLogin.dialog.detail":"{operatingSystem}により、Notionの「ログイン時に開く」を設定できませんでした。これは通常、Notionの起動がシステム設定で構成されているか、権限が不十分な場合に発生します。この設定は、システム設定で手動で行うこともできます。","openAtLogin.dialog.title":"ログイン時に開く","updatePrompt.detail":"今すぐインストールしますか？ウィンドウとタブは復元されます。","updatePrompt.installAndRelaunch":"インストールして再起動","updatePrompt.message":"Notionの新バージョンがリリースされました！","updatePrompt.remindMeLater":"あとでリマインド","window.loadingError.message":"Notionの読み込みに失敗しました。インターネットに接続してください。","window.loadingError.reload":"再読み込み","window.tabLoadingError.cancel":"キャンセル","window.tabMenu.closeOtherTabs":"他のタブを閉じる","window.tabMenu.closeTab":"タブを閉じる","window.tabMenu.closeTabsToLeft":"左のタブを閉じる","window.tabMenu.closeTabsToRight":"右のタブを閉じる","window.tabMenu.copyLink":"リンクをコピー","window.tabMenu.duplicateTab":"タブを複製","window.tabMenu.moveToNewWindow":"タブを新しいウィンドウに移動","window.tabMenu.refresh":"タブを再読み込み"}')
-        }, 8332: e => {
+        },
+        // ko_KR
+        8332: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion - 명령어 검색","desktop.tabBar.backButtonLabel":"뒤로가기","desktop.tabBar.closeSidebarLabel":"사이드바 닫기","desktop.tabBar.closeTabLabel":"{tabTitle} 탭 닫기","desktop.tabBar.forwardButtonLabel":"앞으로 가기","desktop.tabBar.loadingPlaceholder":"로딩 중...","desktop.tabBar.newTabButtonLabel":"새 탭","desktop.tabBar.openSidebarLabel":"사이드바 열기","desktopInstaller.failedToMove.detail":"앱을 Applications 폴더로 이동시키지 못했습니다. 수동으로 이동시켜 주세요.","desktopInstaller.failedToMove.title":"앱 이동 실패","desktopInstaller.invalidInstallDialog.cancelButton.label":"취소","desktopInstaller.invalidInstallDialog.confirmMove":"Notion 애플리케이션이 정상적으로 설치되지 않았습니다. Notion 앱을 Applications 폴더로 이동시켜도 될까요?","desktopInstaller.invalidInstallDialog.okButton.label":"확인","desktopInstaller.invalidInstallDialog.title":"잘못된 설치","desktopSearch.doneButton.label":"완료","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} 일치} other {{matchCount} 일치}}","desktopSearch.noResults.message":"찾을 수 없음","desktopTopbar.appMenu.about":"Notion 소개","desktopTopbar.appMenu.checkForUpdate":"업데이트 확인","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"최신 버전의 Notion을 사용 중입니다!","desktopTopbar.appMenu.checkForUpdate.title":"업데이트 확인","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"새 버전의 Notion을 사용할 수 있으며 현재 백그라운드에서 다운로드 중입니다. 최신 상태를 유지해 주셔서 감사합니다!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"인터넷 연결 또는 업데이트 서버 자체에 문제가 있어 업데이트 서버에 연결하지 못했습니다. 나중에 다시 시도하세요.","desktopTopbar.appMenu.downloadingUpdate":"업데이트 다운로드 중({percentage}%)","desktopTopbar.appMenu.hide":"Notion 숨기기","desktopTopbar.appMenu.hideOthers":"다른 항목 숨기기","desktopTopbar.appMenu.preferences":"환경설정…","desktopTopbar.appMenu.quit":"끝내기","desktopTopbar.appMenu.quitWithoutSavingTabs":"탭 저장 없이 종료","desktopTopbar.appMenu.resetAndEraseAllLocalData":"앱 초기화 및 로컬 데이터 삭제","desktopTopbar.appMenu.resetAndUpdateApp":"앱 초기화 및 업데이트","desktopTopbar.appMenu.restartToApplyUpdate":"업데이트 적용을 위해 다시 시작","desktopTopbar.appMenu.services":"서비스","desktopTopbar.appMenu.unhide":"모두 표시하기","desktopTopbar.editMenu.copy":"복사","desktopTopbar.editMenu.cut":"잘라내기","desktopTopbar.editMenu.paste":"붙여넣기","desktopTopbar.editMenu.pasteAndMatchStyle":"서식 유지 붙여넣기","desktopTopbar.editMenu.redo":"다시 실행","desktopTopbar.editMenu.selectAll":"모두 선택","desktopTopbar.editMenu.speech":"말하기","desktopTopbar.editMenu.speech.startSpeaking":"말하기 시작","desktopTopbar.editMenu.speech.stopSpeaking":"말하기 중지","desktopTopbar.editMenu.title":"편집","desktopTopbar.editMenu.undo":"실행 취소","desktopTopbar.fileMenu.close":"창 닫기","desktopTopbar.fileMenu.closeTab":"탭 닫기","desktopTopbar.fileMenu.newTab":"새로운 탭","desktopTopbar.fileMenu.newWindow":"새 창","desktopTopbar.fileMenu.print":"인쇄","desktopTopbar.fileMenu.quit":"나가기","desktopTopbar.fileMenu.quitWithoutSavingTabs":"탭 저장 없이 종료","desktopTopbar.fileMenu.reopenClosedTab":"마지막으로 닫은 탭 다시 열기","desktopTopbar.fileMenu.title":"파일","desktopTopbar.helpMenu.disableDebugLogging":"고급 로깅 비활성화 후 다시 시작","desktopTopbar.helpMenu.disableHardwareAcceleration":"하드웨어 가속 비활성화 후 다시 시작","desktopTopbar.helpMenu.enableDebugLogging":"고급 로깅 활성화 후 다시 시작","desktopTopbar.helpMenu.enableHardwareAcceleration":"하드웨어 가속 활성화 후 다시 시작","desktopTopbar.helpMenu.openConsole":"콘솔 열기...","desktopTopbar.helpMenu.openHelpAndSupport":"도움말과 설명서 열기","desktopTopbar.helpMenu.recordPerformanceTrace":"성능 트레이스 기록","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"다음 30초 동안 성능 트레이스를 기록하시겠습니까? 완료되면 다운로드 폴더에 저장됩니다.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"취소","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"성능 트레이스 기록","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"성능 트레이스를 기록하시겠습니까?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"앱을 초기화하고 로컬 데이터 모두 삭제하기","desktopTopbar.helpMenu.showLogsInExplorer":"탐색기에서 로그 표시","desktopTopbar.helpMenu.showLogsInFinder":"Finder에서 로그 표시","desktopTopbar.helpMenu.title":"도움말","desktopTopbar.historyMenu.historyBack":"뒤로","desktopTopbar.historyMenu.historyForward":"앞으로","desktopTopbar.historyMenu.title":"기록","desktopTopbar.toggleDevTools":"개발자 도구 토글","desktopTopbar.toggleWindowDevTools":"Windows 개발자 도구 토글","desktopTopbar.troubleshootingMenu.title":"트러블슈팅","desktopTopbar.viewMenu.actualSize":"실제 크기","desktopTopbar.viewMenu.forceReload":"강제 새로고침","desktopTopbar.viewMenu.reload":"다시 불러오기","desktopTopbar.viewMenu.reloadAllTabs":"모든 탭 다시 불러오기","desktopTopbar.viewMenu.showHideSidebar":"사이드바 표시/숨기기","desktopTopbar.viewMenu.title":"보기","desktopTopbar.viewMenu.togglefullscreen":"전체 화면 토글","desktopTopbar.viewMenu.zoomIn":"확대","desktopTopbar.viewMenu.zoomOut":"축소","desktopTopbar.whatsNewMac.title":"MacOS용 Notion의 업데이트 내용 보기","desktopTopbar.whatsNewWindows.title":"Windows용 Notion의 업데이트 내용 보기","desktopTopbar.windowMenu.close":"닫기","desktopTopbar.windowMenu.front":"앞면","desktopTopbar.windowMenu.maximize":"최대화","desktopTopbar.windowMenu.minimize":"최소화","desktopTopbar.windowMenu.showNextTab":"다음 탭 표시","desktopTopbar.windowMenu.showPreviousTab":"이전 탭 표시","desktopTopbar.windowMenu.title":"창","desktopTopbar.windowMenu.zoom":"확대/축소","desktopTroubleshooting.showLogs.error.message.mac":"Finder에서 로그를 표시하는 동안 Notion에서 오류가 발생했습니다.","desktopTroubleshooting.showLogs.error.message.windows":"Explorer에서 로그를 표시하는 동안 Notion에서 오류가 발생했습니다.","desktopTroubleshooting.showLogs.error.title":"로그 표시에 실패했습니다.","menuBarIcon.menu.enableQuickSearch":"빠른 검색 활성화","menuBarIcon.menu.keepInBackground":"백그라운드에서 계속 실행","menuBarIcon.menu.launchPreferences":"시작 설정","menuBarIcon.menu.openCloseQuickSearch":"빠른 검색 열기/닫기","menuBarIcon.menu.openOnLogin":"로그인 시 Notion 열기","menuBarIcon.menu.quitNotion":"Notion 종료","menuBarIcon.menu.selectCommandSearchShortcut":"명령어 검색 단축키 변경","menuBarIcon.menu.showImmediately":"즉시 표시","menuBarIcon.menu.showNotionInMenuBar":"메뉴 모음에 Notion 표시","menuBarIcon.menu.toggleCommandSearch":"명령어 검색 토글","openAtLogin.dialog.detail":"{operatingSystem}에서 Notion이 \'로그인 시 열기\' 설정을 구성하지 못했습니다. 일반적으로 시스템 설정에서 Notion 시작을 구성했거나 권한이 충분하지 않은 경우 이 문제가 발생합니다. 시스템 설정에서 이 설정을 수동으로 구성할 수 있습니다.","openAtLogin.dialog.title":"로그인 시 열기","updatePrompt.detail":"지금 설치하시겠어요? 창과 탭이 다시 열립니다.","updatePrompt.installAndRelaunch":"설치 후 다시 시작","updatePrompt.message":"Notion의 새로운 버전이 출시되었습니다!","updatePrompt.remindMeLater":"나중에 다시 알림","window.loadingError.message":"Notion을 로드하는 동안 오류가 발생했습니다. 시작하려면 인터넷에 연결하세요.","window.loadingError.reload":"다시 불러오기","window.tabLoadingError.cancel":"취소","window.tabMenu.closeOtherTabs":"다른 탭 닫기","window.tabMenu.closeTab":"탭 닫기","window.tabMenu.closeTabsToLeft":"왼쪽 탭 닫기","window.tabMenu.closeTabsToRight":"오른쪽 탭 닫기","window.tabMenu.copyLink":"링크 복사","window.tabMenu.duplicateTab":"탭 복제","window.tabMenu.moveToNewWindow":"탭을 새 창에서 열기","window.tabMenu.refresh":"탭 새로고침"}')
-        }, 16996: e => {
+        },
+        // nb_NO
+        16996: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Kommandosøk","desktop.tabBar.backButtonLabel":"Tilbake","desktop.tabBar.closeSidebarLabel":"Lukk sidestolpe","desktop.tabBar.closeTabLabel":"Lukk fanen {tabTitle}","desktop.tabBar.forwardButtonLabel":"Framover","desktop.tabBar.loadingPlaceholder":"Laster inn …","desktop.tabBar.newTabButtonLabel":"Ny fane","desktop.tabBar.openSidebarLabel":"Åpne sidestolpen","desktopInstaller.failedToMove.detail":"Vi kan ikke flytte appen til Apper-mappen. Flytt den manuelt.","desktopInstaller.failedToMove.title":"Kan ikke flytte app","desktopInstaller.invalidInstallDialog.cancelButton.label":"Avbryt","desktopInstaller.invalidInstallDialog.confirmMove":"Notion-appen din er ikke riktig installert. Kan vi flytte Notion-appen til Apper-mappen?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ugyldig installasjon","desktopSearch.doneButton.label":"Ferdig","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} match} andre {{matchCount} matcher}}","desktopSearch.noResults.message":"Ikke funnet","desktopTopbar.appMenu.about":"Om Notion","desktopTopbar.appMenu.checkForUpdate":"Se etter oppdateringer …","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du bruker den nyeste versjonen av Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Se etter oppdateringer","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"En ny versjon av Notion er tilgjengelig og lastes for øyeblikket ned i bakgrunnen. Takk for at du holder deg oppdatert!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion klarte ikke å koble til oppdateringsserveren, enten på grunn av et problem med internett-tilkoblingen eller selve oppdateringsserveren. Prøv igjen senere.","desktopTopbar.appMenu.downloadingUpdate":"Laster ned oppdatering ({percentage} %)","desktopTopbar.appMenu.hide":"Skjul Notion","desktopTopbar.appMenu.hideOthers":"Skjul andre","desktopTopbar.appMenu.preferences":"Instillinger …","desktopTopbar.appMenu.quit":"Avslutt","desktopTopbar.appMenu.quitWithoutSavingTabs":"Gå ut uten å lagre faner","desktopTopbar.appMenu.restartToApplyUpdate":"Start på nytt for å bruke oppdateringen","desktopTopbar.appMenu.services":"Tjenester","desktopTopbar.appMenu.unhide":"Vis alt","desktopTopbar.editMenu.copy":"Kopier","desktopTopbar.editMenu.cut":"Klipp ut","desktopTopbar.editMenu.paste":"Lim inn","desktopTopbar.editMenu.pasteAndMatchStyle":"Lim inn og match stil","desktopTopbar.editMenu.redo":"Gjør om","desktopTopbar.editMenu.selectAll":"Velg alle","desktopTopbar.editMenu.speech":"Tale","desktopTopbar.editMenu.speech.startSpeaking":"Begynn å snakke","desktopTopbar.editMenu.speech.stopSpeaking":"Slutt å snakke","desktopTopbar.editMenu.title":"Rediger","desktopTopbar.editMenu.undo":"Angre","desktopTopbar.fileMenu.close":"Lukk vindu","desktopTopbar.fileMenu.closeTab":"Lukk fanen","desktopTopbar.fileMenu.newTab":"Ny fane","desktopTopbar.fileMenu.newWindow":"Nytt vindu","desktopTopbar.fileMenu.print":"Skriv ut ...","desktopTopbar.fileMenu.quit":"Avslutt","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Avslutt uten å lagre faner","desktopTopbar.fileMenu.reopenClosedTab":"Åpne sist lukkede fane på nytt","desktopTopbar.fileMenu.title":"Fil","desktopTopbar.helpMenu.disableDebugLogging":"Deaktiver avansert logging og start på nytt","desktopTopbar.helpMenu.disableHardwareAcceleration":"Deaktiver maskinvareakselerasjon og start på nytt","desktopTopbar.helpMenu.enableDebugLogging":"Aktiver avansert logging og start på nytt","desktopTopbar.helpMenu.enableHardwareAcceleration":"Aktiver maskinvareakselerasjon og start på nytt","desktopTopbar.helpMenu.openConsole":"Åpne konsollen …","desktopTopbar.helpMenu.openHelpAndSupport":"Åpne hjelp og dokumentasjon","desktopTopbar.helpMenu.recordPerformanceTrace":"Registrer ytelsessporing ...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Vil du registrere et ytelsesspor for de neste 30 sekundene? Når det er gjort, vil det bli plassert i nedlastingsmappen.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Avbryt","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Registrer ytelsesspor","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Registrer et ytelsesspor?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Tilbakestill og slett alle lokale data","desktopTopbar.helpMenu.showLogsInExplorer":"Vis logger i Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Vis logger i Finder","desktopTopbar.helpMenu.title":"Hjelp","desktopTopbar.historyMenu.historyBack":"Tilbake","desktopTopbar.historyMenu.historyForward":"Framover","desktopTopbar.historyMenu.title":"Historikk","desktopTopbar.toggleDevTools":"Slå av/på utviklerverktøy","desktopTopbar.toggleWindowDevTools":"Slå av/på Windows Utviklerverktøy","desktopTopbar.troubleshootingMenu.title":"Feilsøking","desktopTopbar.viewMenu.actualSize":"Faktisk størrelse","desktopTopbar.viewMenu.forceReload":"Tving ny innlasting","desktopTopbar.viewMenu.reload":"Last inn på nytt","desktopTopbar.viewMenu.showHideSidebar":"Vis/skjul sidestolpe","desktopTopbar.viewMenu.title":"Vis","desktopTopbar.viewMenu.togglefullscreen":"Veksle fullskjerm","desktopTopbar.viewMenu.zoomIn":"Zoom inn","desktopTopbar.viewMenu.zoomOut":"Zoom ut","desktopTopbar.whatsNewMac.title":"Åpne Hva er nytt i Notion for macOS","desktopTopbar.whatsNewWindows.title":"Åpne Hva er nytt i Notion for Windows","desktopTopbar.windowMenu.close":"Lukk","desktopTopbar.windowMenu.front":"Front","desktopTopbar.windowMenu.maximize":"Maksimer","desktopTopbar.windowMenu.minimize":"Minimer","desktopTopbar.windowMenu.showNextTab":"Vis neste fane","desktopTopbar.windowMenu.showPreviousTab":"Vis forrige fane","desktopTopbar.windowMenu.title":"Vindu","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion oppdaget en feil under forsøk på å vise loggene i Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion oppdaget en feil under forsøk på å vise loggene i Explorer:","desktopTroubleshooting.showLogs.error.title":"Visning av loggene mislyktes","menuBarIcon.menu.enableQuickSearch":"Aktiver hurtigsøk","menuBarIcon.menu.keepInBackground":"Ha i bakgrunnen","menuBarIcon.menu.launchPreferences":"Startinnstillinger","menuBarIcon.menu.openOnLogin":"Åpne Notion ved pålogging","menuBarIcon.menu.quitNotion":"Avslutt Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Endre hurtigtast for kommandosøk","menuBarIcon.menu.showImmediately":"Vis umiddelbart","menuBarIcon.menu.showNotionInMenuBar":"Vis Notion i statusfeltet","menuBarIcon.menu.toggleCommandSearch":"Vis/skjul kommandosøk","openAtLogin.dialog.detail":"{operatingSystem} hindret Notion fra å konfigurere «Åpne ved pålogging»-innstillingen. Dette skjer vanligvis når oppstarten til Notion er konfigurert i systeminnstillingene, eller hvis du mangler tilstrekkelige tillatelser. Du kan fortsatt konfigurere denne innstillingen manuelt i systeminnstillingene.","openAtLogin.dialog.title":"Åpne ved pålogging","updatePrompt.detail":"Vil du installere den nå? Vi åpner vinduene og fanene på nytt for deg.","updatePrompt.installAndRelaunch":"Installer og start på nytt","updatePrompt.message":"En ny versjon av Notion er tilgjengelig!","updatePrompt.remindMeLater":"Minn meg på det senere","window.loadingError.message":"Feil ved innlasting av Notion. Koble til Internett for å komme i gang.","window.loadingError.reload":"Last inn på nytt","window.tabLoadingError.cancel":"Avbryt","window.tabMenu.closeOtherTabs":"Lukk andre faner","window.tabMenu.closeTab":"Lukk fanen","window.tabMenu.closeTabsToLeft":"Lukk faner til venstre","window.tabMenu.closeTabsToRight":"Lukk faner til høyre","window.tabMenu.copyLink":"Kopier lenke","window.tabMenu.duplicateTab":"Dupliser fane","window.tabMenu.moveToNewWindow":"Flytt fane til nytt vindu","window.tabMenu.refresh":"Oppdater fane"}')
-        }, 63969: e => {
+        },
+        // nl_NL
+        63969: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Zoekopdrachten","desktop.tabBar.backButtonLabel":"Terug","desktop.tabBar.closeSidebarLabel":"Zijbalk vergrendelen","desktop.tabBar.closeTabLabel":"Tabblad {tabTitle} sluiten","desktop.tabBar.forwardButtonLabel":"Volgende","desktop.tabBar.loadingPlaceholder":"Aan het laden...","desktop.tabBar.newTabButtonLabel":"Nieuw tabblad","desktop.tabBar.openSidebarLabel":"Zijbalk openen","desktopInstaller.failedToMove.detail":"We zijn er niet in geslaagd de app naar je map Applicaties te verplaatsen. Verplaats deze handmatig.","desktopInstaller.failedToMove.title":"Kan app niet verplaatsen","desktopInstaller.invalidInstallDialog.cancelButton.label":"Annuleren","desktopInstaller.invalidInstallDialog.confirmMove":"Je Notion-applicatie is niet correct geïnstalleerd. Wil je de Notion-app verplaatsen naar je map Applicaties?","desktopInstaller.invalidInstallDialog.okButton.label":"Ok","desktopInstaller.invalidInstallDialog.title":"Ongeldige installatie","desktopSearch.doneButton.label":"Klaar","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} match} other {{matchCount} matches}}","desktopSearch.noResults.message":"Niet gevonden","desktopTopbar.appMenu.about":"Over Notion","desktopTopbar.appMenu.checkForUpdate":"Controleren op updates...","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Je gebruikt de nieuwste versie van Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Controleren op updates...","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Er is een nieuwe versie van Notion beschikbaar die momenteel op de achtergrond wordt gedownload. Bedankt voor het installeren van de update!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion kan geen verbinding maken met de updateserver vanwege een probleem met je internetverbinding of met de updateserver zelf. Probeer het later opnieuw.","desktopTopbar.appMenu.downloadingUpdate":"Update wordt gedownload ({percentage}%)","desktopTopbar.appMenu.hide":"Verberg Notion","desktopTopbar.appMenu.hideOthers":"Verberg anderen","desktopTopbar.appMenu.preferences":"Voorkeuren…","desktopTopbar.appMenu.quit":"Stoppen","desktopTopbar.appMenu.quitWithoutSavingTabs":"Afsluiten zonder tabbladen op te slaan","desktopTopbar.appMenu.restartToApplyUpdate":"Start opnieuw op om de update toe te passen","desktopTopbar.appMenu.services":"Diensten","desktopTopbar.appMenu.unhide":"Toon alle","desktopTopbar.editMenu.copy":"Kopiëren","desktopTopbar.editMenu.cut":"Knippen","desktopTopbar.editMenu.paste":"Plakken","desktopTopbar.editMenu.pasteAndMatchStyle":"Stijl plakken en matchen","desktopTopbar.editMenu.redo":"Opnieuw","desktopTopbar.editMenu.selectAll":"Alles selecteren","desktopTopbar.editMenu.speech":"Spraak","desktopTopbar.editMenu.speech.startSpeaking":"Begin met spreken","desktopTopbar.editMenu.speech.stopSpeaking":"Stop met spreken","desktopTopbar.editMenu.title":"Bewerken","desktopTopbar.editMenu.undo":"Ongedaan maken","desktopTopbar.fileMenu.close":"Venster sluiten","desktopTopbar.fileMenu.closeTab":"Tabblad sluiten","desktopTopbar.fileMenu.newTab":"Nieuw tabblad","desktopTopbar.fileMenu.newWindow":"Nieuw venster","desktopTopbar.fileMenu.print":"Afdrukken…","desktopTopbar.fileMenu.quit":"Afsluiten","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Afsluiten zonder tabbladen op te slaan","desktopTopbar.fileMenu.reopenClosedTab":"Laatst gesloten tabblad opnieuw openen","desktopTopbar.fileMenu.title":"Bestand","desktopTopbar.helpMenu.disableDebugLogging":"Geavanceerde logboekregistratie uitschakelen en opnieuw opstarten","desktopTopbar.helpMenu.disableHardwareAcceleration":"Hardwareversnelling uitschakelen en opnieuw opstarten","desktopTopbar.helpMenu.enableDebugLogging":"Geavanceerde logboekregistratie inschakelen en opnieuw opstarten","desktopTopbar.helpMenu.enableHardwareAcceleration":"Hardwareversnelling inschakelen en opnieuw opstarten","desktopTopbar.helpMenu.openConsole":"Console openen…","desktopTopbar.helpMenu.openHelpAndSupport":"Hulp en documentatie openen","desktopTopbar.helpMenu.recordPerformanceTrace":"Prestatietracering opnemen…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Wilt u een prestatietracering opnemen voor de komende 30 seconden? Als u klaar bent, wordt het in uw map Downloads geplaatst.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Annuleren","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Prestatietracering opnemen","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Een prestatietracering opnemen?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Alle lokale gegevens resetten en wissen","desktopTopbar.helpMenu.showLogsInExplorer":"Logboeken weergeven in Verkenner","desktopTopbar.helpMenu.showLogsInFinder":"Logboeken weergeven in Finder","desktopTopbar.helpMenu.title":"Help","desktopTopbar.historyMenu.historyBack":"Terug","desktopTopbar.historyMenu.historyForward":"Volgende","desktopTopbar.historyMenu.title":"Geschiedenis","desktopTopbar.toggleDevTools":"Schakelen naar ontwikkelaarstools","desktopTopbar.toggleWindowDevTools":"Schakelen naar venster ontwikkelaarstools","desktopTopbar.troubleshootingMenu.title":"Probleemoplossen","desktopTopbar.viewMenu.actualSize":"Werkelijke grootte","desktopTopbar.viewMenu.forceReload":"Opnieuw laden forceren","desktopTopbar.viewMenu.reload":"Opnieuw laden","desktopTopbar.viewMenu.showHideSidebar":"Zijbalk weergeven/verbergen","desktopTopbar.viewMenu.title":"Weergeven","desktopTopbar.viewMenu.togglefullscreen":"Schakelen naar volledige pagina","desktopTopbar.viewMenu.zoomIn":"Inzoomen","desktopTopbar.viewMenu.zoomOut":"Uitzoomen","desktopTopbar.whatsNewMac.title":"Wat is er nieuw in Notion voor macOS openen","desktopTopbar.whatsNewWindows.title":"Wat is er nieuw in Notion voor Windows openen","desktopTopbar.windowMenu.close":"Sluiten","desktopTopbar.windowMenu.front":"Voor","desktopTopbar.windowMenu.maximize":"Maximaliseren","desktopTopbar.windowMenu.minimize":"Minimaliseren","desktopTopbar.windowMenu.showNextTab":"Volgend tabblad weergeven","desktopTopbar.windowMenu.showPreviousTab":"Vorig tabblad weergeven","desktopTopbar.windowMenu.title":"Venster","desktopTopbar.windowMenu.zoom":"Zoom-vergadering","desktopTroubleshooting.showLogs.error.message.mac":"Notion heeft een fout ontdekt bij het weergeven van de logboeken in Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion heeft een fout ontdekt bij het weergeven van de logboeken in Verkenner:","desktopTroubleshooting.showLogs.error.title":"Het weergeven van de logboeken is mislukt","menuBarIcon.menu.enableQuickSearch":"Snel zoeken inschakelen","menuBarIcon.menu.keepInBackground":"Op de achtergrond houden","menuBarIcon.menu.launchPreferences":"Voorkeuren openen","menuBarIcon.menu.openOnLogin":"Notion openen bij aanmelden","menuBarIcon.menu.quitNotion":"Notion afsluiten","menuBarIcon.menu.selectCommandSearchShortcut":"Snelkoppeling voor Zoekopdrachten wijzigen","menuBarIcon.menu.showImmediately":"Onmiddellijk tonen","menuBarIcon.menu.showNotionInMenuBar":"Toon Notion in de menubalk","menuBarIcon.menu.toggleCommandSearch":"Toggle zoekopdracht","openAtLogin.dialog.detail":"{operatingSystem} hield tegen dat Notion de instelling \'Openen bij inloggen\' kon configureren. Dit gebeurt meestal wanneer het opstarten van Notion is geconfigureerd in de systeeminstellingen of wanneer je onvoldoende machtigingen hebt. Je kunt deze instelling nog steeds handmatig configureren in de systeeminstellingen.","openAtLogin.dialog.title":"Openen bij aanmelden","updatePrompt.detail":"Wil je deze nu installeren? We zullen je vensters en tabbladen weer voor je openen.","updatePrompt.installAndRelaunch":"Installeren en opnieuw opstarten","updatePrompt.message":"Er is een nieuwe versie van Notion beschikbaar!","updatePrompt.remindMeLater":"Herinner mij hier later aan","window.loadingError.message":"Fout bij het laden van Notion. Maak verbinding met het internet om aan de slag te gaan.","window.loadingError.reload":"Opnieuw laden","window.tabLoadingError.cancel":"Annuleren","window.tabMenu.closeOtherTabs":"Andere tabbladen sluiten","window.tabMenu.closeTab":"Tabblad sluiten","window.tabMenu.closeTabsToLeft":"Tabbladen links sluiten","window.tabMenu.closeTabsToRight":"Tabbladen rechts sluiten","window.tabMenu.copyLink":"Koppeling kopiëren","window.tabMenu.duplicateTab":"Tabblad dupliceren","window.tabMenu.moveToNewWindow":"Tabblad naar nieuw venster verplaatsen","window.tabMenu.refresh":"Tabblad vernieuwen"}')
-        }, 39301: e => {
+        },
+        // pt_BR
+        39301: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion – Pesquisa por Atalho","desktop.tabBar.backButtonLabel":"Voltar","desktop.tabBar.closeSidebarLabel":"Fechar a barra lateral","desktop.tabBar.closeTabLabel":"Fechar a aba {tabTitle}","desktop.tabBar.forwardButtonLabel":"Avançar","desktop.tabBar.loadingPlaceholder":"Carregando...","desktop.tabBar.newTabButtonLabel":"Nova guia","desktop.tabBar.openSidebarLabel":"Abrir barra lateral","desktopInstaller.failedToMove.detail":"Falha ao mover o aplicativo para a pasta Aplicativos. Você precisa movê-lo manualmente.","desktopInstaller.failedToMove.title":"Falha ao mover o aplicativo","desktopInstaller.invalidInstallDialog.cancelButton.label":"Cancelar","desktopInstaller.invalidInstallDialog.confirmMove":"Seu aplicativo Notion não está instalado corretamente. Podemos movê-lo para a pasta Aplicativos?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Instalação inválida","desktopSearch.doneButton.label":"Concluído","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} correspondência} other {{matchCount} correspondências}}","desktopSearch.noResults.message":"Não encontrado","desktopTopbar.appMenu.about":"Sobre o Notion","desktopTopbar.appMenu.checkForUpdate":"Verifique se há atualizações…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Você está usando a versão mais recente do Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Verifique se há atualizações","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Uma nova versão disponível do Notion está sendo baixada em segundo plano. Obrigado por se manter atualizado!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"O Notion não conseguiu estabelecer uma conexão com o servidor de atualização devido a um problema em sua conexão com a internet ou no próprio servidor. Tente novamente mais tarde.","desktopTopbar.appMenu.downloadingUpdate":"Baixando atualização ({percentage}%)","desktopTopbar.appMenu.hide":"Ocultar o Notion","desktopTopbar.appMenu.hideOthers":"Ocultar outros","desktopTopbar.appMenu.preferences":"Preferências…","desktopTopbar.appMenu.quit":"Sair","desktopTopbar.appMenu.quitWithoutSavingTabs":"Sair sem salvar guias","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Redefinir e apagar todos os dados locais","desktopTopbar.appMenu.resetAndUpdateApp":"Redefinir e atualizar o aplicativo","desktopTopbar.appMenu.restartToApplyUpdate":"Reiniciar para aplicar a atualização","desktopTopbar.appMenu.services":"Serviços","desktopTopbar.appMenu.unhide":"Mostrar tudo","desktopTopbar.editMenu.copy":"Copiar","desktopTopbar.editMenu.cut":"Recortar","desktopTopbar.editMenu.paste":"Colar","desktopTopbar.editMenu.pasteAndMatchStyle":"Colar e usar mesmo estilo","desktopTopbar.editMenu.redo":"Refazer","desktopTopbar.editMenu.selectAll":"Selecionar tudo","desktopTopbar.editMenu.speech":"Fala","desktopTopbar.editMenu.speech.startSpeaking":"Começar a falar","desktopTopbar.editMenu.speech.stopSpeaking":"Parar de falar","desktopTopbar.editMenu.title":"Editar","desktopTopbar.editMenu.undo":"Desfazer","desktopTopbar.fileMenu.close":"Fechar janela","desktopTopbar.fileMenu.closeTab":"Fechar guia","desktopTopbar.fileMenu.newTab":"Nova guia","desktopTopbar.fileMenu.newWindow":"Nova janela","desktopTopbar.fileMenu.print":"Imprimir...","desktopTopbar.fileMenu.quit":"Sair","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Sair sem salvar guias","desktopTopbar.fileMenu.reopenClosedTab":"Reabrir a última guia fechada","desktopTopbar.fileMenu.title":"Arquivo","desktopTopbar.helpMenu.disableDebugLogging":"Desabilitar o registro avançado e reiniciar","desktopTopbar.helpMenu.disableHardwareAcceleration":"Desabilitar aceleração de hardware e reiniciar","desktopTopbar.helpMenu.enableDebugLogging":"Habilitar o registro avançado e reiniciar","desktopTopbar.helpMenu.enableHardwareAcceleration":"Habilitar aceleração de hardware e reiniciar","desktopTopbar.helpMenu.openConsole":"Abrir console…","desktopTopbar.helpMenu.openHelpAndSupport":"Abrir Ajuda e documentação","desktopTopbar.helpMenu.recordPerformanceTrace":"Gravar registro de desempenho…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Deseja gravar um registro de desempenho pelos próximos 30 segundos? Depois de concluído, ele será colocado na pasta Downloads.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Cancelar","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Gravar registro de desempenho","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Quer gravar um registro de desempenho?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Redefinir e apagar todos os dados locais","desktopTopbar.helpMenu.showLogsInExplorer":"Mostrar registros no Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Mostrar registros no Finder","desktopTopbar.helpMenu.title":"Ajuda","desktopTopbar.historyMenu.historyBack":"Voltar","desktopTopbar.historyMenu.historyForward":"Avançar","desktopTopbar.historyMenu.title":"Histórico","desktopTopbar.toggleDevTools":"Alternar Ferramentas do Desenvolvedor","desktopTopbar.toggleWindowDevTools":"Alternar janela de Ferramentas do Desenvolvedor","desktopTopbar.troubleshootingMenu.title":"Solução de problemas","desktopTopbar.viewMenu.actualSize":"Tamanho real","desktopTopbar.viewMenu.forceReload":"Forçar recarregar","desktopTopbar.viewMenu.reload":"Recarregar","desktopTopbar.viewMenu.reloadAllTabs":"Recarregar todas as guias","desktopTopbar.viewMenu.showHideSidebar":"Mostrar/ocultar barra lateral","desktopTopbar.viewMenu.title":"Visualizar","desktopTopbar.viewMenu.togglefullscreen":"Alternar tela cheia","desktopTopbar.viewMenu.zoomIn":"Mais zoom","desktopTopbar.viewMenu.zoomOut":"Menos zoom","desktopTopbar.whatsNewMac.title":"Abra as Novidades do Notion para macOS","desktopTopbar.whatsNewWindows.title":"Abra as Novidades do Notion para Windows","desktopTopbar.windowMenu.close":"Fechar","desktopTopbar.windowMenu.front":"Frente","desktopTopbar.windowMenu.maximize":"Maximizar","desktopTopbar.windowMenu.minimize":"Minimizar","desktopTopbar.windowMenu.showNextTab":"Mostrar próxima guia","desktopTopbar.windowMenu.showPreviousTab":"Mostrar guia anterior","desktopTopbar.windowMenu.title":"Janela","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"O Notion encontrou um erro ao tentar mostrar os registros no Finder:","desktopTroubleshooting.showLogs.error.message.windows":"O Notion encontrou um erro ao tentar mostrar os registros no Explorer:","desktopTroubleshooting.showLogs.error.title":"Falha ao mostrar os registros","menuBarIcon.menu.enableQuickSearch":"Ativar pesquisa rápida","menuBarIcon.menu.keepInBackground":"Manter em segundo plano","menuBarIcon.menu.launchPreferences":"Preferências de inicialização","menuBarIcon.menu.openCloseQuickSearch":"Abrir/fechar pesquisa rápida","menuBarIcon.menu.openOnLogin":"Abrir o Notion no login","menuBarIcon.menu.quitNotion":"Sair do Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Alterar atalho da Pesquisa por Atalho","menuBarIcon.menu.showImmediately":"Mostrar imediatamente","menuBarIcon.menu.showNotionInMenuBar":"Mostrar o Notion na barra de menu","menuBarIcon.menu.toggleCommandSearch":"Alternar Pesquisa por Atalho","openAtLogin.dialog.detail":"{operatingSystem} impediu que o Notion definisse a configuração \\"Abrir no login\\". Isso geralmente acontece quando a inicialização do Notion é definida nas configurações do sistema ou quando você não tem autorizações suficientes. Você ainda pode definir essa configuração manualmente nas configurações do sistema.","openAtLogin.dialog.title":"Abrir no login","updatePrompt.detail":"Gostaria de instalar agora? Reabriremos suas janelas e guias logo após.","updatePrompt.installAndRelaunch":"Instalar e reabrir","updatePrompt.message":"Está disponível uma nova versão do Notion!","updatePrompt.remindMeLater":"Lembrar mais tarde","window.loadingError.message":"Erro ao carregar o Notion. Conecte-se à internet para começar.","window.loadingError.reload":"Recarregar","window.tabLoadingError.cancel":"Cancelar","window.tabMenu.closeOtherTabs":"Fechar outras guias","window.tabMenu.closeTab":"Fechar guia","window.tabMenu.closeTabsToLeft":"Fechar guias à esquerda","window.tabMenu.closeTabsToRight":"Fechar guias à direita","window.tabMenu.copyLink":"Copiar link","window.tabMenu.duplicateTab":"Duplicar guia","window.tabMenu.moveToNewWindow":"Mover guia para nova janela","window.tabMenu.refresh":"Atualizar guia"}')
-        }, 86144: e => {
+        },
+        // sv_SE
+        86144: e => {
             "use strict";
             e.exports = JSON.parse('{"commandSearch.window.title":"Notion – Kommandosökning","desktop.tabBar.backButtonLabel":"Tillbaka","desktop.tabBar.closeSidebarLabel":"Stäng sidofältet","desktop.tabBar.closeTabLabel":"Stäng flik, {tabTitle}","desktop.tabBar.forwardButtonLabel":"Nästa","desktop.tabBar.loadingPlaceholder":"Laddar …","desktop.tabBar.newTabButtonLabel":"Ny flik","desktop.tabBar.openSidebarLabel":"Öppna sidofält","desktopInstaller.failedToMove.detail":"Det gick inte att flytta appen till din Applikations-mapp. Flytta den manuellt.","desktopInstaller.failedToMove.title":"Det gick inte att flytta appen","desktopInstaller.invalidInstallDialog.cancelButton.label":"Avbryt","desktopInstaller.invalidInstallDialog.confirmMove":"Din Notion-applikation är inte korrekt installerad. Kan vi flytta din Notion-app till din Applikations-mapp?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ogiltig installation","desktopSearch.doneButton.label":"Klart","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} träff} other {{matchCount} träffar}}","desktopSearch.noResults.message":"Hittades inte","desktopTopbar.appMenu.about":"Om Notion","desktopTopbar.appMenu.checkForUpdate":"Sök efter uppdateringar …","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du har den senaste versionen av Notion.","desktopTopbar.appMenu.checkForUpdate.title":"Sök efter uppdateringar","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"En ny version av Notion är tillgänglig och laddas för närvarande ner i bakgrunden. Tack för att du håller dig uppdaterad!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion lyckades inte upprätta en anslutning till uppdateringsservern, antingen på grund av problem med din Internetanslutning eller uppdateringsservern. Försök igen senare.","desktopTopbar.appMenu.downloadingUpdate":"Ladda ned uppdatering ({percentage}%)","desktopTopbar.appMenu.hide":"Dölj Notion","desktopTopbar.appMenu.hideOthers":"Dölj andra","desktopTopbar.appMenu.preferences":"Inställningar …","desktopTopbar.appMenu.quit":"Avsluta","desktopTopbar.appMenu.quitWithoutSavingTabs":"Stäng utan att spara flikarna","desktopTopbar.appMenu.restartToApplyUpdate":"Starta om för att tillämpa uppdatering","desktopTopbar.appMenu.services":"Tjänster","desktopTopbar.appMenu.unhide":"Visa alla","desktopTopbar.editMenu.copy":"Kopiera","desktopTopbar.editMenu.cut":"Klipp","desktopTopbar.editMenu.paste":"Klistra in","desktopTopbar.editMenu.pasteAndMatchStyle":"Klistra in och matcha stil","desktopTopbar.editMenu.redo":"Gör om","desktopTopbar.editMenu.selectAll":"Välj alla","desktopTopbar.editMenu.speech":"Tal","desktopTopbar.editMenu.speech.startSpeaking":"Börja tala","desktopTopbar.editMenu.speech.stopSpeaking":"Sluta tala","desktopTopbar.editMenu.title":"Redigera","desktopTopbar.editMenu.undo":"Ångra","desktopTopbar.fileMenu.close":"Stäng fönster","desktopTopbar.fileMenu.closeTab":"Stäng flik","desktopTopbar.fileMenu.newTab":"Ny flik","desktopTopbar.fileMenu.newWindow":"Nytt fönster","desktopTopbar.fileMenu.print":"Skriv ut ...","desktopTopbar.fileMenu.quit":"Avsluta","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Avsluta utan att spara flikarna","desktopTopbar.fileMenu.reopenClosedTab":"Öppna senast stängda flik igen","desktopTopbar.fileMenu.title":"Fil","desktopTopbar.helpMenu.disableDebugLogging":"Avaktivera avancerad loggning och omstart","desktopTopbar.helpMenu.disableHardwareAcceleration":"Inaktivera hårdvaruacceleration och omstart","desktopTopbar.helpMenu.enableDebugLogging":"Aktivera avancerad loggning och omstart","desktopTopbar.helpMenu.enableHardwareAcceleration":"Aktivera hårdvaruacceleration och omstart","desktopTopbar.helpMenu.openConsole":"Öppna konsol …","desktopTopbar.helpMenu.openHelpAndSupport":"Öppna hjälpen och dokumentationen","desktopTopbar.helpMenu.recordPerformanceTrace":"Spela in prestandaspårning …","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Vill du spela in ett prestandaspår under de kommande 30 sekunderna? När du är klar kommer den att placeras i mappen Nedladdningar.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Avbryt","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Spela in prestandaspårning","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Spela in ett prestandaspår?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Återställ och radera alla lokala data","desktopTopbar.helpMenu.showLogsInExplorer":"Visa loggar i Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Visa loggar i Finder","desktopTopbar.helpMenu.title":"Hjälp","desktopTopbar.historyMenu.historyBack":"Tillbaka","desktopTopbar.historyMenu.historyForward":"Nästa","desktopTopbar.historyMenu.title":"Historik","desktopTopbar.toggleDevTools":"Växla utvecklarverktyg","desktopTopbar.toggleWindowDevTools":"Växla Window Developer Tools","desktopTopbar.troubleshootingMenu.title":"Felsökning","desktopTopbar.viewMenu.actualSize":"Faktisk storlek","desktopTopbar.viewMenu.forceReload":"Tvinga omladdning","desktopTopbar.viewMenu.reload":"Läs in igen","desktopTopbar.viewMenu.showHideSidebar":"Visa/dölj sidofält","desktopTopbar.viewMenu.title":"Visa","desktopTopbar.viewMenu.togglefullscreen":"Växla helskärm","desktopTopbar.viewMenu.zoomIn":"Zooma in","desktopTopbar.viewMenu.zoomOut":"Zooma ut","desktopTopbar.whatsNewMac.title":"Öppna Nyheter i Notion för macOS","desktopTopbar.whatsNewWindows.title":"Öppna Nyheter i Notion för Windows","desktopTopbar.windowMenu.close":"Stäng","desktopTopbar.windowMenu.front":"Framsida","desktopTopbar.windowMenu.maximize":"Maximera","desktopTopbar.windowMenu.minimize":"Minimera","desktopTopbar.windowMenu.showNextTab":"Visa nästa flik","desktopTopbar.windowMenu.showPreviousTab":"Visa föregående flik","desktopTopbar.windowMenu.title":"Fönster","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion stötte på ett fel när du försökte visa loggarna i Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion stötte på ett fel när du försökte visa loggarna i Explorer:","desktopTroubleshooting.showLogs.error.title":"Det gick inte att visa loggarna","menuBarIcon.menu.enableQuickSearch":"Aktivera snabbsökning","menuBarIcon.menu.keepInBackground":"Behåll i bakgrunden","menuBarIcon.menu.launchPreferences":"Startinställningar","menuBarIcon.menu.openOnLogin":"Öppna Notion vid inloggning","menuBarIcon.menu.quitNotion":"Avsluta Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Ändra snabbkommandon för kommandosökning","menuBarIcon.menu.showImmediately":"Visa omedelbart","menuBarIcon.menu.showNotionInMenuBar":"Visa Notion i menyfältet","menuBarIcon.menu.toggleCommandSearch":"Växla kommandosökning","openAtLogin.dialog.detail":"{operatingSystem} förhindrade att Notion konfigurerade inställningen Öppna vid inloggning.Det här inträffar vanligtvis när Notions uppstart har konfigurerats i systeminställningarna eller om du inte har tillräcklig behörighet.Du kan fortfarande konfigurera inställningen manuellt i systeminställningarna.","openAtLogin.dialog.title":"Öppna vid inloggning","updatePrompt.detail":"Vill du installera den nu? Vi öppnar dina fönster och flikar igen.","updatePrompt.installAndRelaunch":"Installera och starta om","updatePrompt.message":"En ny version av Notion finns tillgänglig.","updatePrompt.remindMeLater":"Påminn mig senare","window.loadingError.message":"Notion kunde inte laddas. Anslut till internet för att komma igång.","window.loadingError.reload":"Läs in igen","window.tabLoadingError.cancel":"Avbryt","window.tabMenu.closeOtherTabs":"Stäng andra flikar","window.tabMenu.closeTab":"Stäng flik","window.tabMenu.closeTabsToLeft":"Stäng flikar till vänster","window.tabMenu.closeTabsToRight":"Stäng flikar till höger","window.tabMenu.copyLink":"Kopiera länk","window.tabMenu.duplicateTab":"Duplicera fliken","window.tabMenu.moveToNewWindow":"Flytta fliken till ett nytt fönster","window.tabMenu.refresh":"Uppdatera fliken"}')
-        }, 49596: e => {
+        },
+        // zh_CN
+        49596: e => {
             "use strict";
-            e.exports = JSON.parse('{"desktop.tabBar.backButtonLabel":"返回","desktop.tabBar.closeSidebarLabel":"关闭侧边栏","desktop.tabBar.closeTabLabel":"关闭标签页 {tabTitle}","desktop.tabBar.forwardButtonLabel":"前进","desktop.tabBar.loadingPlaceholder":"载入中…","desktop.tabBar.newTabButtonLabel":"新标签页","desktop.tabBar.openSidebarLabel":"打开侧边栏","desktopInstaller.failedToMove.detail":"我们未能将应用程序移动到“应用程序”文件夹。请手动移动。","desktopInstaller.failedToMove.title":"移动应用程序失败","desktopInstaller.invalidInstallDialog.cancelButton.label":"取消","desktopInstaller.invalidInstallDialog.confirmMove":"你的 Notion 应用程序未正确安装。我们能否将 Notion 应用程序移到“应用程序”文件夹中？","desktopInstaller.invalidInstallDialog.okButton.label":"好的","desktopInstaller.invalidInstallDialog.title":"安装无效","desktopSearch.doneButton.label":"完成","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} 个匹配项} other {{matchCount} 个匹配项}}","desktopSearch.noResults.message":"未找到","desktopTopbar.appMenu.about":"关于 Notion","desktopTopbar.appMenu.checkForUpdate":"检查更新…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"你使用的是最新版本的 Notion！","desktopTopbar.appMenu.checkForUpdate.title":"检查更新","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"新版 Notion 已经发布，目前正在后台下载。感谢你及时更新！","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion 无法与更新服务器建立连接，可能是由于你的互联网连接或更新服务器本身存在问题。请稍后再试。","desktopTopbar.appMenu.downloadingUpdate":"正在下载更新","desktopTopbar.appMenu.hide":"隐藏 Notion","desktopTopbar.appMenu.hideOthers":"隐藏其他","desktopTopbar.appMenu.preferences":"首选项...","desktopTopbar.appMenu.quit":"退出","desktopTopbar.appMenu.resetAndEraseAllLocalData":"重置和擦除所有本地数据","desktopTopbar.appMenu.resetAndUpdateApp":"重置并更新应用","desktopTopbar.appMenu.restartToApplyUpdate":"重新启动以应用更新","desktopTopbar.appMenu.services":"服务","desktopTopbar.appMenu.unhide":"显示所有","desktopTopbar.editMenu.copy":"复制","desktopTopbar.editMenu.cut":"剪切","desktopTopbar.editMenu.paste":"粘贴","desktopTopbar.editMenu.pasteAndMatchStyle":"粘贴和匹配样式","desktopTopbar.editMenu.redo":"重做","desktopTopbar.editMenu.selectAll":"全选","desktopTopbar.editMenu.speech":"语音","desktopTopbar.editMenu.speech.startSpeaking":"开始说话","desktopTopbar.editMenu.speech.stopSpeaking":"停止说话","desktopTopbar.editMenu.title":"编辑","desktopTopbar.editMenu.undo":"撤消","desktopTopbar.fileMenu.close":"关闭窗口","desktopTopbar.fileMenu.closeTab":"关闭标签页","desktopTopbar.fileMenu.newTab":"新标签页","desktopTopbar.fileMenu.newWindow":"新窗口","desktopTopbar.fileMenu.quit":"退出","desktopTopbar.fileMenu.reopenClosedTab":"重新打开上次关闭的标签页","desktopTopbar.fileMenu.title":"文件","desktopTopbar.helpMenu.disableDebugLogging":"禁用高级日志记录并重新启动","desktopTopbar.helpMenu.disableHardwareAcceleration":"禁用硬件加速并重新启动","desktopTopbar.helpMenu.enableDebugLogging":"启用高级日志记录并重新启动","desktopTopbar.helpMenu.enableHardwareAcceleration":"启用硬件加速并重新启动","desktopTopbar.helpMenu.openConsole":"打开控制台...","desktopTopbar.helpMenu.openHelpAndSupport":"打开帮助和文档","desktopTopbar.helpMenu.recordPerformanceTrace":"记录性能跟踪","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"您想记录未来 30 秒的性能跟踪吗？完成后，它将被放置在您的“下载”文件夹中。","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"取消","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"记录性能跟踪","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"记录性能跟踪？","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"重置并擦除所有本地数据","desktopTopbar.helpMenu.showLogsInExplorer":"在资源管理器中显示日志","desktopTopbar.helpMenu.showLogsInFinder":"在 Finder 中显示日志","desktopTopbar.helpMenu.title":"帮助","desktopTopbar.historyMenu.historyBack":"后退","desktopTopbar.historyMenu.historyForward":"前进","desktopTopbar.historyMenu.title":"历史","desktopTopbar.toggleDevTools":"切换开发工具","desktopTopbar.toggleWindowDevTools":"切换Windows开发人员工具","desktopTopbar.troubleshootingMenu.title":"故障排除","desktopTopbar.viewMenu.actualSize":"实际大小","desktopTopbar.viewMenu.forceReload":"强制重新加载","desktopTopbar.viewMenu.reload":"重新加载","desktopTopbar.viewMenu.reloadAllTabs":"重新加载所有标签页","desktopTopbar.viewMenu.showHideSidebar":"显示/隐藏侧边栏","desktopTopbar.viewMenu.title":"视图","desktopTopbar.viewMenu.togglefullscreen":"切换全屏","desktopTopbar.viewMenu.zoomIn":"放大","desktopTopbar.viewMenu.zoomOut":"缩小","desktopTopbar.windowMenu.close":"关闭","desktopTopbar.windowMenu.front":"前面","desktopTopbar.windowMenu.maximize":"最大化","desktopTopbar.windowMenu.minimize":"最小化","desktopTopbar.windowMenu.showNextTab":"显示下一个选项卡","desktopTopbar.windowMenu.showPreviousTab":"显示上一个选项卡","desktopTopbar.windowMenu.title":"窗口","desktopTopbar.windowMenu.zoom":"缩放","desktopTroubleshooting.showLogs.error.message.mac":"Notion 尝试在 Finder 中显示日志时遇到错误：","desktopTroubleshooting.showLogs.error.message.windows":"Notion 尝试在资源管理器中显示日志时遇到错误：","desktopTroubleshooting.showLogs.error.title":"显示日志失败","menuBarIcon.menu.enableQuickSearch":"启用快速搜索","menuBarIcon.menu.openCloseQuickSearch":"打开/关闭快速搜索","menuBarIcon.menu.quitNotion":"退出 Notion","menuBarIcon.menu.showNotionInMenuBar":"在菜单栏中显示 Notion","window.loadingError.message":"加载 Notion 时出错，请连接到 Internet 开始使用。","window.loadingError.reload":"重新加载","window.tabLoadingError.cancel":"取消","window.tabMenu.closeOtherTabs":"关闭其他标签页","window.tabMenu.closeTab":"关闭标签页","window.tabMenu.closeTabsToLeft":"关闭左侧的标签页","window.tabMenu.closeTabsToRight":"关闭右侧的标签页","window.tabMenu.copyLink":"复制链接","window.tabMenu.duplicateTab":"复制标签页","window.tabMenu.moveToNewWindow":"将标签页移动到新窗口","window.tabMenu.refresh":"刷新标签页"}')
-        }, 36044: e => {
+            e.exports = {
+                "desktop.tabBar.backButtonLabel": "返回",
+                "desktop.tabBar.closeSidebarLabel": "关闭侧边栏",
+                "desktop.tabBar.closeTabLabel": "关闭标签页 {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "前进",
+                "desktop.tabBar.loadingPlaceholder": "载入中…",
+                "desktop.tabBar.newTabButtonLabel": "新标签页",
+                "desktop.tabBar.openSidebarLabel": "打开侧边栏",
+                "desktopInstaller.failedToMove.detail": "我们未能将应用程序移动到“应用程序”文件夹。请手动移动。",
+                "desktopInstaller.failedToMove.title": "移动应用程序失败",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "取消",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "你的 Notion 应用程序未正确安装。我们能否将 Notion 应用程序移到“应用程序”文件夹中？",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "好的",
+                "desktopInstaller.invalidInstallDialog.title": "安装无效",
+                "desktopSearch.doneButton.label": "完成",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} 个匹配项} other {{matchCount} 个匹配项}}",
+                "desktopSearch.noResults.message": "未找到",
+                "desktopTopbar.appMenu.about": "关于 Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "检查更新…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "你使用的是最新版本的 Notion！",
+                "desktopTopbar.appMenu.checkForUpdate.title": "检查更新",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "新版 Notion 已经发布，目前正在后台下载。感谢你及时更新！",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion 无法与更新服务器建立连接，可能是由于你的互联网连接或更新服务器本身存在问题。请稍后再试。",
+                "desktopTopbar.appMenu.downloadingUpdate": "正在下载更新",
+                "desktopTopbar.appMenu.hide": "隐藏 Notion",
+                "desktopTopbar.appMenu.hideOthers": "隐藏其他",
+                "desktopTopbar.appMenu.preferences": "首选项...",
+                "desktopTopbar.appMenu.quit": "退出",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "重置和擦除所有本地数据",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "重置并更新应用",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "重新启动以应用更新",
+                "desktopTopbar.appMenu.services": "服务",
+                "desktopTopbar.appMenu.unhide": "显示所有",
+                "desktopTopbar.editMenu.copy": "复制",
+                "desktopTopbar.editMenu.cut": "剪切",
+                "desktopTopbar.editMenu.paste": "粘贴",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "粘贴和匹配样式",
+                "desktopTopbar.editMenu.redo": "重做",
+                "desktopTopbar.editMenu.selectAll": "全选",
+                "desktopTopbar.editMenu.speech": "语音",
+                "desktopTopbar.editMenu.speech.startSpeaking": "开始说话",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "停止说话",
+                "desktopTopbar.editMenu.title": "编辑",
+                "desktopTopbar.editMenu.undo": "撤消",
+                "desktopTopbar.fileMenu.close": "关闭窗口",
+                "desktopTopbar.fileMenu.closeTab": "关闭标签页",
+                "desktopTopbar.fileMenu.newTab": "新标签页",
+                "desktopTopbar.fileMenu.newWindow": "新窗口",
+                "desktopTopbar.fileMenu.quit": "退出",
+                "desktopTopbar.fileMenu.reopenClosedTab": "重新打开上次关闭的标签页",
+                "desktopTopbar.fileMenu.title": "文件",
+                "desktopTopbar.helpMenu.disableDebugLogging": "禁用高级日志记录并重新启动",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "禁用硬件加速并重新启动",
+                "desktopTopbar.helpMenu.enableDebugLogging": "启用高级日志记录并重新启动",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "启用硬件加速并重新启动",
+                "desktopTopbar.helpMenu.openConsole": "打开控制台...",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "打开帮助和文档",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "记录性能跟踪",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "您想记录未来 30 秒的性能跟踪吗？完成后，它将被放置在您的“下载”文件夹中。",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "取消",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "记录性能跟踪",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "记录性能跟踪？",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "重置并擦除所有本地数据",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "在资源管理器中显示日志",
+                "desktopTopbar.helpMenu.showLogsInFinder": "在 Finder 中显示日志",
+                "desktopTopbar.helpMenu.title": "帮助",
+                "desktopTopbar.historyMenu.historyBack": "后退",
+                "desktopTopbar.historyMenu.historyForward": "前进",
+                "desktopTopbar.historyMenu.title": "历史",
+                "desktopTopbar.toggleDevTools": "切换开发工具",
+                "desktopTopbar.toggleWindowDevTools": "切换Windows开发人员工具",
+                "desktopTopbar.troubleshootingMenu.title": "故障排除",
+                "desktopTopbar.viewMenu.actualSize": "实际大小",
+                "desktopTopbar.viewMenu.forceReload": "强制重新加载",
+                "desktopTopbar.viewMenu.reload": "重新加载",
+                "desktopTopbar.viewMenu.reloadAllTabs": "重新加载所有标签页",
+                "desktopTopbar.viewMenu.showHideSidebar": "显示/隐藏侧边栏",
+                "desktopTopbar.viewMenu.title": "视图",
+                "desktopTopbar.viewMenu.togglefullscreen": "切换全屏",
+                "desktopTopbar.viewMenu.zoomIn": "放大",
+                "desktopTopbar.viewMenu.zoomOut": "缩小",
+                "desktopTopbar.windowMenu.close": "关闭",
+                "desktopTopbar.windowMenu.front": "前面",
+                "desktopTopbar.windowMenu.maximize": "最大化",
+                "desktopTopbar.windowMenu.minimize": "最小化",
+                "desktopTopbar.windowMenu.showNextTab": "显示下一个选项卡",
+                "desktopTopbar.windowMenu.showPreviousTab": "显示上一个选项卡",
+                "desktopTopbar.windowMenu.title": "窗口",
+                "desktopTopbar.windowMenu.zoom": "缩放",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion 尝试在 Finder 中显示日志时遇到错误：",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion 尝试在资源管理器中显示日志时遇到错误：",
+                "desktopTroubleshooting.showLogs.error.title": "显示日志失败",
+                "menuBarIcon.menu.enableQuickSearch": "启用快速搜索",
+                "menuBarIcon.menu.openCloseQuickSearch": "打开/关闭快速搜索",
+                "menuBarIcon.menu.quitNotion": "退出 Notion",
+                "menuBarIcon.menu.showNotionInMenuBar": "在菜单栏中显示 Notion",
+                "window.loadingError.message": "加载 Notion 时出错，请连接到 Internet 开始使用。",
+                "window.loadingError.reload": "重新加载",
+                "window.tabLoadingError.cancel": "取消",
+                "window.tabMenu.closeOtherTabs": "关闭其他标签页",
+                "window.tabMenu.closeTab": "关闭标签页",
+                "window.tabMenu.closeTabsToLeft": "关闭左侧的标签页",
+                "window.tabMenu.closeTabsToRight": "关闭右侧的标签页",
+                "window.tabMenu.copyLink": "复制链接",
+                "window.tabMenu.duplicateTab": "复制标签页",
+                "window.tabMenu.moveToNewWindow": "将标签页移动到新窗口",
+                "window.tabMenu.refresh": "刷新标签页"
+            }
+        },
+        // zh_TW
+        36044: e => {
             "use strict";
             e.exports = JSON.parse('{"desktop.tabBar.backButtonLabel":"返回","desktop.tabBar.closeSidebarLabel":"關閉側邊欄","desktop.tabBar.closeTabLabel":"關閉分頁 {tabTitle}","desktop.tabBar.forwardButtonLabel":"前進","desktop.tabBar.loadingPlaceholder":"載入中...","desktop.tabBar.newTabButtonLabel":"新分頁","desktop.tabBar.openSidebarLabel":"開啟側邊欄","desktopInstaller.failedToMove.detail":"我們不能將 APP 移至你的應用程式資料夾。請手動將其移動。","desktopInstaller.failedToMove.title":"無法移動 APP","desktopInstaller.invalidInstallDialog.cancelButton.label":"取消","desktopInstaller.invalidInstallDialog.confirmMove":"Notion APP 並未正確安裝。我們可以將你的 Notion APP 移入應用程式資料夾內嗎？","desktopInstaller.invalidInstallDialog.okButton.label":"好","desktopInstaller.invalidInstallDialog.title":"安裝無效","desktopSearch.doneButton.label":"完成","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} 個相符項目} other {{matchCount} 個相符項目}}","desktopSearch.noResults.message":"未找到","desktopTopbar.appMenu.about":"關於 Notion","desktopTopbar.appMenu.checkForUpdate":"檢查更新……","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"你正在使用最新版本的 Notion！","desktopTopbar.appMenu.checkForUpdate.title":"檢查更新","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"新版 Notion 現已推出，目前正在後台下載。感謝你隨時掌握最新資訊！","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion 無法與更新的伺服器連線，原因在於你的網際網路連線，或者更新的伺服器本身出現問題。請稍後再試一次。","desktopTopbar.appMenu.downloadingUpdate":"正在下載更新","desktopTopbar.appMenu.hide":"隱藏 Notion","desktopTopbar.appMenu.hideOthers":"隱藏其他","desktopTopbar.appMenu.preferences":"偏好設定","desktopTopbar.appMenu.quit":"離開","desktopTopbar.appMenu.resetAndEraseAllLocalData":"重置並清除所有本機資料","desktopTopbar.appMenu.resetAndUpdateApp":"重置並更新應用程式","desktopTopbar.appMenu.restartToApplyUpdate":"重新啟動以套用更新","desktopTopbar.appMenu.services":"服務","desktopTopbar.appMenu.unhide":"全部顯示","desktopTopbar.editMenu.copy":"複製","desktopTopbar.editMenu.cut":"剪下","desktopTopbar.editMenu.paste":"貼上","desktopTopbar.editMenu.pasteAndMatchStyle":"貼上並匹配風格","desktopTopbar.editMenu.redo":"重做","desktopTopbar.editMenu.selectAll":"全選","desktopTopbar.editMenu.speech":"語音","desktopTopbar.editMenu.speech.startSpeaking":"開始說話","desktopTopbar.editMenu.speech.stopSpeaking":"停止說話","desktopTopbar.editMenu.title":"編輯","desktopTopbar.editMenu.undo":"還原","desktopTopbar.fileMenu.close":"關閉視窗","desktopTopbar.fileMenu.closeTab":"關閉分頁","desktopTopbar.fileMenu.newTab":"新分頁","desktopTopbar.fileMenu.newWindow":"新視窗","desktopTopbar.fileMenu.quit":"離開","desktopTopbar.fileMenu.reopenClosedTab":"重新開啟最後關閉的分頁","desktopTopbar.fileMenu.title":"檔案","desktopTopbar.helpMenu.disableDebugLogging":"停用進階登錄並重新啟動","desktopTopbar.helpMenu.disableHardwareAcceleration":"停用硬體加速並重新啟動","desktopTopbar.helpMenu.enableDebugLogging":"啟用進階登錄並重新啟動","desktopTopbar.helpMenu.enableHardwareAcceleration":"啟用硬體加速並重新啟動","desktopTopbar.helpMenu.openConsole":"開啟控制台……","desktopTopbar.helpMenu.openHelpAndSupport":"開啟說明與文件","desktopTopbar.helpMenu.recordPerformanceTrace":"記錄性能追蹤","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"是否要記錄接下來 30 秒的性能追蹤？完成後，該記錄即會留存在你的「下載」資料夾。","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"取消","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"記錄性能追蹤","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"是否記錄性能追蹤？","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"重設並清除所有本機資料","desktopTopbar.helpMenu.showLogsInExplorer":"在 Explorer 中顯示日誌檔","desktopTopbar.helpMenu.showLogsInFinder":"在 Finder 中顯示日誌檔","desktopTopbar.helpMenu.title":"說明","desktopTopbar.historyMenu.historyBack":"返回","desktopTopbar.historyMenu.historyForward":"前進","desktopTopbar.historyMenu.title":"歷史","desktopTopbar.toggleDevTools":"切換開發者工具","desktopTopbar.toggleWindowDevTools":"切換Windows開發人員工具","desktopTopbar.troubleshootingMenu.title":"疑難排解","desktopTopbar.viewMenu.actualSize":"實際大小","desktopTopbar.viewMenu.forceReload":"強制重新載入","desktopTopbar.viewMenu.reload":"重新載入","desktopTopbar.viewMenu.reloadAllTabs":"重新載入所有分頁","desktopTopbar.viewMenu.showHideSidebar":"顯示/隱藏側邊欄","desktopTopbar.viewMenu.title":"視圖","desktopTopbar.viewMenu.togglefullscreen":"切換全熒幕","desktopTopbar.viewMenu.zoomIn":"縮小","desktopTopbar.viewMenu.zoomOut":"放大","desktopTopbar.windowMenu.close":"關閉","desktopTopbar.windowMenu.front":"前面","desktopTopbar.windowMenu.maximize":"最大化","desktopTopbar.windowMenu.minimize":"最小化","desktopTopbar.windowMenu.showNextTab":"顯示下一個分頁","desktopTopbar.windowMenu.showPreviousTab":"顯示上一個分頁","desktopTopbar.windowMenu.title":"視窗","desktopTopbar.windowMenu.zoom":"縮放","desktopTroubleshooting.showLogs.error.message.mac":"Notion 嘗試在 Finder 中顯示日誌檔時發生錯誤：","desktopTroubleshooting.showLogs.error.message.windows":"Notion 嘗試在 Explorer 中顯示日誌檔時發生錯誤：","desktopTroubleshooting.showLogs.error.title":"顯示日誌檔失敗","menuBarIcon.menu.enableQuickSearch":"啟用快速搜尋","menuBarIcon.menu.openCloseQuickSearch":"開啟/關閉快速搜尋","menuBarIcon.menu.quitNotion":"退出 Notion","menuBarIcon.menu.showNotionInMenuBar":"在選單列中顯示 Notion","window.loadingError.message":"載入 Notion 時出錯，連線到網際網路即可使用。","window.loadingError.reload":"重新載入","window.tabLoadingError.cancel":"取消","window.tabMenu.closeOtherTabs":"關閉其他分頁","window.tabMenu.closeTab":"關閉分頁","window.tabMenu.closeTabsToLeft":"關閉左側分頁","window.tabMenu.closeTabsToRight":"關閉右側分頁","window.tabMenu.copyLink":"複製連結","window.tabMenu.duplicateTab":"複製分頁","window.tabMenu.moveToNewWindow":"將分頁移至新視窗","window.tabMenu.refresh":"重新整理分頁"}')
-        }, 37301: e => {
+        },
+
+        // json schema
+        37301: module => {
             "use strict";
-            e.exports = JSON.parse('{"$id":"https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#","description":"Meta-schema for $data reference (JSON AnySchema extension proposal)","type":"object","required":["$data"],"properties":{"$data":{"type":"string","anyOf":[{"format":"relative-json-pointer"},{"format":"json-pointer"}]}},"additionalProperties":false}')
-        }, 92455: e => {
+            module.exports = {
+                "$id": "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+                "description": "Meta-schema for $data reference (JSON AnySchema extension proposal)",
+                "type": "object",
+                "required": [
+                    "$data"
+                ],
+                "properties": {
+                    "$data": {
+                        "type": "string",
+                        "anyOf": [
+                            {
+                                "format": "relative-json-pointer"
+                            },
+                            {
+                                "format": "json-pointer"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        92455: module => {
             "use strict";
-            e.exports = JSON.parse('{"$schema":"http://json-schema.org/draft-07/schema#","$id":"http://json-schema.org/draft-07/schema#","title":"Core schema meta-schema","definitions":{"schemaArray":{"type":"array","minItems":1,"items":{"$ref":"#"}},"nonNegativeInteger":{"type":"integer","minimum":0},"nonNegativeIntegerDefault0":{"allOf":[{"$ref":"#/definitions/nonNegativeInteger"},{"default":0}]},"simpleTypes":{"enum":["array","boolean","integer","null","number","object","string"]},"stringArray":{"type":"array","items":{"type":"string"},"uniqueItems":true,"default":[]}},"type":["object","boolean"],"properties":{"$id":{"type":"string","format":"uri-reference"},"$schema":{"type":"string","format":"uri"},"$ref":{"type":"string","format":"uri-reference"},"$comment":{"type":"string"},"title":{"type":"string"},"description":{"type":"string"},"default":true,"readOnly":{"type":"boolean","default":false},"examples":{"type":"array","items":true},"multipleOf":{"type":"number","exclusiveMinimum":0},"maximum":{"type":"number"},"exclusiveMaximum":{"type":"number"},"minimum":{"type":"number"},"exclusiveMinimum":{"type":"number"},"maxLength":{"$ref":"#/definitions/nonNegativeInteger"},"minLength":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"pattern":{"type":"string","format":"regex"},"additionalItems":{"$ref":"#"},"items":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/schemaArray"}],"default":true},"maxItems":{"$ref":"#/definitions/nonNegativeInteger"},"minItems":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"uniqueItems":{"type":"boolean","default":false},"contains":{"$ref":"#"},"maxProperties":{"$ref":"#/definitions/nonNegativeInteger"},"minProperties":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"required":{"$ref":"#/definitions/stringArray"},"additionalProperties":{"$ref":"#"},"definitions":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"properties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"patternProperties":{"type":"object","additionalProperties":{"$ref":"#"},"propertyNames":{"format":"regex"},"default":{}},"dependencies":{"type":"object","additionalProperties":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/stringArray"}]}},"propertyNames":{"$ref":"#"},"const":true,"enum":{"type":"array","items":true,"minItems":1,"uniqueItems":true},"type":{"anyOf":[{"$ref":"#/definitions/simpleTypes"},{"type":"array","items":{"$ref":"#/definitions/simpleTypes"},"minItems":1,"uniqueItems":true}]},"format":{"type":"string"},"contentMediaType":{"type":"string"},"contentEncoding":{"type":"string"},"if":{"$ref":"#"},"then":{"$ref":"#"},"else":{"$ref":"#"},"allOf":{"$ref":"#/definitions/schemaArray"},"anyOf":{"$ref":"#/definitions/schemaArray"},"oneOf":{"$ref":"#/definitions/schemaArray"},"not":{"$ref":"#"}},"default":true}')
-        }, 74483: e => {
+            module.exports = {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "$id": "http://json-schema.org/draft-07/schema#",
+                "title": "Core schema meta-schema",
+                "definitions": {
+                    "schemaArray": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "$ref": "#"
+                        }
+                    },
+                    "nonNegativeInteger": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "nonNegativeIntegerDefault0": {
+                        "allOf": [
+                            {
+                                "$ref": "#/definitions/nonNegativeInteger"
+                            },
+                            {
+                                "default": 0
+                            }
+                        ]
+                    },
+                    "simpleTypes": {
+                        "enum": [
+                            "array",
+                            "boolean",
+                            "integer",
+                            "null",
+                            "number",
+                            "object",
+                            "string"
+                        ]
+                    },
+                    "stringArray": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true,
+                        "default": []
+                    }
+                },
+                "type": [
+                    "object",
+                    "boolean"
+                ],
+                "properties": {
+                    "$id": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$schema": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "$ref": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$comment": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "default": true,
+                    "readOnly": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "examples": {
+                        "type": "array",
+                        "items": true
+                    },
+                    "multipleOf": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                    },
+                    "maximum": {
+                        "type": "number"
+                    },
+                    "exclusiveMaximum": {
+                        "type": "number"
+                    },
+                    "minimum": {
+                        "type": "number"
+                    },
+                    "exclusiveMinimum": {
+                        "type": "number"
+                    },
+                    "maxLength": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minLength": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "pattern": {
+                        "type": "string",
+                        "format": "regex"
+                    },
+                    "additionalItems": {
+                        "$ref": "#"
+                    },
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#"
+                            },
+                            {
+                                "$ref": "#/definitions/schemaArray"
+                            }
+                        ],
+                        "default": true
+                    },
+                    "maxItems": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minItems": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "uniqueItems": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "contains": {
+                        "$ref": "#"
+                    },
+                    "maxProperties": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minProperties": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "required": {
+                        "$ref": "#/definitions/stringArray"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#"
+                    },
+                    "definitions": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "patternProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "propertyNames": {
+                            "format": "regex"
+                        },
+                        "default": {}
+                    },
+                    "dependencies": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#"
+                                },
+                                {
+                                    "$ref": "#/definitions/stringArray"
+                                }
+                            ]
+                        }
+                    },
+                    "propertyNames": {
+                        "$ref": "#"
+                    },
+                    "const": true,
+                    "enum": {
+                        "type": "array",
+                        "items": true,
+                        "minItems": 1,
+                        "uniqueItems": true
+                    },
+                    "type": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/simpleTypes"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/simpleTypes"
+                                },
+                                "minItems": 1,
+                                "uniqueItems": true
+                            }
+                        ]
+                    },
+                    "format": {
+                        "type": "string"
+                    },
+                    "contentMediaType": {
+                        "type": "string"
+                    },
+                    "contentEncoding": {
+                        "type": "string"
+                    },
+                    "if": {
+                        "$ref": "#"
+                    },
+                    "then": {
+                        "$ref": "#"
+                    },
+                    "else": {
+                        "$ref": "#"
+                    },
+                    "allOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "anyOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "oneOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "not": {
+                        "$ref": "#"
+                    }
+                },
+                "default": true
+            }
+        },
+        74483: module => {
             "use strict";
-            e.exports = JSON.parse('{"$id":"https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#","description":"Meta-schema for $data reference (JSON AnySchema extension proposal)","type":"object","required":["$data"],"properties":{"$data":{"type":"string","anyOf":[{"format":"relative-json-pointer"},{"format":"json-pointer"}]}},"additionalProperties":false}')
-        }, 89049: e => {
+            module.exports = {
+                "$id": "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+                "description": "Meta-schema for $data reference (JSON AnySchema extension proposal)",
+                "type": "object",
+                "required": [
+                    "$data"
+                ],
+                "properties": {
+                    "$data": {
+                        "type": "string",
+                        "anyOf": [
+                            {
+                                "format": "relative-json-pointer"
+                            },
+                            {
+                                "format": "json-pointer"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        89049: module => {
             "use strict";
-            e.exports = JSON.parse('{"$schema":"http://json-schema.org/draft-07/schema#","$id":"http://json-schema.org/draft-07/schema#","title":"Core schema meta-schema","definitions":{"schemaArray":{"type":"array","minItems":1,"items":{"$ref":"#"}},"nonNegativeInteger":{"type":"integer","minimum":0},"nonNegativeIntegerDefault0":{"allOf":[{"$ref":"#/definitions/nonNegativeInteger"},{"default":0}]},"simpleTypes":{"enum":["array","boolean","integer","null","number","object","string"]},"stringArray":{"type":"array","items":{"type":"string"},"uniqueItems":true,"default":[]}},"type":["object","boolean"],"properties":{"$id":{"type":"string","format":"uri-reference"},"$schema":{"type":"string","format":"uri"},"$ref":{"type":"string","format":"uri-reference"},"$comment":{"type":"string"},"title":{"type":"string"},"description":{"type":"string"},"default":true,"readOnly":{"type":"boolean","default":false},"examples":{"type":"array","items":true},"multipleOf":{"type":"number","exclusiveMinimum":0},"maximum":{"type":"number"},"exclusiveMaximum":{"type":"number"},"minimum":{"type":"number"},"exclusiveMinimum":{"type":"number"},"maxLength":{"$ref":"#/definitions/nonNegativeInteger"},"minLength":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"pattern":{"type":"string","format":"regex"},"additionalItems":{"$ref":"#"},"items":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/schemaArray"}],"default":true},"maxItems":{"$ref":"#/definitions/nonNegativeInteger"},"minItems":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"uniqueItems":{"type":"boolean","default":false},"contains":{"$ref":"#"},"maxProperties":{"$ref":"#/definitions/nonNegativeInteger"},"minProperties":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"required":{"$ref":"#/definitions/stringArray"},"additionalProperties":{"$ref":"#"},"definitions":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"properties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"patternProperties":{"type":"object","additionalProperties":{"$ref":"#"},"propertyNames":{"format":"regex"},"default":{}},"dependencies":{"type":"object","additionalProperties":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/stringArray"}]}},"propertyNames":{"$ref":"#"},"const":true,"enum":{"type":"array","items":true,"minItems":1,"uniqueItems":true},"type":{"anyOf":[{"$ref":"#/definitions/simpleTypes"},{"type":"array","items":{"$ref":"#/definitions/simpleTypes"},"minItems":1,"uniqueItems":true}]},"format":{"type":"string"},"contentMediaType":{"type":"string"},"contentEncoding":{"type":"string"},"if":{"$ref":"#"},"then":{"$ref":"#"},"else":{"$ref":"#"},"allOf":{"$ref":"#/definitions/schemaArray"},"anyOf":{"$ref":"#/definitions/schemaArray"},"oneOf":{"$ref":"#/definitions/schemaArray"},"not":{"$ref":"#"}},"default":true}')
-        }
+            module.exports = {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "$id": "http://json-schema.org/draft-07/schema#",
+                "title": "Core schema meta-schema",
+                "definitions": {
+                    "schemaArray": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "$ref": "#"
+                        }
+                    },
+                    "nonNegativeInteger": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "nonNegativeIntegerDefault0": {
+                        "allOf": [
+                            {
+                                "$ref": "#/definitions/nonNegativeInteger"
+                            },
+                            {
+                                "default": 0
+                            }
+                        ]
+                    },
+                    "simpleTypes": {
+                        "enum": [
+                            "array",
+                            "boolean",
+                            "integer",
+                            "null",
+                            "number",
+                            "object",
+                            "string"
+                        ]
+                    },
+                    "stringArray": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true,
+                        "default": []
+                    }
+                },
+                "type": [
+                    "object",
+                    "boolean"
+                ],
+                "properties": {
+                    "$id": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$schema": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "$ref": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$comment": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "default": true,
+                    "readOnly": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "examples": {
+                        "type": "array",
+                        "items": true
+                    },
+                    "multipleOf": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                    },
+                    "maximum": {
+                        "type": "number"
+                    },
+                    "exclusiveMaximum": {
+                        "type": "number"
+                    },
+                    "minimum": {
+                        "type": "number"
+                    },
+                    "exclusiveMinimum": {
+                        "type": "number"
+                    },
+                    "maxLength": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minLength": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "pattern": {
+                        "type": "string",
+                        "format": "regex"
+                    },
+                    "additionalItems": {
+                        "$ref": "#"
+                    },
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#"
+                            },
+                            {
+                                "$ref": "#/definitions/schemaArray"
+                            }
+                        ],
+                        "default": true
+                    },
+                    "maxItems": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minItems": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "uniqueItems": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "contains": {
+                        "$ref": "#"
+                    },
+                    "maxProperties": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minProperties": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "required": {
+                        "$ref": "#/definitions/stringArray"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#"
+                    },
+                    "definitions": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "patternProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "propertyNames": {
+                            "format": "regex"
+                        },
+                        "default": {}
+                    },
+                    "dependencies": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#"
+                                },
+                                {
+                                    "$ref": "#/definitions/stringArray"
+                                }
+                            ]
+                        }
+                    },
+                    "propertyNames": {
+                        "$ref": "#"
+                    },
+                    "const": true,
+                    "enum": {
+                        "type": "array",
+                        "items": true,
+                        "minItems": 1,
+                        "uniqueItems": true
+                    },
+                    "type": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/simpleTypes"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/simpleTypes"
+                                },
+                                "minItems": 1,
+                                "uniqueItems": true
+                            }
+                        ]
+                    },
+                    "format": {
+                        "type": "string"
+                    },
+                    "contentMediaType": {
+                        "type": "string"
+                    },
+                    "contentEncoding": {
+                        "type": "string"
+                    },
+                    "if": {
+                        "$ref": "#"
+                    },
+                    "then": {
+                        "$ref": "#"
+                    },
+                    "else": {
+                        "$ref": "#"
+                    },
+                    "allOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "anyOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "oneOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "not": {
+                        "$ref": "#"
+                    }
+                },
+                "default": true
+            }
+        },
     }
     const __cache = {};
 
@@ -43529,27 +46261,45 @@
     }
 
     r.c = __cache
-    r.n = e => {
-        var t = e && e.__esModule ? () => e.default : () => e;
-        return r.d(t, {a: t}), t
+    r.n = module => {
+        let fn = module && module.__esModule ? () => module.default : () => module;
+        r.d(fn, {a: fn})
+        return fn
     }
-    r.d = (e, t) => {
-        for (var n in t) r.o(t, n) && !r.o(e, n) && Object.defineProperty(e, n, {enumerable: !0, get: t[n]})
+    r.d = (target, source) => {
+        for (let key in source)
+            if (r.o(source, key) && !r.o(target, key)) {
+                Object.defineProperty(target, key, {enumerable: true, get: source[key]})
+            }
     }
-    r.hmd = e => ((e = Object.create(e)).children || (e.children = []), Object.defineProperty(e, "exports", {
-        enumerable: !0,
-        set: () => {
-            throw new Error("ES Modules may not assign module.exports or exports.*, Use ESM export syntax, instead: " + e.id)
+    r.hmd = module => {
+        module = Object.create(module)
+        if (!module.children) {
+            module.children = []
         }
-    }), e)
-    r.o = (e, t) => Object.prototype.hasOwnProperty.call(e, t)
-    r.r = e => {
-        "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, {value: "Module"}), Object.defineProperty(e, "__esModule", {value: !0})
+        Object.defineProperty(module, "exports", {
+            enumerable: true,
+            set: () => {
+                throw new Error("ES Modules may not assign module.exports or exports.*, Use ESM export syntax, instead: " + module.id)
+            }
+        })
+        return module
     }
-    r.nmd = e => (e.paths = [], e.children || (e.children = []), e)
+    r.o = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key)
+    r.r = module => {
+        "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(module, Symbol.toStringTag, {value: "Module"})
+        Object.defineProperty(module, "__esModule", {value: !0})
+    }
+    r.nmd = module => {
+        module.paths = []
+        if (!module.children) {
+            module.children = []
+        }
+        return module
+    }
+    r.ab = __dirname + "/native_modules/"
 
-    void 0 !== r && (r.ab = __dirname + "/native_modules/");
-    var n = r(r.s = 64982);
+    let n = r(r.s = 64982)
     module.exports = n
 })();
 //# sourceMappingURL=index.js.map
