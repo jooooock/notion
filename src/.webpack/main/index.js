@@ -9,6 +9,7 @@
 
             exports.default = __config
         },
+        // 定义 TabBar 尺寸
         60522: (module, exports) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
@@ -18,6 +19,7 @@
             exports.MAX_TAB_WIDTH_PX = 200
             exports.MIN_TAB_WIDTH_PX = 52
         },
+        // 定义 TabColors 和 ElectronColors
         27683: (module, exports, __require) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
@@ -48,59 +50,76 @@
                 titleBarOverlayBackground: {light: "rgba(255, 255, 255, 0.1)", dark: "rgba(0, 0, 0, 0)"}
             }
         },
+        // throwIfNotProd 函数
         51916: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            const o = n(__require(11239));
+            const __config = n(__require(11239));
 
-            exports.throwIfNotProd = function (e) {
-                if ("production" !== o.default.env) throw new Error(e)
+            exports.throwIfNotProd = function (message) {
+                if ("production" !== __config.default.env) {
+                    throw new Error(message)
+                }
             }
         },
+        // child_process 的 exec/execFile 函数
         31957: (module, exports, __require) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            const n = __require(35317);
+            const __child_process = __require(35317);
 
-            exports.exec = function (e) {
-                return new Promise(((t, r) => {
-                    (0, n.exec)(e, ((e, n, o) => {
-                        if (e) return r(e);
-                        t({stdout: n, stderr: o})
-                    }))
-                }))
+            exports.exec = function (command) {
+                return new Promise((resolve, reject) => {
+                    __child_process.exec(command, (error, stdout, stderr) => {
+                        if (error) {
+                            return reject(error);
+                        }
+                        resolve({stdout: stdout, stderr: stderr})
+                    })
+                })
             }
-            exports.execFile = function (e, t) {
-                return new Promise(((r, o) => {
-                    (0, n.execFile)(e, t, ((e, t, n) => {
-                        if (e) return o(e);
-                        r({stdout: t, stderr: n})
-                    }))
-                }))
+            exports.execFile = function (file, args) {
+                return new Promise((resolve, reject) => {
+                    __child_process.execFile(file, args, (error, stdout, stderr) => {
+                        if (error) return reject(error);
+                        resolve({stdout: stdout, stderr: stderr})
+                    })
+                })
             }
         },
+        // isNotionWebContents
         55108: (module, exports) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
             exports.isNotionWebContents = function (e) {
-                const t = e.getURL()
-                const {hostname, protocol} = new URL(t);
-                return !("notion.so" !== hostname && "notion.site" !== hostname && "notion.com" !== hostname && !hostname.endsWith(".notion.so")) || "file:" === protocol || "localhost" === hostname
+                const url = e.getURL()
+                const {hostname, protocol} = new URL(url);
+                if (
+                    "notion.so" === hostname ||
+                    "notion.site" === hostname ||
+                    "notion.com" === hostname ||
+                    hostname.endsWith(".notion.so")
+                ) {
+                    return true
+                } else if ("file:" === protocol) {
+                    return true
+                }
+                return "localhost" === hostname
             }
         },
         55870: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
             Object.defineProperty(exports, "__esModule", {value: !0})
@@ -152,6 +171,7 @@
                 }, r)
             }
         },
+        // getHumanPlatformName 函数
         49960: (module, exports) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
@@ -6351,9 +6371,10 @@
                 return `{${e}, select, ${Object.entries({...r, other: t}).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
             }
         },
-        36343: function (e, t, r) {
+
+        36343: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -6364,47 +6385,73 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__exportStar || function (e, t) {
+            }),
+                o = this && this.__exportStar || function (e, t) {
                 for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createIntlCache = t.createIntl = t.RawIntlProvider = t.IntlProvider = t.FormattedNumber = t.FormattedMessage = t.FormattedList = t.FormattedDate = t.useIntl = t.injectIntl = t.defineMessages = void 0;
-            const a = r(85425);
-            Symbol.for("LocalizedString"), Symbol("defined message descriptor"), t.defineMessages = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const a = __require(85425);
+            Symbol.for("LocalizedString")
+            Symbol("defined message descriptor")
+
+            exports.defineMessages = function (e) {
                 return e
-            }, t.injectIntl = function (e) {
-                return (0, a.injectIntl)(e)
-            }, t.useIntl = a.useIntl, o(r(50263), t);
-            var i = r(85425);
-            Object.defineProperty(t, "FormattedDate", {
-                enumerable: !0, get: function () {
+            }
+            exports.injectIntl = function (e) {
+                return a.injectIntl(e)
+            }
+            exports.useIntl = a.useIntl
+            o(__require(50263), exports);
+
+            let i = __require(85425);
+
+            Object.defineProperty(exports, "FormattedDate", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedDate
                 }
-            }), Object.defineProperty(t, "FormattedList", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "FormattedList", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedList
                 }
-            }), Object.defineProperty(t, "FormattedMessage", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "FormattedMessage", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedMessage
                 }
-            }), Object.defineProperty(t, "FormattedNumber", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "FormattedNumber", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedNumber
                 }
-            }), Object.defineProperty(t, "IntlProvider", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "IntlProvider", {
+                enumerable: !0,
+                get: function () {
                     return i.IntlProvider
                 }
-            }), Object.defineProperty(t, "RawIntlProvider", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "RawIntlProvider", {
+                enumerable: !0,
+                get: function () {
                     return i.RawIntlProvider
                 }
-            }), Object.defineProperty(t, "createIntl", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "createIntl", {
+                enumerable: !0,
+                get: function () {
                     return i.createIntl
                 }
-            }), Object.defineProperty(t, "createIntlCache", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "createIntlCache", {
+                enumerable: !0,
+                get: function () {
                     return i.createIntlCache
                 }
             })
