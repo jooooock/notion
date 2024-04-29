@@ -21,8 +21,8 @@
 87309: AssetCache 类
 94774: AssetCache 实例
 
-43579: auto updater
-94625: auto updater
+43579: initializeAutoUpdater
+94625: autoUpdater
 
 56116: sentry
 34516: setupSqliteServer
@@ -59,6 +59,7 @@
 21248: shared/logglyHelpers
 37318: shared/cleanObjectForSerialization
 
+43067: 工具类 utils
 
 // nodejs模块
 70857: os

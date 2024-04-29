@@ -1922,7 +1922,8 @@
 
                 updateState() {
                     electron_log.default.debug("Calling updateState()");
-                    const e = __store.Store.getState(), t = e.app, r = (0, __store.selectTabSearchingState)(e, this.tabId),
+                    const e = __store.Store.getState(), t = e.app,
+                        r = (0, __store.selectTabSearchingState)(e, this.tabId),
                         n = this.parentWindowControllerId ? e.windows[this.parentWindowControllerId] : void 0,
                         o = 1 !== n?.tabs?.length && !Boolean(n?.displayState?.isHtmlFullScreen),
                         a = o ? Math.ceil(v.TAB_BAR_HEIGHT_PX * t.zoomFactor) : 0;
@@ -2475,7 +2476,10 @@
                 newTabAtIndex(e) {
                     const {url: t, insertionIndex: r, makeActiveTab: n, parentTabId: o, tabId: a} = e,
                         i = Math.min(r, this.tabControllers.length),
-                        s = __TabController.TabController.newInstance({id: a || (0, __tabSlice.createTabId)(), initialUrl: t});
+                        s = __TabController.TabController.newInstance({
+                            id: a || (0, __tabSlice.createTabId)(),
+                            initialUrl: t
+                        });
                     this.tabControllers.splice(i, 0, s), this.subscribeToTabStates(), s.attachToWindow(this.windowId, this.browserWindow), n ? (this.activeTabController.bringToFront(), this.activeTabController = s, this.activeTabController.initialReadyStatePromise.then((() => {
                         this.activeTabController.bringToFront()
                     })), this.activeTabController.initialLoadingStatePromise.catch((() => {
@@ -2643,7 +2647,8 @@
                     const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
                     if (-1 === t) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
                     e < t && this.makeTabActive(this.tabControllers[e].tabId);
-                    const r = this.tabControllers.slice(e + 1), n = r.map((e => __store.Store.getState().tabs[e.tabId])),
+                    const r = this.tabControllers.slice(e + 1),
+                        n = r.map((e => __store.Store.getState().tabs[e.tabId])),
                         o = __store.Store.getState().windows[this.windowId].tabs;
                     __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
                         type: "multiple-tabs", tabs: n.map(((r, n) => {
@@ -2849,7 +2854,10 @@
                 }
 
                 setRendererVisibility(e) {
-                    __store.Store.dispatch((0, __windowSlice.updateIsWindowVisible)({windowId: this.windowId, isVisible: e}))
+                    __store.Store.dispatch((0, __windowSlice.updateIsWindowVisible)({
+                        windowId: this.windowId,
+                        isVisible: e
+                    }))
                 }
 
                 setWindowSidebarState(e, t) {
@@ -3222,10 +3230,10 @@
             })
         },
 
-        // autoUpdater
+        // initializeAutoUpdater
         43579: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                     void 0 === n && (n = r);
                     var o = Object.getOwnPropertyDescriptor(t, r);
                     o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -3254,7 +3262,7 @@
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            exports.isAutoUpdateDisabled = exports.restartToApplyUpdate = exports.checkForUpdate = exports.initializeAutoUpdater = exports.autoUpdateStatus = void 0;
+
             const electron = __require(4482),
                 electron_log = i(__require(47419)),
                 __autoUpdater = __require(94625),
@@ -3269,31 +3277,33 @@
                 __assetCache = __require(94774),
                 __notionIPC = a(__require(10454)),
                 __store = __require(69340),
-                __setupSystemMenu = __require(50833),
-                k = u.defineMessages({
-                    updateInstallButton: {
-                        id: "updatePrompt.installAndRelaunch",
-                        defaultMessage: "Install and relaunch",
-                        description: "Button to install an app update and relaunch the app"
-                    },
-                    updateRemindButton: {
-                        id: "updatePrompt.remindMeLater",
-                        defaultMessage: "Remind me later",
-                        description: "Button to remind the user later (1 day) to install their update"
-                    },
-                    updateMessage: {
-                        id: "updatePrompt.message",
-                        defaultMessage: "A new version of Notion is available!",
-                        description: "Message for the dialog telling the user that a new update is available"
-                    },
-                    updateDetail: {
-                        id: "updatePrompt.detail",
-                        defaultMessage: "Would you like to install it now? We'll reopen your windows and tabs for you.",
-                        description: "Detail text for the dialog telling the user that a new update is available"
-                    }
-                });
+                __setupSystemMenu = __require(50833)
+
+            const messages = u.defineMessages({
+                updateInstallButton: {
+                    id: "updatePrompt.installAndRelaunch",
+                    defaultMessage: "Install and relaunch",
+                    description: "Button to install an app update and relaunch the app"
+                },
+                updateRemindButton: {
+                    id: "updatePrompt.remindMeLater",
+                    defaultMessage: "Remind me later",
+                    description: "Button to remind the user later (1 day) to install their update"
+                },
+                updateMessage: {
+                    id: "updatePrompt.message",
+                    defaultMessage: "A new version of Notion is available!",
+                    description: "Message for the dialog telling the user that a new update is available"
+                },
+                updateDetail: {
+                    id: "updatePrompt.detail",
+                    defaultMessage: "Would you like to install it now? We'll reopen your windows and tabs for you.",
+                    description: "Detail text for the dialog telling the user that a new update is available"
+                }
+            });
 
             let T, E;
+
             __autoUpdater.autoUpdater.logger = electron_log.default.scope("AutoUpdater")
 
             // setting autoUpdater channel
@@ -3340,10 +3350,10 @@
                 try {
                     if (0 === (await electron.dialog.showMessageBox({
                         type: "question",
-                        buttons: [intl.formatMessage(k.updateInstallButton), intl.formatMessage(k.updateRemindButton)],
+                        buttons: [intl.formatMessage(messages.updateInstallButton), intl.formatMessage(messages.updateRemindButton)],
                         defaultId: 0,
-                        message: intl.formatMessage(k.updateMessage),
-                        detail: intl.formatMessage(k.updateDetail)
+                        message: intl.formatMessage(messages.updateMessage),
+                        detail: intl.formatMessage(messages.updateDetail)
                     })).response) {
                         restartToApplyUpdate({launch: true})
                     } else {
@@ -4399,7 +4409,7 @@
                 __ServerLogger = __require(3420), // ServerLogger 对应老版本的 helpers/loggly.js
                 __AppController = __require(21852),
                 __assetCache = __require(94774),
-                u = __require(43579),
+                __initializeAutoUpdater = __require(43579),
                 d = __require(68516),
                 p = __require(83789),
                 __logging = __require(5554),
@@ -4474,7 +4484,7 @@
                 await __electron.app.whenReady()
                 await p.waitForWebpack()
                 void async function () {
-                    (0, u.initializeAutoUpdater)(), (0, __setupSystemMenu.setupSystemMenu)(), await __assetCache.assetCache.initialize(), await (0, __setupSqliteServer.setupSqliteServer)(), (0, v.setupSecurity)(), (0, __session.setupSessionListeners)(), (0, __setupRendererListeners.setupRendererListeners)(), __store.Store.getState().app.preferences.isUsingHttps || (0, __handleNotionProtocol.handleNotionProtocol)(), handleActivate(), await (0, d.wipeTransientCsrfCookie)(), __AppController.appController.onAppReady(), __electron.app.on("before-quit", (() => __AppController.appController.handleQuit())), __electron.app.on("activate", handleActivate)
+                    (0, __initializeAutoUpdater.initializeAutoUpdater)(), (0, __setupSystemMenu.setupSystemMenu)(), await __assetCache.assetCache.initialize(), await (0, __setupSqliteServer.setupSqliteServer)(), (0, v.setupSecurity)(), (0, __session.setupSessionListeners)(), (0, __setupRendererListeners.setupRendererListeners)(), __store.Store.getState().app.preferences.isUsingHttps || (0, __handleNotionProtocol.handleNotionProtocol)(), handleActivate(), await (0, d.wipeTransientCsrfCookie)(), __AppController.appController.onAppReady(), __electron.app.on("before-quit", (() => __AppController.appController.handleQuit())), __electron.app.on("activate", handleActivate)
                 }()
             }()
         },
@@ -4915,7 +4925,10 @@
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", (e, t) => {
                     const r = __AppController.appController.getTabControllerForWebContents(e.sender);
-                    r && __store.Store.dispatch((0, __tabSlice.updateTabIsOverlayActive)({tabId: r.tabId, isOverlayActive: t}))
+                    r && __store.Store.dispatch((0, __tabSlice.updateTabIsOverlayActive)({
+                        tabId: r.tabId,
+                        isOverlayActive: t
+                    }))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-order", (e, t) => {
                     const r = __AppController.appController.getWindowControllerForWebContents(e.sender);
@@ -5997,7 +6010,7 @@
                 __config = i(__require(11239)),
                 __AppController = __require(21852),
                 __assetCache = __require(94774),
-                p = __require(43579),
+                __initializeAutoUpdater = __require(43579),
                 h = __require(83789),
                 __appSlice = __require(73553),
                 __store = __require(69340),
@@ -6430,7 +6443,10 @@
                         }, ...T()]
                     },
                     w = function (e) {
-                        const {isHardwareAccelerationDisabled: t, logLevel: r} = __store.Store.getState().app.preferences,
+                        const {
+                                isHardwareAccelerationDisabled: t,
+                                logLevel: r
+                            } = __store.Store.getState().app.preferences,
                             n = {
                                 role: "help", label: e.formatMessage(v.helpTitle), submenu: [{
                                     label: e.formatMessage(v.troubleshootingTitle),
@@ -6497,7 +6513,7 @@
                             label: t.formatMessage(v.preferences), accelerator: "Cmd+,", click(e, t) {
                                 t && __AppController.appController.getWindowControllerForWebContents(t.webContents)?.getActiveTabController()?.openSettings()
                             }
-                        }, {type: "separator"}, ...(0, p.isAutoUpdateDisabled)() ? [] : [E(t), {type: "separator"}], {
+                        }, {type: "separator"}, ...(0, __initializeAutoUpdater.isAutoUpdateDisabled)() ? [] : [E(t), {type: "separator"}], {
                             role: "services",
                             label: t.formatMessage(v.services)
                         }, {type: "separator"}, {role: "hide", label: t.formatMessage(v.hide)}, {
@@ -6592,18 +6608,18 @@
             }
 
             function E(e) {
-                return p.autoUpdateStatus.downloaded ? {
+                return __initializeAutoUpdater.autoUpdateStatus.downloaded ? {
                     label: e.formatMessage(v.restartToApplyUpdate), click() {
-                        (0, p.restartToApplyUpdate)()
+                        (0, __initializeAutoUpdater.restartToApplyUpdate)()
                     }
-                } : p.autoUpdateStatus.available ? {
-                    label: e.formatMessage(v.downloadingUpdate, {percentage: Math.round(p.autoUpdateStatus.downloading?.percent || 0)}),
+                } : __initializeAutoUpdater.autoUpdateStatus.available ? {
+                    label: e.formatMessage(v.downloadingUpdate, {percentage: Math.round(__initializeAutoUpdater.autoUpdateStatus.downloading?.percent || 0)}),
                     enabled: !1
                 } : {
                     label: e.formatMessage(v.checkForUpdate), async click() {
                         let t = "", r = "";
                         try {
-                            const n = await (0, p.checkForUpdate)();
+                            const n = await (0, __initializeAutoUpdater.checkForUpdate)();
                             t = n.downloadPromise ? e.formatMessage(v.updateAvailable) : e.formatMessage(v.noUpdateAvailable), r = `${electron.app.getVersion()} → ${n.updateInfo.version}`
                         } catch (n) {
                             t = e.formatMessage(v.updateCheckFailed), r += `\n${n}`
@@ -6774,22 +6790,23 @@
                 h = "show-immediately";
 
             exports.buildTrayMenuTemplate = function () {
-                const e = __AppController.appController.intl, t = __store.Store.getState().app.preferences, r = function (e, t) {
-                    const {isQuickSearchEnabled: r, quickSearchShortcut: n} = t;
-                    return r ? [{
-                        label: e.formatMessage(c.toggleCommandSearch), accelerator: n, click() {
-                            __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("tray-icon"))
+                const e = __AppController.appController.intl, t = __store.Store.getState().app.preferences,
+                    r = function (e, t) {
+                        const {isQuickSearchEnabled: r, quickSearchShortcut: n} = t;
+                        return r ? [{
+                            label: e.formatMessage(c.toggleCommandSearch), accelerator: n, click() {
+                                __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("tray-icon"))
+                            }
+                        }, {
+                            label: e.formatMessage(c.changeCommandSearchShortcut), click() {
+                                __AppController.appController.openUserSettings()
+                            }
+                        }, {type: "separator"}] : []
+                    }(e, t), o = [...r, {
+                        label: e.formatMessage(c.quitNotion), click() {
+                            electron.app.quit()
                         }
-                    }, {
-                        label: e.formatMessage(c.changeCommandSearchShortcut), click() {
-                            __AppController.appController.openUserSettings()
-                        }
-                    }, {type: "separator"}] : []
-                }(e, t), o = [...r, {
-                    label: e.formatMessage(c.quitNotion), click() {
-                        electron.app.quit()
-                    }
-                }];
+                    }];
                 return "win32" === process.platform ? o.splice(r.length, 0, function (e, t) {
                     const {isOpenAtLoginEnabled: r, isQuickSearchEnabled: n, isHideLastWindowOnCloseEnabled: o} = t;
                     return {
@@ -7340,7 +7357,7 @@
             exports.mutatePromiseIntoAsyncQueuePromise = mutatePromiseIntoAsyncQueuePromise
         },
 
-        // utils
+        // utils 工具类
         43067: function (module, exports, __require) {
             "use strict";
             let __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -7393,12 +7410,12 @@
                 return n
             }
 
-            function timeout(e, t = u.SYSTEM_TIME_SOURCE) {
-                return new Promise((r => {
-                    t.setTimeout((() => {
-                        r()
-                    }), e)
-                }))
+            function timeout(ms, t = u.SYSTEM_TIME_SOURCE) {
+                return new Promise(resolve => {
+                    t.setTimeout(() => {
+                        resolve()
+                    }, ms)
+                })
             }
 
             function deferred() {
@@ -33967,7 +33984,8 @@
         },
         78464: (e, t, r) => {
             "use strict";
-            const n = r(83641), __path = r(16928), a = r(15776).mkdirs, i = r(18386).pathExists, s = r(57213).utimesMillis,
+            const n = r(83641), __path = r(16928), a = r(15776).mkdirs, i = r(18386).pathExists,
+                s = r(57213).utimesMillis,
                 l = r(84440);
 
             function c(e, t, r, n, s) {
@@ -34420,7 +34438,8 @@
         },
         1948: (e, t, r) => {
             "use strict";
-            const n = r(83641), __path = r(16928), a = r(90823).copySync, i = r(88024).removeSync, s = r(15776).mkdirpSync,
+            const n = r(83641), __path = r(16928), a = r(90823).copySync, i = r(88024).removeSync,
+                s = r(15776).mkdirpSync,
                 l = r(84440);
 
             function c(e, t, r) {
@@ -34650,7 +34669,8 @@
             }
 
             function u(e, t) {
-                const r = __path.resolve(e).split(__path.sep).filter((e => e)), n = __path.resolve(t).split(__path.sep).filter((e => e));
+                const r = __path.resolve(e).split(__path.sep).filter((e => e)),
+                    n = __path.resolve(t).split(__path.sep).filter((e => e));
                 return r.reduce(((e, t, r) => e && n[r] === t), !0)
             }
 
