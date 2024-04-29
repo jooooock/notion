@@ -229,7 +229,7 @@
                 electron = __require(4482),
                 electron_log = i(__require(47419)),
                 lodash_1 = a(__require(6600)),
-                d = __require(21248), //shared/logglyHelpers
+                __logglyHelpers = __require(21248), //shared/logglyHelpers
                 p = __require(43067),
                 __config = i(__require(11239));
 
@@ -266,7 +266,7 @@
                                             type: "unreachableSplunk",
                                             error: {
                                                 message: "Could not reach Splunk!",
-                                                miscErrorString: d.safelyConvertAnyToString({
+                                                miscErrorString: __logglyHelpers.safelyConvertAnyToString({
                                                     status: result.status,
                                                     statusText: result.statusText,
                                                     responseText: await result.text()
@@ -305,7 +305,7 @@
                     const {data: data, ...r} = message;
                     return {
                         environment: this.env,
-                        data: data ? d.stringifyMiscData(data) : void 0,
+                        data: data ? __logglyHelpers.stringifyMiscData(data) : void 0,
                         ...r,
                     }
                 }
@@ -429,15 +429,15 @@
                 v = __require(26605),
                 y = __require(88493),
                 w = __require(29902),
-                __quickSearchController = __require(26760),
+                __QuickSearchController = __require(26760),
                 __appSlice = __require(73553),
-                T = __require(30506),
-                E = __require(28192),
+                __appStatePersister = __require(30506),
+                __historySlice = __require(28192),
                 __store = __require(69340),
-                C = __require(54417),
-                O = __require(772),
-                __trayController = __require(84087),
-                I = __require(1147)
+                __tabSlice = __require(54417),
+                __windowSlice = __require(772),
+                __TrayController = __require(84087),
+                __WindowController = __require(1147)
 
             const scopeLogger = electron_log.default.scope("AppController");
 
@@ -453,13 +453,13 @@
                     this.historyStateUnsubscribe = __store.subscribeToSelector(
                         rootState => __store.selectHistory(rootState),
                         current => {
-                            T.appStatePersister.set("history", current)
+                            __appStatePersister.appStatePersister.set("history", current)
                         }
                     )
                     this.focusedWindowStateUnsubscribe = __store.subscribeToSelector(
                         rootState => __store.selectFocusedWindowDisplayState(rootState),
                         current => {
-                            current && __store.Store.dispatch(E.updateLastFocusedWindowDisplayState(current))
+                            current && __store.Store.dispatch(__historySlice.updateLastFocusedWindowDisplayState(current))
                         },
                         {wait: 30_000}
                     )
@@ -478,7 +478,7 @@
                 async onAppReady() {
                     await electron.app.whenReady()
                     this.initializeQuickSearchController()
-                    this.trayController = new __trayController.TrayController()
+                    this.trayController = new __TrayController.TrayController()
                 }
 
                 get intl() {
@@ -559,9 +559,9 @@
 
                 newWindow(e) {
                     this.trackAnalyticsEvent("electron_new_window");
-                    const t = I.WindowController.newInstanceWithUrl({
+                    const t = __WindowController.WindowController.newInstanceWithUrl({
                         intl: this.intl,
-                        windowId: e.windowId || O.createWindowId(),
+                        windowId: e.windowId || __windowSlice.createWindowId(),
                         initialTabUrl: w.normalizeUrlProtocolWithDefault(e.initialUrl),
                         displayState: e.displayState,
                         initialTabId: e.initialTabId,
@@ -576,8 +576,8 @@
                 }
 
                 createWindowForTabController(tabController) {
-                    const t = I.WindowController.newInstanceWithController({
-                        windowId: O.createWindowId(),
+                    const t = __WindowController.WindowController.newInstanceWithController({
+                        windowId: __windowSlice.createWindowId(),
                         intl: this.intl,
                         initialTabController: tabController
                     });
@@ -592,7 +592,7 @@
                 reopenLastClosedPages() {
                     const e = __store.Store.getState().history.closeEvents?.[0];
                     if (!e) return;
-                    __store.Store.dispatch((0, E.popCloseEvent)());
+                    __store.Store.dispatch((0, __historySlice.popCloseEvent)());
                     const t = this.getWindowControllerForId(e.windowId);
                     if (t) if ("single-tab" === e.type) t.newTabAtIndex({
                         url: this.getRestoredUrl(e.url),
@@ -631,7 +631,7 @@
                 initializeQuickSearchController() {
                     if (__appSlice.QUICK_SEARCH_ENABLED) {
                         if (!this.quickSearchController) {
-                            this.quickSearchController = new __quickSearchController.QuickSearchController()
+                            this.quickSearchController = new __QuickSearchController.QuickSearchController()
                         }
                     }
                 }
@@ -742,7 +742,7 @@
                 }
 
                 handleAppStateChange(e, t) {
-                    T.appStatePersister.set("appState", e);
+                    __appStatePersister.appStatePersister.set("appState", e);
                     const r = e.preferences || {}, n = t.preferences || {};
                     "darwin" === process.platform && r.isClosingBrowserTabs && !n.isClosingBrowserTabs && b.closeLastBrowserTab({
                         urlContaining: "notion.so",
@@ -769,7 +769,7 @@
                             }
                         }))
                     })));
-                    __store.Store.dispatch((0, E.setAppRestorationState)(t))
+                    __store.Store.dispatch((0, __historySlice.setAppRestorationState)(t))
                 }
 
                 handleQuit() {
@@ -777,7 +777,7 @@
                 }
 
                 handleQuitWithoutSavingTabs() {
-                    __store.Store.dispatch((0, C.resetTabState)()), __store.Store.dispatch((0, O.resetWindowState)()), __store.Store.dispatch((0, E.resetHistoryState)()), electron.app.quit()
+                    __store.Store.dispatch((0, __tabSlice.resetTabState)()), __store.Store.dispatch((0, __windowSlice.resetWindowState)()), __store.Store.dispatch((0, __historySlice.resetHistoryState)()), electron.app.quit()
                 }
 
                 handleWindowClose(e, t) {
@@ -836,7 +836,7 @@
 
                 updateMediaIndicator(e, r) {
                     const n = exports.appController.getTabControllerForWebContents(e);
-                    n && __store.Store.dispatch((0, C.updateTabIsMediaInputActive)({
+                    n && __store.Store.dispatch((0, __tabSlice.updateTabIsMediaInputActive)({
                         tabId: n.tabId,
                         isMediaInputActive: r
                     }))
@@ -847,7 +847,7 @@
             exports.AppController_TEST_ONLY = AppController
         },
 
-        // AssetCache
+        // AssetCache 类
         87309: function (module, exports, __require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -886,16 +886,16 @@
                 electron_log = i(__require(47419)),
                 d = i(__require(80115)),
                 __events = i(__require(45437)),
-                __asyncQueue = __require(4058),
+                __AsyncQueue = __require(4058),
                 f = __require(28902),
                 lodash_1 = a(__require(6600)),
-                g = __require(21248),
+                __logglyHelpers = __require(21248),
                 b = __require(43067),
                 v = a(__require(60411)),
-                y = i(__require(11239)),
-                w = __require(3420),
-                _ = __require(5554),
-                k = __require(13387)
+                __config = i(__require(11239)),
+                __ServerLogger = __require(3420),
+                __logging = __require(5554),
+                __session = __require(13387)
 
             const logger = electron_log.default.scope("AssetCache");
 
@@ -904,7 +904,7 @@
             exports.AssetCache = class {
                 constructor(args) {
                     this.args = args
-                    this.queue = new __asyncQueue.AsyncQueue(1)
+                    this.queue = new __AsyncQueue.AsyncQueue(1)
                     this.events = new __events.default
                     this.appActive = true
                     this.lastAppStateChangeTime = 0
@@ -916,21 +916,23 @@
                     this.latestVersionPath = __path.default.join(this.cacheDir, this.latestVersionFileName)
                 }
 
-                async handleRequest(e) {
-                    const t = v.parse(e.url), r = t.host, n = t.pathname || "/";
-                    if (r !== y.default.domainName) return;
+                async handleRequest(req) {
+                    const t = v.parse(req.url),
+                        r = t.host,
+                        n = t.pathname || "/";
+                    if (r !== __config.default.domainName) return;
                     if (!this.assetCacheState) return;
                     const o = this.assetCacheState;
                     if (o.assetsJson.proxyServerPathPrefixes.some((e => n.startsWith(e)))) return;
                     const a = o.assetsJson.files.find((e => e.path === n));
                     if (a) {
                         const e = this.getAssetsDir(o.assetsJson.version), t = __path.default.join(e, a.path);
-                        return (0, _.shouldLog)("silly") && logger.silly("Performing file request", {
+                        return (0, __logging.shouldLog)("silly") && logger.silly("Performing file request", {
                             absolutePath: t,
                             urlPath: n
                         }), {absolutePath: t, headers: this.getHeaders(a.path)}
                     }
-                    if ([".js", ".json", ".css", ".woff", ".woff2", ".png", ".svg"].some((e => n.endsWith(e)))) return void w.serverLogger.rateLimitedLog({
+                    if ([".js", ".json", ".css", ".woff", ".woff2", ".png", ".svg"].some((e => n.endsWith(e)))) return void __ServerLogger.serverLogger.rateLimitedLog({
                         level: "error",
                         from: "AssetCache",
                         type: "obviouslyIncorrectPathForIndex",
@@ -939,7 +941,7 @@
                     const i = this.getAssetsDir(o.assetsJson.version);
                     let s = o.assetsJson.entry;
                     if (o.assetsJson.localeHtml) {
-                        const e = electron.session.fromPartition(k.electronSessionPartition).cookies, [t] = await e.get({name: "notion_locale"});
+                        const e = electron.session.fromPartition(__session.electronSessionPartition).cookies, [t] = await e.get({name: "notion_locale"});
                         let r = "en-US";
                         t && (r = (0, f.getLocaleFromCookie)(t.value));
                         const n = o.assetsJson.localeHtml[r];
@@ -947,19 +949,19 @@
                     }
                     const u = o.assetsJson.files.find((e => e.path === s));
                     if (u) {
-                        n.includes(".") && w.serverLogger.rateLimitedLog({
+                        n.includes(".") && __ServerLogger.serverLogger.rateLimitedLog({
                             level: "error",
                             from: "AssetCache",
                             type: "requestReturnedAsIndexV2",
                             data: {url: n}
                         });
                         const e = __path.default.join(i, u.path);
-                        return (0, _.shouldLog)("silly") && logger.silly("Performing file request (2)", {
+                        return (0, __logging.shouldLog)("silly") && logger.silly("Performing file request (2)", {
                             absolutePath: e,
                             urlPath: n
                         }), {absolutePath: e, headers: this.getHeaders(u.path)}
                     }
-                    w.serverLogger.rateLimitedLog({
+                    __ServerLogger.serverLogger.rateLimitedLog({
                         level: "error",
                         from: "AssetCache",
                         type: "cannotFindIndex",
@@ -1072,7 +1074,7 @@
                         }))
                     };
                     S(), this.logPerformance("assetJson", s);
-                    const C = Date.now(), O = new __asyncQueue.AsyncQueue(8), M = [];
+                    const C = Date.now(), O = new __AsyncQueue.AsyncQueue(8), M = [];
                     await Promise.all(i.files.map((e => O.enqueue((async () => {
                         if (w.has(e.path) && await this.verifyAsset(p, e)) return k++, void S();
                         const t = __path.default.join(p, e.path);
@@ -1088,7 +1090,7 @@
                     }))))), this.logPerformance("prepare", C);
                     const I = Date.now();
                     if (M.length > 0) return logger.error("Found errors (downloadError)", {
-                        miscErrorString: (0, g.safelyConvertAnyToString)({errors: M.slice(0, 100)}),
+                        miscErrorString: (0, __logglyHelpers.safelyConvertAnyToString)({errors: M.slice(0, 100)}),
                         data: this.createErrorDataMetrics(s)
                     }), void this.events.emit("error", M[0]);
                     if (!await this.writeJson(m, c)) return void this.events.emit("error", new Error("Cannot write headers.json"));
@@ -1102,7 +1104,7 @@
                 }
 
                 logPerformance(e, t) {
-                    if (!(0, _.shouldLog)("debug")) return;
+                    if (!(0, __logging.shouldLog)("debug")) return;
                     const r = Date.now();
                     !this.appActive || t < this.lastAppStateChangeTime || logger.log(`performance.${e}`, {duration: r - t})
                 }
@@ -1172,8 +1174,8 @@
                     try {
                         return void 0 === t ? await d.default.remove(e) : await d.default.writeJSON(e, t), !0
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        return r.miscDataString = (0, g.safelyConvertAnyToString)({absolutePath: e}), w.serverLogger.log({
+                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
+                        return r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({absolutePath: e}), __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToWriteFile",
@@ -1210,8 +1212,8 @@
                     try {
                         return await d.default.readdir(e)
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        return r.miscDataString = (0, g.safelyConvertAnyToString)({dirPath: e}), w.serverLogger.log({
+                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
+                        return r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({dirPath: e}), __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToReadDir",
@@ -1224,8 +1226,8 @@
                     try {
                         await d.default.remove(e)
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        r.miscDataString = (0, g.safelyConvertAnyToString)({dirOrFilePath: e}), w.serverLogger.log({
+                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
+                        r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({dirOrFilePath: e}), __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToRemoveDir",
@@ -1245,8 +1247,8 @@
                             }))
                         }))
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        r.miscDataString = (0, g.safelyConvertAnyToString)({filePath: e}), w.serverLogger.log({
+                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
+                        r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({filePath: e}), __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToGetFileHash",
@@ -1256,7 +1258,7 @@
                 }
 
                 async downloadFile(e, t) {
-                    await d.default.mkdirp(__path.default.parse(t).dir), this.session = this.session || electron.session.fromPartition(k.electronSessionPartition);
+                    await d.default.mkdirp(__path.default.parse(t).dir), this.session = this.session || electron.session.fromPartition(__session.electronSessionPartition);
                     const r = electron.default.net.request({url: e, session: this.session}),
                         n = d.default.createWriteStream(t), o = {};
                     return r.on("response", (function (e) {
@@ -1283,10 +1285,10 @@
 
             const electron = __require(4482),
                 o = __require(36343),
-                a = __require(21852),
+                __AppController = __require(21852),
                 i = __require(29902),
-                s = __require(13387),
-                quick_search_slice = __require(14473),
+                __session = __require(13387),
+                __quickSearchSlice = __require(14473),
                 __store = __require(69340),
                 u = o.defineMessages({
                     windowTitle: {
@@ -1324,19 +1326,19 @@
 
                     const readyState = __store.Store.getState().quickSearch.readyState,
                         attempts = "error" === readyState.type ? readyState.attempts : 0;
-                    __store.Store.dispatch(quick_search_slice.setReadyState({
+                    __store.Store.dispatch(__quickSearchSlice.setReadyState({
                         type: "loading",
                         attempts: attempts + 1
                     }))
                     this.quickSearchBrowserWindow.webContents
                         .loadURL(`${i.initialBaseUrl()}/quick-search`)
                         .then((() => {
-                            __store.Store.dispatch(quick_search_slice.setReadyState({type: "loaded"}))
+                            __store.Store.dispatch(__quickSearchSlice.setReadyState({type: "loaded"}))
                         }))
                         .catch(() => {
                             const readyState = __store.Store.getState().quickSearch.readyState;
                             if ("loading" === readyState.type) {
-                                __store.Store.dispatch(quick_search_slice.setReadyState({
+                                __store.Store.dispatch(__quickSearchSlice.setReadyState({
                                     type: "error",
                                     attempts: readyState.attempts
                                 }))
@@ -1394,10 +1396,10 @@
                 }
 
                 handleGlobalShortcutPress() {
-                    const e = a.appController.getMostRecentlyFocusedWindowController();
+                    const e = __AppController.appController.getMostRecentlyFocusedWindowController();
                     e && e.browserWindow.isFocused()
                         ? e.getActiveTabController().openSearchModalInNotion()
-                        : __store.Store.dispatch(quick_search_slice.toggleVisibilityStateIfReady("shortcut"))
+                        : __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("shortcut"))
                 }
 
                 initializeQuickSearch() {
@@ -1415,10 +1417,10 @@
                         frame: false,
                         type: "panel",
                         alwaysOnTop: true,
-                        title: a.appController.intl.formatMessage(u.windowTitle),
+                        title: __AppController.appController.intl.formatMessage(u.windowTitle),
                         webPreferences: {
                             sandbox: true,
-                            session: electron.session.fromPartition(s.electronSessionPartition),
+                            session: electron.session.fromPartition(__session.electronSessionPartition),
                             preload: require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"),
                             backgroundThrottling: false
                         }
@@ -1427,12 +1429,12 @@
                         evt.preventDefault()
                     })
                     this.quickSearchBrowserWindow.on("blur", () => {
-                        "visible" !== __store.Store.getState().quickSearch.visibilityState.type || this.quickSearchBrowserWindow?.webContents?.isDevToolsOpened() || __store.Store.dispatch(quick_search_slice.toggleVisibilityStateIfReady("navigation"))
+                        "visible" !== __store.Store.getState().quickSearch.visibilityState.type || this.quickSearchBrowserWindow?.webContents?.isDevToolsOpened() || __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("navigation"))
                     })
                     this.quickSearchBrowserWindow.webContents.on("render-process-gone", () => {
                         clearInterval(this.loadingWatchdogTimeout)
                         this.loadingWatchdogTimeout = void 0
-                        __store.Store.dispatch(quick_search_slice.setReadyState({type: "crashed"}))
+                        __store.Store.dispatch(__quickSearchSlice.setReadyState({type: "crashed"}))
                     })
                     electron.app.on("before-quit", () => {
                         this.destroyQuickSearch()
@@ -1492,13 +1494,13 @@
                 h = __require(43067),
                 f = __require(32289),
                 m = a(__require(60411)),
-                g = i(__require(11239)),
+                __config = i(__require(11239)),
                 b = __require(27683),
                 v = __require(60522),
                 y = __require(29902),
-                w = __require(13387),
-                _ = __require(69340),
-                k = __require(54417),
+                __session = __require(13387),
+                __store = __require(69340),
+                __tabSlice = __require(54417),
                 T = __require(54417);
 
             class TabController {
@@ -1527,29 +1529,29 @@
                     this.animating = false
                     this._isVisible = false
                     this.handleResize = () => {
-                        this.parentWindowControllerId && _.Store.getState().windows[this.parentWindowControllerId].activeTabId === this.tabId && this.updateState()
+                        this.parentWindowControllerId && __store.Store.getState().windows[this.parentWindowControllerId].activeTabId === this.tabId && this.updateState()
                     }
                     this.handleResized = () => {
                         this.updateState()
                     }
                     this.debouncedUpdateState = lodash_1.debounce((() => this.updateState()), 200)
                     this.tabId = e.id;
-                    const app = _.Store.getState().app
+                    const app = __store.Store.getState().app
                     const webPreferences = {
                         spellcheck: true,
                         sandbox: true,
                         contextIsolation: true,
-                        session: electron.session.fromPartition(w.electronSessionPartition),
+                        session: electron.session.fromPartition(__session.electronSessionPartition),
                         preload: require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js")
                     };
                     this.notion = new electron.BrowserView({webPreferences: webPreferences})
                     this.backgroundColor = app.preferences.isVibrancyEnabled
                         ? "#00000000"
-                        : b.electronColors.notionBackground[_.Store.getState().app.theme.mode]
+                        : b.electronColors.notionBackground[__store.Store.getState().app.theme.mode]
                     this.notion.webContents.addListener("found-in-page", ((e, t) => this.handleFoundInPage(e, t)))
                     this.notion.webContents.addListener("context-menu", ((e, t) => this.handleContextMenu(e, t)))
                     this.notion.webContents.addListener("did-navigate-in-page", ((e, t, r, n, o) => {
-                        o && this.shouldTrackUrlInHistory(t) && _.Store.dispatch((0, T.updateTabUrl)({
+                        o && this.shouldTrackUrlInHistory(t) && __store.Store.dispatch((0, T.updateTabUrl)({
                             tabId: this.tabId,
                             url: t
                         }))
@@ -1575,7 +1577,7 @@
                     this.notion.webContents.addListener("page-favicon-updated", ((e, t) => this.handlePageFaviconUpdated(e, t)))
                     this.initialLoadedOrErroredDeferred = h.deferred()
                     this.initialReadyToShowDeferred = h.deferred()
-                    "dark" === _.Store.getState().app.theme.mode
+                    "dark" === __store.Store.getState().app.theme.mode
                         ? (this._loadingState = "loading-not-ready-to-show", this.notion.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "darkmode_placeholder", "index.html")}`).then((() => {
                             this._loadingState = "loading-ready-to-show", this.initialReadyToShowDeferred.resolve(), this.notion.webContents.loadURL(e.initialUrl).then((() => {
                                 this.notion.webContents.clearHistory(), this._loadingState = "loaded", this.initialLoadedOrErroredDeferred.resolve()
@@ -1602,12 +1604,12 @@
                     this.search.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "search", "index.html")}`).catch((e => {
                         electron_log.default.error("Error loading search URL", e)
                     }))
-                    _.Store.dispatch(T.initializeTabState({
+                    __store.Store.dispatch(T.initializeTabState({
                         tabId: e.id,
                         url: e.initialUrl
                     }))
-                    this.appStateUnsubscribe = _.subscribeToSelector((e => _.selectAppState(e)), (() => this.updateState()))
-                    this.tabStateUnsubscribe = _.subscribeToSelector((t => _.selectTabState(t, e.id)), (() => this.updateState()))
+                    this.appStateUnsubscribe = __store.subscribeToSelector((e => __store.selectAppState(e)), (() => this.updateState()))
+                    this.tabStateUnsubscribe = __store.subscribeToSelector((t => __store.selectTabState(t, e.id)), (() => this.updateState()))
                 }
 
                 get initialReadyStatePromise() {
@@ -1651,7 +1653,7 @@
                 attachToWindow(e, t) {
                     if (this.parentWindow !== t) {
                         if (this.parentWindow) throw new Error("Already attached to some other window");
-                        this.parentWindow = t, this.parentWindow.addBrowserView(this.notion), this.setBoundsAndVisibility(), (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId)?.isSearching && this.parentWindow.addBrowserView(this.search), this.parentWindow.on("resize", this.handleResize), this.parentWindow.on("resized", this.handleResized), this.parentWindowControllerId = e, this.parentWindowStateUnsubscribe = (0, _.subscribeToSelector)((t => (0, _.selectWindowState)(t, e)), (() => this.debouncedUpdateState())), this.updateState()
+                        this.parentWindow = t, this.parentWindow.addBrowserView(this.notion), this.setBoundsAndVisibility(), (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId)?.isSearching && this.parentWindow.addBrowserView(this.search), this.parentWindow.on("resize", this.handleResize), this.parentWindow.on("resized", this.handleResized), this.parentWindowControllerId = e, this.parentWindowStateUnsubscribe = (0, __store.subscribeToSelector)((t => (0, __store.selectWindowState)(t, e)), (() => this.debouncedUpdateState())), this.updateState()
                     }
                 }
 
@@ -1660,29 +1662,29 @@
                 }
 
                 detachFromWindowWithoutUpdatingState() {
-                    this.parentWindow && (this.parentWindow.removeBrowserView(this.notion), (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId)?.isSearching && this.parentWindow.removeBrowserView(this.search), this.parentWindow.removeListener("resize", this.handleResize), this.parentWindow.removeListener("resized", this.handleResized), this.parentWindow = void 0, this.parentWindowControllerId = void 0, this.parentWindowStateUnsubscribe?.())
+                    this.parentWindow && (this.parentWindow.removeBrowserView(this.notion), (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId)?.isSearching && this.parentWindow.removeBrowserView(this.search), this.parentWindow.removeListener("resize", this.handleResize), this.parentWindow.removeListener("resized", this.handleResized), this.parentWindow = void 0, this.parentWindowControllerId = void 0, this.parentWindowStateUnsubscribe?.())
                 }
 
                 bringToFront() {
-                    this.isVisible = !0, this.parentWindow?.setTopBrowserView(this.notion), (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId)?.isSearching ? (this.parentWindow?.setTopBrowserView(this.search), this.search.webContents.focus()) : this.notion.webContents.focus()
+                    this.isVisible = !0, this.parentWindow?.setTopBrowserView(this.notion), (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId)?.isSearching ? (this.parentWindow?.setTopBrowserView(this.search), this.search.webContents.focus()) : this.notion.webContents.focus()
                 }
 
                 focus() {
-                    (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId)?.isSearching ? this.search.webContents.focus() : this.notion.webContents.focus()
+                    (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId)?.isSearching ? this.search.webContents.focus() : this.notion.webContents.focus()
                 }
 
                 destroy() {
                     this.appStateUnsubscribe(), this.tabStateUnsubscribe(), this.notion.webContents.removeAllListeners(), this.search.webContents.removeAllListeners(), this.detachFromWindowWithoutUpdatingState(), this.debouncedUpdateState.cancel();
                     const e = this.search.webContents, t = this.notion.webContents;
-                    e.destroy(), t.destroy(), _.Store.dispatch((0, T.removeTabState)({tabId: this.tabId}))
+                    e.destroy(), t.destroy(), __store.Store.dispatch((0, T.removeTabState)({tabId: this.tabId}))
                 }
 
                 setAppStoreState(e) {
-                    _.Store.dispatch((0, T.updateAppStoreState)({tabId: this.tabId, appStoreState: e}))
+                    __store.Store.dispatch((0, T.updateAppStoreState)({tabId: this.tabId, appStoreState: e}))
                 }
 
                 handleSearchStartFromNotion(e) {
-                    _.Store.dispatch((0, T.updateTabSearchingState)({
+                    __store.Store.dispatch((0, T.updateTabSearchingState)({
                         tabId: this.tabId,
                         isSearching: !0,
                         isFirstQuery: !0,
@@ -1691,7 +1693,7 @@
                 }
 
                 handleSearchStopFromNotion() {
-                    (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId)?.isSearching && (_.Store.dispatch((0, T.updateTabSearchingState)({
+                    (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId)?.isSearching && (__store.Store.dispatch((0, T.updateTabSearchingState)({
                         tabId: this.tabId,
                         isSearching: !1,
                         isFirstQuery: !0,
@@ -1700,7 +1702,7 @@
                 }
 
                 handleSearchStopFromSearch() {
-                    (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId)?.isSearching && (_.Store.dispatch((0, T.updateTabSearchingState)({
+                    (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId)?.isSearching && (__store.Store.dispatch((0, T.updateTabSearchingState)({
                         tabId: this.tabId,
                         isSearching: !1,
                         isFirstQuery: !0,
@@ -1709,28 +1711,28 @@
                 }
 
                 handleSearchNextFromSearch(e) {
-                    const t = (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId);
+                    const t = (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId);
                     if (!t || !t.isSearching) return;
                     const r = !t.isFirstQuery;
-                    _.Store.dispatch((0, T.updateTabSearchingState)({
+                    __store.Store.dispatch((0, T.updateTabSearchingState)({
                         tabId: this.tabId, ...t,
                         isFirstQuery: !1
                     })), this.notion.webContents.findInPage(e, {forward: !0, findNext: r})
                 }
 
                 handleSearchPrevFromSearch(e) {
-                    const t = (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId);
+                    const t = (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId);
                     if (!t || !t.isSearching) return;
                     const r = !t.isFirstQuery;
-                    _.Store.dispatch((0, T.updateTabSearchingState)({
+                    __store.Store.dispatch((0, T.updateTabSearchingState)({
                         tabId: this.tabId, ...t,
                         isFirstQuery: !1
                     })), this.notion.webContents.findInPage(e, {forward: !1, findNext: r})
                 }
 
                 handleSearchClearFromSearch() {
-                    const e = (0, _.selectTabSearchingState)(_.Store.getState(), this.tabId);
-                    e && e.isSearching && (_.Store.dispatch((0, T.updateTabSearchingState)({
+                    const e = (0, __store.selectTabSearchingState)(__store.Store.getState(), this.tabId);
+                    e && e.isSearching && (__store.Store.dispatch((0, T.updateTabSearchingState)({
                         tabId: this.tabId, ...e,
                         isFirstQuery: !0
                     })), this.notion.webContents.stopFindInPage("clearSelection"))
@@ -1810,7 +1812,7 @@
                 copyHttpLinkToClipboard() {
                     electron.clipboard.writeText((0, f.getHttpUrl)({
                         schemeUrl: this.getUrl(),
-                        baseUrl: g.default.domainBaseUrl
+                        baseUrl: __config.default.domainBaseUrl
                     }))
                 }
 
@@ -1865,14 +1867,14 @@
                 }
 
                 setPageTitle(e) {
-                    _.Store.dispatch((0, T.updateTabTitle)({tabId: this.tabId, title: e}))
+                    __store.Store.dispatch((0, T.updateTabTitle)({tabId: this.tabId, title: e}))
                 }
 
                 handlePageFaviconUpdated(e, t) {
                     let r;
                     0 !== t.length && (r = t[0], (r.endsWith("favicon-local.ico") || r.endsWith("favicon-dev.ico") || r.endsWith("favicon-stg.ico") || r.endsWith("favicon.ico")) && (r = void 0));
-                    const n = _.Store.getState().tabs[this.tabId];
-                    n?.favicon !== r && _.Store.dispatch((0, k.updatePageHistoryFaviconMap)({
+                    const n = __store.Store.getState().tabs[this.tabId];
+                    n?.favicon !== r && __store.Store.dispatch((0, __tabSlice.updatePageHistoryFaviconMap)({
                         tabId: this.tabId,
                         favicon: r,
                         url: n.url
@@ -1920,12 +1922,12 @@
 
                 updateState() {
                     electron_log.default.debug("Calling updateState()");
-                    const e = _.Store.getState(), t = e.app, r = (0, _.selectTabSearchingState)(e, this.tabId),
+                    const e = __store.Store.getState(), t = e.app, r = (0, __store.selectTabSearchingState)(e, this.tabId),
                         n = this.parentWindowControllerId ? e.windows[this.parentWindowControllerId] : void 0,
                         o = 1 !== n?.tabs?.length && !Boolean(n?.displayState?.isHtmlFullScreen),
                         a = o ? Math.ceil(v.TAB_BAR_HEIGHT_PX * t.zoomFactor) : 0;
                     this.tabBarOffset === a || this.animating || (n?.activeTabId === this.tabId ? this.startTabBarAnimation(this.tabBarOffset, a) : this.tabBarOffset = a);
-                    const i = (0, _.getElectronAppFeatures)({isShowingTabBar: o});
+                    const i = (0, __store.getElectronAppFeatures)({isShowingTabBar: o});
                     if (this.sendToNotion("notion:set-electron-app-features", i), this.parentWindow && r?.isSearching) {
                         electron.BrowserWindow.fromBrowserView(this.search) || this.parentWindow.addBrowserView(this.search);
                         const e = r?.isSearchingCenterPeek ? 0 : (0, d.getTopbarHeight)("darwin" === process.platform),
@@ -1937,15 +1939,15 @@
                             };
                         this.search.setBounds(a)
                     } else this.parentWindow && electron.BrowserWindow.fromBrowserView(this.search) === this.parentWindow && this.parentWindow.removeBrowserView(this.search);
-                    if (this.setBoundsAndVisibility(), this.backgroundColor = t.preferences.isVibrancyEnabled ? "#00000000" : b.electronColors.notionBackground[_.Store.getState().app.theme.mode], this.notion.webContents.setZoomFactor(t.zoomFactor), this.search.webContents.setZoomFactor(t.zoomFactor), this.sendToSearch("search:set-theme", t.theme), this.parentWindowControllerId) {
-                        const e = _.Store.getState().windows[this.parentWindowControllerId];
+                    if (this.setBoundsAndVisibility(), this.backgroundColor = t.preferences.isVibrancyEnabled ? "#00000000" : b.electronColors.notionBackground[__store.Store.getState().app.theme.mode], this.notion.webContents.setZoomFactor(t.zoomFactor), this.search.webContents.setZoomFactor(t.zoomFactor), this.sendToSearch("search:set-theme", t.theme), this.parentWindowControllerId) {
+                        const e = __store.Store.getState().windows[this.parentWindowControllerId];
                         e && e.sidebarState && e.activeTabId && e.activeTabId !== this.tabId && this.sendToNotion("notion:set-window-sidebar-state", e.sidebarState), this.sendToNotion("notion:set-is-active-tab", e.activeTabId === this.tabId)
                     }
                 }
 
                 setBoundsAndVisibility() {
                     if (!this.parentWindow) return;
-                    const e = _.Store.getState().app.preferences.isVibrancyEnabled,
+                    const e = __store.Store.getState().app.preferences.isVibrancyEnabled,
                         t = e && !1 === this.isVisible ? 1e4 : 0,
                         r = e && !1 === this.isVisible ? 1e4 : this.tabBarOffset,
                         n = this.parentWindow.getContentBounds().width || 0,
@@ -1964,7 +1966,7 @@
                 }
 
                 shouldTrackUrlInHistory(e) {
-                    if (!e.startsWith(g.default.protocol) && !e.startsWith(g.default.domainBaseUrl)) return !1;
+                    if (!e.startsWith(__config.default.protocol) && !e.startsWith(__config.default.domainBaseUrl)) return !1;
                     let t;
                     try {
                         t = new URL(e)
@@ -2014,7 +2016,7 @@
             const __path = i(__require(16928)),
                 electron = __require(4482),
                 electron_log = i(__require(47419)),
-                quickSearchSlice = __require(14473),
+                __quickSearchSlice = __require(14473),
                 __store = __require(69340),
                 p = __require(63374)
 
@@ -2037,7 +2039,7 @@
                     const {preferences} = __store.Store.getState().app
                     const {isQuickSearchEnabled} = preferences;
                     if (isQuickSearchEnabled) {
-                        __store.Store.dispatch(quickSearchSlice.toggleVisibilityStateIfReady("tray-icon"));
+                        __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("tray-icon"));
                     } else {
                         const {handleActivate} = await Promise.resolve().then(() => a(__require(64982)))
                         handleActivate()
@@ -2126,7 +2128,7 @@
 
             const electron_log = i(__require(47419)),
                 __config = i(__require(11239)),
-                c = __require(21852),
+                __AppController = __require(21852),
                 __notionIPC = a(__require(10454)),
                 d = __require(29902),
                 __store = __require(69340);
@@ -2152,8 +2154,8 @@
                         this.pendingUpdate && this.assetCache.syncVersions().then(() => {
                             const r = d.normalizeUrlProtocol(t);
                             r
-                                ? (c.appController.getTabControllerForWebContents(evt.sender)?.loadUrl(r), c.appController.refreshAll(!1))
-                                : c.appController.refreshAll(!0)
+                                ? (__AppController.appController.getTabControllerForWebContents(evt.sender)?.loadUrl(r), __AppController.appController.refreshAll(!1))
+                                : __AppController.appController.refreshAll(!0)
                         })
                     })
                 }
@@ -2177,7 +2179,7 @@
                         if (this.backgroundInterval) return;
                         this.backgroundInterval = setInterval(async () => {
                             if (this.pendingUpdate) {
-                                this.isAppVisible || Date.now() < this.pendingUpdate.applyUpdateAfter || (electron_log.default.info("Sending update install notification to all windows"), await this.assetCache.syncVersions(), c.appController.refreshAll(!0))
+                                this.isAppVisible || Date.now() < this.pendingUpdate.applyUpdateAfter || (electron_log.default.info("Sending update install notification to all windows"), await this.assetCache.syncVersions(), __AppController.appController.refreshAll(!0))
                             }
                         }, 6e4)
                     } else if (this.backgroundInterval) {
@@ -2230,13 +2232,13 @@
                 h = __require(51916),
                 f = __require(60522),
                 m = __require(18503),
-                g = __require(21852),
+                __AppController = __require(21852),
                 b = __require(29902),
-                v = __require(28192),
-                y = __require(69340),
-                w = __require(54417),
-                _ = __require(772),
-                k = __require(52728)
+                __historySlice = __require(28192),
+                __store = __require(69340),
+                __tabSlice = __require(54417),
+                __windowSlice = __require(772),
+                __TabController = __require(52728)
 
             const T = u.defineMessages({
                 loadingErrorMessage: {
@@ -2298,8 +2300,8 @@
 
             class WindowController {
                 static newInstanceWithUrl(e) {
-                    const t = k.TabController.newInstance({
-                        id: e.initialTabId || (0, w.createTabId)(),
+                    const t = __TabController.TabController.newInstance({
+                        id: e.initialTabId || (0, __tabSlice.createTabId)(),
                         initialUrl: e.initialTabUrl
                     });
                     return new WindowController({
@@ -2333,7 +2335,7 @@
                     this.windowId = windowId
                     this.intl = intl;
                     const i = WindowController.getDesiredWindowDisplayState(displayState),
-                        u = y.Store.getState().app,
+                        u = __store.Store.getState().app,
                         d = u.theme.mode,
                         {isVibrancyEnabled: h} = u.preferences,
                         g = {
@@ -2362,25 +2364,25 @@
                     this.browserWindow.addListener("app-command", ((e, t) => this.handleAppCommandNavigation(e, t)))
                     this.browserWindow.addListener("swipe", ((e, t) => this.handleSwipeNavigation(e, t)))
                     this.browserWindow.addListener("enter-full-screen", (() => {
-                        y.Store.dispatch((0, _.updateDisplayState)({
+                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isFullScreen: !0}
                         })), this.handleFullscreenEvent()
                     }))
                     this.browserWindow.addListener("leave-full-screen", (() => {
-                        y.Store.dispatch((0, _.updateDisplayState)({
+                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isFullScreen: !1}
                         })), this.handleFullscreenEvent()
                     }))
                     this.browserWindow.addListener("enter-html-full-screen", (() => {
-                        y.Store.dispatch((0, _.updateDisplayState)({
+                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isHtmlFullScreen: !0}
                         })), this.handleFullscreenEvent()
                     }))
                     this.browserWindow.addListener("leave-html-full-screen", (() => {
-                        y.Store.dispatch((0, _.updateDisplayState)({
+                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
                             windowId: this.windowId,
                             update: {isHtmlFullScreen: !1}
                         })), this.handleFullscreenEvent()
@@ -2407,7 +2409,7 @@
                     this.browserWindow.addBrowserView(this.tabBar)
                     this.tabControllers.push(initialTabController)
                     this.activeTabController = initialTabController
-                    y.Store.dispatch(_.initializeWindowState({
+                    __store.Store.dispatch(__windowSlice.initializeWindowState({
                         windowId: this.windowId,
                         initialTabId: initialTabController.tabId,
                         initialParentTabId: initialParentTabId,
@@ -2426,8 +2428,8 @@
                     }))
                     this.activeTabController.bringToFront()
                     this.updateState()
-                    this.appStateUnsubscribe = y.subscribeToSelector(y.selectAppState, (() => this.updateState()))
-                    this.windowStateUnsubscribe = y.subscribeToSelector((t => y.selectWindowState(t, windowId)), (() => this.updateState()))
+                    this.appStateUnsubscribe = __store.subscribeToSelector(__store.selectAppState, (() => this.updateState()))
+                    this.windowStateUnsubscribe = __store.subscribeToSelector((t => __store.selectWindowState(t, windowId)), (() => this.updateState()))
                     this.subscribeToTabStates()
                 }
 
@@ -2436,7 +2438,7 @@
                 }
 
                 async searchForNewTab(e) {
-                    const {isNewTabSearchEnabled: t} = y.Store.getState().app.preferences;
+                    const {isNewTabSearchEnabled: t} = __store.Store.getState().app.preferences;
                     if (!t) return this.newTab(e);
                     this.activeTabController.sendToNotion("notion:open-search-for-new-tab", e);
                     try {
@@ -2449,7 +2451,7 @@
                 newTab(e) {
                     const {initialUrl: t, makeActiveTab: r, position: n} = e;
                     let o;
-                    switch (g.appController.trackAnalyticsEvent("electron_new_tab"), n.type) {
+                    switch (__AppController.appController.trackAnalyticsEvent("electron_new_tab"), n.type) {
                         case"start":
                             o = 0;
                             break;
@@ -2473,12 +2475,12 @@
                 newTabAtIndex(e) {
                     const {url: t, insertionIndex: r, makeActiveTab: n, parentTabId: o, tabId: a} = e,
                         i = Math.min(r, this.tabControllers.length),
-                        s = k.TabController.newInstance({id: a || (0, w.createTabId)(), initialUrl: t});
+                        s = __TabController.TabController.newInstance({id: a || (0, __tabSlice.createTabId)(), initialUrl: t});
                     this.tabControllers.splice(i, 0, s), this.subscribeToTabStates(), s.attachToWindow(this.windowId, this.browserWindow), n ? (this.activeTabController.bringToFront(), this.activeTabController = s, this.activeTabController.initialReadyStatePromise.then((() => {
                         this.activeTabController.bringToFront()
                     })), this.activeTabController.initialLoadingStatePromise.catch((() => {
                         this.activeTabController === s && this.handleTabLoadingError()
-                    }))) : this.activeTabController.bringToFront(), y.Store.dispatch((0, _.addTabToWindow)({
+                    }))) : this.activeTabController.bringToFront(), __store.Store.dispatch((0, __windowSlice.addTabToWindow)({
                         windowId: this.windowId,
                         tabId: s.tabId,
                         index: i,
@@ -2488,7 +2490,7 @@
                 }
 
                 computeAfterChildrenInsertionIndex(e) {
-                    const t = y.Store.getState().windows[this.windowId]?.tabs;
+                    const t = __store.Store.getState().windows[this.windowId]?.tabs;
                     if (!t) return this.tabControllers.length;
                     const r = new Set;
                     r.add(e);
@@ -2510,7 +2512,7 @@
                         this.activeTabController = this.tabControllers[t], this.activeTabController.attachToWindow(this.windowId, this.browserWindow), this.activeTabController.bringToFront()
                     }
                     const r = this.tabControllers[e];
-                    r.detachFromWindow(), g.appController.createWindowForTabController(r), this.tabControllers.splice(e, 1), this.subscribeToTabStates(), y.Store.dispatch((0, _.removeTabFromWindow)({
+                    r.detachFromWindow(), __AppController.appController.createWindowForTabController(r), this.tabControllers.splice(e, 1), this.subscribeToTabStates(), __store.Store.dispatch((0, __windowSlice.removeTabFromWindow)({
                         windowId: this.windowId,
                         index: e,
                         newActiveTabId: this.activeTabController.tabId
@@ -2535,7 +2537,7 @@
                     if (e === this.activeTabController.tabId) return;
                     const t = this.tabControllers.find((t => t.tabId === e));
                     if (t) {
-                        if (this.activeTabController = t, this.activeTabController.isVisible = !0, y.Store.dispatch((0, _.updateActiveTabId)({
+                        if (this.activeTabController = t, this.activeTabController.isVisible = !0, __store.Store.dispatch((0, __windowSlice.updateActiveTabId)({
                             windowId: this.windowId,
                             activeTabId: e
                         })), this.activeTabController.attachToWindow(this.windowId, this.browserWindow), this.activeTabController.bringToFront(), this.activeTabController.focus(), "errored" === this.activeTabController.loadingState) {
@@ -2595,10 +2597,10 @@
                         const t = e === this.tabControllers.length - 1 ? e - 1 : e + 1;
                         this.makeTabActive(this.tabControllers[t].tabId)
                     } else this.activeTabController.focus();
-                    const r = this.tabControllers[e], n = y.Store.getState().tabs[r.tabId];
+                    const r = this.tabControllers[e], n = __store.Store.getState().tabs[r.tabId];
                     if (this.tabControllers.splice(e, 1), this.subscribeToTabStates(), n) {
-                        const t = y.Store.getState().windows[this.windowId].tabs[e];
-                        y.Store.dispatch((0, v.insertCloseEvent)({
+                        const t = __store.Store.getState().windows[this.windowId].tabs[e];
+                        __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
                             type: "single-tab",
                             tabId: t.tabId,
                             parentTabId: t.parentTabId,
@@ -2607,7 +2609,7 @@
                             windowId: this.windowId
                         }))
                     }
-                    y.Store.dispatch((0, _.removeTabFromWindow)({
+                    __store.Store.dispatch((0, __windowSlice.removeTabFromWindow)({
                         windowId: this.windowId,
                         index: e,
                         newActiveTabId: this.activeTabController.tabId
@@ -2618,10 +2620,10 @@
                     const t = this.tabControllers[e].tabId;
                     this.makeTabActive(t);
                     const r = this.tabControllers.filter((e => e !== this.activeTabController)),
-                        n = r.map((e => y.Store.getState().tabs[e.tabId]));
+                        n = r.map((e => __store.Store.getState().tabs[e.tabId]));
                     this.tabControllers = [this.activeTabController], this.subscribeToTabStates();
-                    const o = y.Store.getState().windows[this.windowId].tabs;
-                    y.Store.dispatch((0, v.insertCloseEvent)({
+                    const o = __store.Store.getState().windows[this.windowId].tabs;
+                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
                         type: "multiple-tabs", tabs: n.map(((t, r) => {
                             const n = r < e ? r : r + 1;
                             return {
@@ -2632,7 +2634,7 @@
                                 parentTabId: o[n].parentTabId
                             }
                         })), windowId: this.windowId
-                    })), y.Store.dispatch((0, _.closeAllNonActiveTabs)({windowId: this.windowId})), r.forEach((e => {
+                    })), __store.Store.dispatch((0, __windowSlice.closeAllNonActiveTabs)({windowId: this.windowId})), r.forEach((e => {
                         e.destroy()
                     }))
                 }
@@ -2641,9 +2643,9 @@
                     const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
                     if (-1 === t) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
                     e < t && this.makeTabActive(this.tabControllers[e].tabId);
-                    const r = this.tabControllers.slice(e + 1), n = r.map((e => y.Store.getState().tabs[e.tabId])),
-                        o = y.Store.getState().windows[this.windowId].tabs;
-                    y.Store.dispatch((0, v.insertCloseEvent)({
+                    const r = this.tabControllers.slice(e + 1), n = r.map((e => __store.Store.getState().tabs[e.tabId])),
+                        o = __store.Store.getState().windows[this.windowId].tabs;
+                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
                         type: "multiple-tabs", tabs: n.map(((r, n) => {
                             const a = n + e + 1;
                             return {
@@ -2654,7 +2656,7 @@
                                 parentTabId: o[a].parentTabId
                             }
                         })), windowId: this.windowId
-                    })), this.tabControllers = this.tabControllers.slice(0, e + 1), this.subscribeToTabStates(), y.Store.dispatch((0, _.sliceTabRange)({
+                    })), this.tabControllers = this.tabControllers.slice(0, e + 1), this.subscribeToTabStates(), __store.Store.dispatch((0, __windowSlice.sliceTabRange)({
                         windowId: this.windowId,
                         startIndex: 0,
                         endIndex: e + 1
@@ -2667,10 +2669,10 @@
                     const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
                     if (-1 === t) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
                     e > t && this.makeTabActive(this.tabControllers[e].tabId);
-                    const r = this.tabControllers.slice(0, e), n = r.map((e => y.Store.getState().tabs[e.tabId]));
+                    const r = this.tabControllers.slice(0, e), n = r.map((e => __store.Store.getState().tabs[e.tabId]));
                     this.tabControllers = this.tabControllers.slice(e), this.subscribeToTabStates();
-                    const o = y.Store.getState().windows[this.windowId].tabs;
-                    y.Store.dispatch((0, v.insertCloseEvent)({
+                    const o = __store.Store.getState().windows[this.windowId].tabs;
+                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
                         type: "multiple-tabs",
                         tabs: n.map(((e, r) => ({
                             tabId: o[r].tabId,
@@ -2680,7 +2682,7 @@
                             parentTabId: o[r].parentTabId
                         }))),
                         windowId: this.windowId
-                    })), y.Store.dispatch((0, _.sliceTabRange)({
+                    })), __store.Store.dispatch((0, __windowSlice.sliceTabRange)({
                         windowId: this.windowId,
                         startIndex: e
                     })), r.forEach((e => {
@@ -2692,7 +2694,7 @@
                     const t = {};
                     this.tabControllers.forEach((e => {
                         t[e.tabId] = e
-                    })), this.tabControllers = e.map((e => t[e])), y.Store.dispatch((0, _.setTabOrder)({
+                    })), this.tabControllers = e.map((e => t[e])), __store.Store.dispatch((0, __windowSlice.setTabOrder)({
                         windowId: this.windowId,
                         tabs: e
                     }))
@@ -2735,7 +2737,7 @@
                         label: this.intl.formatMessage(T.tabMenuCloseTabsToRight), click: () => {
                             this.closeTabsToRight(t)
                         }, enabled: this.tabControllers.length > 1 && t !== this.tabControllers.length - 1
-                    }], i = y.Store.getState().app.zoomFactor;
+                    }], i = __store.Store.getState().app.zoomFactor;
                     electron.Menu.buildFromTemplate(a).popup({
                         window: this.browserWindow,
                         x: Math.floor(r * i),
@@ -2800,7 +2802,7 @@
 
                 showTabHistoryMenu(e) {
                     const {direction: t, clientX: r, clientY: n} = e, o = this.getTabHistoryNavigationEntries(t),
-                        a = y.Store.getState().tabs[this.activeTabController.tabId].pageHistoryFaviconMap,
+                        a = __store.Store.getState().tabs[this.activeTabController.tabId].pageHistoryFaviconMap,
                         i = o.map((({title: e, url: r}, n) => ({
                             icon: this.getFaviconForPageTitle(r, a),
                             label: e,
@@ -2815,7 +2817,7 @@
                                 }
                             },
                             visible: this.isUniqueNavigationEntry({navigationEntries: o, index: n, url: r})
-                        }))), l = y.Store.getState().app.zoomFactor;
+                        }))), l = __store.Store.getState().app.zoomFactor;
                     electron.Menu.buildFromTemplate(i).popup({
                         window: this.browserWindow,
                         x: Math.floor(r * l) - 20,
@@ -2847,22 +2849,22 @@
                 }
 
                 setRendererVisibility(e) {
-                    y.Store.dispatch((0, _.updateIsWindowVisible)({windowId: this.windowId, isVisible: e}))
+                    __store.Store.dispatch((0, __windowSlice.updateIsWindowVisible)({windowId: this.windowId, isVisible: e}))
                 }
 
                 setWindowSidebarState(e, t) {
-                    this.activeTabController.isManagerOf(e) && y.Store.dispatch((0, _.updateWindowSidebarState)({
+                    this.activeTabController.isManagerOf(e) && __store.Store.dispatch((0, __windowSlice.updateWindowSidebarState)({
                         windowId: this.windowId,
                         sidebarState: t
                     }))
                 }
 
                 updateState() {
-                    const e = y.Store.getState().app, t = y.Store.getState().windows[this.windowId],
+                    const e = __store.Store.getState().app, t = __store.Store.getState().windows[this.windowId],
                         r = Math.ceil(f.TAB_BAR_HEIGHT_PX * e.zoomFactor),
                         n = Math.ceil((0, c.getTopbarHeight)(!1) * e.zoomFactor), o = e.theme.mode;
                     if (!t) return;
-                    if (this.backgroundColor = e.preferences.isVibrancyEnabled ? "#00000000" : p.electronColors.notionBackground[o], "win32" === process.platform && y.Store.getState().app.preferences.isUnifiedTitleBarEnabled) {
+                    if (this.backgroundColor = e.preferences.isVibrancyEnabled ? "#00000000" : p.electronColors.notionBackground[o], "win32" === process.platform && __store.Store.getState().app.preferences.isUnifiedTitleBarEnabled) {
                         const e = {
                             height: this.hasMultipleTabs() ? r : n,
                             color: p.electronColors.titleBarOverlayBackground[o],
@@ -2876,7 +2878,7 @@
                         height: r,
                         width: this.browserWindow.getContentBounds().width
                     }), "darwin" === process.platform && this.browserWindow.setWindowButtonPosition((0, m.getTrafficLightPosition)(r, e.zoomFactor)), this.tabBar.webContents.setZoomFactor(e.zoomFactor), this.tabBar.setBackgroundColor(e.preferences.isVibrancyEnabled ? "#00000000" : p.electronColors.notionBackground[o]);
-                    const a = y.Store.getState().tabs;
+                    const a = __store.Store.getState().tabs;
                     if (!a) return;
                     const i = a[this.activeTabController.tabId], s = i?.title;
                     s && this.browserWindow.setTitle(s);
@@ -2895,7 +2897,7 @@
                     })), this.sendToTabBar("tabs:set-state", {
                         tabs: l,
                         tabOrder: u,
-                        locale: g.appController.notionLocale,
+                        locale: __AppController.appController.notionLocale,
                         themeMode: e.theme.mode,
                         isWindows: "win32" === process.platform,
                         isFullscreen: t.displayState.isFullScreen,
@@ -2945,11 +2947,11 @@
                 }
 
                 handleFocus() {
-                    y.Store.dispatch((0, _.focusWindow)({windowId: this.windowId}))
+                    __store.Store.dispatch((0, __windowSlice.focusWindow)({windowId: this.windowId}))
                 }
 
                 handleMove() {
-                    y.Store.dispatch((0, _.updateDisplayState)({
+                    __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
                         windowId: this.windowId,
                         update: {
                             normalBounds: this.browserWindow.getNormalBounds(),
@@ -2959,7 +2961,7 @@
                 }
 
                 handleResize() {
-                    y.Store.dispatch((0, _.updateDisplayState)({
+                    __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
                         windowId: this.windowId,
                         update: {
                             normalBounds: this.browserWindow.getNormalBounds(),
@@ -2969,15 +2971,15 @@
                 }
 
                 handleClose(e) {
-                    if (!g.appController.handleWindowClose(e, this.browserWindow)) return electron_log.default.info(`Preventing closure for window with id ${this.browserWindow.id}, hiding`), e.preventDefault(), void (this.browserWindow.isFullScreen() ? (this.browserWindow.setFullScreen(!1), this.browserWindow.once("leave-full-screen", (() => {
+                    if (!__AppController.appController.handleWindowClose(e, this.browserWindow)) return electron_log.default.info(`Preventing closure for window with id ${this.browserWindow.id}, hiding`), e.preventDefault(), void (this.browserWindow.isFullScreen() ? (this.browserWindow.setFullScreen(!1), this.browserWindow.once("leave-full-screen", (() => {
                         this.browserWindow.hide()
                     }))) : this.browserWindow.hide());
                     electron_log.default.info(`Window with id ${this.browserWindow.id} closed`);
                     const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
                     this.browserWindow.removeAllListeners(), this.browserWindow.webContents.removeAllListeners(), this.appStateUnsubscribe(), this.windowStateUnsubscribe(), this.tabStateUnsubscribe?.(), this.tabBar.webContents.destroy();
-                    const r = this.tabControllers.map((e => y.Store.getState().tabs[e.tabId])),
-                        n = y.Store.getState().windows[this.windowId].tabs;
-                    y.Store.dispatch((0, v.insertCloseEvent)({
+                    const r = this.tabControllers.map((e => __store.Store.getState().tabs[e.tabId])),
+                        n = __store.Store.getState().windows[this.windowId].tabs;
+                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
                         type: "window",
                         tabs: r.map(((e, r) => ({
                             tabId: n[r].tabId,
@@ -2994,7 +2996,7 @@
                             isFullScreen: this.browserWindow.isFullScreen(),
                             isHtmlFullScreen: !1
                         }
-                    })), y.Store.dispatch((0, _.removeWindowState)({windowId: this.windowId})), this.tabControllers.forEach((e => {
+                    })), __store.Store.dispatch((0, __windowSlice.removeWindowState)({windowId: this.windowId})), this.tabControllers.forEach((e => {
                         e.destroy()
                     })), "win32" === process.platform && electron.BrowserWindow.getAllWindows().every((e => e.id === this.browserWindow.id)) && electron.app.quit()
                 }
@@ -3028,21 +3030,21 @@
                 }
 
                 setShouldShowAppMenuFromAltKey(e) {
-                    y.Store.dispatch((0, _.setShouldShowAppMenuFromAlt)({
+                    __store.Store.dispatch((0, __windowSlice.setShouldShowAppMenuFromAlt)({
                         windowId: this.windowId,
                         shouldShowAppMenuFromAltKey: e
                     }))
                 }
 
                 toggleAppMenuPopup() {
-                    this.browserWindow.isMenuBarVisible() ? electron.Menu.getApplicationMenu()?.closePopup() : y.Store.getState().windows[this.windowId]?.shouldShowAppMenuFromAltKey && electron.Menu.getApplicationMenu()?.popup({
+                    this.browserWindow.isMenuBarVisible() ? electron.Menu.getApplicationMenu()?.closePopup() : __store.Store.getState().windows[this.windowId]?.shouldShowAppMenuFromAltKey && electron.Menu.getApplicationMenu()?.popup({
                         x: 8,
                         y: 8
                     })
                 }
 
                 static getDesiredWindowDisplayState(e = void 0) {
-                    const t = g.appController.getFocusedWindowController();
+                    const t = __AppController.appController.getFocusedWindowController();
                     if (t && !e) {
                         const e = t.browserWindow, [r, n] = e.getPosition(), [o, a] = e.getSize();
                         return {
@@ -3053,7 +3055,7 @@
                             isMaximized: e.isMaximized()
                         }
                     }
-                    const r = e || y.Store.getState().history.lastFocusedWindowDisplayState;
+                    const r = e || __store.Store.getState().history.lastFocusedWindowDisplayState;
                     if (r) {
                         const e = r.normalBounds, t = electron.screen.getAllDisplays();
                         let n = !1;
@@ -3088,7 +3090,7 @@
                 }
 
                 subscribeToTabStates() {
-                    this.tabStateUnsubscribe?.(), this.tabStateUnsubscribe = (0, y.subscribeToSelector)((e => (0, y.selectTabStates)(e, this.tabControllers.map((e => e.tabId)))), (() => this.updateState()))
+                    this.tabStateUnsubscribe?.(), this.tabStateUnsubscribe = (0, __store.subscribeToSelector)((e => (0, __store.selectTabStates)(e, this.tabControllers.map((e => e.tabId)))), (() => this.updateState()))
                 }
             }
 
@@ -3181,7 +3183,7 @@
 
 
             const electron = i(__require(4482)),
-                l = __require(37318),
+                __cleanObjectForSerialization = __require(37318),
                 __config = i(__require(11239)),
                 __AppController = __require(21852),
                 __AssetCache = __require(87309),
@@ -3194,7 +3196,7 @@
             })
 
             exports.assetCache.events.addListener("error", e => {
-                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-error", l.cleanObjectForSerialization(e))
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-error", __cleanObjectForSerialization.cleanObjectForSerialization(e))
             })
             exports.assetCache.events.addListener("checking-for-update", () => {
                 __AppController.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
@@ -3257,17 +3259,17 @@
                 electron_log = i(__require(47419)),
                 __autoUpdater = __require(94625),
                 u = __require(36343),
-                d = __require(37318),
+                __cleanObjectForSerialization = __require(37318),
                 lodash_1 = a(__require(6600)),
-                h = __require(21248),
+                __logglyHelpers = __require(21248),
                 f = __require(43067),
-                m = i(__require(11239)),
-                __serverLogger = __require(3420),
+                __config = i(__require(11239)),
+                __ServerLogger = __require(3420),
                 __AppController = __require(21852),
                 __assetCache = __require(94774),
                 __notionIPC = a(__require(10454)),
                 __store = __require(69340),
-                _ = __require(50833),
+                __setupSystemMenu = __require(50833),
                 k = u.defineMessages({
                     updateInstallButton: {
                         id: "updatePrompt.installAndRelaunch",
@@ -3323,7 +3325,7 @@
 
             function updateStatus(updater) {
                 Object.assign(exports.autoUpdateStatus, updater)
-                _.setupSystemMenu()
+                __setupSystemMenu.setupSystemMenu()
             }
 
             async function O(timeout) {
@@ -3407,64 +3409,64 @@
                     }
 
                     if ("NSPOSIXErrorDomain" === e.domain) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "autoUpdater",
                             type: "NSPOSIXErrorDomainError",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     } else if ("SQRLUpdaterErrorDomain" === e.domain) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "autoUpdater",
                             type: "SQRLUpdaterErrorDomainError",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     } else if ("NSCocoaErrorDomain" === e.domain) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "autoUpdater",
                             type: "NSCocoaErrorDomainError",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     } else if (e.message.startsWith("net::ERR")) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "info",
                             from: "autoUpdater",
                             type: "networkError",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     } else if (403 === e.statusCode) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "warning",
                             from: "autoUpdater",
                             type: "cloudflareCaptcha",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     } else if (503 === e.statusCode) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "warning",
                             from: "autoUpdater",
                             type: "serviceUnavailable",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     } else if (-1 !== e.message.indexOf("/opt/notion-app/app.asar")) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "info",
                             from: "autoUpdater",
                             type: "unsupportedLinuxApp",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     } else if (-1 === e.message.indexOf("app-update.yml")) {
-                        __serverLogger.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "autoUpdater",
                             type: "unknownAutoUpdaterError",
-                            error: h.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                     }
 
-                    __AppController.appController.sendMainToAllNotionInstances("notion:update-error", d.cleanObjectForSerialization(e))
+                    __AppController.appController.sendMainToAllNotionInstances("notion:update-error", __cleanObjectForSerialization.cleanObjectForSerialization(e))
                 })
                 __autoUpdater.autoUpdater.on("checking-for-update", () => {
                     electron_log.default.info("Checking for update")
@@ -3483,7 +3485,7 @@
                         available: info,
                         ...r ? {downloaded: void 0} : {}
                     })
-                    _.setupSystemMenu()
+                    __setupSystemMenu.setupSystemMenu()
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-available", info)
                 })
                 __autoUpdater.autoUpdater.on("update-not-available", () => {
@@ -3491,13 +3493,13 @@
                         checking: void 0,
                         available: void 0
                     })
-                    _.setupSystemMenu()
+                    __setupSystemMenu.setupSystemMenu()
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-not-available")
                 })
                 const e = lodash_1.throttle(e => {
                     updateStatus({downloading: e})
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-progress", e)
-                    _.setupSystemMenu()
+                    __setupSystemMenu.setupSystemMenu()
                 }, 300)
                 __autoUpdater.autoUpdater.on("download-progress", e)
                 __autoUpdater.autoUpdater.on("update-downloaded", info => {
@@ -3515,7 +3517,7 @@
                             ? E = O()
                             : e
                                 ? restartToApplyUpdate()
-                                : "production" !== m.default.env && (E = O())
+                                : "production" !== __config.default.env && (E = O())
                     }()
                 })
             }
@@ -3769,7 +3771,7 @@
                 __config = i(__require(11239)),
                 __AppController = __require(21852),
                 __notionIPC = a(__require(10454)),
-                p = __require(13387);
+                __session = __require(13387);
 
             exports.createGoogleDrivePicker = function (e) {
                 const {url} = e
@@ -3792,7 +3794,7 @@
                     webPreferences: {
                         preload: require("path").resolve(__dirname, "../renderer", "popup", "preload.js"),
                         nodeIntegration: false,
-                        session: electron.session.fromPartition(p.electronSessionPartition),
+                        session: electron.session.fromPartition(__session.electronSessionPartition),
                         sandbox: true
                     }
                 })
@@ -3854,7 +3856,7 @@
                 __config = i(__require(11239)),
                 __AppController = __require(21852),
                 __notionIPC = a(__require(10454)),
-                p = __require(13387);
+                __session = __require(13387);
 
             exports.createPopup = function (e) {
                 const {url, title, width, height} = e
@@ -3878,7 +3880,7 @@
                     webPreferences: {
                         preload: require("path").resolve(__dirname, "../renderer", "popup", "preload.js"),
                         nodeIntegration: false,
-                        session: electron.session.fromPartition(p.electronSessionPartition),
+                        session: electron.session.fromPartition(__session.electronSessionPartition),
                         sandbox: true
                     }
                 })
@@ -4227,83 +4229,152 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            const s = i(__require(16928)),
+            const __path = i(__require(16928)),
                 electron = __require(4482),
                 electron_log = i(__require(47419)),
-                u = i(__require(80115)),
-                d = a(__require(21248)),
-                p = __require(3420),
-                h = a(__require(10454)),
-                f = a(__require(56116)),
-                m = __require(69340);
+                __fse = i(__require(80115)),
+                __logglyHelpers = a(__require(21248)),
+                __ServerLogger = __require(3420),
+                __notionIPC = a(__require(10454)),
+                __sentry = a(__require(56116)),
+                __store = __require(69340);
 
+            // 针对错误进行日志打印，适用于本地调试
             function setupLocalLogging() {
-                electron_log.default.transports.console.level = exports.LOG_LEVEL, electron_log.default.transports.file.level = exports.LOG_LEVEL, electron_log.default.transports.file.maxSize = 2097152, electron_log.default.info(`App starting with version ${electron.app.getVersion()}`, {
+                electron_log.default.transports.console.level = exports.LOG_LEVEL
+                electron_log.default.transports.file.level = exports.LOG_LEVEL
+                electron_log.default.transports.file.maxSize = 2097152
+
+                electron_log.default.info(`App starting with version ${electron.app.getVersion()}`, {
                     system: `${process.platform} ${process.arch}`,
                     electron: process.versions.electron
-                }), electron.app.on("render-process-gone", ((e, t, r) => {
+                })
+
+                electron.app.on("render-process-gone", (evt, webContents, details) => {
                     try {
-                        electron_log.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
+                        electron_log.default.error("renderer-process-gone", {
+                            url: webContents?.getURL(),
+                            details: details
+                        })
                     } catch (e) {
-                        electron_log.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
+                        electron_log.default.error("renderer-process-gone", {
+                            url: "[unavailable]",
+                            details: details
+                        })
                     }
-                })), electron.app.on("child-process-gone", ((e, t) => {
-                    electron_log.default.error("child-process-gone", t)
-                })), electron.app.on("web-contents-created", ((e, t) => {
-                    const r = `${t.getType()}-${t.id}`, n = electron_log.default.scope(r);
-                    t.on("did-fail-load", ((e, t, r, o) => {
-                        n.error("did-fail-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("did-fail-provisional-load", ((e, t, r, o) => {
-                        n.error("did-fail-provisional-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), shouldLog("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
-                        t > 1 && n.debug(`console-message: ${r}`, {line: o, sourceId: a})
-                    })))
-                })), electron.app.on("before-quit", (() => electron_log.default.info("Quitting..."))), shouldLog("debug") && (electron.app.on("browser-window-blur", (() => {
-                    electron.BrowserWindow.getFocusedWindow() || electron_log.default.debug("App blurred")
-                })), electron.app.on("browser-window-focus", (() => {
-                    electron_log.default.debug("App focused")
-                })))
+                })
+                electron.app.on("child-process-gone", (evt, details) => {
+                    electron_log.default.error("child-process-gone", details)
+                })
+                electron.app.on("web-contents-created", (evt, webContents) => {
+                    const scope = `${webContents.getType()}-${webContents.id}`
+                    const logger = electron_log.default.scope(scope);
+
+                    webContents.on("did-fail-load", (evt, errorCode, errorDescription, validatedURL) => {
+                        logger.error("did-fail-load", {
+                            errorCode: errorCode,
+                            errorDescription: errorDescription,
+                            validatedURL: validatedURL
+                        })
+                    })
+                    webContents.on("did-fail-provisional-load", (evt, errorCode, errorDescription, validatedURL) => {
+                        logger.error("did-fail-provisional-load", {
+                            errorCode: errorCode,
+                            errorDescription: errorDescription,
+                            validatedURL: validatedURL
+                        })
+                    })
+                    webContents.on("unresponsive", () => logger.error("unresponsive"))
+                    webContents.on("destroyed", () => logger.warn("destroyed"))
+                    webContents.on("unresponsive", () => logger.warn("unresponsive"))
+                    webContents.on("responsive", () => logger.warn("responsive"))
+
+                    if (shouldLog("debug")) {
+                        webContents.on("did-start-loading", () => logger.debug("did-start-loading"))
+                        webContents.on("did-stop-loading", () => logger.debug("did-stop-loading"))
+                        webContents.on("dom-ready", () => logger.debug("dom-ready"))
+                        webContents.on("console-message", (evt, level, message, line, sourceId) => {
+                            // 0: verbose, 1: info, 2: warning, 3: error
+                            level > 1 && logger.debug(`console-message: ${message}`, {line: line, sourceId: sourceId})
+                        })
+                    }
+                })
+                electron.app.on("before-quit", () => electron_log.default.info("Quitting..."))
+
+                if (shouldLog("debug")) {
+                    electron.app.on("browser-window-blur", () => {
+                        electron.BrowserWindow.getFocusedWindow() || electron_log.default.debug("App blurred")
+                    })
+                    electron.app.on("browser-window-focus", () => {
+                        electron_log.default.debug("App focused")
+                    })
+                }
             }
 
-            function shouldLog(e, r = exports.LOG_LEVEL) {
-                return exports.LOG_LEVELS.indexOf(r) <= exports.LOG_LEVELS.indexOf(e)
+            function shouldLog(logLevel, min_log_level = exports.LOG_LEVEL) {
+                return exports.LOG_LEVELS.indexOf(logLevel) >= exports.LOG_LEVELS.indexOf(min_log_level)
             }
 
             exports.LOG_LEVEL = function () {
-                const e = m.Store.getState();
-                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : u.default.existsSync(s.default.join(electron.app.getPath("userData"), "debug")) ? "debug" : electron.app.isPackaged ? "info" : "debug"
+                const rootState = __store.Store.getState();
+                return rootState?.app?.preferences?.logLevel
+                    ? rootState?.app?.preferences?.logLevel
+                    : __fse.default.existsSync(__path.default.join(electron.app.getPath("userData"), "debug"))
+                        ? "debug"
+                        : electron.app.isPackaged
+                            ? "info"
+                            : "debug"
             }()
             exports.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"]
+
             exports.setupLogging = function () {
-                setupLocalLogging(), f.initialize(electron.app), process.on("uncaughtException", (e => {
-                    e.message.startsWith("net::ERR") ? p.serverLogger.log({
-                        level: "info",
-                        from: "main",
-                        type: "networkError",
-                        error: d.convertErrorToLog(e)
-                    }) : (f.capture(e), p.serverLogger.log({
-                        level: "error",
-                        from: "main",
-                        type: "uncaughtException",
-                        error: d.convertErrorToLog(e)
-                    }))
-                })), process.on("unhandledRejection", (e => {
-                    e && e instanceof Error && e.message.startsWith("net::ERR") ? p.serverLogger.log({
-                        level: "info",
-                        from: "main",
-                        type: "networkError",
-                        error: d.convertErrorToLog(e)
-                    }) : (f.capture(e), p.serverLogger.log({
-                        level: "error",
-                        from: "main",
-                        type: "unhandledRejection",
-                        error: d.convertErrorToLog(e)
-                    }))
-                })), h.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
-                    p.serverLogger.extraLoggingContext.clientEnvironmentData = t
-                })), h.handleEventFromRenderer.addListener("notion:log-error", ((e, t) => {
-                    p.serverLogger.log(t)
-                }))
+                setupLocalLogging()
+
+                __sentry.initialize(electron.app)
+
+                process.on("uncaughtException", error => {
+                    if (error.message.startsWith("net::ERR")) {
+                        __ServerLogger.serverLogger.log({
+                            level: "info",
+                            from: "main",
+                            type: "networkError",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    } else {
+                        __sentry.capture(error)
+                        __ServerLogger.serverLogger.log({
+                            level: "error",
+                            from: "main",
+                            type: "uncaughtException",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    }
+                })
+                process.on("unhandledRejection", error => {
+                    if (error && error instanceof Error && error.message.startsWith("net::ERR")) {
+                        __ServerLogger.serverLogger.log({
+                            level: "info",
+                            from: "main",
+                            type: "networkError",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    } else {
+                        __sentry.capture(error)
+                        __ServerLogger.serverLogger.log({
+                            level: "error",
+                            from: "main",
+                            type: "unhandledRejection",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    }
+                })
+
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-logger-data", (evt, extraData) => {
+                    __ServerLogger.serverLogger.extraLoggingContext.clientEnvironmentData = extraData
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:log-error", (evt, error) => {
+                    __ServerLogger.serverLogger.log(error)
+                })
             }
             exports.setupLocalLogging = setupLocalLogging
             exports.shouldLog = shouldLog
@@ -4323,41 +4394,41 @@
 
             __require(84041); // crash reporter
 
-            const logglyHelpers = __require(21248), // shared/logglyHelpers
+            const __logglyHelpers = __require(21248), // shared/logglyHelpers
                 __config = __importDefault(__require(11239)), // config
-                serverLogger = __require(3420), // ServerLogger 对应老版本的 helpers/loggly.js
-                __appController = __require(21852),
-                c = __require(94774),
+                __ServerLogger = __require(3420), // ServerLogger 对应老版本的 helpers/loggly.js
+                __AppController = __require(21852),
+                __assetCache = __require(94774),
                 u = __require(43579),
                 d = __require(68516),
                 p = __require(83789),
                 __logging = __require(5554),
-                f = __require(77514),
+                __handleNotionProtocol = __require(77514),
                 m = __require(26605),
                 g = __require(29902),
-                b = __require(35219),
-                v = __require(15425),
-                y = __require(13387),
-                w = __require(34516),
-                _ = __require(69340),
-                k = __require(50833),
+                __setupRendererListeners = __require(35219),
+                v = __require(15425), // isNavigationAllowed 设置页面导航规则
+                __session = __require(13387),
+                __setupSqliteServer = __require(34516),
+                __store = __require(69340),
+                __setupSystemMenu = __require(50833),
                 T = __require(98441),
-                E = __require(19628);
+                __WebUpdater = __require(19628);
             let S, C;
 
             function handleActivate() {
-                const e = __appController.appController.getMostRecentlyFocusedWindowController();
+                const e = __AppController.appController.getMostRecentlyFocusedWindowController();
                 if (e) {
-                    const t = __appController.appController.rehydrateEntireAppInForeground(S);
+                    const t = __AppController.appController.rehydrateEntireAppInForeground(S);
                     S && !t && e.loadUrlInActiveTab(S)
                     e.browserWindow.show()
                 } else if (m.getWasOpenedAsHidden()) {
-                    __appController.appController.rehydrateSingleTabInBackground(S) || __appController.appController.newWindow({
+                    __AppController.appController.rehydrateSingleTabInBackground(S) || __AppController.appController.newWindow({
                         initialUrl: S,
                         showWhenLoaded: !1
                     })
                 } else {
-                    __appController.appController.rehydrateEntireAppInForeground(S) || __appController.appController.newWindow({initialUrl: S}).browserWindow.show()
+                    __AppController.appController.rehydrateEntireAppInForeground(S) || __AppController.appController.newWindow({initialUrl: S}).browserWindow.show()
                 }
                 S = void 0
             }
@@ -4374,7 +4445,7 @@
                     ? __electron.app.on("open-url", ((e, t) => {
                         if (e.preventDefault(), __electron.app.isReady()) {
                             const e = (0, g.normalizeUrlProtocol)(t);
-                            __appController.appController.rehydrateEntireAppInForeground(e) || __appController.appController.handleProtocolUrl((0, g.normalizeUrlProtocol)(t))
+                            __AppController.appController.rehydrateEntireAppInForeground(e) || __AppController.appController.handleProtocolUrl((0, g.normalizeUrlProtocol)(t))
                         }
                     }))
                     : "win32" === process.platform && (__electron.app.requestSingleInstanceLock() ? __electron.app.on("second-instance", ((e, t) => {
@@ -4383,14 +4454,14 @@
                 __electron.Menu.setApplicationMenu(null)
                 __electron.app.setAppUserModelId(__config.default.desktopAppId)
                 void function () {
-                    if (C = new E.WebUpdater(__electron.app, c.assetCache), !__config.default.isLocalhost || __config.default.offline) {
+                    if (C = new __WebUpdater.WebUpdater(__electron.app, __assetCache.assetCache), !__config.default.isLocalhost || __config.default.offline) {
                         const e = "production" === __config.default.env ? 6e5 : 6e4;
                         setInterval((async () => {
                             try {
-                                await c.assetCache.checkForUpdates()
+                                await __assetCache.assetCache.checkForUpdates()
                             } catch (e) {
-                                const t = (0, logglyHelpers.convertErrorToLog)(e);
-                                serverLogger.serverLogger.log({
+                                const t = (0, __logglyHelpers.convertErrorToLog)(e);
+                                __ServerLogger.serverLogger.log({
                                     level: "error",
                                     from: "AssetCache",
                                     type: "topLevelAssetPollingError",
@@ -4403,10 +4474,12 @@
                 await __electron.app.whenReady()
                 await p.waitForWebpack()
                 void async function () {
-                    (0, u.initializeAutoUpdater)(), (0, k.setupSystemMenu)(), await c.assetCache.initialize(), await (0, w.setupSqliteServer)(), (0, v.setupSecurity)(), (0, y.setupSessionListeners)(), (0, b.setupRendererListeners)(), _.Store.getState().app.preferences.isUsingHttps || (0, f.handleNotionProtocol)(), handleActivate(), await (0, d.wipeTransientCsrfCookie)(), __appController.appController.onAppReady(), __electron.app.on("before-quit", (() => __appController.appController.handleQuit())), __electron.app.on("activate", handleActivate)
+                    (0, u.initializeAutoUpdater)(), (0, __setupSystemMenu.setupSystemMenu)(), await __assetCache.assetCache.initialize(), await (0, __setupSqliteServer.setupSqliteServer)(), (0, v.setupSecurity)(), (0, __session.setupSessionListeners)(), (0, __setupRendererListeners.setupRendererListeners)(), __store.Store.getState().app.preferences.isUsingHttps || (0, __handleNotionProtocol.handleNotionProtocol)(), handleActivate(), await (0, d.wipeTransientCsrfCookie)(), __AppController.appController.onAppReady(), __electron.app.on("before-quit", (() => __AppController.appController.handleQuit())), __electron.app.on("activate", handleActivate)
                 }()
             }()
         },
+
+        // notion IPC
         10454: function (module, exports, __require) {
             "use strict";
             let n = this && this.__importDefault || function (e) {
@@ -4460,7 +4533,7 @@
                 electron = __require(4482),
                 electron_log = n(__require(47419)),
                 l = n(__require(80115)),
-                c = __require(21248),
+                __logglyHelpers = __require(21248),
                 u = __require(32289),
                 __config = n(__require(11239)),
                 __ServerLogger = __require(3420),
@@ -4476,8 +4549,8 @@
                 const t = a.default.parse(req.url);
                 let r = t
                 if (!("local" === __config.default.env
-                    ? r.hostname?.endsWith("local.notion.so") || r.host?.endsWith(__config.default.domainName) || r.host?.endsWith(__config.default.domainName.split(":")[0])
-                    : Boolean(r.host?.endsWith(__config.default.domainName))
+                        ? r.hostname?.endsWith("local.notion.so") || r.host?.endsWith(__config.default.domainName) || r.host?.endsWith(__config.default.domainName.split(":")[0])
+                        : Boolean(r.host?.endsWith(__config.default.domainName))
                 )) {
                     return new Response("Invalid proxy URL", {status: 0});
                 }
@@ -4608,7 +4681,7 @@
                             level: "error",
                             from: "schemeHandler",
                             type: "requestHandlerError",
-                            error: c.convertErrorToLog(e)
+                            error: __logglyHelpers.convertErrorToLog(e)
                         })
                         return new Response("Something went wrong.", {status: 500})
                     }
@@ -4782,8 +4855,9 @@
 
 
             const electron = __require(4482);
-            __require(84041)
-            __require(15425);
+            __require(84041) // crash reporter
+            __require(15425) // isNavigationAllowed 设置页面导航规则
+
             const electron_log = i(__require(47419)),
                 lodash_1 = a(__require(6600)),
                 u = __require(80004),
@@ -4795,10 +4869,10 @@
                 g = __require(43041),
                 __notionIPC = a(__require(10454)),
                 v = __require(29902),
-                y = __require(73553),
-                w = __require(14473),
-                _ = __require(69340),
-                k = __require(54417);
+                __appSlice = __require(73553),
+                __quickSearchSlice = __require(14473),
+                __store = __require(69340),
+                __tabSlice = __require(54417);
 
             exports.setupRendererListeners = function () {
                 electron.app.on("browser-window-blur", () => {
@@ -4819,7 +4893,7 @@
                     __AppController.appController.getWindowControllerForWebContents(e.sender)?.setRendererVisibility(t)
                 })
                 __notionIPC.handleRequestFromRenderer.addListener("notion:is-active-tab", e => __AppController.appController.getWindowControllerForWebContents(e.sender)?.isActiveTab(e.sender) || !1)
-                __notionIPC.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", e => "visible" === _.Store.getState().quickSearch.visibilityState.type)
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", e => "visible" === __store.Store.getState().quickSearch.visibilityState.type)
                 __notionIPC.handleEventFromRenderer.addListener("notion:toggle-maximized", e => {
                     const t = electron.BrowserWindow.fromWebContents(e.sender);
                     t && (t.isMaximized() ? t.unmaximize() : t.maximize())
@@ -4833,15 +4907,15 @@
                     return t ? {value: t.isVisible()} : {value: !1}
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-theme", (e, t) => {
-                    _.Store.dispatch((0, y.updateTheme)(t))
+                    __store.Store.dispatch((0, __appSlice.updateTheme)(t))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-colors", (e, t) => {
                     const r = __AppController.appController.getTabControllerForWebContents(e.sender);
-                    r && _.Store.dispatch((0, k.updateTabColors)({tabId: r.tabId, colors: t}))
+                    r && __store.Store.dispatch((0, __tabSlice.updateTabColors)({tabId: r.tabId, colors: t}))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", (e, t) => {
                     const r = __AppController.appController.getTabControllerForWebContents(e.sender);
-                    r && _.Store.dispatch((0, k.updateTabIsOverlayActive)({tabId: r.tabId, isOverlayActive: t}))
+                    r && __store.Store.dispatch((0, __tabSlice.updateTabIsOverlayActive)({tabId: r.tabId, isOverlayActive: t}))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-order", (e, t) => {
                     const r = __AppController.appController.getWindowControllerForWebContents(e.sender);
@@ -4856,13 +4930,13 @@
                 })
                 __notionIPC.handleRequestFromRenderer.addListener("notion:get-electron-app-features", e => {
                     const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
-                    return (0, _.getElectronAppFeatures)({isShowingTabBar: !t || t.hasMultipleTabs()})
+                    return (0, __store.getElectronAppFeatures)({isShowingTabBar: !t || t.hasMultipleTabs()})
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-user-preference", (e, t, r) => {
                     electron_log.default.info("notion:set-user-preference", {
                         key: t,
                         value: r
-                    }), _.Store.dispatch((0, y.updatePreferences)({[t]: r}))
+                    }), __store.Store.dispatch((0, __appSlice.updatePreferences)({[t]: r}))
                 })
                 __notionIPC.handleRequestFromRenderer.addListener("notion:get-app-version", e => ({value: electron.app.getVersion()}))
                 __notionIPC.handleRequestFromRenderer.addListener("notion:get-is-running-under-arm64-translation", e => electron.app.runningUnderARM64Translation)
@@ -4954,17 +5028,17 @@
                     __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromSearch()
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-close", () => {
-                    "visible" === _.Store.getState().quickSearch.visibilityState.type && _.Store.dispatch((0, w.toggleVisibilityStateIfReady)("navigation"))
+                    "visible" === __store.Store.getState().quickSearch.visibilityState.type && __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("navigation"))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-result", (e, t) => {
                     const r = (0, v.normalizeUrlProtocol)(t);
                     r && __AppController.appController.openURLOptionallySurfacingExistingTab(r)
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-ready", () => {
-                    _.Store.dispatch((0, w.setReadyState)({type: "ready"}))
+                    __store.Store.dispatch((0, __quickSearchSlice.setReadyState)({type: "ready"}))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-not-ready", () => {
-                    _.Store.dispatch((0, w.setReadyState)({type: "not-ready"}))
+                    __store.Store.dispatch((0, __quickSearchSlice.setReadyState)({type: "not-ready"}))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-refresh", () => {
                     __AppController.appController.quickSearchController?.reload()
@@ -5022,7 +5096,7 @@
                     r && r.setPageTitle(t.title)
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-badge", (e, t) => {
-                    if (_.Store.dispatch((0, y.updateNotificationCount)(lodash_1.toNumber(t.badgeString))), electron.app.dock) return void electron.app.dock.setBadge(t.badgeString);
+                    if (__store.Store.dispatch((0, __appSlice.updateNotificationCount)(lodash_1.toNumber(t.badgeString))), electron.app.dock) return void electron.app.dock.setBadge(t.badgeString);
                     const r = electron.BrowserWindow.fromWebContents(e.sender);
                     if (!r) return;
                     if (!r.setOverlayIcon) return;
@@ -5050,11 +5124,11 @@
                 __notionIPC.handleRequestFromRenderer.addListener("notion:ready", e => Promise.resolve({value: void 0}))
                 __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-down", e => {
                     const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
-                    t && "win32" === process.platform && (_.Store.getState().app.preferences.isUnifiedTitleBarEnabled ? t.setShouldShowAppMenuFromAltKey(!0) : t.maybeAddWindowsMenuBarSpacing())
+                    t && "win32" === process.platform && (__store.Store.getState().app.preferences.isUnifiedTitleBarEnabled ? t.setShouldShowAppMenuFromAltKey(!0) : t.maybeAddWindowsMenuBarSpacing())
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-up", e => {
                     const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
-                    "win32" === process.platform && _.Store.getState().app.preferences.isUnifiedTitleBarEnabled && t && (t.toggleAppMenuPopup(), t.setShouldShowAppMenuFromAltKey(!1))
+                    "win32" === process.platform && __store.Store.getState().app.preferences.isUnifiedTitleBarEnabled && t && (t.toggleAppMenuPopup(), t.setShouldShowAppMenuFromAltKey(!1))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", e => {
                     const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
@@ -5085,7 +5159,7 @@
             const electron = __require(4482),
                 electron_log = n(__require(47419)),
                 __config = n(__require(11239)),
-                s = __require(13387),
+                __session = __require(13387),
                 l = __require(49248),
                 c = `${__config.default.protocol}:`,
                 domainBaseUrl = __config.default.domainBaseUrl,
@@ -5132,7 +5206,7 @@
 
             exports.isNavigationAllowed = isNavigationAllowed
             exports.setupSecurity = function () {
-                const session = electron.session.fromPartition(s.electronSessionPartition);
+                const session = electron.session.fromPartition(__session.electronSessionPartition);
                 session.setPermissionRequestHandler((e, t, r, n) => {
                     const o = n.requestingUrl, {protocol: a} = new URL(o);
                     r(a === c)
@@ -5319,12 +5393,12 @@
 
 
             const s = i(__require(76982)),
-                l = i(__require(16928)),
+                __path = i(__require(16928)),
                 electron = __require(4482),
                 electron_log = i(__require(47419)),
                 d = i(__require(51359)),
-                p = a(__require(10454)),
-                h = a(__require(56116));
+                __notionIPC = a(__require(10454)),
+                __sentry = a(__require(56116));
 
             let f, m, g;
             const logger = electron_log.default.scope("Sqlite");
@@ -5332,18 +5406,18 @@
             exports.setupSqliteServer = async function () {
                 m ? logger.error("Tried to start SqliteServer but Sqlite child process is already running") : (f = s.default.randomBytes(20).toString("hex"), g = await (0, d.default)({host: "127.0.0.1"}), m = function () {
                     if (!g) throw new Error("No process port assigned.");
-                    const e = electron.app.getPath("userData"), t = l.default.join(__dirname, "./SqliteServer.js");
+                    const e = electron.app.getPath("userData"), t = __path.default.join(__dirname, "./SqliteServer.js");
                     return m = electron.utilityProcess.fork(t, [e, g.toString(), f], {
                         serviceName: "Sqlite Server",
                         stdio: ["ignore", "pipe", "pipe"]
                     }), m.on("exit", (e => {
                         0 !== e && logger.warn("Process unexpectedly closed", {code: e})
                     })), m.stderr?.on("data", (e => {
-                        h.captureMessage(e.toString()), logger.info(`stderr: ${e}`)
+                        __sentry.captureMessage(e.toString()), logger.info(`stderr: ${e}`)
                     })), m.stdout?.on("data", (e => {
-                        h.captureMessage(e.toString()), logger.info(`stdout: ${e}`)
+                        __sentry.captureMessage(e.toString()), logger.info(`stdout: ${e}`)
                     })), m
-                }(), p.handleRequestFromRenderer.addListener("notion:get-sqlite-meta", (e => {
+                }(), __notionIPC.handleRequestFromRenderer.addListener("notion:get-sqlite-meta", (e => {
                     if (!g) throw new Error("Port not yet assigned, should not be possible.");
                     return {value: {serverProcessPort: g, authToken: f}}
                 })), electron.app.on("before-quit", (() => {
@@ -5366,7 +5440,7 @@
                 i = __require(50019),
                 __config = o(__require(11239)),
                 l = __require(26605),
-                c = __require(30506);
+                __appStatePersister = __require(30506);
 
             exports.QUICK_SEARCH_ENABLED = true
             exports.WINDOWS_UNIFIED_TITLE_BAR_ENABLED = true
@@ -5399,7 +5473,7 @@
             exports.appSlice = redux.createSlice({
                 name: "app",
                 initialState: function () {
-                    const initialState = c.appStatePersister.get("appState", {
+                    const initialState = __appStatePersister.appStatePersister.get("appState", {
                         zoomFactor: 1,
                         theme: i.getElectronTheme("light", false),
                         preferences: exports.DEFAULT_PERSISTED_PREFERENCES,
@@ -5455,13 +5529,13 @@
 
 
             const o = __require(6354),
-                a = __require(30506),
+                __appStatePersister = __require(30506),
                 i = {};
 
             exports.historySlice = o.createSlice({
                 name: "history",
                 initialState: function () {
-                    const initialState = a.appStatePersister.get("history", i);
+                    const initialState = __appStatePersister.appStatePersister.get("history", i);
                     let t = initialState;
                     if (void 0 !== t.lastFocusedWindowDisplayState) {
                         void 0 === t.lastFocusedWindowDisplayState.isFullScreen && (t.lastFocusedWindowDisplayState.isFullScreen = !1)
@@ -5889,44 +5963,44 @@
         50833: function (module, exports, __require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            },
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
                 i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
+                    return e && e.__esModule ? e : {default: e}
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
             exports.setupSystemMenu = void 0;
 
             const electron = __require(4482),
                 l = __require(36343),
-                c = i(__require(11239)),
-                u = __require(21852),
-                d = __require(94774),
+                __config = i(__require(11239)),
+                __AppController = __require(21852),
+                __assetCache = __require(94774),
                 p = __require(43579),
                 h = __require(83789),
-                f = __require(73553),
-                m = __require(69340),
+                __appSlice = __require(73553),
+                __store = __require(69340),
                 g = a(__require(48021)),
                 b = a(__require(98441)),
                 v = l.defineMessages({
@@ -5993,7 +6067,10 @@
                         defaultMessage: "Paste and Match Style"
                     },
                     selectAll: {id: "desktopTopbar.editMenu.selectAll", defaultMessage: "Select All"},
-                    startSpeaking: {id: "desktopTopbar.editMenu.speech.startSpeaking", defaultMessage: "Start Speaking"},
+                    startSpeaking: {
+                        id: "desktopTopbar.editMenu.speech.startSpeaking",
+                        defaultMessage: "Start Speaking"
+                    },
                     stopSpeaking: {id: "desktopTopbar.editMenu.speech.stopSpeaking", defaultMessage: "Stop Speaking"},
                     speech: {id: "desktopTopbar.editMenu.speech", defaultMessage: "Speech"},
                     reload: {id: "desktopTopbar.viewMenu.reload", defaultMessage: "Reload"},
@@ -6022,7 +6099,10 @@
                         defaultMessage: "Show/Hide Sidebar",
                         description: "Button to let the user show/hide the sidebar that shows pages"
                     },
-                    togglefullscreen: {id: "desktopTopbar.viewMenu.togglefullscreen", defaultMessage: "Toggle Full Screen"},
+                    togglefullscreen: {
+                        id: "desktopTopbar.viewMenu.togglefullscreen",
+                        defaultMessage: "Toggle Full Screen"
+                    },
                     toggleDevTools: {id: "desktopTopbar.toggleDevTools", defaultMessage: "Toggle Developer Tools"},
                     toggleWindowDevTools: {
                         id: "desktopTopbar.toggleWindowDevTools",
@@ -6053,7 +6133,10 @@
                     },
                     front: {id: "desktopTopbar.windowMenu.front", defaultMessage: "Front"},
                     close: {id: "desktopTopbar.windowMenu.close", defaultMessage: "Close"},
-                    help: {id: "desktopTopbar.helpMenu.openHelpAndSupport", defaultMessage: "Open Help & Documentation"},
+                    help: {
+                        id: "desktopTopbar.helpMenu.openHelpAndSupport",
+                        defaultMessage: "Open Help & Documentation"
+                    },
                     resetAndEraseAllLocalData: {
                         id: "desktopTopbar.helpMenu.resetAndEraseAllLocalData",
                         defaultMessage: "Reset & Erase All Local Data",
@@ -6181,253 +6264,254 @@
 
             function setupSystemMenu() {
                 const isDarwin = "darwin" === process.platform,
-                    t = u.appController.intl,
+                    t = __AppController.appController.intl,
                     r = function (e) {
-                    const t = function (e) {
-                        const t = [];
-                        return t.push({
-                            label: e.formatMessage(v.newTab), accelerator: "CmdOrCtrl+T", click: () => {
-                                u.appController.getFocusedWindowController()?.searchForNewTab({
-                                    makeActiveTab: !0,
-                                    position: {type: "end"}
-                                })
-                            }
-                        }), t.push({
-                            label: e.formatMessage(v.newWindow),
-                            accelerator: "CmdOrCtrl+Shift+N",
-                            click: () => {
-                                u.appController.newWindow({})
-                            }
-                        }), t.push({
-                            label: e.formatMessage(v.reopenLastClosedTab),
-                            accelerator: "CmdOrCtrl+Shift+T",
-                            click: () => {
-                                u.appController.reopenLastClosedPages()
-                            }
-                        }), t.push({type: "separator"}), t.push({
-                            label: e.formatMessage(v.closeTab),
-                            accelerator: "CmdOrCtrl+W",
-                            click: () => {
-                                u.appController.getFocusedWindowController()?.closeActiveTab()
-                            }
-                        }), t.push({
-                            accelerator: "CmdOrCtrl+Shift+W",
-                            label: e.formatMessage(v.closeWindow),
-                            click(e, t) {
-                                const r = u.appController.getFocusedWindowController();
-                                return r ? r.close() : t ? t.close() : void 0
-                            }
-                        }), t.push({type: "separator"}), t.push({
-                            label: e.formatMessage(v.print), click() {
-                                u.appController.getFocusedWindowController()?.printActiveTab()
-                            }
-                        }), t
-                    }(e);
-                    return {
-                        role: "fileMenu",
-                        label: e.formatMessage(v.fileMenuTitle),
-                        submenu: "darwin" === process.platform ? t : _(t, e)
-                    }
-                }(t),
+                        const t = function (e) {
+                            const t = [];
+                            return t.push({
+                                label: e.formatMessage(v.newTab), accelerator: "CmdOrCtrl+T", click: () => {
+                                    __AppController.appController.getFocusedWindowController()?.searchForNewTab({
+                                        makeActiveTab: !0,
+                                        position: {type: "end"}
+                                    })
+                                }
+                            }), t.push({
+                                label: e.formatMessage(v.newWindow),
+                                accelerator: "CmdOrCtrl+Shift+N",
+                                click: () => {
+                                    __AppController.appController.newWindow({})
+                                }
+                            }), t.push({
+                                label: e.formatMessage(v.reopenLastClosedTab),
+                                accelerator: "CmdOrCtrl+Shift+T",
+                                click: () => {
+                                    __AppController.appController.reopenLastClosedPages()
+                                }
+                            }), t.push({type: "separator"}), t.push({
+                                label: e.formatMessage(v.closeTab),
+                                accelerator: "CmdOrCtrl+W",
+                                click: () => {
+                                    __AppController.appController.getFocusedWindowController()?.closeActiveTab()
+                                }
+                            }), t.push({
+                                accelerator: "CmdOrCtrl+Shift+W",
+                                label: e.formatMessage(v.closeWindow),
+                                click(e, t) {
+                                    const r = __AppController.appController.getFocusedWindowController();
+                                    return r ? r.close() : t ? t.close() : void 0
+                                }
+                            }), t.push({type: "separator"}), t.push({
+                                label: e.formatMessage(v.print), click() {
+                                    __AppController.appController.getFocusedWindowController()?.printActiveTab()
+                                }
+                            }), t
+                        }(e);
+                        return {
+                            role: "fileMenu",
+                            label: e.formatMessage(v.fileMenuTitle),
+                            submenu: "darwin" === process.platform ? t : _(t, e)
+                        }
+                    }(t),
                     n = [{role: "undo", label: t.formatMessage(v.undo)}, {
-                    role: "redo",
-                    label: t.formatMessage(v.redo)
-                }, {type: "separator"}, {role: "cut", label: t.formatMessage(v.cut)}, {
-                    role: "copy",
-                    label: t.formatMessage(v.copy)
-                }, {role: "paste", label: t.formatMessage(v.paste)}],
+                        role: "redo",
+                        label: t.formatMessage(v.redo)
+                    }, {type: "separator"}, {role: "cut", label: t.formatMessage(v.cut)}, {
+                        role: "copy",
+                        label: t.formatMessage(v.copy)
+                    }, {role: "paste", label: t.formatMessage(v.paste)}],
                     o = {
-                    role: "editMenu",
-                    label: t.formatMessage(v.editMenuTitle),
-                    submenu: isDarwin ? [...n, {
-                        role: "pasteAndMatchStyle",
-                        label: t.formatMessage(v.pasteAndMatchStyle)
-                    }, {
-                        role: "selectAll",
-                        label: t.formatMessage(v.selectAll)
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.speech),
-                        submenu: [{
-                            role: "startSpeaking",
-                            label: t.formatMessage(v.startSpeaking)
-                        }, {role: "stopSpeaking", label: t.formatMessage(v.stopSpeaking)}]
-                    }] : [...n, {type: "separator"}, {role: "selectAll", label: t.formatMessage(v.selectAll)}]
-                },
-                    a = {
-                    role: "viewMenu",
-                    label: t.formatMessage(v.viewMenuTitle),
-                    submenu: [{
-                        label: t.formatMessage(v.reload), accelerator: "CmdOrCtrl+R", click() {
-                            d.assetCache.isUpdateAvailable() ? d.assetCache.syncVersions().then((() => {
-                                u.appController.refreshAll(!0)
-                            })) : u.appController.getFocusedWindowController()?.reloadActiveTab()
-                        }
-                    }, {
-                        label: t.formatMessage(v.forceReload), accelerator: "CmdOrCtrl+Shift+R", async click() {
-                            await d.assetCache.reset(), d.assetCache.checkForUpdates(), u.appController.refreshAll(!0)
-                        }
-                    }, {
-                        label: t.formatMessage(v.toggleDevTools),
-                        accelerator: isDarwin ? "Alt+Command+I" : "Ctrl+Shift+I",
-                        click() {
-                            const e = u.appController.getFocusedWindowController()?.getActiveTabController();
-                            e && e.toggleDevTools()
-                        }
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.showHideSidebar),
-                        accelerator: "CmdOrCtrl+\\",
-                        click() {
-                            u.appController.getFocusedWindowController()?.getActiveTabController()?.toggleSidebarInNotion()
-                        }
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.zoomIn), accelerator: "CmdOrCtrl+Plus", click() {
-                            u.appController.zoomIn()
-                        }
-                    }, {
-                        label: t.formatMessage(v.zoomIn),
-                        accelerator: "CmdOrCtrl+=",
-                        visible: !1,
-                        acceleratorWorksWhenHidden: !0,
-                        click() {
-                            u.appController.zoomIn()
-                        }
-                    }, {
-                        label: t.formatMessage(v.zoomOut), accelerator: "CmdOrCtrl+-", click() {
-                            u.appController.zoomOut()
-                        }
-                    }, {
-                        label: t.formatMessage(v.actualSize), accelerator: "CmdOrCtrl+0", click() {
-                            u.appController.resetZoom()
-                        }
-                    }, {role: "togglefullscreen", label: t.formatMessage(v.togglefullscreen)}]
-                },
-                    i = {
-                    label: t.formatMessage(v.historyMenuTitle),
-                    submenu: [{
-                        accelerator: "CmdOrCtrl+[", label: t.formatMessage(v.historyBack), click() {
-                            u.appController.getFocusedWindowController()?.getActiveTabController()?.goBack()
-                        }
-                    }, {
-                        accelerator: "CmdOrCtrl+]", label: t.formatMessage(v.historyForward), click() {
-                            u.appController.getFocusedWindowController()?.getActiveTabController()?.goForward()
-                        }
-                    }]
-                },
-                    l = {
-                    role: "windowMenu",
-                    label: t.formatMessage(v.windowMenuTitle),
-                    submenu: isDarwin ? [{role: "minimize", label: t.formatMessage(v.minimize)}, {
-                        role: "zoom",
-                        label: t.formatMessage(v.zoom)
-                    }, {type: "separator"}, {
-                        accelerator: "Ctrl+Shift+Tab",
-                        label: t.formatMessage(v.showPreviousTab),
-                        click() {
-                            u.appController.getFocusedWindowController()?.showPreviousTab()
-                        }
-                    }, {
-                        accelerator: "Ctrl+Tab", label: t.formatMessage(v.showNextTab), click() {
-                            u.appController.getFocusedWindowController()?.showNextTab()
-                        }
-                    }, {type: "separator"}, ...k(t), ...T(), {role: "front"}] : [{
-                        role: "minimize",
-                        label: t.formatMessage(v.minimize)
-                    }, {
-                        accelerator: "Ctrl+Shift+Tab", label: t.formatMessage(v.showPreviousTab), click() {
-                            u.appController.getFocusedWindowController()?.showPreviousTab()
-                        }
-                    }, {
-                        accelerator: "Ctrl+Tab", label: t.formatMessage(v.showNextTab), click() {
-                            u.appController.getFocusedWindowController()?.showNextTab()
-                        }
-                    }, {
-                        label: t.formatMessage(v.maximize), click(e, t) {
-                            t && (t.isMaximized() ? t.unmaximize() : t.maximize())
-                        }
-                    }, ...T()]
-                },
-                    w = function (e) {
-                    const {isHardwareAccelerationDisabled: t, logLevel: r} = m.Store.getState().app.preferences, n = {
-                        role: "help", label: e.formatMessage(v.helpTitle), submenu: [{
-                            label: e.formatMessage(v.troubleshootingTitle),
-                            submenu: [{
-                                label: "win32" === process.platform ? e.formatMessage(v.showLogsInExplorer) : e.formatMessage(v.showLogsInFinder),
-                                async click(e, t) {
-                                    await b.showLogsInShell()
-                                }
-                            }, {
-                                label: e.formatMessage(v.openConsole), click() {
-                                    u.appController.getFocusedWindowController()?.getActiveTabController()?.openNotionConsole()
-                                }
-                            }, {
-                                label: e.formatMessage(v.recordPerformanceTrace), async click(t, r) {
-                                    const {response: n} = await electron.dialog.showMessageBox({
-                                        title: e.formatMessage(v.recordPerformanceTraceConfirmTitle),
-                                        type: "question",
-                                        textWidth: 300,
-                                        message: e.formatMessage(v.recordPerformanceTraceConfirm),
-                                        buttons: [e.formatMessage(v.recordPerformanceTraceConfirmCancel), e.formatMessage(v.recordPerformanceTraceConfirmOk)]
-                                    });
-                                    1 === n && await g.recordTraceAndPackage(r)
-                                }
-                            }, {type: "separator"}, {
-                                label: e.formatMessage(t ? v.enableHardwareAcceleration : v.disableHardwareAcceleration),
-                                click() {
-                                    m.Store.dispatch((0, f.updatePreferences)({isHardwareAccelerationDisabled: !t})), electron.app.relaunch(), process.nextTick((() => {
-                                        electron.app.quit()
-                                    }))
-                                }
-                            }, {
-                                label: e.formatMessage("debug" === r ? v.disableDebugLogging : v.enableDebugLogging),
-                                click() {
-                                    m.Store.dispatch((0, f.updatePreferences)({logLevel: "debug" === r ? "info" : "debug"})), electron.app.relaunch(), process.nextTick((() => {
-                                        electron.app.quit()
-                                    }))
-                                }
-                            }, {type: "separator"}, {
-                                label: e.formatMessage(v.resetAndEraseAllLocalData),
-                                click: (e, t) => b.deleteLocalData(t)
-                            }]
+                        role: "editMenu",
+                        label: t.formatMessage(v.editMenuTitle),
+                        submenu: isDarwin ? [...n, {
+                            role: "pasteAndMatchStyle",
+                            label: t.formatMessage(v.pasteAndMatchStyle)
+                        }, {
+                            role: "selectAll",
+                            label: t.formatMessage(v.selectAll)
                         }, {type: "separator"}, {
-                            label: e.formatMessage(v.help), click() {
-                                electron.shell.openExternal(`${c.default.domainBaseUrl}/help`)
+                            label: t.formatMessage(v.speech),
+                            submenu: [{
+                                role: "startSpeaking",
+                                label: t.formatMessage(v.startSpeaking)
+                            }, {role: "stopSpeaking", label: t.formatMessage(v.stopSpeaking)}]
+                        }] : [...n, {type: "separator"}, {role: "selectAll", label: t.formatMessage(v.selectAll)}]
+                    },
+                    a = {
+                        role: "viewMenu",
+                        label: t.formatMessage(v.viewMenuTitle),
+                        submenu: [{
+                            label: t.formatMessage(v.reload), accelerator: "CmdOrCtrl+R", click() {
+                                __assetCache.assetCache.isUpdateAvailable() ? __assetCache.assetCache.syncVersions().then((() => {
+                                    __AppController.appController.refreshAll(!0)
+                                })) : __AppController.appController.getFocusedWindowController()?.reloadActiveTab()
                             }
                         }, {
-                            label: "darwin" === process.platform ? e.formatMessage(v.whatsNewMacTitle) : e.formatMessage(v.whatsNewWindowsTitle),
+                            label: t.formatMessage(v.forceReload), accelerator: "CmdOrCtrl+Shift+R", async click() {
+                                await __assetCache.assetCache.reset(), __assetCache.assetCache.checkForUpdates(), __AppController.appController.refreshAll(!0)
+                            }
+                        }, {
+                            label: t.formatMessage(v.toggleDevTools),
+                            accelerator: isDarwin ? "Alt+Command+I" : "Ctrl+Shift+I",
                             click() {
-                                electron.shell.openExternal(`${c.default.domainBaseUrl}/desktop/whats-new`)
+                                const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                e && e.toggleDevTools()
+                            }
+                        }, {type: "separator"}, {
+                            label: t.formatMessage(v.showHideSidebar),
+                            accelerator: "CmdOrCtrl+\\",
+                            click() {
+                                __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.toggleSidebarInNotion()
+                            }
+                        }, {type: "separator"}, {
+                            label: t.formatMessage(v.zoomIn), accelerator: "CmdOrCtrl+Plus", click() {
+                                __AppController.appController.zoomIn()
+                            }
+                        }, {
+                            label: t.formatMessage(v.zoomIn),
+                            accelerator: "CmdOrCtrl+=",
+                            visible: !1,
+                            acceleratorWorksWhenHidden: !0,
+                            click() {
+                                __AppController.appController.zoomIn()
+                            }
+                        }, {
+                            label: t.formatMessage(v.zoomOut), accelerator: "CmdOrCtrl+-", click() {
+                                __AppController.appController.zoomOut()
+                            }
+                        }, {
+                            label: t.formatMessage(v.actualSize), accelerator: "CmdOrCtrl+0", click() {
+                                __AppController.appController.resetZoom()
+                            }
+                        }, {role: "togglefullscreen", label: t.formatMessage(v.togglefullscreen)}]
+                    },
+                    i = {
+                        label: t.formatMessage(v.historyMenuTitle),
+                        submenu: [{
+                            accelerator: "CmdOrCtrl+[", label: t.formatMessage(v.historyBack), click() {
+                                __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.goBack()
+                            }
+                        }, {
+                            accelerator: "CmdOrCtrl+]", label: t.formatMessage(v.historyForward), click() {
+                                __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.goForward()
                             }
                         }]
-                    };
-                    return "darwin" !== process.platform && n.submenu.unshift({
-                        role: "about",
-                        label: e.formatMessage(v.about)
-                    }, {type: "separator"}), n
-                }(t),
+                    },
+                    l = {
+                        role: "windowMenu",
+                        label: t.formatMessage(v.windowMenuTitle),
+                        submenu: isDarwin ? [{role: "minimize", label: t.formatMessage(v.minimize)}, {
+                            role: "zoom",
+                            label: t.formatMessage(v.zoom)
+                        }, {type: "separator"}, {
+                            accelerator: "Ctrl+Shift+Tab",
+                            label: t.formatMessage(v.showPreviousTab),
+                            click() {
+                                __AppController.appController.getFocusedWindowController()?.showPreviousTab()
+                            }
+                        }, {
+                            accelerator: "Ctrl+Tab", label: t.formatMessage(v.showNextTab), click() {
+                                __AppController.appController.getFocusedWindowController()?.showNextTab()
+                            }
+                        }, {type: "separator"}, ...k(t), ...T(), {role: "front"}] : [{
+                            role: "minimize",
+                            label: t.formatMessage(v.minimize)
+                        }, {
+                            accelerator: "Ctrl+Shift+Tab", label: t.formatMessage(v.showPreviousTab), click() {
+                                __AppController.appController.getFocusedWindowController()?.showPreviousTab()
+                            }
+                        }, {
+                            accelerator: "Ctrl+Tab", label: t.formatMessage(v.showNextTab), click() {
+                                __AppController.appController.getFocusedWindowController()?.showNextTab()
+                            }
+                        }, {
+                            label: t.formatMessage(v.maximize), click(e, t) {
+                                t && (t.isMaximized() ? t.unmaximize() : t.maximize())
+                            }
+                        }, ...T()]
+                    },
+                    w = function (e) {
+                        const {isHardwareAccelerationDisabled: t, logLevel: r} = __store.Store.getState().app.preferences,
+                            n = {
+                                role: "help", label: e.formatMessage(v.helpTitle), submenu: [{
+                                    label: e.formatMessage(v.troubleshootingTitle),
+                                    submenu: [{
+                                        label: "win32" === process.platform ? e.formatMessage(v.showLogsInExplorer) : e.formatMessage(v.showLogsInFinder),
+                                        async click(e, t) {
+                                            await b.showLogsInShell()
+                                        }
+                                    }, {
+                                        label: e.formatMessage(v.openConsole), click() {
+                                            __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.openNotionConsole()
+                                        }
+                                    }, {
+                                        label: e.formatMessage(v.recordPerformanceTrace), async click(t, r) {
+                                            const {response: n} = await electron.dialog.showMessageBox({
+                                                title: e.formatMessage(v.recordPerformanceTraceConfirmTitle),
+                                                type: "question",
+                                                textWidth: 300,
+                                                message: e.formatMessage(v.recordPerformanceTraceConfirm),
+                                                buttons: [e.formatMessage(v.recordPerformanceTraceConfirmCancel), e.formatMessage(v.recordPerformanceTraceConfirmOk)]
+                                            });
+                                            1 === n && await g.recordTraceAndPackage(r)
+                                        }
+                                    }, {type: "separator"}, {
+                                        label: e.formatMessage(t ? v.enableHardwareAcceleration : v.disableHardwareAcceleration),
+                                        click() {
+                                            __store.Store.dispatch((0, __appSlice.updatePreferences)({isHardwareAccelerationDisabled: !t})), electron.app.relaunch(), process.nextTick((() => {
+                                                electron.app.quit()
+                                            }))
+                                        }
+                                    }, {
+                                        label: e.formatMessage("debug" === r ? v.disableDebugLogging : v.enableDebugLogging),
+                                        click() {
+                                            __store.Store.dispatch((0, __appSlice.updatePreferences)({logLevel: "debug" === r ? "info" : "debug"})), electron.app.relaunch(), process.nextTick((() => {
+                                                electron.app.quit()
+                                            }))
+                                        }
+                                    }, {type: "separator"}, {
+                                        label: e.formatMessage(v.resetAndEraseAllLocalData),
+                                        click: (e, t) => b.deleteLocalData(t)
+                                    }]
+                                }, {type: "separator"}, {
+                                    label: e.formatMessage(v.help), click() {
+                                        electron.shell.openExternal(`${__config.default.domainBaseUrl}/help`)
+                                    }
+                                }, {
+                                    label: "darwin" === process.platform ? e.formatMessage(v.whatsNewMacTitle) : e.formatMessage(v.whatsNewWindowsTitle),
+                                    click() {
+                                        electron.shell.openExternal(`${__config.default.domainBaseUrl}/desktop/whats-new`)
+                                    }
+                                }]
+                            };
+                        return "darwin" !== process.platform && n.submenu.unshift({
+                            role: "about",
+                            label: e.formatMessage(v.about)
+                        }, {type: "separator"}), n
+                    }(t),
                     S = {
-                    role: "appMenu",
-                    submenu: [{
-                        role: "about",
-                        label: t.formatMessage(v.about)
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.preferences), accelerator: "Cmd+,", click(e, t) {
-                            t && u.appController.getWindowControllerForWebContents(t.webContents)?.getActiveTabController()?.openSettings()
-                        }
-                    }, {type: "separator"}, ...(0, p.isAutoUpdateDisabled)() ? [] : [E(t), {type: "separator"}], {
-                        role: "services",
-                        label: t.formatMessage(v.services)
-                    }, {type: "separator"}, {role: "hide", label: t.formatMessage(v.hide)}, {
-                        role: "hideOthers",
-                        label: t.formatMessage(v.hideOthers)
-                    }, {
-                        role: "unhide",
-                        label: t.formatMessage(v.unhide)
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.quitWithoutSavingTabsMac), click() {
-                            u.appController.handleQuitWithoutSavingTabs()
-                        }
-                    }, {role: "quit", label: t.formatMessage(v.quitMac)}]
-                },
+                        role: "appMenu",
+                        submenu: [{
+                            role: "about",
+                            label: t.formatMessage(v.about)
+                        }, {type: "separator"}, {
+                            label: t.formatMessage(v.preferences), accelerator: "Cmd+,", click(e, t) {
+                                t && __AppController.appController.getWindowControllerForWebContents(t.webContents)?.getActiveTabController()?.openSettings()
+                            }
+                        }, {type: "separator"}, ...(0, p.isAutoUpdateDisabled)() ? [] : [E(t), {type: "separator"}], {
+                            role: "services",
+                            label: t.formatMessage(v.services)
+                        }, {type: "separator"}, {role: "hide", label: t.formatMessage(v.hide)}, {
+                            role: "hideOthers",
+                            label: t.formatMessage(v.hideOthers)
+                        }, {
+                            role: "unhide",
+                            label: t.formatMessage(v.unhide)
+                        }, {type: "separator"}, {
+                            label: t.formatMessage(v.quitWithoutSavingTabsMac), click() {
+                                __AppController.appController.handleQuitWithoutSavingTabs()
+                            }
+                        }, {role: "quit", label: t.formatMessage(v.quitMac)}]
+                    },
                     C = [r, o, a, i, l, w];
                 isDarwin && C.unshift(S)
                 h.shouldShowDebugMenu() && C.push(h.getDebugMenu());
@@ -6436,7 +6520,7 @@
                 if (isDarwin) {
                     const menu = electron.Menu.buildFromTemplate([{
                         label: t.formatMessage(v.newWindow),
-                        click: () => u.appController.newWindow({})
+                        click: () => __AppController.appController.newWindow({})
                     }]);
                     electron.app.dock.setMenu(menu)
                 }
@@ -6456,7 +6540,7 @@
                     acceleratorWorksWhenHidden: !0,
                     label: e.formatMessage(v.showPreviousTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showPreviousTab()
+                        __AppController.appController.getFocusedWindowController()?.showPreviousTab()
                     }
                 }, {
                     visible: !1,
@@ -6464,7 +6548,7 @@
                     acceleratorWorksWhenHidden: !0,
                     label: e.formatMessage(v.showNextTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showNextTab()
+                        __AppController.appController.getFocusedWindowController()?.showNextTab()
                     }
                 }, {
                     visible: !1,
@@ -6472,7 +6556,7 @@
                     acceleratorWorksWhenHidden: !0,
                     label: e.formatMessage(v.showPreviousTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showPreviousTab()
+                        __AppController.appController.getFocusedWindowController()?.showPreviousTab()
                     }
                 }, {
                     visible: !1,
@@ -6480,7 +6564,7 @@
                     acceleratorWorksWhenHidden: !0,
                     label: e.formatMessage(v.showNextTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showNextTab()
+                        __AppController.appController.getFocusedWindowController()?.showNextTab()
                     }
                 }]
             }
@@ -6493,7 +6577,7 @@
                     accelerator: `CmdOrCtrl+${t}`,
                     acceleratorWorksWhenHidden: !0,
                     click: () => {
-                        u.appController.getFocusedWindowController()?.makeTabActiveIgnoringInvalidIndices(t - 1)
+                        __AppController.appController.getFocusedWindowController()?.makeTabActiveIgnoringInvalidIndices(t - 1)
                     }
                 });
                 return e.push({
@@ -6502,7 +6586,7 @@
                     accelerator: "CmdOrCtrl+9",
                     acceleratorWorksWhenHidden: !0,
                     click: () => {
-                        u.appController.getFocusedWindowController()?.showLastTab()
+                        __AppController.appController.getFocusedWindowController()?.showLastTab()
                     }
                 }), e
             }
@@ -6572,9 +6656,9 @@
                 electron_log = i(__require(47419)),
                 c = __require(40041),
                 u = i(__require(80115)),
-                d = i(__require(11239)),
+                __config = i(__require(11239)),
                 p = i(__require(4928)),
-                h = a(__require(21852)),
+                __AppController = a(__require(21852)),
                 f = a(__require(98441)),
                 m = {
                     seconds: 30,
@@ -6585,7 +6669,7 @@
                 const r = `${electron.app.getName()}-profile-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
                     n = `${electron.app.getPath("downloads")}/${r}`, o = {...m, ...t}, a = await async function (e, t) {
                         if (!electron.app.isReady()) return electron_log.default.error("recordTrace() called before app was ready"), null;
-                        const r = h.appController.getWindowControllerForWebContents(e?.webContents)?.getActiveTabController()?.getProcessIds(),
+                        const r = __AppController.appController.getWindowControllerForWebContents(e?.webContents)?.getActiveTabController()?.getProcessIds(),
                             n = process.pid, o = r ? [n, ...r] : void 0;
                         electron_log.default.info(`Recording trace for pids ${o?.join(", ") || "all"} for ${t.seconds} seconds`), await electron.contentTracing.startRecording({
                             recording_mode: "record-until-full",
@@ -6609,7 +6693,7 @@
                 if (!a) return;
                 const i = await async function (e) {
                     try {
-                        const t = (await u.default.readFile(e, "utf-8")).replaceAll(`${d.default.protocol}://`, "https://");
+                        const t = (await u.default.readFile(e, "utf-8")).replaceAll(`${__config.default.protocol}://`, "https://");
                         return await u.default.remove(e), t
                     } catch (e) {
                         electron_log.default.error("Tried to fix up trace but failed", e)
@@ -6633,10 +6717,10 @@
 
             const electron = __require(4482),
                 o = __require(36343),
-                a = __require(21852),
-                i = __require(73553),
-                s = __require(14473),
-                l = __require(69340),
+                __AppController = __require(21852),
+                __appSlice = __require(73553),
+                __quickSearchSlice = __require(14473),
+                __store = __require(69340),
                 c = o.defineMessages({
                     showNotionInMenuBar: {
                         id: "menuBarIcon.menu.showNotionInMenuBar",
@@ -6690,15 +6774,15 @@
                 h = "show-immediately";
 
             exports.buildTrayMenuTemplate = function () {
-                const e = a.appController.intl, t = l.Store.getState().app.preferences, r = function (e, t) {
+                const e = __AppController.appController.intl, t = __store.Store.getState().app.preferences, r = function (e, t) {
                     const {isQuickSearchEnabled: r, quickSearchShortcut: n} = t;
                     return r ? [{
                         label: e.formatMessage(c.toggleCommandSearch), accelerator: n, click() {
-                            l.Store.dispatch((0, s.toggleVisibilityStateIfReady)("tray-icon"))
+                            __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("tray-icon"))
                         }
                     }, {
                         label: e.formatMessage(c.changeCommandSearchShortcut), click() {
-                            a.appController.openUserSettings()
+                            __AppController.appController.openUserSettings()
                         }
                     }, {type: "separator"}] : []
                 }(e, t), o = [...r, {
@@ -6716,11 +6800,11 @@
                             id: u,
                             checked: r,
                             click(e) {
-                                l.Store.dispatch((0, i.updatePreferences)({isOpenAtLoginEnabled: e.checked}))
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isOpenAtLoginEnabled: e.checked}))
                             }
                         }, {
                             label: e.formatMessage(c.enableQuickSearch), type: "checkbox", id: d, checked: n, click(e) {
-                                l.Store.dispatch((0, i.updatePreferences)({isQuickSearchEnabled: e.checked}))
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isQuickSearchEnabled: e.checked}))
                             }
                         }, {type: "separator"}, {
                             label: e.formatMessage(c.keepInBackground),
@@ -6728,18 +6812,18 @@
                             id: p,
                             checked: o,
                             click() {
-                                l.Store.dispatch((0, i.updatePreferences)({isHideLastWindowOnCloseEnabled: !0}))
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isHideLastWindowOnCloseEnabled: !0}))
                             }
                         }, {
                             label: e.formatMessage(c.showImmediately), type: "radio", id: h, checked: !o, click() {
-                                l.Store.dispatch((0, i.updatePreferences)({isHideLastWindowOnCloseEnabled: !1}))
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isHideLastWindowOnCloseEnabled: !1}))
                             }
                         }]
                     }
                 }(e, t)) : o.splice(r.length, 0, function (e, t) {
                     return {
                         label: e.formatMessage(c.showNotionInMenuBar), type: "checkbox", checked: !0, click() {
-                            l.Store.dispatch((0, i.updatePreferences)({isMenuBarIconEnabled: !1}))
+                            __store.Store.dispatch((0, __appSlice.updatePreferences)({isMenuBarIconEnabled: !1}))
                         }
                     }
                 }(e)), o
@@ -6778,17 +6862,17 @@
 
 
             const __os = i(__require(70857)),
-                l = i(__require(16928)),
+                __path = i(__require(16928)),
                 electron = __require(4482),
                 electron_log = i(__require(47419)),
                 d = __require(40041),
                 p = a(__require(80115)),
                 h = __require(36343),
                 f = i(__require(4928)),
-                m = a(__require(21852)),
-                g = __require(87309),
-                b = __require(13387),
-                v = __require(69340),
+                __AppController = a(__require(21852)),
+                __AssetCache = __require(87309),
+                __session = __require(13387),
+                __store = __require(69340),
                 y = h.defineMessages({
                     logsInShellFailedTitle: {
                         id: "desktopTroubleshooting.showLogs.error.title",
@@ -6823,21 +6907,21 @@
             exports.showLogsInShell = async function () {
                 try {
                     const e = await async function () {
-                            const e = l.default.dirname(electron_log.default.transports.file.getFile().path),
+                            const e = __path.default.dirname(electron_log.default.transports.file.getFile().path),
                                 t = await p.readdir(e),
                                 r = {};
                             for (const n of t) {
-                                const t = l.default.join(e, n);
+                                const t = __path.default.join(e, n);
                                 r[n] = (0, d.strToU8)(await p.readFile(t, "utf8"))
                             }
                             const n = await getAuxiliaryInfo();
                             return await (0, f.default)({...r, ...n})
                         }(), t = `${electron.app.getName()}-logs-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
-                        r = l.default.join(electron.app.getPath("downloads"), t);
+                        r = __path.default.join(electron.app.getPath("downloads"), t);
                     await p.writeFile(r, e), electron.shell.showItemInFolder(r)
                 } catch (e) {
                     electron_log.default.error(`showLogsInShell() failed: ${e}`);
-                    const t = m.appController.intl,
+                    const t = __AppController.appController.intl,
                         r = "win32" === process.platform ? t.formatMessage(y.logsInShellFailedMessageWindows) : t.formatMessage(y.logsInShellFailedMessageMac);
                     await electron.dialog.showMessageBox({
                         title: t.formatMessage(y.logsInShellFailedTitle),
@@ -6848,7 +6932,7 @@
             }
             exports.getAuxiliaryInfo = getAuxiliaryInfo
             exports.maybeDisableHardwareAcceleration = function () {
-                const {preferences: e} = v.Store.getState().app;
+                const {preferences: e} = __store.Store.getState().app;
                 !electron.app.isReady() && e.isHardwareAccelerationDisabled && (electron_log.default.info("Disabling GPU hardware acceleration"), electron.app.disableHardwareAcceleration())
             }
             exports.deleteLocalData = async function (e) {
@@ -6857,10 +6941,10 @@
                 } catch (e) {
                     electron_log.default.warn("Failed to remove userData directory", e)
                 } else if (e) {
-                    const e = electron.session.fromPartition(b.electronSessionPartition);
+                    const e = electron.session.fromPartition(__session.electronSessionPartition);
                     e.flushStorageData(), await e.clearStorageData(), e.flushStorageData();
                     const t = electron.app.getPath("userData"),
-                        r = [l.default.join(t, g.assetCacheDirName), l.default.join(t, "state.json"), l.default.join(t, "window-state.json"), l.default.join(t, "sentry")];
+                        r = [__path.default.join(t, __AssetCache.assetCacheDirName), __path.default.join(t, "state.json"), __path.default.join(t, "window-state.json"), __path.default.join(t, "sentry")];
                     for (const e of r) try {
                         await p.remove(e)
                     } catch (t) {
@@ -6902,23 +6986,23 @@
         50263: function (module, exports, __require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__exportStar || function (e, t) {
-                for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
-            },
+                    for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
+                },
                 a = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
+                    return e && e.__esModule ? e : {default: e}
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
             exports.select = exports.plural = exports.number = void 0;
@@ -7597,28 +7681,28 @@
         37318: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
@@ -7684,28 +7768,28 @@
         52869: function (module, t, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
 
             Object.defineProperty(t, "__esModule", {value: !0})
 
@@ -7731,88 +7815,88 @@
 
             t.grayscale = {light: d(45), dark: d(205)};
             const p = {
-                blue: "#2383E2",
-                red: "#EB5757",
-                contentBorder: "#E4E3E2",
-                contentGrayBackground: "#F7F6F5",
-                contentPlaceholder: "#C4C4C4",
-                defaultText: "rgb(66, 66, 65)",
-                uiBlack: "#333",
-                uiExtraLightGray: "#E2E2E2",
-                uiGray: "#A5A5A5",
-                uiLightBlack: "#888",
-                uiLightBorder: "#F2F1F0",
-                uiLightGray: "#C4C4C4"
-            },
+                    blue: "#2383E2",
+                    red: "#EB5757",
+                    contentBorder: "#E4E3E2",
+                    contentGrayBackground: "#F7F6F5",
+                    contentPlaceholder: "#C4C4C4",
+                    defaultText: "rgb(66, 66, 65)",
+                    uiBlack: "#333",
+                    uiExtraLightGray: "#E2E2E2",
+                    uiGray: "#A5A5A5",
+                    uiLightBlack: "#888",
+                    uiLightBorder: "#F2F1F0",
+                    uiLightGray: "#C4C4C4"
+                },
                 h = {
-                frontText: "#040404",
-                frontTextLight: "rgba(0,0,0,0.4)",
-                frontTextMedium: "rgba(0,0,0,0.6)",
-                frontTextDark: "#111111",
-                frontBorder: "rgba(0, 0, 0, 0.1)",
-                frontCreamBackground: "#FFFEFC",
-                frontCreamBackgroundDark: "#F9F5F1",
-                frontCreamText: "#463D34",
-                frontCreamBorder: "#D4CFCB",
-                frontBlueBackground: "#EFF3F5",
-                frontBlueBackgroundDark: "#D7E3E8",
-                frontBlueText: "#2383E2",
-                frontBlueBorder: "#B5C7D8",
-                frontPurpleBackground: "#E7E6EA",
-                frontPurpleBackgroundDark: "#D9D7DF",
-                frontPurpleText: "#382F49",
-                frontPurpleBorder: "#ACA8BD",
-                frontOrangeBackground: "#F8EDE7",
-                frontOrangeBackgroundDark: "#F2DCCF",
-                frontOrangeText: "#5B3322",
-                frontOrangeBorder: "#DEBEAC",
-                frontRed: "#eb5757",
-                frontPrimaryButtonBackground: "#E16259",
-                frontPrimaryButtonBackgroundHovered: "#CF534A",
-                frontPrimaryButtonBackgroundPressed: "#BF4D45",
-                frontPrimaryButtonBorder: "#BE5643",
-                frontRedButtonBackground: "#E16259",
-                frontRedButtonBackgroundHovered: "#CF534A",
-                frontRedButtonBackgroundPressed: "#BF4D45",
-                frontRedButtonBorder: "#BE5643",
-                frontSecondaryButtonBackground: "#FDF5F2",
-                frontSecondaryButtonBackgroundHovered: "#FBEBE8",
-                frontSecondaryButtonBackgroundPressed: "#F9E5E2",
-                frontTertiaryButtonBackground: "transparent",
-                frontTertiaryButtonBackgroundHovered: (0, i.alpha)(t.grayscale.light.darkgray, .08),
-                frontTertiaryButtonBackgroundPressed: (0, i.alpha)(t.grayscale.light.darkgray, .16),
-                frontQuaternaryButtonBackground: "#2383E2",
-                frontQuaternaryButtonBackgroundHovered: "#2383E2",
-                frontQuaternaryButtonBackgroundPressed: "#2383E2",
-                frontQuaternaryButtonBorder: "#2383E2",
-                frontMobilePhoneBackground: "#1d1d1d",
-                frontLiveDemoSidebarText: "#777",
-                frontLiveDemoSidebarLabelText: "rgba(55, 53, 47, 0.3)",
-                frontTransparent: "transparent",
-                frontBlackButtonBackground: (0, i.getCSSColor)(t.grayscale.dark.darkgray),
-                frontBlackButtonBackgroundHovered: "rgb(98, 102, 104)",
-                frontBlackButtonBackgroundPressed: "rgb(120, 123, 123)",
-                frontBlueButtonBackground: "#2383E2",
-                frontBlueButtonHoveredBackground: (0, i.darken)("#2383E2", .3),
-                frontBlueButtonPressedBackground: (0, i.darken)("#2383E2", .6)
-            },
+                    frontText: "#040404",
+                    frontTextLight: "rgba(0,0,0,0.4)",
+                    frontTextMedium: "rgba(0,0,0,0.6)",
+                    frontTextDark: "#111111",
+                    frontBorder: "rgba(0, 0, 0, 0.1)",
+                    frontCreamBackground: "#FFFEFC",
+                    frontCreamBackgroundDark: "#F9F5F1",
+                    frontCreamText: "#463D34",
+                    frontCreamBorder: "#D4CFCB",
+                    frontBlueBackground: "#EFF3F5",
+                    frontBlueBackgroundDark: "#D7E3E8",
+                    frontBlueText: "#2383E2",
+                    frontBlueBorder: "#B5C7D8",
+                    frontPurpleBackground: "#E7E6EA",
+                    frontPurpleBackgroundDark: "#D9D7DF",
+                    frontPurpleText: "#382F49",
+                    frontPurpleBorder: "#ACA8BD",
+                    frontOrangeBackground: "#F8EDE7",
+                    frontOrangeBackgroundDark: "#F2DCCF",
+                    frontOrangeText: "#5B3322",
+                    frontOrangeBorder: "#DEBEAC",
+                    frontRed: "#eb5757",
+                    frontPrimaryButtonBackground: "#E16259",
+                    frontPrimaryButtonBackgroundHovered: "#CF534A",
+                    frontPrimaryButtonBackgroundPressed: "#BF4D45",
+                    frontPrimaryButtonBorder: "#BE5643",
+                    frontRedButtonBackground: "#E16259",
+                    frontRedButtonBackgroundHovered: "#CF534A",
+                    frontRedButtonBackgroundPressed: "#BF4D45",
+                    frontRedButtonBorder: "#BE5643",
+                    frontSecondaryButtonBackground: "#FDF5F2",
+                    frontSecondaryButtonBackgroundHovered: "#FBEBE8",
+                    frontSecondaryButtonBackgroundPressed: "#F9E5E2",
+                    frontTertiaryButtonBackground: "transparent",
+                    frontTertiaryButtonBackgroundHovered: (0, i.alpha)(t.grayscale.light.darkgray, .08),
+                    frontTertiaryButtonBackgroundPressed: (0, i.alpha)(t.grayscale.light.darkgray, .16),
+                    frontQuaternaryButtonBackground: "#2383E2",
+                    frontQuaternaryButtonBackgroundHovered: "#2383E2",
+                    frontQuaternaryButtonBackgroundPressed: "#2383E2",
+                    frontQuaternaryButtonBorder: "#2383E2",
+                    frontMobilePhoneBackground: "#1d1d1d",
+                    frontLiveDemoSidebarText: "#777",
+                    frontLiveDemoSidebarLabelText: "rgba(55, 53, 47, 0.3)",
+                    frontTransparent: "transparent",
+                    frontBlackButtonBackground: (0, i.getCSSColor)(t.grayscale.dark.darkgray),
+                    frontBlackButtonBackgroundHovered: "rgb(98, 102, 104)",
+                    frontBlackButtonBackgroundPressed: "rgb(120, 123, 123)",
+                    frontBlueButtonBackground: "#2383E2",
+                    frontBlueButtonHoveredBackground: (0, i.darken)("#2383E2", .3),
+                    frontBlueButtonPressedBackground: (0, i.darken)("#2383E2", .6)
+                },
                 f = {
-                regularTextColor: u(1),
-                mediumTextColor: u(.7),
-                lightTextColor: u(.4),
-                regularIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .8),
-                mediumIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .4),
-                lightIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .2),
-                dividerColor: (0, i.alpha)(t.grayscale.light.darkgray, .09),
-                invertedTextColor: (0, i.alpha)("white", .9),
-                selectionColor: "rgba(35, 131, 226, 0.28)"
-            },
+                    regularTextColor: u(1),
+                    mediumTextColor: u(.7),
+                    lightTextColor: u(.4),
+                    regularIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .8),
+                    mediumIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .4),
+                    lightIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .2),
+                    dividerColor: (0, i.alpha)(t.grayscale.light.darkgray, .09),
+                    invertedTextColor: (0, i.alpha)("white", .9),
+                    selectionColor: "rgba(35, 131, 226, 0.28)"
+                },
                 m = {
-                halfWhite: "rgba(255, 255, 255, 0.5)",
-                diffTextColor: p.blue,
-                diffBackground: (0, i.alpha)(p.blue, .1),
-                diffBackgroundHover: (0, i.alpha)(p.blue, .2)
-            };
+                    halfWhite: "rgba(255, 255, 255, 0.5)",
+                    diffTextColor: p.blue,
+                    diffBackground: (0, i.alpha)(p.blue, .1),
+                    diffBackgroundHover: (0, i.alpha)(p.blue, .2)
+                };
             t.colors = {
                 inherit: "inherit",
                 transparent: "transparent",
@@ -9065,16 +9149,16 @@
             t.selectColors = ["default", "gray", "brown", "orange", "yellow", "green", "blue", "purple", "pink", "red"];
             const v = "rgb(255, 212, 0)",
                 y = {
-                comment: (0, i.colord)({r: 255, g: 203, b: 0}),
-                update: (0, i.colord)({r: 35, g: 131, b: 226}),
-                remove: (0, i.colord)({r: 120, g: 119, b: 116})
-            },
+                    comment: (0, i.colord)({r: 255, g: 203, b: 0}),
+                    update: (0, i.colord)({r: 35, g: 131, b: 226}),
+                    remove: (0, i.colord)({r: 120, g: 119, b: 116})
+                },
                 w = {comment: .8, update: .4, remove: .4},
                 _ = {
-                comment: {background: .15, underline: .4375},
-                update: {underline: .25, background: .09},
-                remove: {underline: .25, background: .09}
-            };
+                    comment: {background: .15, underline: .4375},
+                    update: {underline: .25, background: .09},
+                    remove: {underline: .25, background: .09}
+                };
 
             function k(e, t) {
                 const r = (0, c.objectKeys)(t).map((r => {
@@ -9133,11 +9217,11 @@
                 return (0, i.getCSSColor)(s.alpha(Math.min(l * c * (1 + d), u)))
             }), (e => lodash_1.values(e).join("_")))
             t.commentBackgroundWithLevel = function ({
-                                                                                                   level: e,
-                                                                                                   selected: r,
-                                                                                                   hovered: n,
-                                                                                                   newStyling: o
-                                                                                               }) {
+                                                         level: e,
+                                                         selected: r,
+                                                         hovered: n,
+                                                         newStyling: o
+                                                     }) {
                 if (o) return (0, t.interactiveAnnotationColor)({
                     annotationType: "comment",
                     type: "background",
@@ -10575,13 +10659,13 @@
 
 
             // shared/cleanObjectForSerialization
-            const n = _require(37318)
+            const __cleanObjectForSerialization = _require(37318)
             const logLevelOrder = ["silent", "error", "warning", "info", "debug"];
 
             function safelyConvertAnyToString(toConvert, stringify = JSON.stringify) {
                 try {
                     return "object" == typeof toConvert && null !== toConvert
-                        ? stringify(n.cleanObjectForSerialization(toConvert, 10))
+                        ? stringify(__cleanObjectForSerialization.cleanObjectForSerialization(toConvert, 10))
                         : String(toConvert)
                 } catch (e) {
                     return `Unable to safely convert to string: "${e.stack ? e.stack : ""}"`
@@ -15092,7 +15176,7 @@
                         }))
                     }, e.id = "LinkedErrors", e
                 }(),
-                Je = __require(16928);
+                __path = __require(16928);
             var Xe, Ze,
                 _Modules = function () {
                     function e() {
@@ -15114,9 +15198,9 @@
                         }(), n = {}, o = {}, t.forEach((function (t) {
                             var r = t, a = function () {
                                 var t = r;
-                                if ((r = (0, Je.dirname)(t)) && t !== r && !o[t]) {
+                                if ((r = (0, __path.dirname)(t)) && t !== r && !o[t]) {
                                     if (e.indexOf(r) < 0) return a();
-                                    var i = (0, Je.join)(t, "package.json");
+                                    var i = (0, __path.join)(t, "package.json");
                                     if (o[t] = !0, !(0, Y.existsSync)(i)) return a();
                                     try {
                                         var s = JSON.parse((0, Y.readFileSync)(i, "utf8"));
@@ -15805,11 +15889,11 @@
                     return (0, l.YH)(this, (function (o) {
                         switch (o.label) {
                             case 0:
-                                t = (0, Je.resolve)(e), o.label = 1;
+                                t = (0, __path.resolve)(e), o.label = 1;
                             case 1:
                                 return o.trys.push([1, 2, , 5]), [2, Wt(t, 511)];
                             case 2:
-                                return r = o.sent(), (n = r) && "ENOENT" === n.code ? [4, zt((0, Je.dirname)(t))] : [3, 4];
+                                return r = o.sent(), (n = r) && "ENOENT" === n.code ? [4, zt((0, __path.dirname)(t))] : [3, 4];
                             case 3:
                                 return o.sent(), [2, Wt(t, 511)];
                             case 4:
@@ -15827,11 +15911,11 @@
             }
 
             function qt(e) {
-                var t = (0, Je.resolve)(e);
+                var t = (0, __path.resolve)(e);
                 try {
                     (0, Y.mkdirSync)(t, 511)
                 } catch (e) {
-                    if (e && "ENOENT" === e.code) qt((0, Je.dirname)(t)), (0, Y.mkdirSync)(t, 511); else try {
+                    if (e && "ENOENT" === e.code) qt((0, __path.dirname)(t)), (0, Y.mkdirSync)(t, 511); else try {
                         if (!(0, Y.statSync)(t).isDirectory()) throw e
                     } catch (t) {
                         throw e
@@ -15953,7 +16037,7 @@
                             case 2:
                                 return t = i.sent(), (r = Zt.find((function (e) {
                                     return t.includes(e.name)
-                                }))) ? [4, Ht((0, Je.join)("/etc", r.name), {encoding: "utf-8"})] : [2, e];
+                                }))) ? [4, Ht((0, __path.join)("/etc", r.name), {encoding: "utf-8"})] : [2, e];
                             case 3:
                                 return n = i.sent().toLowerCase(), o = r.distros, e.name = o.find((function (e) {
                                     return n.indexOf(rr(e)) >= 0
@@ -16084,7 +16168,7 @@
 
             var cr = function () {
                     function e(e, t, r) {
-                        this._path = (0, Je.join)(e, t + ".json"), this._initial = r, this._flushing = !1
+                        this._path = (0, __path.join)(e, t + ".json"), this._initial = r, this._flushing = !1
                     }
 
                     e.prototype.set = function (e) {
@@ -16109,7 +16193,7 @@
                     }
                     e.prototype._flush = function () {
                         try {
-                            qt((0, Je.dirname)(this._path)), (0, Y.writeFileSync)(this._path, JSON.stringify(this._data))
+                            qt((0, __path.dirname)(this._path)), (0, Y.writeFileSync)(this._path, JSON.stringify(this._data))
                         } catch (e) {
                             O.v.warn("Failed to flush store", e)
                         } finally {
@@ -16317,12 +16401,12 @@
                             return (0, l.YH)(this, (function (t) {
                                 switch (t.label) {
                                     case 0:
-                                        return ze(this._deleteCrashpadMetadataFile()), [4, Kt(e = (0, Je.join)(this._crashesDirectory, this._crashpadSubDirectory))];
+                                        return ze(this._deleteCrashpadMetadataFile()), [4, Kt(e = (0, __path.join)(this._crashesDirectory, this._crashpadSubDirectory))];
                                     case 1:
                                         return [2, t.sent().filter((function (e) {
                                             return e.endsWith(".dmp")
                                         })).map((function (t) {
-                                            return (0, Je.join)(e, t)
+                                            return (0, __path.join)(e, t)
                                         }))]
                                 }
                             }))
@@ -16334,7 +16418,7 @@
                                 switch (o.label) {
                                     case 0:
                                         if (e > 2e3) return [2];
-                                        t = (0, Je.join)(this._crashesDirectory, "metadata"), o.label = 1;
+                                        t = (0, __path.join)(this._crashesDirectory, "metadata"), o.label = 1;
                                     case 1:
                                         return o.trys.push([1, 3, , 4]), [4, Gt(t)];
                                     case 2:
@@ -16373,7 +16457,7 @@
                                                 return (0, l.YH)(this, (function (r) {
                                                     switch (r.label) {
                                                         case 0:
-                                                            t = (0, Je.join)(this._crashesDirectory, e), r.label = 1;
+                                                            t = (0, __path.join)(this._crashesDirectory, e), r.label = 1;
                                                         case 1:
                                                             return r.trys.push([1, 3, , 4]), [4, Gt(t)];
                                                         case 2:
@@ -16388,7 +16472,7 @@
                                         }))), [2, e.filter((function (e) {
                                             return e.endsWith(".dmp")
                                         })).map((function (e) {
-                                            return (0, Je.join)(t._crashesDirectory, e)
+                                            return (0, __path.join)(t._crashesDirectory, e)
                                         }))]
                                 }
                             }))
@@ -16406,9 +16490,9 @@
                             return (0, l.YH)(this, (function (i) {
                                 switch (i.label) {
                                     case 0:
-                                        return t = (0, Je.basename)(e.path), this._queue.get().some((function (e) {
-                                            return (0, Je.basename)(e.path) === t
-                                        })) ? [2] : (r = (0, Je.join)(this._cacheDirectory, t), [4, zt(this._cacheDirectory)]);
+                                        return t = (0, __path.basename)(e.path), this._queue.get().some((function (e) {
+                                            return (0, __path.basename)(e.path) === t
+                                        })) ? [2] : (r = (0, __path.join)(this._cacheDirectory, t), [4, zt(this._cacheDirectory)]);
                                     case 1:
                                         return i.sent(), [4, (s = e.path, c = r, new Promise((function (e, t) {
                                             (0, Y.rename)(s, c, (function (r) {
@@ -16460,7 +16544,7 @@
                                             attachment_type: "event.minidump",
                                             length: s.length,
                                             type: "attachment",
-                                            filename: (0, Je.basename)(r)
+                                            filename: (0, __path.basename)(r)
                                         }), i = Buffer.concat([i, Buffer.from(u + "\n"), s, Buffer.from("\n")]), [3, 5];
                                     case 4:
                                         O.v.warn("Will not add minidump to request since they are rate limited."), l.label = 5;
@@ -16477,7 +16561,7 @@
                 }();
 
             function fr() {
-                return (0, Je.join)(electron.app.getPath("userData"), "sentry")
+                return (0, __path.join)(electron.app.getPath("userData"), "sentry")
             }
 
             function mr() {
@@ -22633,7 +22717,7 @@
         37221: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.writeFileSync = t.writeFile = t.readFileSync = t.readFile = void 0;
-            const n = r(16928), o = r(3453), a = r(31484), i = r(63911), s = r(63538), l = r(2213);
+            const __path = r(16928), o = r(3453), a = r(31484), i = r(63911), s = r(63538), l = r(2213);
             t.readFile = function e(t, r = o.DEFAULT_READ_OPTIONS) {
                 var n;
                 if (i.default.isString(r)) return e(t, {encoding: r});
@@ -22663,7 +22747,7 @@
                         const t = await a.default.statAttempt(e);
                         t && (r = {...r}, c && (r.chown = {uid: t.uid, gid: t.gid}), u && (r.mode = t.mode))
                     }
-                    const b = n.dirname(e);
+                    const b = __path.dirname(e);
                     await a.default.mkdirAttempt(b, {
                         mode: o.DEFAULT_FOLDER_MODE,
                         recursive: !0
@@ -22690,7 +22774,7 @@
                         const t = a.default.statSyncAttempt(e);
                         t && (r = {...r}, s && (r.chown = {uid: t.uid, gid: t.gid}), d && (r.mode = t.mode))
                     }
-                    const f = n.dirname(e);
+                    const f = __path.dirname(e);
                     a.default.mkdirSyncAttempt(f, {
                         mode: o.DEFAULT_FOLDER_MODE,
                         recursive: !0
@@ -22866,7 +22950,7 @@
         2213: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
-            const n = r(16928), o = r(3453), a = r(31484), i = {
+            const __path = r(16928), o = r(3453), a = r(31484), i = {
                 store: {}, create: e => {
                     const t = `000000${Math.floor(16777215 * Math.random()).toString(16)}`.slice(-6);
                     return `${e}.tmp-${Date.now().toString().slice(-10)}${t}`
@@ -22880,7 +22964,7 @@
                 }, purgeSyncAll: () => {
                     for (const e in i.store) i.purgeSync(e)
                 }, truncate: e => {
-                    const t = n.basename(e);
+                    const t = __path.basename(e);
                     if (t.length <= o.LIMIT_BASENAME_LENGTH) return e;
                     const r = /^(\.?)(.*?)((?:\.[^.]+)?(?:\.tmp-\d{10}[a-f0-9]{6})?)$/.exec(t);
                     if (!r) return e;
@@ -23470,12 +23554,12 @@
                 return "m" === r ? n : "a" === r ? n.call(e) : n ? n.value : t.get(e)
             };
             Object.defineProperty(t, "__esModule", {value: !0});
-            const d = r(39023), p = r(79896), h = r(16928), f = r(76982), m = r(42613), g = r(24434), b = r(85444),
+            const d = r(39023), p = r(79896), __path = r(16928), f = r(76982), m = r(42613), g = r(24434), b = r(85444),
                 v = r(87339), y = r(54719), w = r(37221), _ = r(73210), k = r(42368), T = r(23659), E = r(86659),
                 S = r(40688), C = "aes-256-cbc", O = () => Object.create(null);
             let M = "";
             try {
-                delete require.cache[__filename], M = h.dirname(null !== (o = null === (n = e.parent) || void 0 === n ? void 0 : n.filename) && void 0 !== o ? o : ".")
+                delete require.cache[__filename], M = __path.dirname(null !== (o = null === (n = e.parent) || void 0 === n ? void 0 : n.filename) && void 0 !== o ? o : ".")
             } catch (e) {
             }
             const I = "__internal__", A = `${I}.migrations.version`;
@@ -23509,7 +23593,7 @@
                     }
                     r.defaults && c(this, l, {...u(this, l, "f"), ...r.defaults}, "f"), r.serialize && (this._serialize = r.serialize), r.deserialize && (this._deserialize = r.deserialize), this.events = new g.EventEmitter, c(this, i, r.encryptionKey, "f");
                     const o = r.fileExtension ? `.${r.fileExtension}` : "";
-                    this.path = h.resolve(r.cwd, `${null !== (t = r.configName) && void 0 !== t ? t : "config"}${o}`);
+                    this.path = __path.resolve(r.cwd, `${null !== (t = r.configName) && void 0 !== t ? t : "config"}${o}`);
                     const d = this.store, f = Object.assign(O(), r.defaults, d);
                     this._validate(f);
                     try {
@@ -23639,7 +23723,7 @@
                 }
 
                 _ensureDirectory() {
-                    p.mkdirSync(h.dirname(this.path), {recursive: !0})
+                    p.mkdirSync(__path.dirname(this.path), {recursive: !0})
                 }
 
                 _write(e) {
@@ -27896,7 +27980,7 @@
         },
         21789: (e, t, r) => {
             "use strict";
-            var electron, o = r(16928);
+            var electron, __path = r(16928);
             try {
                 electron = r(4482)
             } catch (e) {
@@ -27944,7 +28028,7 @@
                     var e, t
                 }, isDev: function () {
                     var e = i();
-                    return e && void 0 !== e.isPackaged ? !e.isPackaged : "string" == typeof process.execPath ? o.basename(process.execPath).toLowerCase().startsWith("electron") : "1" === process.env.ELECTRON_IS_DEV
+                    return e && void 0 !== e.isPackaged ? !e.isPackaged : "string" == typeof process.execPath ? __path.basename(process.execPath).toLowerCase().startsWith("electron") : "1" === process.env.ELECTRON_IS_DEV
                 }, isElectron: function () {
                     return "browser" === process.type || "renderer" === process.type
                 }, isIpcChannelListened: function (e) {
@@ -28349,7 +28433,7 @@
         },
         17235: (e, t, r) => {
             "use strict";
-            var n = r(24434), o = r(79896), __os = r(70857), i = r(16928), s = r(16857), l = r(39023);
+            var n = r(24434), o = r(79896), __os = r(70857), __path = r(16928), s = r(16857), l = r(39023);
 
             function c(e, t, r) {
                 n.call(this), this.path = e, this.initialSize = void 0, this.bytesWritten = 0, this.writeAsync = Boolean(r), this.asyncWriteQueue = [], this.hasActiveAsyncWritting = !1, this.writeOptions = t || {
@@ -28372,7 +28456,7 @@
                 try {
                     return o.mkdirSync(e), !0
                 } catch (t) {
-                    if ("ENOENT" === t.code) return p(i.dirname(e)) && p(e);
+                    if ("ENOENT" === t.code) return p(__path.dirname(e)) && p(e);
                     try {
                         if (o.statSync(e).isDirectory()) return !0;
                         throw t
@@ -28437,7 +28521,7 @@
             }, l.inherits(d, n), d.prototype.provide = function (e, t, r) {
                 var n;
                 try {
-                    if (e = i.resolve(e), this.store[e]) return this.store[e];
+                    if (e = __path.resolve(e), this.store[e]) return this.store[e];
                     n = this.createFile(e, t, Boolean(r))
                 } catch (t) {
                     n = new u(e), this.emitError(t, n)
@@ -28448,21 +28532,21 @@
             }, d.prototype.emitError = function (e, t) {
                 this.emit("error", e, t)
             }, d.prototype.testFileWriting = function (e) {
-                p(i.dirname(e)), o.writeFileSync(e, "", {flag: "a"})
+                p(__path.dirname(e)), o.writeFileSync(e, "", {flag: "a"})
             }
         },
         36209: (e, t, r) => {
             "use strict";
-            var n = r(79896), o = r(16928), __os = r(70857), i = r(39023), s = r(33396), l = r(17235).FileRegistry,
+            var n = r(79896), __path = r(16928), __os = r(70857), i = r(39023), s = r(33396), l = r(17235).FileRegistry,
                 c = r(61820);
             e.exports = function (e, t) {
                 var r = c.getPathVariables(process.platform), l = t || u;
                 return l.listenerCount("error") < 1 && l.on("error", (function (e, t) {
                     p("Can't write to " + t, e)
                 })), d.archiveLog = function (e) {
-                    var t = e.toString(), r = o.parse(t);
+                    var t = e.toString(), r = __path.parse(t);
                     try {
-                        n.renameSync(t, o.join(r.dir, r.name + ".old" + r.ext))
+                        n.renameSync(t, __path.join(r.dir, r.name + ".old" + r.ext))
                     } catch (t) {
                         p("Could not rotate log", t);
                         var a = Math.round(d.maxSize / 4);
@@ -28480,9 +28564,9 @@
                 }(), d.format = "[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}]{scope} {text}", d.getFile = h, d.level = "silly", d.maxSize = 1048576, d.readAllLogs = function (e) {
                     var t = e && "function" == typeof e.fileFilter ? e.fileFilter : function (e) {
                         return e.endsWith(".log")
-                    }, i = Object.assign({}, r, {fileName: d.fileName}), s = o.dirname(d.resolvePath(i));
+                    }, i = Object.assign({}, r, {fileName: d.fileName}), s = __path.dirname(d.resolvePath(i));
                     return n.readdirSync(s).map((function (e) {
-                        return o.join(s, e)
+                        return __path.join(s, e)
                     })).filter(t).map((function (e) {
                         try {
                             return {path: e, lines: n.readFileSync(e, "utf8").split(__os.EOL)}
@@ -28491,7 +28575,7 @@
                         }
                     })).filter(Boolean)
                 }, d.resolvePath = function (e) {
-                    return o.join(e.libraryDefaultDir, e.fileName)
+                    return __path.join(e.libraryDefaultDir, e.fileName)
                 }, d.sync = !0, d.writeOptions = {
                     flag: "a",
                     mode: 438,
@@ -28547,19 +28631,19 @@
         },
         97251: (e, t, r) => {
             "use strict";
-            var n = r(79896), o = r(16928);
+            var n = r(79896), __path = r(16928);
 
             function a(e) {
                 if (!e) return null;
                 try {
                     var t = function (e, t) {
                         for (var r = t; ;) {
-                            var a = o.parse(r), i = a.root, s = a.dir;
-                            if (n.existsSync(o.join(r, e))) return o.resolve(o.join(r, e));
+                            var a = __path.parse(r), i = a.root, s = a.dir;
+                            if (n.existsSync(__path.join(r, e))) return __path.resolve(__path.join(r, e));
                             if (r === i) return null;
                             r = s
                         }
-                    }("package.json", e = o.join.apply(o, arguments));
+                    }("package.json", e = __path.join.apply(__path, arguments));
                     if (!t) return null;
                     var r = JSON.parse(n.readFileSync(t, "utf8")), a = r.productName || r.name;
                     if (!a || "electron" === a.toLowerCase()) return null;
@@ -28583,7 +28667,7 @@
         },
         61820: (e, t, r) => {
             "use strict";
-            var __os = r(70857), o = r(16928), a = r(21789), i = r(97251);
+            var __os = r(70857), __path = r(16928), a = r(21789), i = r(97251);
 
             function s(e) {
                 var t = a.getPath("appData");
@@ -28591,11 +28675,11 @@
                 var r = l();
                 switch (e) {
                     case"darwin":
-                        return o.join(r, "Library/Application Support");
+                        return __path.join(r, "Library/Application Support");
                     case"win32":
-                        return process.env.APPDATA || o.join(r, "AppData/Roaming");
+                        return process.env.APPDATA || __path.join(r, "AppData/Roaming");
                     default:
-                        return process.env.XDG_CONFIG_HOME || o.join(r, ".config")
+                        return process.env.XDG_CONFIG_HOME || __path.join(r, ".config")
                 }
             }
 
@@ -28604,11 +28688,11 @@
             }
 
             function c(e, t) {
-                return "darwin" === e ? o.join(l(), "Library/Logs", t) : o.join(p(e, t), "logs")
+                return "darwin" === e ? __path.join(l(), "Library/Logs", t) : __path.join(p(e, t), "logs")
             }
 
             function u(e) {
-                return "darwin" === e ? o.join(l(), "Library/Logs", "{appName}") : o.join(s(e), "{appName}", "logs")
+                return "darwin" === e ? __path.join(l(), "Library/Logs", "{appName}") : __path.join(s(e), "{appName}", "logs")
             }
 
             function d() {
@@ -28619,7 +28703,7 @@
             }
 
             function p(e, t) {
-                return a.getName() !== t ? o.join(s(e), t) : a.getPath("userData") || o.join(s(e), t)
+                return a.getName() !== t ? __path.join(s(e), t) : a.getPath("userData") || __path.join(s(e), t)
             }
 
             e.exports = {
@@ -31338,7 +31422,7 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928))
+            }(r(16928)) // path
         },
         49619: (e, t, r) => {
             "use strict";
@@ -31373,7 +31457,7 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(r(16928)); // path
 
             function l() {
                 const e = r(86216);
@@ -31512,7 +31596,7 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(r(16928)); // path
 
             function d() {
                 const e = r(44993);
@@ -31550,10 +31634,10 @@
             }
 
             function g() {
-                const e = r(94625);
+                const __autoUpdater = r(94625);
                 return g = function () {
-                    return e
-                }, e
+                    return __autoUpdater
+                }, __autoUpdater
             }
 
             function b() {
@@ -31948,7 +32032,7 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(r(16928)); // path
             t.DownloadedUpdateHelper = class {
                 constructor(e) {
                     this.cacheDir = e, this._file = null, this._packageFile = null, this.versionInfo = null, this.fileInfo = null, this._downloadedFileInfo = null
@@ -32035,7 +32119,7 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(r(16928)); // path
 
             function o() {
                 const e = r(64226);
@@ -32236,7 +32320,7 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(r(16928)); //path
 
             function i() {
                 const e = r(86216);
@@ -32260,10 +32344,10 @@
             }
 
             function c() {
-                const e = r(94625);
+                const __autoUpdater = r(94625);
                 return c = function () {
-                    return e
-                }, e
+                    return __autoUpdater
+                }, __autoUpdater
             }
 
             function u() {
@@ -32979,6 +33063,8 @@
 
             t.ElectronHttpExecutor = s
         },
+
+        // __autoUpdater
         94625: (module, exports, __require) => {
             "use strict";
 
@@ -33198,10 +33284,10 @@
             }
 
             function i() {
-                const e = r(94625);
+                const __autoUpdater = r(94625);
                 return i = function () {
-                    return e
-                }, e
+                    return __autoUpdater
+                }, __autoUpdater
             }
 
             function s() {
@@ -33255,10 +33341,10 @@
             }
 
             function o() {
-                const e = r(94625);
+                const __autoUpdater = r(94625);
                 return o = function () {
-                    return e
-                }, e
+                    return __autoUpdater
+                }, __autoUpdater
             }
 
             function a() {
@@ -33341,10 +33427,10 @@
             }
 
             function i() {
-                const e = r(94625);
+                const __autoUpdater = r(94625);
                 return i = function () {
-                    return e
-                }, e
+                    return __autoUpdater
+                }, __autoUpdater
             }
 
             function s() {
@@ -33473,7 +33559,7 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(r(16928)); // path
 
             function i() {
                 const e = r(16857);
@@ -33490,10 +33576,10 @@
             }
 
             function l() {
-                const e = r(94625);
+                const __autoUpdater = r(94625);
                 return l = function () {
-                    return e
-                }, e
+                    return __autoUpdater
+                }, __autoUpdater
             }
 
             function c() {
@@ -33585,10 +33671,10 @@
             }
 
             function a() {
-                const e = __require(94625);
+                const __autoUpdater = __require(94625);
                 return a = function () {
-                    return e
-                }, e
+                    return __autoUpdater
+                }, __autoUpdater
             }
 
             function getFileList(e) {
@@ -33746,36 +33832,36 @@
         },
         54719: (e, t, r) => {
             "use strict";
-            const n = r(16928), __os = r(70857), a = __os.homedir(), i = __os.tmpdir(), {env: s} = process,
+            const __path = r(16928), __os = r(70857), a = __os.homedir(), i = __os.tmpdir(), {env: s} = process,
                 l = (e, t) => {
                     if ("string" != typeof e) throw new TypeError("Expected string, got " + typeof e);
                     return (t = Object.assign({suffix: "nodejs"}, t)).suffix && (e += `-${t.suffix}`), "darwin" === process.platform ? (e => {
-                        const t = n.join(a, "Library");
+                        const t = __path.join(a, "Library");
                         return {
-                            data: n.join(t, "Application Support", e),
-                            config: n.join(t, "Preferences", e),
-                            cache: n.join(t, "Caches", e),
-                            log: n.join(t, "Logs", e),
-                            temp: n.join(i, e)
+                            data: __path.join(t, "Application Support", e),
+                            config: __path.join(t, "Preferences", e),
+                            cache: __path.join(t, "Caches", e),
+                            log: __path.join(t, "Logs", e),
+                            temp: __path.join(i, e)
                         }
                     })(e) : "win32" === process.platform ? (e => {
-                        const t = s.APPDATA || n.join(a, "AppData", "Roaming"),
-                            r = s.LOCALAPPDATA || n.join(a, "AppData", "Local");
+                        const t = s.APPDATA || __path.join(a, "AppData", "Roaming"),
+                            r = s.LOCALAPPDATA || __path.join(a, "AppData", "Local");
                         return {
-                            data: n.join(r, e, "Data"),
-                            config: n.join(t, e, "Config"),
-                            cache: n.join(r, e, "Cache"),
-                            log: n.join(r, e, "Log"),
-                            temp: n.join(i, e)
+                            data: __path.join(r, e, "Data"),
+                            config: __path.join(t, e, "Config"),
+                            cache: __path.join(r, e, "Cache"),
+                            log: __path.join(r, e, "Log"),
+                            temp: __path.join(i, e)
                         }
                     })(e) : (e => {
-                        const t = n.basename(a);
+                        const t = __path.basename(a);
                         return {
-                            data: n.join(s.XDG_DATA_HOME || n.join(a, ".local", "share"), e),
-                            config: n.join(s.XDG_CONFIG_HOME || n.join(a, ".config"), e),
-                            cache: n.join(s.XDG_CACHE_HOME || n.join(a, ".cache"), e),
-                            log: n.join(s.XDG_STATE_HOME || n.join(a, ".local", "state"), e),
-                            temp: n.join(i, t, e)
+                            data: __path.join(s.XDG_DATA_HOME || __path.join(a, ".local", "share"), e),
+                            config: __path.join(s.XDG_CONFIG_HOME || __path.join(a, ".config"), e),
+                            cache: __path.join(s.XDG_CACHE_HOME || __path.join(a, ".cache"), e),
+                            log: __path.join(s.XDG_STATE_HOME || __path.join(a, ".local", "state"), e),
+                            temp: __path.join(i, t, e)
                         }
                     })(e)
                 };
@@ -33809,7 +33895,7 @@
         },
         49924: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(15776).mkdirsSync, i = r(57213).utimesMillisSync, s = r(84440);
+            const n = r(83641), __path = r(16928), a = r(15776).mkdirsSync, i = r(57213).utimesMillisSync, s = r(84440);
 
             function l(e, t, r, a) {
                 if (!a.filter || a.filter(t, r)) return function (e, t, r, a) {
@@ -33827,7 +33913,7 @@
                         }(e, r, o, a) : c(e, r, o, a)
                     }(i, e, t, r, a) : i.isSymbolicLink() ? function (e, t, r, a) {
                         let i = n.readlinkSync(t);
-                        if (a.dereference && (i = o.resolve(process.cwd(), i)), e) {
+                        if (a.dereference && (i = __path.resolve(process.cwd(), i)), e) {
                             let e;
                             try {
                                 e = n.readlinkSync(r)
@@ -33835,7 +33921,7 @@
                                 if ("EINVAL" === e.code || "UNKNOWN" === e.code) return n.symlinkSync(i, r);
                                 throw e
                             }
-                            if (a.dereference && (e = o.resolve(process.cwd(), e)), s.isSrcSubdir(i, e)) throw new Error(`Cannot copy '${i}' to a subdirectory of itself, '${e}'.`);
+                            if (a.dereference && (e = __path.resolve(process.cwd(), e)), s.isSrcSubdir(i, e)) throw new Error(`Cannot copy '${i}' to a subdirectory of itself, '${e}'.`);
                             if (n.statSync(r).isDirectory() && s.isSrcSubdir(e, i)) throw new Error(`Cannot overwrite '${e}' with '${i}'.`);
                             return function (e, t) {
                                 return n.unlinkSync(t), n.symlinkSync(e, t)
@@ -33860,7 +33946,7 @@
 
             function u(e, t, r) {
                 n.readdirSync(e).forEach((n => function (e, t, r, n) {
-                    const a = o.join(t, e), i = o.join(r, e), {destStat: c} = s.checkPathsSync(a, i, "copy");
+                    const a = __path.join(t, e), i = __path.join(r, e), {destStat: c} = s.checkPathsSync(a, i, "copy");
                     return l(c, a, i, n)
                 }(n, e, t, r)))
             }
@@ -33870,7 +33956,7 @@
                 const {srcStat: i, destStat: c} = s.checkPathsSync(e, t, "copy");
                 return s.checkParentPathsSync(e, i, t, "copy"), function (e, t, r, i) {
                     if (i.filter && !i.filter(t, r)) return;
-                    const s = o.dirname(r);
+                    const s = __path.dirname(r);
                     return n.existsSync(s) || a(s), l(e, t, r, i)
                 }(c, e, t, r)
             }
@@ -33881,11 +33967,11 @@
         },
         78464: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(15776).mkdirs, i = r(18386).pathExists, s = r(57213).utimesMillis,
+            const n = r(83641), __path = r(16928), a = r(15776).mkdirs, i = r(18386).pathExists, s = r(57213).utimesMillis,
                 l = r(84440);
 
             function c(e, t, r, n, s) {
-                const l = o.dirname(r);
+                const l = __path.dirname(r);
                 i(l, ((o, i) => o ? s(o) : i ? d(e, t, r, n, s) : void a(l, (o => o ? s(o) : d(e, t, r, n, s)))))
             }
 
@@ -33911,7 +33997,7 @@
                         n.unlink(r, (n => n ? a(n) : h(e, t, r, o, a)))
                     }(e, r, o, a, i) : h(e, r, o, a, i)
                 }(c, e, t, r, a, i) : c.isSymbolicLink() ? function (e, t, r, a, i) {
-                    n.readlink(t, ((t, s) => t ? i(t) : (a.dereference && (s = o.resolve(process.cwd(), s)), e ? void n.readlink(r, ((t, c) => t ? "EINVAL" === t.code || "UNKNOWN" === t.code ? n.symlink(s, r, i) : i(t) : (a.dereference && (c = o.resolve(process.cwd(), c)), l.isSrcSubdir(s, c) ? i(new Error(`Cannot copy '${s}' to a subdirectory of itself, '${c}'.`)) : e.isDirectory() && l.isSrcSubdir(c, s) ? i(new Error(`Cannot overwrite '${c}' with '${s}'.`)) : function (e, t, r) {
+                    n.readlink(t, ((t, s) => t ? i(t) : (a.dereference && (s = __path.resolve(process.cwd(), s)), e ? void n.readlink(r, ((t, c) => t ? "EINVAL" === t.code || "UNKNOWN" === t.code ? n.symlink(s, r, i) : i(t) : (a.dereference && (c = __path.resolve(process.cwd(), c)), l.isSrcSubdir(s, c) ? i(new Error(`Cannot copy '${s}' to a subdirectory of itself, '${c}'.`)) : e.isDirectory() && l.isSrcSubdir(c, s) ? i(new Error(`Cannot overwrite '${c}' with '${s}'.`)) : function (e, t, r) {
                         n.unlink(t, (o => o ? r(o) : n.symlink(e, t, r)))
                     }(s, r, i)))) : n.symlink(s, r, i))))
                 }(e, t, r, a, i) : void 0))
@@ -33938,7 +34024,7 @@
             function g(e, t, r, n, a) {
                 const i = e.pop();
                 return i ? function (e, t, r, n, a, i) {
-                    const s = o.join(r, t), c = o.join(n, t);
+                    const s = __path.join(r, t), c = __path.join(n, t);
                     l.checkPaths(s, c, "copy", ((t, o) => {
                         if (t) return i(t);
                         const {destStat: l} = o;
@@ -33963,11 +34049,11 @@
         },
         5721: (e, t, r) => {
             "use strict";
-            const n = r(83410).S, o = r(83641), a = r(16928), i = r(15776), s = r(88024), l = n((function (e, t) {
+            const n = r(83410).S, o = r(83641), __path = r(16928), i = r(15776), s = r(88024), l = n((function (e, t) {
                 t = t || function () {
                 }, o.readdir(e, ((r, n) => {
                     if (r) return i.mkdirs(e, t);
-                    n = n.map((t => a.join(e, t))), function e() {
+                    n = n.map((t => __path.join(e, t))), function e() {
                         const r = n.pop();
                         if (!r) return t();
                         s.remove(r, (r => {
@@ -33986,7 +34072,7 @@
                     return i.mkdirsSync(e)
                 }
                 t.forEach((t => {
-                    t = a.join(e, t), s.removeSync(t)
+                    t = __path.join(e, t), s.removeSync(t)
                 }))
             }
 
@@ -33994,7 +34080,7 @@
         },
         43726: (e, t, r) => {
             "use strict";
-            const n = r(83410).S, o = r(16928), a = r(83641), i = r(15776), s = r(18386).pathExists;
+            const n = r(83410).S, __path = r(16928), a = r(83641), i = r(15776), s = r(18386).pathExists;
             e.exports = {
                 createFile: n((function (e, t) {
                     function r() {
@@ -34006,7 +34092,7 @@
 
                     a.stat(e, ((n, a) => {
                         if (!n && a.isFile()) return t();
-                        const l = o.dirname(e);
+                        const l = __path.dirname(e);
                         s(l, ((e, n) => e ? t(e) : n ? r() : void i.mkdirs(l, (e => {
                             if (e) return t(e);
                             r()
@@ -34019,7 +34105,7 @@
                     } catch (e) {
                     }
                     if (t && t.isFile()) return;
-                    const r = o.dirname(e);
+                    const r = __path.dirname(e);
                     a.existsSync(r) || i.mkdirsSync(r), a.writeFileSync(e, "")
                 }
             }
@@ -34044,7 +34130,7 @@
         },
         55596: (e, t, r) => {
             "use strict";
-            const n = r(83410).S, o = r(16928), a = r(83641), i = r(15776), s = r(18386).pathExists;
+            const n = r(83410).S, __path = r(16928), a = r(83641), i = r(15776), s = r(18386).pathExists;
             e.exports = {
                 createLink: n((function (e, t, r) {
                     function n(e, t) {
@@ -34056,7 +34142,7 @@
 
                     s(t, ((l, c) => l ? r(l) : c ? r(null) : void a.lstat(e, (a => {
                         if (a) return a.message = a.message.replace("lstat", "ensureLink"), r(a);
-                        const l = o.dirname(t);
+                        const l = __path.dirname(t);
                         s(l, ((o, a) => o ? r(o) : a ? n(e, t) : void i.mkdirs(l, (o => {
                             if (o) return r(o);
                             n(e, t)
@@ -34069,41 +34155,41 @@
                     } catch (e) {
                         throw e.message = e.message.replace("lstat", "ensureLink"), e
                     }
-                    const r = o.dirname(t);
+                    const r = __path.dirname(t);
                     return a.existsSync(r) || i.mkdirsSync(r), a.linkSync(e, t)
                 }
             }
         },
         95636: (e, t, r) => {
             "use strict";
-            const n = r(16928), o = r(83641), a = r(18386).pathExists;
+            const __path = r(16928), o = r(83641), a = r(18386).pathExists;
             e.exports = {
                 symlinkPaths: function (e, t, r) {
-                    if (n.isAbsolute(e)) return o.lstat(e, (t => t ? (t.message = t.message.replace("lstat", "ensureSymlink"), r(t)) : r(null, {
+                    if (__path.isAbsolute(e)) return o.lstat(e, (t => t ? (t.message = t.message.replace("lstat", "ensureSymlink"), r(t)) : r(null, {
                         toCwd: e,
                         toDst: e
                     })));
                     {
-                        const i = n.dirname(t), s = n.join(i, e);
+                        const i = __path.dirname(t), s = __path.join(i, e);
                         return a(s, ((t, a) => t ? r(t) : a ? r(null, {
                             toCwd: s,
                             toDst: e
                         }) : o.lstat(e, (t => t ? (t.message = t.message.replace("lstat", "ensureSymlink"), r(t)) : r(null, {
                             toCwd: e,
-                            toDst: n.relative(i, e)
+                            toDst: __path.relative(i, e)
                         })))))
                     }
                 }, symlinkPathsSync: function (e, t) {
                     let r;
-                    if (n.isAbsolute(e)) {
+                    if (__path.isAbsolute(e)) {
                         if (r = o.existsSync(e), !r) throw new Error("absolute srcpath does not exist");
                         return {toCwd: e, toDst: e}
                     }
                     {
-                        const a = n.dirname(t), i = n.join(a, e);
+                        const a = __path.dirname(t), i = __path.join(a, e);
                         if (r = o.existsSync(i), r) return {toCwd: i, toDst: e};
                         if (r = o.existsSync(e), !r) throw new Error("relative srcpath does not exist");
-                        return {toCwd: e, toDst: n.relative(a, e)}
+                        return {toCwd: e, toDst: __path.relative(a, e)}
                     }
                 }
             }
@@ -34132,7 +34218,7 @@
         },
         30805: (e, t, r) => {
             "use strict";
-            const n = r(83410).S, o = r(16928), a = r(83641), i = r(15776), s = i.mkdirs, l = i.mkdirsSync,
+            const n = r(83410).S, __path = r(16928), a = r(83641), i = r(15776), s = i.mkdirs, l = i.mkdirsSync,
                 c = r(95636), u = c.symlinkPaths, d = c.symlinkPathsSync, p = r(89638), h = p.symlinkType,
                 f = p.symlinkTypeSync, m = r(18386).pathExists;
             e.exports = {
@@ -34141,7 +34227,7 @@
                         if (i) return n(i);
                         e = l.toDst, h(l.toCwd, r, ((r, i) => {
                             if (r) return n(r);
-                            const l = o.dirname(t);
+                            const l = __path.dirname(t);
                             m(l, ((r, o) => r ? n(r) : o ? a.symlink(e, t, i, n) : void s(l, (r => {
                                 if (r) return n(r);
                                 a.symlink(e, t, i, n)
@@ -34152,7 +34238,7 @@
                     if (a.existsSync(t)) return;
                     const n = d(e, t);
                     e = n.toDst, r = f(n.toCwd, r);
-                    const i = o.dirname(t);
+                    const i = __path.dirname(t);
                     return a.existsSync(i) || l(i), a.symlinkSync(e, t, r)
                 }
             }
@@ -34193,6 +34279,7 @@
                 exports.realpath.native = n(o.realpath.native)
             }
         },
+        // fse?
         80115: (module, exports, __require) => {
             "use strict";
 
@@ -34233,18 +34320,18 @@
         },
         76186: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(15776), i = r(52672);
+            const n = r(83641), __path = r(16928), a = r(15776), i = r(52672);
             e.exports = function (e, t, r) {
-                const s = o.dirname(e);
+                const s = __path.dirname(e);
                 n.existsSync(s) || a.mkdirsSync(s), i.writeJsonSync(e, t, r)
             }
         },
         4704: (e, t, r) => {
             "use strict";
-            const n = r(16928), o = r(15776), a = r(18386).pathExists, i = r(52672);
+            const __path = r(16928), o = r(15776), a = r(18386).pathExists, i = r(52672);
             e.exports = function (e, t, r, s) {
                 "function" == typeof r && (s = r, r = {});
-                const l = n.dirname(e);
+                const l = __path.dirname(e);
                 a(l, ((n, a) => n ? s(n) : a ? i.writeJson(e, t, r, s) : void o.mkdirs(l, (n => {
                     if (n) return s(n);
                     i.writeJson(e, t, r, s)
@@ -34258,7 +34345,7 @@
         },
         76348: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(59411).invalidWin32Path, i = parseInt("0777", 8);
+            const n = r(83641), __path = r(16928), a = r(59411).invalidWin32Path, i = parseInt("0777", 8);
             e.exports = function e(t, r, s) {
                 r && "object" == typeof r || (r = {mode: r});
                 let l = r.mode;
@@ -34267,13 +34354,13 @@
                     const e = new Error(t + " contains invalid WIN32 path characters.");
                     throw e.code = "EINVAL", e
                 }
-                void 0 === l && (l = i & ~process.umask()), s || (s = null), t = o.resolve(t);
+                void 0 === l && (l = i & ~process.umask()), s || (s = null), t = __path.resolve(t);
                 try {
                     c.mkdirSync(t, l), s = s || t
                 } catch (n) {
                     if ("ENOENT" === n.code) {
-                        if (o.dirname(t) === t) throw n;
-                        s = e(o.dirname(t), r, s), e(t, r, s)
+                        if (__path.dirname(t) === t) throw n;
+                        s = e(__path.dirname(t), r, s), e(t, r, s)
                     } else {
                         let e;
                         try {
@@ -34289,7 +34376,7 @@
         },
         80794: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(59411).invalidWin32Path, i = parseInt("0777", 8);
+            const n = r(83641), __path = r(16928), a = r(59411).invalidWin32Path, i = parseInt("0777", 8);
             e.exports = function e(t, r, s, l) {
                 if ("function" == typeof r ? (s = r, r = {}) : r && "object" == typeof r || (r = {mode: r}), "win32" === process.platform && a(t)) {
                     const e = new Error(t + " contains invalid WIN32 path characters.");
@@ -34298,11 +34385,11 @@
                 let c = r.mode;
                 const u = r.fs || n;
                 void 0 === c && (c = i & ~process.umask()), l || (l = null), s = s || function () {
-                }, t = o.resolve(t), u.mkdir(t, c, (n => {
+                }, t = __path.resolve(t), u.mkdir(t, c, (n => {
                     if (!n) return s(null, l = l || t);
                     if ("ENOENT" === n.code) {
-                        if (o.dirname(t) === t) return s(n);
-                        e(o.dirname(t), r, ((n, o) => {
+                        if (__path.dirname(t) === t) return s(n);
+                        e(__path.dirname(t), r, ((n, o) => {
                             n ? s(n, o) : e(t, r, s, o)
                         }))
                     } else u.stat(t, ((e, t) => {
@@ -34313,10 +34400,10 @@
         },
         59411: (e, t, r) => {
             "use strict";
-            const n = r(16928);
+            const __path = r(16928);
 
             function o(e) {
-                return (e = n.normalize(n.resolve(e)).split(n.sep)).length > 0 ? e[0] : null
+                return (e = __path.normalize(__path.resolve(e)).split(__path.sep)).length > 0 ? e[0] : null
             }
 
             const a = /[<>:"|?*]/;
@@ -34333,7 +34420,7 @@
         },
         1948: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(90823).copySync, i = r(88024).removeSync, s = r(15776).mkdirpSync,
+            const n = r(83641), __path = r(16928), a = r(90823).copySync, i = r(88024).removeSync, s = r(15776).mkdirpSync,
                 l = r(84440);
 
             function c(e, t, r) {
@@ -34349,7 +34436,7 @@
 
             e.exports = function (e, t, r) {
                 const a = (r = r || {}).overwrite || r.clobber || !1, {srcStat: u} = l.checkPathsSync(e, t, "move");
-                return l.checkParentPathsSync(e, u, t, "move"), s(o.dirname(t)), function (e, t, r) {
+                return l.checkParentPathsSync(e, u, t, "move"), s(__path.dirname(t)), function (e, t, r) {
                     if (r) return i(t), c(e, t, r);
                     if (n.existsSync(t)) throw new Error("dest already exists.");
                     return c(e, t, r)
@@ -34363,7 +34450,7 @@
         },
         66712: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(95925).copy, i = r(88024).remove, s = r(15776).mkdirp,
+            const n = r(83641), __path = r(16928), a = r(95925).copy, i = r(88024).remove, s = r(15776).mkdirp,
                 l = r(18386).pathExists, c = r(84440);
 
             function u(e, t, r, o) {
@@ -34380,7 +34467,7 @@
                     const {srcStat: p} = d;
                     c.checkParentPaths(e, p, t, "move", (r => {
                         if (r) return n(r);
-                        s(o.dirname(t), (r => r ? n(r) : function (e, t, r, n) {
+                        s(__path.dirname(t), (r => r ? n(r) : function (e, t, r, n) {
                             if (r) return i(t, (o => o ? n(o) : u(e, t, r, n)));
                             l(t, ((o, a) => o ? n(o) : a ? n(new Error("dest already exists.")) : u(e, t, r, n)))
                         }(e, t, a, n)))
@@ -34390,17 +34477,17 @@
         },
         13573: (e, t, r) => {
             "use strict";
-            const n = r(83410).S, o = r(83641), a = r(16928), i = r(15776), s = r(18386).pathExists;
+            const n = r(83410).S, o = r(83641), __path = r(16928), i = r(15776), s = r(18386).pathExists;
             e.exports = {
                 outputFile: n((function (e, t, r, n) {
                     "function" == typeof r && (n = r, r = "utf8");
-                    const l = a.dirname(e);
+                    const l = __path.dirname(e);
                     s(l, ((a, s) => a ? n(a) : s ? o.writeFile(e, t, r, n) : void i.mkdirs(l, (a => {
                         if (a) return n(a);
                         o.writeFile(e, t, r, n)
                     }))))
                 })), outputFileSync: function (e, ...t) {
-                    const r = a.dirname(e);
+                    const r = __path.dirname(e);
                     if (o.existsSync(r)) return o.writeFileSync(e, ...t);
                     i.mkdirsSync(r), o.writeFileSync(e, ...t)
                 }
@@ -34422,7 +34509,7 @@
         },
         74911: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = r(42613), i = "win32" === process.platform;
+            const n = r(83641), __path = r(16928), a = r(42613), i = "win32" === process.platform;
 
             function s(e) {
                 ["unlink", "chmod", "stat", "lstat", "rmdir", "readdir"].forEach((t => {
@@ -34486,7 +34573,7 @@
                             let i, s = a.length;
                             if (0 === s) return t.rmdir(e, r);
                             a.forEach((n => {
-                                l(o.join(e, n), t, (n => {
+                                l(__path.join(e, n), t, (n => {
                                     if (!i) return n ? r(i = n) : void (0 == --s && t.rmdir(e, r))
                                 }))
                             }))
@@ -34521,7 +34608,7 @@
                 } catch (n) {
                     if ("ENOTDIR" === n.code) throw r;
                     if ("ENOTEMPTY" === n.code || "EEXIST" === n.code || "EPERM" === n.code) !function (e, t) {
-                        if (a(e), a(t), t.readdirSync(e).forEach((r => h(o.join(e, r), t))), !i) return t.rmdirSync(e, t);
+                        if (a(e), a(t), t.readdirSync(e).forEach((r => h(__path.join(e, r), t))), !i) return t.rmdirSync(e, t);
                         {
                             const r = Date.now();
                             do {
@@ -34550,7 +34637,7 @@
         },
         84440: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(16928), a = process.versions.node.split("."), i = Number.parseInt(a[0], 10),
+            const n = r(83641), __path = r(16928), a = process.versions.node.split("."), i = Number.parseInt(a[0], 10),
                 s = Number.parseInt(a[1], 10), l = Number.parseInt(a[2], 10);
 
             function c() {
@@ -34563,7 +34650,7 @@
             }
 
             function u(e, t) {
-                const r = o.resolve(e).split(o.sep).filter((e => e)), n = o.resolve(t).split(o.sep).filter((e => e));
+                const r = __path.resolve(e).split(__path.sep).filter((e => e)), n = __path.resolve(t).split(__path.sep).filter((e => e));
                 return r.reduce(((e, t, r) => e && n[r] === t), !0)
             }
 
@@ -34611,12 +34698,12 @@
                     if (o.isDirectory() && u(e, t)) throw new Error(d(e, t, r));
                     return {srcStat: o, destStat: a}
                 }, checkParentPaths: function e(t, r, a, i, s) {
-                    const l = o.resolve(o.dirname(t)), u = o.resolve(o.dirname(a));
-                    if (u === l || u === o.parse(u).root) return s();
+                    const l = __path.resolve(__path.dirname(t)), u = __path.resolve(__path.dirname(a));
+                    if (u === l || u === __path.parse(u).root) return s();
                     c() ? n.stat(u, {bigint: !0}, ((n, o) => n ? "ENOENT" === n.code ? s() : s(n) : o.ino && o.dev && o.ino === r.ino && o.dev === r.dev ? s(new Error(d(t, a, i))) : e(t, r, u, i, s))) : n.stat(u, ((n, o) => n ? "ENOENT" === n.code ? s() : s(n) : o.ino && o.dev && o.ino === r.ino && o.dev === r.dev ? s(new Error(d(t, a, i))) : e(t, r, u, i, s)))
                 }, checkParentPathsSync: function e(t, r, a, i) {
-                    const s = o.resolve(o.dirname(t)), l = o.resolve(o.dirname(a));
-                    if (l === s || l === o.parse(l).root) return;
+                    const s = __path.resolve(__path.dirname(t)), l = __path.resolve(__path.dirname(a));
+                    if (l === s || l === __path.parse(l).root) return;
                     let u;
                     try {
                         u = c() ? n.statSync(l, {bigint: !0}) : n.statSync(l)
@@ -34631,11 +34718,11 @@
         },
         57213: (e, t, r) => {
             "use strict";
-            const n = r(83641), __os = r(70857), a = r(16928);
+            const n = r(83641), __os = r(70857), __path = r(16928);
             e.exports = {
                 hasMillisRes: function (e) {
-                    let t = a.join("millis-test" + Date.now().toString() + Math.random().toString().slice(2));
-                    t = a.join(__os.tmpdir(), t);
+                    let t = __path.join("millis-test" + Date.now().toString() + Math.random().toString().slice(2));
+                    t = __path.join(__os.tmpdir(), t);
                     const r = new Date(1435410243862);
                     n.writeFile(t, "https://github.com/jprichardson/node-fs-extra/pull/141", (o => {
                         if (o) return e(o);
@@ -34654,8 +34741,8 @@
                         }))
                     }))
                 }, hasMillisResSync: function () {
-                    let e = a.join("millis-test-sync" + Date.now().toString() + Math.random().toString().slice(2));
-                    e = a.join(__os.tmpdir(), e);
+                    let e = __path.join("millis-test-sync" + Date.now().toString() + Math.random().toString().slice(2));
+                    e = __path.join(__os.tmpdir(), e);
                     const t = new Date(1435410243862);
                     n.writeFileSync(e, "https://github.com/jprichardson/node-fs-extra/pull/141");
                     const r = n.openSync(e, "r+");
@@ -40803,33 +40890,33 @@
         },
         44566: (e, t, r) => {
             "use strict";
-            const n = r(16928), o = r(92363);
+            const __path = r(16928), o = r(92363);
             e.exports = (e, t = {}) => {
-                const r = n.resolve(t.cwd || ""), {root: a} = n.parse(r), i = [].concat(e);
+                const r = __path.resolve(t.cwd || ""), {root: a} = __path.parse(r), i = [].concat(e);
                 return new Promise((e => {
                     !function t(r) {
                         o(i, {cwd: r}).then((o => {
-                            o ? e(n.join(r, o)) : r === a ? e(null) : t(n.dirname(r))
+                            o ? e(__path.join(r, o)) : r === a ? e(null) : t(__path.dirname(r))
                         }))
                     }(r)
                 }))
             }, e.exports.sync = (e, t = {}) => {
-                let r = n.resolve(t.cwd || "");
-                const {root: a} = n.parse(r), i = [].concat(e);
+                let r = __path.resolve(t.cwd || "");
+                const {root: a} = __path.parse(r), i = [].concat(e);
                 for (; ;) {
                     const e = o.sync(i, {cwd: r});
-                    if (e) return n.join(r, e);
+                    if (e) return __path.join(r, e);
                     if (r === a) return null;
-                    r = n.dirname(r)
+                    r = __path.dirname(r)
                 }
             }
         },
         92363: (e, t, r) => {
             "use strict";
-            const n = r(16928), o = r(35095), a = r(48098);
-            e.exports = (e, t) => (t = Object.assign({cwd: process.cwd()}, t), a(e, (e => o(n.resolve(t.cwd, e))), t)), e.exports.sync = (e, t) => {
+            const __path = r(16928), o = r(35095), a = r(48098);
+            e.exports = (e, t) => (t = Object.assign({cwd: process.cwd()}, t), a(e, (e => o(__path.resolve(t.cwd, e))), t)), e.exports.sync = (e, t) => {
                 t = Object.assign({cwd: process.cwd()}, t);
-                for (const r of e) if (o.sync(n.resolve(t.cwd, r))) return r
+                for (const r of e) if (o.sync(__path.resolve(t.cwd, r))) return r
             }
         },
         86979: (e, t, r) => {

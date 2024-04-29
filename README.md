@@ -4,7 +4,7 @@
 
 ```
 64982: 入口
-5554: logging
+5554: setupLogging
 84041: crash reporter
 10454: notion ipc
 
@@ -64,6 +64,7 @@
 70857: os
 57075: node:stream
 16928: path
+80115: fse
 83480: querystring
 2203: stream
 13193: string_decoder
