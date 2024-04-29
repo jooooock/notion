@@ -24,11 +24,21 @@
 43579: auto updater
 94625: auto updater
 
+56116: sentry
+34516: setupSqliteServer
+
 3420: ServerLogger 对应老版本的 helpers/loggly.js
 21789: AppUtil
 
 75593: CancellationToken
 79529: 
+
+15425: isNavigationAllowed 设置页面导航规则
+35219: setupRendererListeners
+
+29902: url protocol utils
+26605: open at login
+77514: handleNotionProtocol
 
 69340: redux store
 73553: app slice
@@ -37,9 +47,12 @@
 54417: tab slice
 772: window slice
 
-13387: session
+13387: session 下载进度展示
 45437: events
 4058: AsyncQueue
+50833: setupSystemMenu
+
+30506: appStatePersister
 
 59664: HttpExecutor
 
@@ -76,4 +89,5 @@
 99163: debug for browser
 81047: debug for nodejs
 55623: debug
+6600: lodash
 ```

@@ -195,7 +195,7 @@
         // ServerLogger 对应老版本的 helpers/loggly.js
         3420: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                     void 0 === n && (n = r);
                     var o = Object.getOwnPropertyDescriptor(t, r);
                     o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -224,12 +224,12 @@
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            exports.serverLogger = exports.ServerLogger = void 0;
+
             const __os = i(__require(70857)),
                 electron = __require(4482),
                 electron_log = i(__require(47419)),
                 lodash_1 = a(__require(6600)),
-                d = __require(21248),
+                d = __require(21248), //shared/logglyHelpers
                 p = __require(43067),
                 __config = i(__require(11239));
 
@@ -421,7 +421,7 @@
                 u = __require(43277),
                 d = __require(83704),
                 p = __require(28902),
-                h = __importStar(__require(6600)),
+                lodash_1 = __importStar(__require(6600)),
                 f = __importStar(__require(60411)),
                 __config = __importDefault(__require(11239)),
                 g = __require(55870),
@@ -507,7 +507,7 @@
                     if (!this.previousRestorationState || e) {
                         return false
                     }
-                    const t = h.maxBy(this.previousRestorationState, "focusOrder");
+                    const t = lodash_1.maxBy(this.previousRestorationState, "focusOrder");
                     if (!t) {
                         return false
                     }
@@ -527,7 +527,7 @@
                         return false
                     }
                     const previousRestorationState = this.previousRestorationState;
-                    h.orderBy(previousRestorationState, ["focusOrder"], ["asc"]).forEach((r, n) => {
+                    lodash_1.orderBy(previousRestorationState, ["focusOrder"], ["asc"]).forEach((r, n) => {
                         const o = this.getWindowControllerForId(r.windowId) || this.newWindow({
                             windowId: r.windowId,
                             displayState: r.displayState,
@@ -678,7 +678,7 @@
                 }
 
                 getMostRecentlyFocusedWindowController() {
-                    const e = h.maxBy(Object.values(__store.Store.getState().windows), (e => e.focusOrder));
+                    const e = lodash_1.maxBy(Object.values(__store.Store.getState().windows), (e => e.focusOrder));
                     if (e) {
                         const t = this.getWindowControllerForId(e.windowId);
                         if (t) return t
@@ -753,7 +753,7 @@
                 }
 
                 handleAppRestorationStateChange(e) {
-                    if (h.isEmpty(e.windows)) return;
+                    if (lodash_1.isEmpty(e.windows)) return;
                     const t = Object.values(e.windows).map((t => ({
                         windowId: t.windowId,
                         focusOrder: t.focusOrder,
@@ -793,7 +793,7 @@
 
                 getWindowAndTabControllerWithEquivalentURL(e) {
                     const t = this.getMostRecentlyFocusedWindowController(),
-                        r = h.compact([t, ...this.windowControllers.filter((e => e !== t))]);
+                        r = lodash_1.compact([t, ...this.windowControllers.filter((e => e !== t))]);
                     for (const t of r) {
                         const r = t.getTabControllerWithEquivalentUrl(e);
                         if (r) return {windowController: t, tabController: r}
@@ -850,7 +850,7 @@
         // AssetCache
         87309: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                     void 0 === n && (n = r);
                     var o = Object.getOwnPropertyDescriptor(t, r);
                     o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -888,7 +888,7 @@
                 __events = i(__require(45437)),
                 __asyncQueue = __require(4058),
                 f = __require(28902),
-                m = a(__require(6600)),
+                lodash_1 = a(__require(6600)),
                 g = __require(21248),
                 b = __require(43067),
                 v = a(__require(60411)),
@@ -1261,7 +1261,7 @@
                         n = d.default.createWriteStream(t), o = {};
                     return r.on("response", (function (e) {
                         const {statusCode: t, statusMessage: a} = e;
-                        if (e.once("error", m.identity), (t < 200 || t > 299) && 304 !== t) {
+                        if (e.once("error", lodash_1.identity), (t < 200 || t > 299) && 304 !== t) {
                             const e = new Error(`Response code ${t} (${a})`);
                             r.emit("error", e)
                         } else {
@@ -1483,12 +1483,12 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            const s = __require(4482),
-                l = i(__require(47419)),
+            const electron = __require(4482),
+                electron_log = i(__require(47419)),
                 c = __require(43277),
                 u = i(__require(5508)),
                 d = __require(13984),
-                p = a(__require(6600)),
+                lodash_1 = a(__require(6600)),
                 h = __require(43067),
                 f = __require(32289),
                 m = a(__require(60411)),
@@ -1532,17 +1532,17 @@
                     this.handleResized = () => {
                         this.updateState()
                     }
-                    this.debouncedUpdateState = p.debounce((() => this.updateState()), 200)
+                    this.debouncedUpdateState = lodash_1.debounce((() => this.updateState()), 200)
                     this.tabId = e.id;
                     const app = _.Store.getState().app
                     const webPreferences = {
                         spellcheck: true,
                         sandbox: true,
                         contextIsolation: true,
-                        session: s.session.fromPartition(w.electronSessionPartition),
+                        session: electron.session.fromPartition(w.electronSessionPartition),
                         preload: require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js")
                     };
-                    this.notion = new s.BrowserView({webPreferences: webPreferences})
+                    this.notion = new electron.BrowserView({webPreferences: webPreferences})
                     this.backgroundColor = app.preferences.isVibrancyEnabled
                         ? "#00000000"
                         : b.electronColors.notionBackground[_.Store.getState().app.theme.mode]
@@ -1583,7 +1583,7 @@
                                 this.notion.webContents.clearHistory(), this.handleInitialLoadError(e.initialUrl, t)
                             }))
                         })).catch((() => {
-                            l.default.error("Error loading placeholder page")
+                            electron_log.default.error("Error loading placeholder page")
                         })))
                         : (this._loadingState = "loading-ready-to-show", this.initialReadyToShowDeferred.resolve(), this.notion.webContents.loadURL(e.initialUrl).then((() => {
                             this._loadingState = "loaded", this.initialLoadedOrErroredDeferred.resolve()
@@ -1598,9 +1598,9 @@
                         preload: require("path").resolve(__dirname, "../renderer", "search", "preload.js"),
                         transparent: !0
                     };
-                    this.search = new s.BrowserView({webPreferences: n})
+                    this.search = new electron.BrowserView({webPreferences: n})
                     this.search.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "search", "index.html")}`).catch((e => {
-                        l.default.error("Error loading search URL", e)
+                        electron_log.default.error("Error loading search URL", e)
                     }))
                     _.Store.dispatch(T.initializeTabState({
                         tabId: e.id,
@@ -1644,7 +1644,7 @@
                     return this._loadingState = "loading-ready-to-show", this.notion.webContents.loadURL(e).then((() => {
                         this._loadingState = "loaded"
                     })).catch((t => {
-                        if (!t.code || "ERR_ABORTED" !== t.code) throw l.default.error(`Error loading URL in loadFullUrl: ${e}`, t), this._loadingState = "errored", t
+                        if (!t.code || "ERR_ABORTED" !== t.code) throw electron_log.default.error(`Error loading URL in loadFullUrl: ${e}`, t), this._loadingState = "errored", t
                     }))
                 }
 
@@ -1808,7 +1808,7 @@
                 }
 
                 copyHttpLinkToClipboard() {
-                    s.clipboard.writeText((0, f.getHttpUrl)({
+                    electron.clipboard.writeText((0, f.getHttpUrl)({
                         schemeUrl: this.getUrl(),
                         baseUrl: g.default.domainBaseUrl
                     }))
@@ -1919,7 +1919,7 @@
                 }
 
                 updateState() {
-                    l.default.debug("Calling updateState()");
+                    electron_log.default.debug("Calling updateState()");
                     const e = _.Store.getState(), t = e.app, r = (0, _.selectTabSearchingState)(e, this.tabId),
                         n = this.parentWindowControllerId ? e.windows[this.parentWindowControllerId] : void 0,
                         o = 1 !== n?.tabs?.length && !Boolean(n?.displayState?.isHtmlFullScreen),
@@ -1927,7 +1927,7 @@
                     this.tabBarOffset === a || this.animating || (n?.activeTabId === this.tabId ? this.startTabBarAnimation(this.tabBarOffset, a) : this.tabBarOffset = a);
                     const i = (0, _.getElectronAppFeatures)({isShowingTabBar: o});
                     if (this.sendToNotion("notion:set-electron-app-features", i), this.parentWindow && r?.isSearching) {
-                        s.BrowserWindow.fromBrowserView(this.search) || this.parentWindow.addBrowserView(this.search);
+                        electron.BrowserWindow.fromBrowserView(this.search) || this.parentWindow.addBrowserView(this.search);
                         const e = r?.isSearchingCenterPeek ? 0 : (0, d.getTopbarHeight)("darwin" === process.platform),
                             n = Math.ceil(80 * t.zoomFactor), o = Math.ceil(500 * t.zoomFactor), a = {
                                 x: this.parentWindow.getContentBounds().width - o,
@@ -1936,7 +1936,7 @@
                                 height: n
                             };
                         this.search.setBounds(a)
-                    } else this.parentWindow && s.BrowserWindow.fromBrowserView(this.search) === this.parentWindow && this.parentWindow.removeBrowserView(this.search);
+                    } else this.parentWindow && electron.BrowserWindow.fromBrowserView(this.search) === this.parentWindow && this.parentWindow.removeBrowserView(this.search);
                     if (this.setBoundsAndVisibility(), this.backgroundColor = t.preferences.isVibrancyEnabled ? "#00000000" : b.electronColors.notionBackground[_.Store.getState().app.theme.mode], this.notion.webContents.setZoomFactor(t.zoomFactor), this.search.webContents.setZoomFactor(t.zoomFactor), this.sendToSearch("search:set-theme", t.theme), this.parentWindowControllerId) {
                         const e = _.Store.getState().windows[this.parentWindowControllerId];
                         e && e.sidebarState && e.activeTabId && e.activeTabId !== this.tabId && this.sendToNotion("notion:set-window-sidebar-state", e.sidebarState), this.sendToNotion("notion:set-is-active-tab", e.activeTabId === this.tabId)
@@ -1950,7 +1950,7 @@
                         r = e && !1 === this.isVisible ? 1e4 : this.tabBarOffset,
                         n = this.parentWindow.getContentBounds().width || 0,
                         o = (this.parentWindow.getContentBounds().height || 0) - this.tabBarOffset;
-                    l.default.silly(`Setting bounds for tab ${this.tabId} to ${this.isVisible} ${t}, ${r}, ${n}, ${o}`), this.notion.setBounds({
+                    electron_log.default.silly(`Setting bounds for tab ${this.tabId} to ${this.isVisible} ${t}, ${r}, ${n}, ${o}`), this.notion.setBounds({
                         x: t,
                         y: r,
                         width: n,
@@ -1960,7 +1960,7 @@
 
                 handleInitialLoadError(e, t) {
                     if (t.code && "ERR_ABORTED" === t.code) return this._loadingState = "loaded", void this.initialLoadedOrErroredDeferred.resolve();
-                    l.default.error(`Error loading initial URL: ${e}`, t), this._loadingState = "errored", this.initialLoadedOrErroredDeferred.reject(t)
+                    electron_log.default.error(`Error loading initial URL: ${e}`, t), this._loadingState = "errored", this.initialLoadedOrErroredDeferred.reject(t)
                 }
 
                 shouldTrackUrlInHistory(e) {
@@ -2221,11 +2221,11 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            const s = __require(4482),
-                l = i(__require(47419)),
+            const electron = __require(4482),
+                electron_log = i(__require(47419)),
                 c = __require(13984),
                 u = __require(36343),
-                d = a(__require(6600)),
+                lodash_1 = a(__require(6600)),
                 p = __require(27683),
                 h = __require(51916),
                 f = __require(60522),
@@ -2356,7 +2356,7 @@
                             vibrancy: h ? "sidebar" : void 0,
                             backgroundColor: h ? "#00000000" : p.electronColors.notionBackground[d], ...u.preferences.isUnifiedTitleBarEnabled ? g : {}
                         };
-                    this.browserWindow = new s.BrowserWindow(b)
+                    this.browserWindow = new electron.BrowserWindow(b)
                     i.isFullScreen && showWhenLoaded && this.browserWindow.setFullScreen(!0)
                     i.isMaximized && this.browserWindow.maximize()
                     this.browserWindow.addListener("app-command", ((e, t) => this.handleAppCommandNavigation(e, t)))
@@ -2389,7 +2389,7 @@
                     this.browserWindow.addListener("move", (() => this.handleMove()))
                     this.browserWindow.addListener("resize", (() => this.handleResize()))
                     this.browserWindow.on("close", (e => this.handleClose(e)))
-                    this.tabBar = new s.BrowserView({
+                    this.tabBar = new electron.BrowserView({
                         webPreferences: {
                             spellcheck: !1,
                             sandbox: !0,
@@ -2401,7 +2401,7 @@
                     this.tabBar.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "tabs", "index.html")}`).then((() => {
                         this.updateState()
                     })).catch((e => {
-                        l.default.error("Error loading tabs URL", e)
+                        electron_log.default.error("Error loading tabs URL", e)
                     }))
                     this.tabBar.setBackgroundColor(p.electronColors.tabBarBackground[u.theme.mode])
                     this.browserWindow.addBrowserView(this.tabBar)
@@ -2440,9 +2440,9 @@
                     if (!t) return this.newTab(e);
                     this.activeTabController.sendToNotion("notion:open-search-for-new-tab", e);
                     try {
-                        await this.activeTabController.executeJavaScript("__electronApi.openSearchModalForNewTab.listeners().length > 0") || (l.default.warn("No listeners for open-search-for-new-tab, opening tab directly"), this.newTab(e))
+                        await this.activeTabController.executeJavaScript("__electronApi.openSearchModalForNewTab.listeners().length > 0") || (electron_log.default.warn("No listeners for open-search-for-new-tab, opening tab directly"), this.newTab(e))
                     } catch (t) {
-                        l.default.warn(`Error checking for listeners for open-search-for-new-tab: ${t}`), this.newTab(e)
+                        electron_log.default.warn(`Error checking for listeners for open-search-for-new-tab: ${t}`), this.newTab(e)
                     }
                 }
 
@@ -2736,7 +2736,7 @@
                             this.closeTabsToRight(t)
                         }, enabled: this.tabControllers.length > 1 && t !== this.tabControllers.length - 1
                     }], i = y.Store.getState().app.zoomFactor;
-                    s.Menu.buildFromTemplate(a).popup({
+                    electron.Menu.buildFromTemplate(a).popup({
                         window: this.browserWindow,
                         x: Math.floor(r * i),
                         y: Math.floor(n * i)
@@ -2764,7 +2764,7 @@
                 }
 
                 getTabControllerWithEquivalentUrl(e) {
-                    const t = d.compact([this.activeTabController, ...this.tabControllers.filter((e => e !== this.activeTabController))]);
+                    const t = lodash_1.compact([this.activeTabController, ...this.tabControllers.filter((e => e !== this.activeTabController))]);
                     for (const r of t) if (r.hasEquivalentUrl(e)) return r
                 }
 
@@ -2816,7 +2816,7 @@
                             },
                             visible: this.isUniqueNavigationEntry({navigationEntries: o, index: n, url: r})
                         }))), l = y.Store.getState().app.zoomFactor;
-                    s.Menu.buildFromTemplate(i).popup({
+                    electron.Menu.buildFromTemplate(i).popup({
                         window: this.browserWindow,
                         x: Math.floor(r * l) - 20,
                         y: Math.floor(n * l) + 20
@@ -2834,7 +2834,7 @@
 
                 getFaviconForPageTitle(e, t) {
                     const r = t[e];
-                    if (r) return s.nativeImage.createFromDataURL(r).resize({width: 16, height: 16})
+                    if (r) return electron.nativeImage.createFromDataURL(r).resize({width: 16, height: 16})
                 }
 
                 getTabHistoryNavigationEntries(e) {
@@ -2969,10 +2969,10 @@
                 }
 
                 handleClose(e) {
-                    if (!g.appController.handleWindowClose(e, this.browserWindow)) return l.default.info(`Preventing closure for window with id ${this.browserWindow.id}, hiding`), e.preventDefault(), void (this.browserWindow.isFullScreen() ? (this.browserWindow.setFullScreen(!1), this.browserWindow.once("leave-full-screen", (() => {
+                    if (!g.appController.handleWindowClose(e, this.browserWindow)) return electron_log.default.info(`Preventing closure for window with id ${this.browserWindow.id}, hiding`), e.preventDefault(), void (this.browserWindow.isFullScreen() ? (this.browserWindow.setFullScreen(!1), this.browserWindow.once("leave-full-screen", (() => {
                         this.browserWindow.hide()
                     }))) : this.browserWindow.hide());
-                    l.default.info(`Window with id ${this.browserWindow.id} closed`);
+                    electron_log.default.info(`Window with id ${this.browserWindow.id} closed`);
                     const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
                     this.browserWindow.removeAllListeners(), this.browserWindow.webContents.removeAllListeners(), this.appStateUnsubscribe(), this.windowStateUnsubscribe(), this.tabStateUnsubscribe?.(), this.tabBar.webContents.destroy();
                     const r = this.tabControllers.map((e => y.Store.getState().tabs[e.tabId])),
@@ -2996,18 +2996,18 @@
                         }
                     })), y.Store.dispatch((0, _.removeWindowState)({windowId: this.windowId})), this.tabControllers.forEach((e => {
                         e.destroy()
-                    })), "win32" === process.platform && s.BrowserWindow.getAllWindows().every((e => e.id === this.browserWindow.id)) && s.app.quit()
+                    })), "win32" === process.platform && electron.BrowserWindow.getAllWindows().every((e => e.id === this.browserWindow.id)) && electron.app.quit()
                 }
 
                 handleTabLoadingError() {
-                    s.dialog.showMessageBox(this.browserWindow, {
+                    electron.dialog.showMessageBox(this.browserWindow, {
                         message: this.intl.formatMessage(T.loadingErrorMessage),
                         buttons: [this.intl.formatMessage(T.loadingErrorReload), this.intl.formatMessage(T.loadingErrorCancel)],
                         noLink: !0
                     }).then((e => {
                         0 === e.response && this.activeTabController.reloadAtCurrentUrl()
                     })).catch((e => {
-                        l.default.error("error showing dialog", e)
+                        electron_log.default.error("error showing dialog", e)
                     }))
                 }
 
@@ -3035,7 +3035,7 @@
                 }
 
                 toggleAppMenuPopup() {
-                    this.browserWindow.isMenuBarVisible() ? s.Menu.getApplicationMenu()?.closePopup() : y.Store.getState().windows[this.windowId]?.shouldShowAppMenuFromAltKey && s.Menu.getApplicationMenu()?.popup({
+                    this.browserWindow.isMenuBarVisible() ? electron.Menu.getApplicationMenu()?.closePopup() : y.Store.getState().windows[this.windowId]?.shouldShowAppMenuFromAltKey && electron.Menu.getApplicationMenu()?.popup({
                         x: 8,
                         y: 8
                     })
@@ -3055,7 +3055,7 @@
                     }
                     const r = e || y.Store.getState().history.lastFocusedWindowDisplayState;
                     if (r) {
-                        const e = r.normalBounds, t = s.screen.getAllDisplays();
+                        const e = r.normalBounds, t = electron.screen.getAllDisplays();
                         let n = !1;
                         if (void 0 === e.x && void 0 === e.y) n = !0; else if (void 0 !== e.x && void 0 !== e.y) for (const r of t) {
                             const t = r.bounds;
@@ -3064,9 +3064,9 @@
                                 break
                             }
                         }
-                        const o = ["width", "height", "x", "y"], a = d.sortBy(r.displayBounds, o),
-                            i = d.sortBy(t.map((e => e.bounds)), o);
-                        if (n && d.isEqual(i, a) && e.width > 640 && e.height > 480) return {
+                        const o = ["width", "height", "x", "y"], a = lodash_1.sortBy(r.displayBounds, o),
+                            i = lodash_1.sortBy(t.map((e => e.bounds)), o);
+                        if (n && lodash_1.isEqual(i, a) && e.width > 640 && e.height > 480) return {
                             normalBounds: e,
                             displayBounds: WindowController.getDisplayBounds(),
                             isFullScreen: !1,
@@ -3084,7 +3084,7 @@
                 }
 
                 static getDisplayBounds() {
-                    return s.screen.getAllDisplays().map((e => e.bounds))
+                    return electron.screen.getAllDisplays().map((e => e.bounds))
                 }
 
                 subscribeToTabStates() {
@@ -3258,7 +3258,7 @@
                 __autoUpdater = __require(94625),
                 u = __require(36343),
                 d = __require(37318),
-                p = a(__require(6600)),
+                lodash_1 = a(__require(6600)),
                 h = __require(21248),
                 f = __require(43067),
                 m = i(__require(11239)),
@@ -3494,7 +3494,7 @@
                     _.setupSystemMenu()
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-not-available")
                 })
-                const e = p.throttle(e => {
+                const e = lodash_1.throttle(e => {
                     updateStatus({downloading: e})
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-progress", e)
                     _.setupSystemMenu()
@@ -3547,85 +3547,131 @@
                 }()
             }
         },
-        68115: function (e, t, r) {
+
+        // closeLastBrowserTab
+        68115: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.closeLastBrowserTab = void 0;
-            const o = n(r(47419)), a = r(31957), i = r(69340);
-            t.closeLastBrowserTab = async function (e) {
-                const {isClosingBrowserTabs: t} = i.Store.getState().app.preferences;
-                return !("darwin" !== process.platform || !t) && async function (e) {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron_log = n(__require(47419)),
+                __exec = __require(31957),
+                __store = __require(69340);
+
+            exports.closeLastBrowserTab = async function (e) {
+                const {isClosingBrowserTabs} = __store.Store.getState().app.preferences;
+                if ("darwin" === process.platform && isClosingBrowserTabs) {
                     try {
-                        const t = await async function () {
+                        // com.google.chrome
+                        const defaultBrowser = await async function () {
                             if ("darwin" === process.platform) {
-                                const e = "defaults read com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers | sed -n -e '/LSHandlerURLScheme = https;/{x;p;d;}' -e 's/.*=[^\"]\"\\(.*\\)\";/\\1/g' -e x";
+                                const command = "defaults read com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers | sed -n -e '/LSHandlerURLScheme = https;/{x;p;d;}' -e 's/.*=[^\"]\"\\(.*\\)\";/\\1/g' -e x";
                                 try {
-                                    const {stdout: t} = await (0, a.exec)(e);
-                                    return t.trim()
+                                    const {stdout} = await __exec.exec(command);
+                                    return stdout.trim()
                                 } catch (e) {
-                                    o.default.error(`Error getting default browser: ${e}`)
+                                    electron_log.default.error(`Error getting default browser: ${e}`)
                                 }
                             }
                             return null
                         }();
-                        if (!t) return !1;
-                        const r = `\n      tell application id "${t}"\n        if URL of active tab of window 1 contains "${e.urlContaining}" then\n            ${e.dryRun ? 'return "Hello"' : "close active tab of window 1"}\n        end if\n      end tell\n    `, {stderr: n} = await function (e) {
-                            if ("darwin" === process.platform) return (0, a.exec)(`osascript -e '${e}'`);
+                        if (!defaultBrowser) {
+                            return false
+                        }
+
+                        const command = `\n      tell application id "${defaultBrowser}"\n        if URL of active tab of window 1 contains "${e.urlContaining}" then\n            ${e.dryRun ? 'return "Hello"' : "close active tab of window 1"}\n        end if\n      end tell\n    `
+                        const {stderr} = await function (command) {
+                            if ("darwin" === process.platform) {
+                                return __exec.exec(`osascript -e '${command}'`);
+                            }
                             throw new Error("Not running on macOS")
-                        }(r);
-                        return !n
+                        }(command);
+                        return !stderr
                     } catch (e) {
-                        return o.default.error(`Error closing last browser tab: ${e}`), !1
+                        electron_log.default.error(`Error closing last browser tab: ${e}`)
+                        return false
                     }
-                }(e)
+                }
             }
         },
-        68516: function (e, t, r) {
+
+        // wipeTransientCsrfCookie
+        68516: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.wipeTransientCsrfCookie = void 0;
-            const s = r(4482), l = i(r(11239)), c = a(r(10454)), u = r(13387);
-            t.wipeTransientCsrfCookie = async function () {
-                const e = (0, u.getSession)().cookies, [t] = await e.get({name: "csrf"});
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                __config = i(__require(11239)),
+                __notionIPC = a(__require(10454)),
+                __session = __require(13387);
+
+            exports.wipeTransientCsrfCookie = async function () {
+                const cookies = __session.getSession().cookies
+                const [t] = await cookies.get({name: "csrf"});
                 if (t && t.domain) {
-                    const r = "localhost" === t.domain ? "https://localhost:3000/" : l.default.domainBaseUrl;
-                    await e.remove(r, t.name)
+                    const r = "localhost" === t.domain ? "https://localhost:3000/" : __config.default.domainBaseUrl;
+                    await cookies.remove(r, t.name)
                 }
-            }, c.handleEventFromRenderer.addListener("notion:clear-cookies", (() => {
-                (0, u.getSession)().clearStorageData({origin: l.default.domainBaseUrl, storages: ["cookies"]})
-            })), c.handleEventFromRenderer.addListener("notion:clear-all-cookies", (() => {
-                (0, u.getSession)().clearStorageData(), s.session.defaultSession && s.session.defaultSession.clearStorageData()
-            })), c.handleRequestFromRenderer.addListener("notion:get-cookie", (async (e, t) => {
-                const {cookies: r} = (0, u.getSession)(), [n] = await r.get({url: l.default.domainBaseUrl, name: t});
+            }
+
+            __notionIPC.handleEventFromRenderer.addListener("notion:clear-cookies", () => {
+                __session.getSession().clearStorageData({
+                    origin: __config.default.domainBaseUrl,
+                    storages: ["cookies"]
+                })
+            })
+            __notionIPC.handleEventFromRenderer.addListener("notion:clear-all-cookies", () => {
+                __session.getSession().clearStorageData()
+                electron.session.defaultSession && electron.session.defaultSession.clearStorageData()
+            })
+            __notionIPC.handleRequestFromRenderer.addListener("notion:get-cookie", async (e, name) => {
+                const {cookies} = __session.getSession()
+                const [n] = await cookies.get({
+                    url: __config.default.domainBaseUrl,
+                    name: name
+                });
                 return {value: n && !n.httpOnly ? n.value : void 0}
-            })), c.handleEventFromRenderer.addListener("notion:set-cookie", ((e, t) => {
-                const {cookies: r} = (0, u.getSession)();
-                r.set({...t, url: l.default.domainBaseUrl, expirationDate: t.expires})
-            }))
+            })
+            __notionIPC.handleEventFromRenderer.addListener("notion:set-cookie", (e, t) => {
+                const {cookies} = __session.getSession();
+                cookies.set({
+                    ...t,
+                    url: __config.default.domainBaseUrl,
+                    expirationDate: t.expires
+                })
+            })
         },
 
         // crash reporter
@@ -3685,160 +3731,254 @@
             })
         },
 
-        89304: function (e, t, r) {
+        // createGoogleDrivePicker
+        89304: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createGoogleDrivePicker = void 0;
-            const s = r(4482), l = a(r(60411)), c = i(r(11239)), u = r(21852), d = a(r(10454)), p = r(13387);
-            t.createGoogleDrivePicker = function (e) {
-                const {url: t} = e, r = {x: void 0, y: void 0, width: 566, height: 350},
-                    n = s.BrowserWindow.getFocusedWindow();
-                if (n) {
-                    const [e, t] = n.getPosition(), [o, a] = n.getSize();
-                    r.width = Math.min(Math.max(r.width, .8 * o), 1051), r.height = Math.min(Math.max(r.height, .8 * a), 650), r.x = Math.round(e + o / 2 - r.width / 2), r.y = Math.round(t + a / 2 - r.height / 2)
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                l = a(__require(60411)),
+                __config = i(__require(11239)),
+                __AppController = __require(21852),
+                __notionIPC = a(__require(10454)),
+                p = __require(13387);
+
+            exports.createGoogleDrivePicker = function (e) {
+                const {url} = e
+                const options = {x: void 0, y: void 0, width: 566, height: 350}
+                const focusedWindow = electron.BrowserWindow.getFocusedWindow();
+                if (focusedWindow) {
+                    const [e, t] = focusedWindow.getPosition(),
+                        [o, a] = focusedWindow.getSize();
+                    options.width = Math.min(Math.max(options.width, .8 * o), 1051)
+                    options.height = Math.min(Math.max(options.height, .8 * a), 650)
+                    options.x = Math.round(e + o / 2 - options.width / 2)
+                    options.y = Math.round(t + a / 2 - options.height / 2)
                 }
-                if (!l.parse(c.default.domainBaseUrl).hostname) throw new Error("No base URL dmain.");
-                const o = new s.BrowserWindow({
-                    ...r,
+                if (!l.parse(__config.default.domainBaseUrl).hostname) {
+                    throw new Error("No base URL dmain.");
+                }
+                const win = new electron.BrowserWindow({
+                    ...options,
                     title: "",
                     webPreferences: {
                         preload: require("path").resolve(__dirname, "../renderer", "popup", "preload.js"),
-                        nodeIntegration: !1,
-                        session: s.session.fromPartition(p.electronSessionPartition),
-                        sandbox: !0
+                        nodeIntegration: false,
+                        session: electron.session.fromPartition(p.electronSessionPartition),
+                        sandbox: true
                     }
-                }), a = (e, t) => {
-                    t && "google-drive-picker-callback" === t.type && (d.handleEventFromRenderer.removeListener("notion:post-message", a), o.removeListener("close", i), o.close(), u.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", t.file))
-                }, i = () => {
-                    d.handleEventFromRenderer.removeListener("notion:post-message", a), o.removeListener("close", i), u.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", void 0)
+                })
+                const a = (e, t) => {
+                    if (t && "google-drive-picker-callback" === t.type) {
+                        __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", a)
+                        win.removeListener("close", onClose)
+                        win.close()
+                        __AppController.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", t.file)
+                    }
+                }
+                const onClose = () => {
+                    __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", a)
+                    win.removeListener("close", onClose)
+                    __AppController.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", void 0)
                 };
-                d.handleEventFromRenderer.addListener("notion:post-message", a), o.addListener("close", i), o.loadURL(t)
+
+                __notionIPC.handleEventFromRenderer.addListener("notion:post-message", a)
+
+                win.addListener("close", onClose)
+                win.loadURL(url)
             }
         },
-        43041: function (e, t, r) {
+        // createPopup
+        43041: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createPopup = void 0;
-            const s = r(4482), l = a(r(60411)), c = i(r(11239)), u = r(21852), d = a(r(10454)), p = r(13387);
-            t.createPopup = function (e) {
-                const {url: t, title: r, width: n, height: o} = e, a = {x: void 0, y: void 0, width: n, height: o},
-                    i = s.BrowserWindow.getFocusedWindow();
-                if (i) {
-                    const [e, t] = i.getPosition(), [r, s] = i.getSize();
-                    a.x = Math.round(e + r / 2 - n / 2), a.y = Math.round(t + s / 2 - o / 2), a.width = n, a.height = o
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                l = a(__require(60411)),
+                __config = i(__require(11239)),
+                __AppController = __require(21852),
+                __notionIPC = a(__require(10454)),
+                p = __require(13387);
+
+            exports.createPopup = function (e) {
+                const {url, title, width, height} = e
+                const options = {x: void 0, y: void 0, width: width, height: height}
+                const focusedWindow = electron.BrowserWindow.getFocusedWindow();
+                if (focusedWindow) {
+                    const [e, t] = focusedWindow.getPosition(),
+                        [r, s] = focusedWindow.getSize();
+                    options.x = Math.round(e + r / 2 - width / 2)
+                    options.y = Math.round(t + s / 2 - height / 2)
+                    options.width = width
+                    options.height = height
                 }
-                if (!l.parse(c.default.domainBaseUrl).hostname) throw new Error("No base URL domain.");
-                const h = new s.BrowserWindow({
-                    ...a,
-                    title: r,
+                if (!l.parse(__config.default.domainBaseUrl).hostname) {
+                    throw new Error("No base URL domain.");
+                }
+
+                const win = new electron.BrowserWindow({
+                    ...options,
+                    title: title,
                     webPreferences: {
                         preload: require("path").resolve(__dirname, "../renderer", "popup", "preload.js"),
-                        nodeIntegration: !1,
-                        session: s.session.fromPartition(p.electronSessionPartition),
-                        sandbox: !0
+                        nodeIntegration: false,
+                        session: electron.session.fromPartition(p.electronSessionPartition),
+                        sandbox: true
                     }
-                }), f = (e, t) => {
-                    t && "popup-callback" === t.type && (d.handleEventFromRenderer.removeListener("notion:post-message", f), h.removeListener("close", m), h.close(), u.appController.sendMainToAllNotionInstances("notion:popup-callback", t.url))
-                }, m = () => {
-                    d.handleEventFromRenderer.removeListener("notion:post-message", f), h.removeListener("close", m), u.appController.sendMainToAllNotionInstances("notion:popup-callback", void 0)
+                })
+                const f = (e, t) => {
+                    if (t && "popup-callback" === t.type) {
+                        __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", f)
+                        win.removeListener("close", onClose)
+                        win.close()
+                        __AppController.appController.sendMainToAllNotionInstances("notion:popup-callback", t.url)
+                    }
+                }
+                const onClose = () => {
+                    __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", f)
+                    win.removeListener("close", onClose)
+                    __AppController.appController.sendMainToAllNotionInstances("notion:popup-callback", void 0)
                 };
-                d.handleEventFromRenderer.addListener("notion:post-message", f), h.addListener("close", m), h.loadURL(t)
-            }
-        },
-        66991: (e, t, r) => {
-            "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.ensureCspFrameAncestorsParityWithNotionWebsite = void 0;
-            const n = r(53375);
-            t.ensureCspFrameAncestorsParityWithNotionWebsite = function (e) {
-                const t = new n.CspParser(e.cspHeader), r = t.csp.directives["frame-ancestors"];
-                return r && (r.includes("https:") || r.includes("*")) ? (r.push(`${e.customProtocol}:`), t.csp.convertToString().trim()) : e.cspHeader
-            }
-        },
-        83789: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.waitForWebpack = t.shouldSimulateAirplaneMode = t.getDebugMenu = t.shouldShowDebugMenu = void 0;
-            const s = i(r(79896)), l = i(r(70857)), c = i(r(16928)), u = r(4482), d = i(r(47419)), p = a(r(6600)),
-                h = i(r(11239)), f = r(27683), m = r(21852), g = r(73553), b = r(14473), v = r(69340);
-            let y = !1;
 
-            function w() {
-                return "production" !== h.default.env
+                __notionIPC.handleEventFromRenderer.addListener("notion:post-message", f)
+                win.addListener("close", onClose)
+                win.loadURL(url)
+            }
+        },
+        // ensureCspFrameAncestorsParityWithNotionWebsite
+        66991: (module, exports, __require) => {
+            "use strict";
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const n = __require(53375);
+
+            exports.ensureCspFrameAncestorsParityWithNotionWebsite = function (e) {
+                const t = new n.CspParser(e.cspHeader),
+                    r = t.csp.directives["frame-ancestors"];
+                return r && (r.includes("https:") || r.includes("*"))
+                    ? (r.push(`${e.customProtocol}:`), t.csp.convertToString().trim())
+                    : e.cspHeader
+            }
+        },
+
+        // getDebugMenu
+        83789: function (module, exports, __require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __fs = i(__require(79896)),
+                __os = i(__require(70857)),
+                __path = i(__require(16928)),
+                electron = __require(4482),
+                electron_log = i(__require(47419)),
+                lodash_1 = a(__require(6600)),
+                __config = i(__require(11239)),
+                f = __require(27683),
+                __AppController = __require(21852),
+                __appSlice = __require(73553),
+                __quickSearchSlice = __require(14473),
+                __store = __require(69340);
+
+            let y = false;
+
+            function shouldShowDebugMenu() {
+                return "production" !== __config.default.env
             }
 
             function _(e, t) {
-                k(t, !0)
+                k(t, true)
             }
 
             async function k(e, t) {
                 const r = e.debugger;
-                r.isAttached() || r.attach(), await r.sendCommand("Network.enable"), await r.sendCommand("Network.emulateNetworkConditions", {
+                r.isAttached() || r.attach()
+                await r.sendCommand("Network.enable")
+                await r.sendCommand("Network.emulateNetworkConditions", {
                     offline: t,
                     latency: 0,
                     downloadThroughput: -1,
@@ -3846,246 +3986,296 @@
                 })
             }
 
-            function T(e, t = {}) {
-                const r = u.BrowserWindow.getFocusedWindow() || u.BrowserWindow.getAllWindows()[0];
-                u.dialog.showSaveDialog(r, t).then((({filePath: t}) => {
-                    t && (s.default.writeFileSync(t, JSON.stringify(e, null, 4)), u.shell.openPath(t))
-                }))
+            function saveToFileSync(data, options = {}) {
+                const win = electron.BrowserWindow.getFocusedWindow() || electron.BrowserWindow.getAllWindows()[0];
+                electron.dialog.showSaveDialog(win, options).then(({filePath}) => {
+                    if (filePath) {
+                        __fs.default.writeFileSync(filePath, JSON.stringify(data, null, 4))
+                        electron.shell.openPath(filePath)
+                    }
+                })
             }
 
-            t.shouldShowDebugMenu = w, t.getDebugMenu = function () {
-                if (!w()) throw new Error("Dev tools are disabled, this should never be called!");
+            exports.shouldShowDebugMenu = shouldShowDebugMenu
+            exports.getDebugMenu = function () {
+                if (!shouldShowDebugMenu()) {
+                    throw new Error("Dev tools are disabled, this should never be called!");
+                }
 
-                function e(e, t) {
+                function e(label, value) {
                     return {
-                        label: p.startCase(e.replace("is", "")),
-                        checked: !!v.Store.getState().app.preferences[e],
+                        label: lodash_1.startCase(label.replace("is", "")),
+                        checked: !!__store.Store.getState().app.preferences[label],
                         type: "checkbox",
                         click(t) {
-                            v.Store.dispatch((0, g.updatePreferences)({[e]: t.checked}))
-                        }, ...t
+                            __store.Store.dispatch(__appSlice.updatePreferences({[label]: t.checked}))
+                        },
+                        ...value,
                     }
                 }
 
                 return {
                     label: "Debug",
-                    submenu: [{
-                        label: "Command Search", submenu: [{
-                            label: "Toggle Window Visibility", click() {
-                                v.Store.dispatch((0, b.toggleVisibilityStateIfReady)("debug-menu"))
-                            }
-                        }, {
-                            label: "Toggle DevTools", click() {
-                                m.appController.quickSearchController?.toggleDevTools()
-                            }
-                        }, {
-                            label: "Reload", click() {
-                                m.appController.quickSearchController?.reload()
-                            }
-                        }]
-                    }, {type: "separator"}, e("isUnifiedTitleBarEnabled", {accelerator: "CmdOrCtrl+Shift+I"}), e("isVibrancyEnabled"), {
-                        label: "New Tab Search Enabled",
-                        checked: v.Store.getState().app.preferences.isNewTabSearchEnabled,
-                        type: "checkbox",
-                        click(e) {
-                            v.Store.dispatch((0, g.updatePreferences)({isNewTabSearchEnabled: e.checked}))
-                        }
-                    }, {type: "separator"}, {
-                        label: "(changing will restart app) Is using https:// ",
-                        checked: v.Store.getState().app.preferences.isUsingHttps,
-                        type: "checkbox",
-                        click(e) {
-                            v.Store.dispatch((0, g.updatePreferences)({isUsingHttps: e.checked})), u.app.relaunch(), process.nextTick((() => {
-                                u.app.quit()
-                            }))
-                        }
-                    }, {type: "separator"}, {
-                        label: "Dump state",
-                        click: () => T(v.Store.getState(), {defaultPath: "state.json"})
-                    }, {
-                        label: "Dump window state", click: () => T(function () {
-                            const e = m.appController.windowControllers, t = u.BrowserWindow.getAllWindows(),
-                                r = e.map((e => e.browserWindow)), n = t.filter((e => !r.includes(e))), o = e => {
-                                    const t = [];
-                                    return e.isMinimized() && t.push("minimized"), e.isFullScreen() && t.push("fullscreen"), e.isFocused() && t.push("focused"), e.isVisible() || t.push("hidden"), e.isModal() && t.push("modal"), e.isAlwaysOnTop() && t.push("always-on-top"), e.isClosable() || t.push("not-closable"), e.isMovable() || t.push("not-movable"), t.join(", ")
-                                }, a = e => ({
-                                    id: e.id,
-                                    title: e.getTitle(),
-                                    status: o(e),
-                                    url: e.webContents.getURL(),
-                                    browserViews: e.getBrowserViews().map((e => ({
-                                        url: e.webContents.getURL(),
-                                        title: e.webContents.getTitle()
-                                    })))
-                                });
-                            return {managed: r.map(a), unmanaged: n.map(a)}
-                        }(), {defaultPath: "windows.json"})
-                    }, {type: "separator"}, {
-                        label: "Open Log Folder", click() {
-                            u.shell.openPath(c.default.dirname(d.default.transports.file.getFile().path))
-                        }
-                    }, {
-                        label: "Open Data Folder", click() {
-                            u.shell.openPath(u.app.getPath("userData"))
-                        }
-                    }, {
-                        label: "Open Updater Folder", click() {
-                            const e = l.default.homedir();
-                            if ("win32" === process.platform) {
-                                const t = process.env.LOCALAPPDATA || c.default.join(e, "AppData", "Local"),
-                                    r = u.app.getName().replace(/\s/g, "").toLowerCase();
-                                u.shell.openPath(c.default.join(t, `${r}-updater`))
-                            } else if ("darwin" === process.platform) {
-                                const t = c.default.join(e, "Library", "Caches");
-                                u.shell.openPath(c.default.join(t, `${h.default.desktopAppId}.ShipIt`))
-                            }
-                        }
-                    }, {
-                        label: "Simulate Airplane Mode", type: "checkbox", click(e) {
-                            !async function (e) {
-                                if (!w()) throw new Error("Dev tools are disabled, this should never be called!");
-                                if (y !== e) {
-                                    y = e;
-                                    for (const e of u.webContents.getAllWebContents()) await k(e, y);
-                                    y ? u.app.addListener("web-contents-created", _) : u.app.removeListener("web-contents-created", _)
-                                }
-                            }(e.checked)
-                        }
-                    }, {type: "separator"}, {
-                        label: "Current Window", submenu: [{
-                            label: "Toggle DevTools", click(e, t) {
-                                t?.webContents.toggleDevTools()
-                            }
-                        }, {
-                            label: "Set Vibrancy (macOS)", submenu: [{
-                                label: "None", click(e, t) {
-                                    t?.setVibrancy(null)
-                                }
-                            }, ...["titlebar", "selection", "menu", "popover", "sidebar", "header", "sheet", "window", "hud", "fullscreen-ui", "tooltip", "content", "under-window", "under-page"].map((e => ({
-                                label: e,
-                                click(t, r) {
-                                    r?.setVibrancy(e)
-                                }
-                            })))]
-                        }, {
-                            label: "Set Material (Windows)",
-                            submenu: ["auto", "none", "mica", "acrylic", "tabbed"].map((e => ({
-                                label: e, click(t, r) {
-                                    r?.setBackgroundMaterial(e)
-                                }
-                            })))
-                        }, {
-                            label: "Set Background Color", submenu: [{
-                                label: "Transparent", click(e, t) {
-                                    t?.setBackgroundColor("#00000000")
+                    submenu: [
+                        {
+                            label: "Command Search", submenu: [{
+                                label: "Toggle Window Visibility", click() {
+                                    __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("debug-menu"))
                                 }
                             }, {
-                                label: "Notion Default", click(e, t) {
-                                    const r = v.Store.getState().app,
-                                        n = f.electronColors.notionBackground[r.theme.mode];
-                                    t?.setBackgroundColor(n)
+                                label: "Toggle DevTools", click() {
+                                    __AppController.appController.quickSearchController?.toggleDevTools()
+                                }
+                            }, {
+                                label: "Reload", click() {
+                                    __AppController.appController.quickSearchController?.reload()
                                 }
                             }]
-                        }, {
-                            label: "Set All Backgrounds to Transparent", click(e, t) {
-                                const r = '\n\t\t\t\t\t\t\t\t// Get all elements on the page\n\t\t\t\t\t\t\t\tvar allElements = document.getElementsByTagName("*");\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t// Iterate through all elements and remove background properties\n\t\t\t\t\t\t\t\tfor (var i = 0; i < allElements.length; i++) {\n\t\t\t\t\t\t\t\t\t\tallElements[i].style.background = "transparent";\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t';
-                                m.appController.getFocusedWindowController()?.getActiveTabController().executeJavaScript(r), t?.webContents.executeJavaScript(r)
+                        },
+                        {type: "separator"},
+                        e("isUnifiedTitleBarEnabled", {accelerator: "CmdOrCtrl+Shift+I"}),
+                        e("isVibrancyEnabled"),
+                        {
+                            label: "New Tab Search Enabled",
+                            checked: __store.Store.getState().app.preferences.isNewTabSearchEnabled,
+                            type: "checkbox",
+                            click(e) {
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isNewTabSearchEnabled: e.checked}))
                             }
-                        }]
-                    }, {type: "separator"}, {
-                        label: "Open Notion Console", accelerator: "CmdOrCtrl+Shift+J", click() {
-                            const e = m.appController.getFocusedWindowController()?.getActiveTabController();
-                            e && e.openNotionConsole()
+                        },
+                        {type: "separator"},
+                        {
+                            label: "(changing will restart app) Is using https:// ",
+                            checked: __store.Store.getState().app.preferences.isUsingHttps,
+                            type: "checkbox",
+                            click(e) {
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isUsingHttps: e.checked})), electron.app.relaunch(), process.nextTick((() => {
+                                    electron.app.quit()
+                                }))
+                            }
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Dump state",
+                            click: () => saveToFileSync(__store.Store.getState(), {defaultPath: "state.json"})
+                        },
+                        {
+                            label: "Dump window state", click: () => saveToFileSync(function () {
+                                const e = __AppController.appController.windowControllers,
+                                    t = electron.BrowserWindow.getAllWindows(),
+                                    r = e.map((e => e.browserWindow)), n = t.filter((e => !r.includes(e))), o = e => {
+                                        const t = [];
+                                        return e.isMinimized() && t.push("minimized"), e.isFullScreen() && t.push("fullscreen"), e.isFocused() && t.push("focused"), e.isVisible() || t.push("hidden"), e.isModal() && t.push("modal"), e.isAlwaysOnTop() && t.push("always-on-top"), e.isClosable() || t.push("not-closable"), e.isMovable() || t.push("not-movable"), t.join(", ")
+                                    }, a = e => ({
+                                        id: e.id,
+                                        title: e.getTitle(),
+                                        status: o(e),
+                                        url: e.webContents.getURL(),
+                                        browserViews: e.getBrowserViews().map((e => ({
+                                            url: e.webContents.getURL(),
+                                            title: e.webContents.getTitle()
+                                        })))
+                                    });
+                                return {managed: r.map(a), unmanaged: n.map(a)}
+                            }(), {defaultPath: "windows.json"})
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Open Log Folder", click() {
+                                electron.shell.openPath(__path.default.dirname(electron_log.default.transports.file.getFile().path))
+                            }
+                        },
+                        {
+                            label: "Open Data Folder", click() {
+                                electron.shell.openPath(electron.app.getPath("userData"))
+                            }
+                        },
+                        {
+                            label: "Open Updater Folder", click() {
+                                const e = __os.default.homedir();
+                                if ("win32" === process.platform) {
+                                    const t = process.env.LOCALAPPDATA || __path.default.join(e, "AppData", "Local"),
+                                        r = electron.app.getName().replace(/\s/g, "").toLowerCase();
+                                    electron.shell.openPath(__path.default.join(t, `${r}-updater`))
+                                } else if ("darwin" === process.platform) {
+                                    const t = __path.default.join(e, "Library", "Caches");
+                                    electron.shell.openPath(__path.default.join(t, `${__config.default.desktopAppId}.ShipIt`))
+                                }
+                            }
+                        },
+                        {
+                            label: "Simulate Airplane Mode",
+                            type: "checkbox",
+                            click(e) {
+                                !async function (e) {
+                                    if (!shouldShowDebugMenu()) throw new Error("Dev tools are disabled, this should never be called!");
+                                    if (y !== e) {
+                                        y = e;
+                                        for (const e of electron.webContents.getAllWebContents()) await k(e, y);
+                                        y ? electron.app.addListener("web-contents-created", _) : electron.app.removeListener("web-contents-created", _)
+                                    }
+                                }(e.checked)
+                            }
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Current Window", submenu: [{
+                                label: "Toggle DevTools", click(e, t) {
+                                    t?.webContents.toggleDevTools()
+                                }
+                            }, {
+                                label: "Set Vibrancy (macOS)", submenu: [{
+                                    label: "None", click(e, t) {
+                                        t?.setVibrancy(null)
+                                    }
+                                }, ...["titlebar", "selection", "menu", "popover", "sidebar", "header", "sheet", "window", "hud", "fullscreen-ui", "tooltip", "content", "under-window", "under-page"].map((e => ({
+                                    label: e,
+                                    click(t, r) {
+                                        r?.setVibrancy(e)
+                                    }
+                                })))]
+                            }, {
+                                label: "Set Material (Windows)",
+                                submenu: ["auto", "none", "mica", "acrylic", "tabbed"].map((e => ({
+                                    label: e, click(t, r) {
+                                        r?.setBackgroundMaterial(e)
+                                    }
+                                })))
+                            }, {
+                                label: "Set Background Color", submenu: [{
+                                    label: "Transparent", click(e, t) {
+                                        t?.setBackgroundColor("#00000000")
+                                    }
+                                }, {
+                                    label: "Notion Default", click(e, t) {
+                                        const r = __store.Store.getState().app,
+                                            n = f.electronColors.notionBackground[r.theme.mode];
+                                        t?.setBackgroundColor(n)
+                                    }
+                                }]
+                            }, {
+                                label: "Set All Backgrounds to Transparent", click(e, t) {
+                                    const r = '\n\t\t\t\t\t\t\t\t// Get all elements on the page\n\t\t\t\t\t\t\t\tvar allElements = document.getElementsByTagName("*");\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t// Iterate through all elements and remove background properties\n\t\t\t\t\t\t\t\tfor (var i = 0; i < allElements.length; i++) {\n\t\t\t\t\t\t\t\t\t\tallElements[i].style.background = "transparent";\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t';
+                                    __AppController.appController.getFocusedWindowController()?.getActiveTabController().executeJavaScript(r), t?.webContents.executeJavaScript(r)
+                                }
+                            }]
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Open Notion Console", accelerator: "CmdOrCtrl+Shift+J", click() {
+                                const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                e && e.openNotionConsole()
+                            }
+                        },
+                        {
+                            label: "Open Search Console", click() {
+                                const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                e && e.openSearchConsole()
+                            }
+                        },
+                        {
+                            label: "Open Tabs Console", click() {
+                                const e = __AppController.appController.getFocusedWindowController();
+                                e && e.openTabsConsole()
+                            }
                         }
-                    }, {
-                        label: "Open Search Console", click() {
-                            const e = m.appController.getFocusedWindowController()?.getActiveTabController();
-                            e && e.openSearchConsole()
-                        }
-                    }, {
-                        label: "Open Tabs Console", click() {
-                            const e = m.appController.getFocusedWindowController();
-                            e && e.openTabsConsole()
-                        }
-                    }]
+                    ]
                 }
-            }, t.shouldSimulateAirplaneMode = function () {
+            }
+            exports.shouldSimulateAirplaneMode = function () {
                 return y
-            }, t.waitForWebpack = async function e() {
-                if (u.app.isPackaged) return;
-                const t = [require("path").resolve(__dirname, "../renderer", "tabs", "preload.js"), require("path").resolve(__dirname, "../renderer", "search", "preload.js"), require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"), require("path").resolve(__dirname, "../renderer", "popup", "preload.js")].filter((e => !s.default.existsSync(e)));
+            }
+            exports.waitForWebpack = async function e() {
+                if (electron.app.isPackaged) return;
+                const t = [require("path").resolve(__dirname, "../renderer", "tabs", "preload.js"), require("path").resolve(__dirname, "../renderer", "search", "preload.js"), require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"), require("path").resolve(__dirname, "../renderer", "popup", "preload.js")].filter((e => !__fs.default.existsSync(e)));
                 if (t.length > 0) {
-                    const r = c.default.dirname(__dirname), n = t.map((e => e.replace(r, ""))).join(", ");
-                    return d.default.info(`Waiting for webpack to build: ${n}`), await new Promise((e => setTimeout(e, 1e3))), e()
+                    const r = __path.default.dirname(__dirname), n = t.map((e => e.replace(r, ""))).join(", ");
+                    return electron_log.default.info(`Waiting for webpack to build: ${n}`), await new Promise((e => setTimeout(e, 1e3))), e()
                 }
             }
         },
-        5554: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.shouldLog = t.setupLocalLogging = t.setupLogging = t.LOG_LEVELS = t.LOG_LEVEL = void 0;
-            const s = i(r(16928)), l = r(4482), c = i(r(47419)), u = i(r(80115)), d = a(r(21248)), p = r(3420),
-                h = a(r(10454)), f = a(r(56116)), m = r(69340);
 
-            function g() {
-                c.default.transports.console.level = t.LOG_LEVEL, c.default.transports.file.level = t.LOG_LEVEL, c.default.transports.file.maxSize = 2097152, c.default.info(`App starting with version ${l.app.getVersion()}`, {
+        // setupLogging
+        5554: function (module, exports, __require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = i(__require(16928)),
+                electron = __require(4482),
+                electron_log = i(__require(47419)),
+                u = i(__require(80115)),
+                d = a(__require(21248)),
+                p = __require(3420),
+                h = a(__require(10454)),
+                f = a(__require(56116)),
+                m = __require(69340);
+
+            function setupLocalLogging() {
+                electron_log.default.transports.console.level = exports.LOG_LEVEL, electron_log.default.transports.file.level = exports.LOG_LEVEL, electron_log.default.transports.file.maxSize = 2097152, electron_log.default.info(`App starting with version ${electron.app.getVersion()}`, {
                     system: `${process.platform} ${process.arch}`,
                     electron: process.versions.electron
-                }), l.app.on("render-process-gone", ((e, t, r) => {
+                }), electron.app.on("render-process-gone", ((e, t, r) => {
                     try {
-                        c.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
+                        electron_log.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
                     } catch (e) {
-                        c.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
+                        electron_log.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
                     }
-                })), l.app.on("child-process-gone", ((e, t) => {
-                    c.default.error("child-process-gone", t)
-                })), l.app.on("web-contents-created", ((e, t) => {
-                    const r = `${t.getType()}-${t.id}`, n = c.default.scope(r);
+                })), electron.app.on("child-process-gone", ((e, t) => {
+                    electron_log.default.error("child-process-gone", t)
+                })), electron.app.on("web-contents-created", ((e, t) => {
+                    const r = `${t.getType()}-${t.id}`, n = electron_log.default.scope(r);
                     t.on("did-fail-load", ((e, t, r, o) => {
                         n.error("did-fail-load", {errorCode: t, errorDescription: r, validatedURL: o})
                     })), t.on("did-fail-provisional-load", ((e, t, r, o) => {
                         n.error("did-fail-provisional-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), b("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
+                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), shouldLog("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
                         t > 1 && n.debug(`console-message: ${r}`, {line: o, sourceId: a})
                     })))
-                })), l.app.on("before-quit", (() => c.default.info("Quitting..."))), b("debug") && (l.app.on("browser-window-blur", (() => {
-                    l.BrowserWindow.getFocusedWindow() || c.default.debug("App blurred")
-                })), l.app.on("browser-window-focus", (() => {
-                    c.default.debug("App focused")
+                })), electron.app.on("before-quit", (() => electron_log.default.info("Quitting..."))), shouldLog("debug") && (electron.app.on("browser-window-blur", (() => {
+                    electron.BrowserWindow.getFocusedWindow() || electron_log.default.debug("App blurred")
+                })), electron.app.on("browser-window-focus", (() => {
+                    electron_log.default.debug("App focused")
                 })))
             }
 
-            function b(e, r = t.LOG_LEVEL) {
-                return t.LOG_LEVELS.indexOf(r) <= t.LOG_LEVELS.indexOf(e)
+            function shouldLog(e, r = exports.LOG_LEVEL) {
+                return exports.LOG_LEVELS.indexOf(r) <= exports.LOG_LEVELS.indexOf(e)
             }
 
-            t.LOG_LEVEL = function () {
+            exports.LOG_LEVEL = function () {
                 const e = m.Store.getState();
-                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : u.default.existsSync(s.default.join(l.app.getPath("userData"), "debug")) ? "debug" : l.app.isPackaged ? "info" : "debug"
-            }(), t.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"], t.setupLogging = function () {
-                g(), f.initialize(l.app), process.on("uncaughtException", (e => {
+                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : u.default.existsSync(s.default.join(electron.app.getPath("userData"), "debug")) ? "debug" : electron.app.isPackaged ? "info" : "debug"
+            }()
+            exports.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"]
+            exports.setupLogging = function () {
+                setupLocalLogging(), f.initialize(electron.app), process.on("uncaughtException", (e => {
                     e.message.startsWith("net::ERR") ? p.serverLogger.log({
                         level: "info",
                         from: "main",
@@ -4114,7 +4304,9 @@
                 })), h.handleEventFromRenderer.addListener("notion:log-error", ((e, t) => {
                     p.serverLogger.log(t)
                 }))
-            }, t.setupLocalLogging = g, t.shouldLog = b
+            }
+            exports.setupLocalLogging = setupLocalLogging
+            exports.shouldLog = shouldLog
         },
 
         // 入口
@@ -4215,159 +4407,259 @@
                 }()
             }()
         },
-        10454: function (e, t, r) {
+        10454: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.DEPRECATED_receiveSyncMainFromRenderer = t.handleEventFromRenderer = t.handleRequestFromRenderer = void 0;
-            const o = n(r(4482));
-            t.handleRequestFromRenderer = {
-                addListener(e, t) {
-                    o.default.ipcMain.handle(e, t)
-                }, removeAllListener(e) {
-                    o.default.ipcMain.removeHandler(e)
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = n(__require(4482));
+
+            exports.handleRequestFromRenderer = {
+                addListener(channel, listener) {
+                    electron.default.ipcMain.handle(channel, listener)
+                },
+                removeAllListener(channel) {
+                    electron.default.ipcMain.removeHandler(channel)
                 }
-            }, t.handleEventFromRenderer = {
-                addListener(e, t) {
-                    o.default.ipcMain.addListener(e, t)
-                }, removeListener(e, t) {
-                    o.default.ipcMain.removeListener(e, t)
+            }
+            exports.handleEventFromRenderer = {
+                addListener(channel, listener) {
+                    electron.default.ipcMain.addListener(channel, listener)
+                },
+                removeListener(channel, listener) {
+                    electron.default.ipcMain.removeListener(channel, listener)
                 }
-            }, t.DEPRECATED_receiveSyncMainFromRenderer = {
-                addListener(e, t) {
-                    o.default.ipcMain.on(e, ((e, ...r) => {
-                        e.returnValue = t(e, ...r)
+            }
+            exports.DEPRECATED_receiveSyncMainFromRenderer = {
+                addListener(channel, t) {
+                    electron.default.ipcMain.on(channel, ((event, ...args) => {
+                        event.returnValue = t(event, ...args)
                     }))
-                }, removeAllListener(e) {
-                    o.default.ipcMain.removeHandler(e)
+                },
+                removeAllListener(channel) {
+                    electron.default.ipcMain.removeHandler(channel)
                 }
             }
         },
-        77514: function (e, t, r) {
+
+        // handleNotionProtocol
+        77514: function (module, exports, __require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.handleNotionProtocol = void 0;
-            const o = r(57075), a = n(r(16857)), i = r(4482), s = n(r(47419)), l = n(r(80115)), c = r(21248),
-                u = r(32289), d = n(r(11239)), p = r(3420), h = r(94774), f = r(66991), m = r(83789), g = r(13387);
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            async function b(e) {
-                if ((0, m.shouldSimulateAirplaneMode)()) return new Response("App is simulating airplane mode", {status: 0});
-                const t = a.default.parse(e.url);
-                if (r = t, !("local" === d.default.env ? r.hostname?.endsWith("local.notion.so") || r.host?.endsWith(d.default.domainName) || r.host?.endsWith(d.default.domainName.split(":")[0]) : Boolean(r.host?.endsWith(d.default.domainName)))) return new Response("Invalid proxy URL", {status: 0});
-                var r;
-                const n = a.default.parse(d.default.domainBaseUrl),
+
+            const o = __require(57075),
+                a = n(__require(16857)),
+                electron = __require(4482),
+                electron_log = n(__require(47419)),
+                l = n(__require(80115)),
+                c = __require(21248),
+                u = __require(32289),
+                __config = n(__require(11239)),
+                __ServerLogger = __require(3420),
+                __assetCache = __require(94774),
+                f = __require(66991),
+                m = __require(83789),
+                __session = __require(13387);
+
+            async function handleRequest(req) {
+                if (m.shouldSimulateAirplaneMode()) {
+                    return new Response("App is simulating airplane mode", {status: 0});
+                }
+                const t = a.default.parse(req.url);
+                let r = t
+                if (!("local" === __config.default.env
+                    ? r.hostname?.endsWith("local.notion.so") || r.host?.endsWith(__config.default.domainName) || r.host?.endsWith(__config.default.domainName.split(":")[0])
+                    : Boolean(r.host?.endsWith(__config.default.domainName))
+                )) {
+                    return new Response("Invalid proxy URL", {status: 0});
+                }
+
+                const n = a.default.parse(__config.default.domainBaseUrl),
                     o = {...t, protocol: n.protocol, port: n.port, host: void 0},
-                    i = (0, u.forceConsistentEndingSlash)({src: e.url, dest: a.default.format(o)}),
-                    s = e.headers.get("origin");
-                return s && s.startsWith(d.default.protocol) && e.headers.set("origin", s.replace(d.default.protocol, "https")), (0, g.getSession)().fetch(i, {
-                    headers: e.headers,
-                    body: e.body,
-                    method: e.method,
-                    mode: e.mode,
-                    credentials: e.credentials,
-                    redirect: e.redirect,
-                    cache: e.cache,
-                    referrer: e.referrer,
-                    referrerPolicy: e.referrerPolicy,
-                    integrity: e.integrity,
-                    keepalive: e.keepalive,
+                    i = u.forceConsistentEndingSlash({src: req.url, dest: a.default.format(o)}),
+                    origin = req.headers.get("origin");
+                if (origin && origin.startsWith(__config.default.protocol)) {
+                    req.headers.set("origin", origin.replace(__config.default.protocol, "https"))
+                }
+                return __session.getSession().fetch(i, {
+                    headers: req.headers,
+                    body: req.body,
+                    method: req.method,
+                    mode: req.mode,
+                    credentials: req.credentials,
+                    redirect: req.redirect,
+                    cache: req.cache,
+                    referrer: req.referrer,
+                    referrerPolicy: req.referrerPolicy,
+                    integrity: req.integrity,
+                    keepalive: req.keepalive,
                     duplex: "half"
                 })
             }
 
-            i.protocol.registerSchemesAsPrivileged([{
-                scheme: d.default.protocol,
+            electron.protocol.registerSchemesAsPrivileged([{
+                scheme: __config.default.protocol,
                 privileges: {standard: !0, secure: !0, allowServiceWorkers: !0, supportFetchAPI: !0, corsEnabled: !0}
-            }]), t.handleNotionProtocol = function () {
-                const {webRequest: e, protocol: t} = (0, g.getSession)();
-                !function (e) {
-                    const t = {urls: [`${d.default.protocol}://*/*`]};
-                    e.onBeforeRequest(t, ((e, t) => {
-                        const r = e.frame;
-                        r && r.top !== r ? t({cancel: !0}) : t({})
-                    }))
-                }(e), function (e) {
-                    e.onHeadersReceived(((e, t) => {
-                        if (e.responseHeaders && "subFrame" === e.resourceType) {
-                            const r = e.responseHeaders["content-security-policy"];
-                            if (r) return t({
+            }])
+
+            exports.handleNotionProtocol = function () {
+                const {webRequest, protocol} = __session.getSession();
+
+                const filter = {urls: [`${__config.default.protocol}://*/*`]};
+                webRequest.onBeforeRequest(filter, (details, callback) => {
+                    const frame = details.frame;
+                    frame && frame.top !== frame
+                        ? callback({cancel: true})
+                        : callback({})
+                })
+                webRequest.onHeadersReceived((details, callback) => {
+                    if (details.responseHeaders && "subFrame" === details.resourceType) {
+                        const csp = details.responseHeaders["content-security-policy"];
+                        if (csp) {
+                            return callback({
                                 responseHeaders: {
-                                    ...e.responseHeaders,
-                                    "content-security-policy": r.map((e => (0, f.ensureCspFrameAncestorsParityWithNotionWebsite)({
-                                        cspHeader: e,
-                                        customProtocol: d.default.protocol
-                                    })))
+                                    ...details.responseHeaders,
+                                    "content-security-policy": csp.map(cspHeader => f.ensureCspFrameAncestorsParityWithNotionWebsite({
+                                        cspHeader: cspHeader,
+                                        customProtocol: __config.default.protocol
+                                    }))
                                 }
                             })
                         }
-                        t({})
-                    }))
-                }(e), function (e) {
-                    e.onBeforeSendHeaders({urls: ["<all_urls>"]}, ((e, t) => {
-                        "subFrame" === e.resourceType && e.frame?.parent && e.frame.parent === e.frame.top && !e.requestHeaders.Referer && (e.requestHeaders.Referer = `${d.default.domainBaseUrl}/`);
-                        const r = e.url.toLowerCase();
-                        ["https://file.notion.so/", "https://file-dev.notion.so/", "https://file-stg.notion.so/", "http://file-local.notion.so:3000/"].some((e => r.startsWith(e))) ? (0, g.getSession)().cookies.get({
+                    }
+                    callback({})
+                })
+                webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {
+                    "subFrame" === details.resourceType && details.frame?.parent && details.frame.parent === details.frame.top && !details.requestHeaders.Referer && (details.requestHeaders.Referer = `${__config.default.domainBaseUrl}/`);
+
+                    const url = details.url.toLowerCase();
+                    if ([
+                        "https://file.notion.so/",
+                        "https://file-dev.notion.so/",
+                        "https://file-stg.notion.so/",
+                        "http://file-local.notion.so:3000/"
+                    ].some(e => url.startsWith(e))
+                    ) {
+                        __session.getSession().cookies.get({
                             domain: ".notion.so",
                             name: "file_token"
-                        }).then((r => {
-                            0 !== r.length && (e.requestHeaders.Cookie ? e.requestHeaders.Cookie.includes("file_token") || (e.requestHeaders.Cookie = `${e.requestHeaders.Cookie}; file_token=${r[0].value}`) : e.requestHeaders.Cookie = "file_token=${cookies[0].value}"), t({requestHeaders: e.requestHeaders})
-                        })).catch((r => {
-                            s.default.error("Failed to retrieve file_token from cookies"), t({requestHeaders: e.requestHeaders})
-                        })) : t({requestHeaders: e.requestHeaders})
-                    }))
-                }(e), t.handle(d.default.protocol, (async e => {
-                    if (d.default.isLocalhost && !d.default.offline) return b(e);
+                        }).then(r => {
+                            if (0 !== r.length) {
+                                details.requestHeaders.Cookie
+                                    ? details.requestHeaders.Cookie.includes("file_token") || (details.requestHeaders.Cookie = `${details.requestHeaders.Cookie}; file_token=${r[0].value}`)
+                                    : details.requestHeaders.Cookie = "file_token=${cookies[0].value}"
+                            }
+                            callback({
+                                requestHeaders: details.requestHeaders
+                            })
+                        }).catch(r => {
+                            electron_log.default.error("Failed to retrieve file_token from cookies")
+                            callback({
+                                requestHeaders: details.requestHeaders
+                            })
+                        })
+                    } else {
+                        callback({
+                            requestHeaders: details.requestHeaders
+                        })
+                    }
+                })
+
+                protocol.handle(__config.default.protocol, async req => {
+                    if (__config.default.isLocalhost && !__config.default.offline) {
+                        return handleRequest(req);
+                    }
                     try {
-                        const t = await h.assetCache.handleRequest(e);
-                        if (t) try {
-                            const e = l.default.createReadStream(t.absolutePath), r = o.Readable.toWeb(e),
-                                n = function (e, t) {
-                                    const r = new Headers(e), n = t.split("?")[0];
-                                    return r.has("content-type") || (n.endsWith(".css") ? r.set("content-type", "text/css; charset=UTF-8") : n.endsWith(".html") ? r.set("content-type", "text/html; charset=UTF-8") : n.endsWith(".js") ? r.set("content-type", "text/javascript; charset=UTF-8") : n.endsWith(".svg") && r.set("content-type", "image/svg+xml")), r
-                                }(t.headers, t.absolutePath);
-                            return new Response(r, {headers: n})
-                        } catch (e) {
-                            s.default.error(`Failed to read cached file: ${t.absolutePath}`)
+                        const resp = await __assetCache.assetCache.handleRequest(req);
+                        if (resp) {
+                            try {
+                                const e = l.default.createReadStream(resp.absolutePath),
+                                    body = o.Readable.toWeb(e),
+                                    headers = function (headers, absolutePath) {
+                                        const r = new Headers(headers),
+                                            n = absolutePath.split("?")[0];
+                                        if (!r.has("content-type")) {
+                                            n.endsWith(".css")
+                                                ? r.set("content-type", "text/css; charset=UTF-8")
+                                                : n.endsWith(".html")
+                                                    ? r.set("content-type", "text/html; charset=UTF-8")
+                                                    : n.endsWith(".js")
+                                                        ? r.set("content-type", "text/javascript; charset=UTF-8")
+                                                        : n.endsWith(".svg") && r.set("content-type", "image/svg+xml")
+                                        }
+                                        return r
+                                    }(resp.headers, resp.absolutePath);
+                                return new Response(body, {headers: headers})
+                            } catch (e) {
+                                electron_log.default.error(`Failed to read cached file: ${resp.absolutePath}`)
+                            }
                         }
-                        return b(e)
+                        return handleRequest(req)
                     } catch (e) {
-                        return p.serverLogger.log({
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "schemeHandler",
                             type: "requestHandlerError",
-                            error: (0, c.convertErrorToLog)(e)
-                        }), new Response("Something went wrong.", {status: 500})
+                            error: c.convertErrorToLog(e)
+                        })
+                        return new Response("Something went wrong.", {status: 500})
                     }
-                }))
+                })
             }
         },
-        26605: function (e, t, r) {
+        // open at login
+        26605: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setIsOpenAtLogin = t.getIsOpenAtLogin = t.getWasOpenedAsHidden = void 0;
-            const o = r(4482), a = n(r(47419)).default.scope("launchOnLogin"), i = "--open-at-login";
-            t.getWasOpenedAsHidden = function () {
-                return "darwin" === process.platform ? o.app.getLoginItemSettings().wasOpenedAsHidden || o.app.getLoginItemSettings().wasOpenedAtLogin : process.argv.includes(i)
-            }, t.getIsOpenAtLogin = function () {
-                const e = o.app.getLoginItemSettings({args: [i]});
-                return e.openAtLogin || Boolean(e.executableWillLaunchAtLogin)
-            }, t.setIsOpenAtLogin = function (e) {
-                o.app.isPackaged && (a.info(`Setting open at login to ${e}`), o.app.setLoginItemSettings({
-                    openAtLogin: e,
-                    openAsHidden: !0,
-                    args: [i]
-                }))
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                logger = n(__require(47419)).default.scope("launchOnLogin"),
+                arg = "--open-at-login";
+
+            exports.getWasOpenedAsHidden = function () {
+                return "darwin" === process.platform
+                    ? electron.app.getLoginItemSettings().wasOpenedAsHidden || electron.app.getLoginItemSettings().wasOpenedAtLogin
+                    : process.argv.includes(arg)
+            }
+            exports.getIsOpenAtLogin = function () {
+                const loginItemSettings = electron.app.getLoginItemSettings({args: [arg]});
+                return loginItemSettings.openAtLogin || Boolean(loginItemSettings.executableWillLaunchAtLogin)
+            }
+            exports.setIsOpenAtLogin = function (openAtLogin) {
+                if (electron.app.isPackaged) {
+                    logger.info(`Setting open at login to ${openAtLogin}`)
+                    electron.app.setLoginItemSettings({
+                        openAtLogin: openAtLogin,
+                        openAsHidden: true,
+                        args: [arg]
+                    })
+                }
             }
         },
-        88493: (e, t, r) => {
+        // showOpenAtLoginErrorDialog
+        88493: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.showOpenAtLoginErrorDialog = void 0;
-            const n = r(4482), o = r(36343), a = r(49960), i = r(21852), s = (0, o.defineMessages)({
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                o = __require(36343),
+                a = __require(49960),
+                __AppController = __require(21852)
+
+            const messages = o.defineMessages({
                 failedDialogTitle: {
                     id: "openAtLogin.dialog.title",
                     defaultMessage: "Open at Login",
@@ -4379,18 +4671,20 @@
                     description: "Message for an error dialog informing the user that we failed to set the app's 'open at login' preference with the operating system"
                 }
             });
-            t.showOpenAtLoginErrorDialog = async function () {
-                const e = i.appController.intl;
-                return n.dialog.showMessageBox({
+
+            exports.showOpenAtLoginErrorDialog = async function () {
+                const intl = __AppController.appController.intl;
+                return electron.dialog.showMessageBox({
                     type: "error",
-                    title: e.formatMessage(s.failedDialogTitle),
-                    message: e.formatMessage(s.failedDialogTitle),
-                    detail: e.formatMessage(s.failedDialogDetail, {operatingSystem: (0, a.getHumanPlatformName)()}),
+                    title: intl.formatMessage(messages.failedDialogTitle),
+                    message: intl.formatMessage(messages.failedDialogTitle),
+                    detail: intl.formatMessage(messages.failedDialogDetail, {operatingSystem: a.getHumanPlatformName()}),
                     buttons: ["OK"]
                 })
             }
         },
 
+        // url protocol utils
         29902: function (module, exports, __require) {
             "use strict";
             let n = this && this.__importDefault || function (e) {
@@ -4400,7 +4694,7 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            const o = n(__require(47419)),
+            const electron_log = n(__require(47419)),
                 a = __require(32289),
                 i = __require(60411),
                 __config = n(__require(11239)),
@@ -4433,14 +4727,14 @@
                         const {stdout: t} = await (0, l.exec)(`plutil -convert xml1 -o - ~/Library/Preferences/com.apple.LaunchServices/com.apple.launchservices.secure.plist | grep -A1 "${e}"`);
                         return t.length > 0
                     } catch (e) {
-                        return o.default.error(`Error checking for protocol registration: ${e}`), !1
+                        return electron_log.default.error(`Error checking for protocol registration: ${e}`), !1
                     }
                 }(e) : "win32" === process.platform && async function (e) {
                     try {
                         const {stdout: t} = await (0, l.exec)(`powershell.exe -Command "Test-Path 'Registry::HKEY_CLASSES_ROOT\\${e}'"`);
                         return "True" === t.trim()
                     } catch (e) {
-                        return o.default.error(`Error checking for protocol registration: ${e}`), !1
+                        return electron_log.default.error(`Error checking for protocol registration: ${e}`), !1
                     }
                 }(e))
             }
@@ -4454,100 +4748,158 @@
             }
         },
 
-        35219: function (e, t, r) {
+        // setupRendererListeners
+        35219: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupRendererListeners = void 0;
-            const s = r(4482);
-            r(84041), r(15425);
-            const l = i(r(47419)), c = a(r(6600)), u = r(80004), d = a(r(60411)), p = r(55108), h = r(68543),
-                f = r(21852), m = r(89304), g = r(43041), b = a(r(10454)), v = r(29902), y = r(73553), w = r(14473),
-                _ = r(69340), k = r(54417);
-            t.setupRendererListeners = function () {
-                s.app.on("browser-window-blur", (() => {
-                    f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleRequestFromRenderer.addListener("notion:refresh-all", ((e, t) => (f.appController.refreshAll(void 0 === t || t), Promise.resolve({value: void 0})))), b.handleEventFromRenderer.addListener("notion:focus", (e => {
-                    f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleEventFromRenderer.addListener("notion:blur", (() => {
-                    f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleEventFromRenderer.addListener("notion:renderer-visibility-changed", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.setRendererVisibility(t)
-                })), b.handleRequestFromRenderer.addListener("notion:is-active-tab", (e => f.appController.getWindowControllerForWebContents(e.sender)?.isActiveTab(e.sender) || !1)), b.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", (e => "visible" === _.Store.getState().quickSearch.visibilityState.type)), b.handleEventFromRenderer.addListener("notion:toggle-maximized", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482);
+            __require(84041)
+            __require(15425);
+            const electron_log = i(__require(47419)),
+                lodash_1 = a(__require(6600)),
+                u = __require(80004),
+                d = a(__require(60411)),
+                p = __require(55108),
+                h = __require(68543),
+                __AppController = __require(21852),
+                m = __require(89304),
+                g = __require(43041),
+                __notionIPC = a(__require(10454)),
+                v = __require(29902),
+                y = __require(73553),
+                w = __require(14473),
+                _ = __require(69340),
+                k = __require(54417);
+
+            exports.setupRendererListeners = function () {
+                electron.app.on("browser-window-blur", () => {
+                    __AppController.appController.refreshForWindowsMenuBarSpacing()
+                })
+
+                __notionIPC.handleRequestFromRenderer.addListener("notion:refresh-all", (e, t) => {
+                    __AppController.appController.refreshAll(void 0 === t || t)
+                    return Promise.resolve({value: void 0})
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:focus", e => {
+                    __AppController.appController.refreshForWindowsMenuBarSpacing()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:blur", () => {
+                    __AppController.appController.refreshForWindowsMenuBarSpacing()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:renderer-visibility-changed", (e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.setRendererVisibility(t)
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-active-tab", e => __AppController.appController.getWindowControllerForWebContents(e.sender)?.isActiveTab(e.sender) || !1)
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", e => "visible" === _.Store.getState().quickSearch.visibilityState.type)
+                __notionIPC.handleEventFromRenderer.addListener("notion:toggle-maximized", e => {
+                    const t = electron.BrowserWindow.fromWebContents(e.sender);
                     t && (t.isMaximized() ? t.unmaximize() : t.maximize())
-                })), b.handleRequestFromRenderer.addListener("notion:is-main-tab", (e => {
-                    const t = f.appController.getMostRecentlyFocusedWindowController();
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-main-tab", e => {
+                    const t = __AppController.appController.getMostRecentlyFocusedWindowController();
                     return t && t.browserWindow.isVisible() ? {value: t.getActiveTabController().isManagerOf(e.sender)} : {value: !1}
-                })), b.handleRequestFromRenderer.addListener("notion:is-window-visible", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-window-visible", e => {
+                    const t = electron.BrowserWindow.fromWebContents(e.sender);
                     return t ? {value: t.isVisible()} : {value: !1}
-                })), b.handleEventFromRenderer.addListener("notion:set-theme", ((e, t) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-theme", (e, t) => {
                     _.Store.dispatch((0, y.updateTheme)(t))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-colors", ((e, t) => {
-                    const r = f.appController.getTabControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-colors", (e, t) => {
+                    const r = __AppController.appController.getTabControllerForWebContents(e.sender);
                     r && _.Store.dispatch((0, k.updateTabColors)({tabId: r.tabId, colors: t}))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", ((e, t) => {
-                    const r = f.appController.getTabControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", (e, t) => {
+                    const r = __AppController.appController.getTabControllerForWebContents(e.sender);
                     r && _.Store.dispatch((0, k.updateTabIsOverlayActive)({tabId: r.tabId, isOverlayActive: t}))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-order", ((e, t) => {
-                    const r = f.appController.getWindowControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-order", (e, t) => {
+                    const r = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     r && r.reorderTabs(t)
-                })), b.handleEventFromRenderer.addListener("notion:zoom", ((e, t) => {
-                    f.appController.setZoom(t)
-                })), b.DEPRECATED_receiveSyncMainFromRenderer.addListener("notion:get-fullscreen", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:zoom", (e, t) => {
+                    __AppController.appController.setZoom(t)
+                })
+                __notionIPC.DEPRECATED_receiveSyncMainFromRenderer.addListener("notion:get-fullscreen", e => {
+                    const t = electron.BrowserWindow.fromWebContents(e.sender);
                     return t ? {value: t.isFullScreen()} : {value: !1}
-                })), b.handleRequestFromRenderer.addListener("notion:get-electron-app-features", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-electron-app-features", e => {
+                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     return (0, _.getElectronAppFeatures)({isShowingTabBar: !t || t.hasMultipleTabs()})
-                })), b.handleEventFromRenderer.addListener("notion:set-user-preference", ((e, t, r) => {
-                    l.default.info("notion:set-user-preference", {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-user-preference", (e, t, r) => {
+                    electron_log.default.info("notion:set-user-preference", {
                         key: t,
                         value: r
                     }), _.Store.dispatch((0, y.updatePreferences)({[t]: r}))
-                })), b.handleRequestFromRenderer.addListener("notion:get-app-version", (e => ({value: s.app.getVersion()}))), b.handleRequestFromRenderer.addListener("notion:get-is-running-under-arm64-translation", (e => s.app.runningUnderARM64Translation)), b.handleRequestFromRenderer.addListener("notion:get-analytics-info", (async e => await (0, h.getAnalyticsInfo)())), b.handleRequestFromRenderer.addListener("notion:get-app-path", (e => ({value: s.app.getAppPath()}))), b.handleEventFromRenderer.addListener("notion:cut", (e => {
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-app-version", e => ({value: electron.app.getVersion()}))
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-is-running-under-arm64-translation", e => electron.app.runningUnderARM64Translation)
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-analytics-info", async e => await h.getAnalyticsInfo())
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-app-path", e => ({value: electron.app.getAppPath()}))
+                __notionIPC.handleEventFromRenderer.addListener("notion:cut", e => {
                     e.sender.cut()
-                })), b.handleEventFromRenderer.addListener("notion:copy", (e => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:copy", e => {
                     e.sender.copy()
-                })), b.handleEventFromRenderer.addListener("notion:paste", (e => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:paste", e => {
                     e.sender.paste()
-                })), function () {
+                })
+
+                void function () {
                     const e = e => (0, p.isNotionWebContents)(e.sender);
-                    b.handleRequestFromRenderer.addListener("notion:clipboard:read-text", (t => e(t) ? s.clipboard.readText() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-html", (t => e(t) ? s.clipboard.readHTML() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-rtf", (t => e(t) ? s.clipboard.readRTF() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-image", (t => e(t) ? s.clipboard.readImage()?.toDataURL() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-bookmark", (t => e(t) ? s.clipboard.readBookmark() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-text", ((t, r) => e(t) ? s.clipboard.writeText(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-html", ((t, r) => e(t) ? s.clipboard.writeHTML(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-rtf", ((t, r) => e(t) ? s.clipboard.writeRTF(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-image", ((t, r) => e(t) ? s.clipboard.writeImage(s.nativeImage.createFromDataURL(r)) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-bookmark", ((t, r) => e(t) ? s.clipboard.writeBookmark(r.title, r.url) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:clear", (t => e(t) ? s.clipboard.clear() : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:available-formats", (t => e(t) ? s.clipboard.availableFormats() : [])), b.handleRequestFromRenderer.addListener("notion:clipboard:has", ((t, r) => !!e(t) && s.clipboard.has(r))), b.handleRequestFromRenderer.addListener("notion:clipboard:read", ((t, r) => e(t) ? s.clipboard.read(r) : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:write", ((t, r) => e(t) ? s.clipboard.write(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-buffer", ((t, r) => e(t) ? new Uint8Array(s.clipboard.readBuffer(r)) : new Uint8Array)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-buffer", ((t, r, n) => e(t) ? s.clipboard.writeBuffer(r, Buffer.from(n)) : void 0))
-                }(), b.handleEventFromRenderer.addListener("notion:set-sidebar-state", ((e, t) => {
-                })), b.handleEventFromRenderer.addListener("notion:toggle-sidebar-expanded", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().toggleSidebarInNotion()
-                })), b.handleEventFromRenderer.addListener("notion:set-sidebar-open", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().setSidebarOpenInNotion(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-window-sidebar-state", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.setWindowSidebarState(e.sender, t)
-                })), b.handleEventFromRenderer.addListener("notion:set-app-store-state", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.setAppStoreState(t)
-                })), b.handleEventFromRenderer.addListener("notion:new-tab-from-notion", ((e, t, r, n) => {
-                    const o = f.appController.getWindowControllerForWebContents(e.sender),
-                        a = f.appController.getTabControllerForWebContents(e.sender);
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-text", (t => e(t) ? electron.clipboard.readText() : "")), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-html", (t => e(t) ? electron.clipboard.readHTML() : "")), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-rtf", (t => e(t) ? electron.clipboard.readRTF() : "")), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-image", (t => e(t) ? electron.clipboard.readImage()?.toDataURL() : null)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-bookmark", (t => e(t) ? electron.clipboard.readBookmark() : null)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-text", ((t, r) => e(t) ? electron.clipboard.writeText(r) : void 0)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-html", ((t, r) => e(t) ? electron.clipboard.writeHTML(r) : void 0)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-rtf", ((t, r) => e(t) ? electron.clipboard.writeRTF(r) : void 0)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-image", ((t, r) => e(t) ? electron.clipboard.writeImage(electron.nativeImage.createFromDataURL(r)) : void 0)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-bookmark", ((t, r) => e(t) ? electron.clipboard.writeBookmark(r.title, r.url) : void 0)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:clear", (t => e(t) ? electron.clipboard.clear() : void 0)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:available-formats", (t => e(t) ? electron.clipboard.availableFormats() : [])), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:has", ((t, r) => !!e(t) && electron.clipboard.has(r))), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read", ((t, r) => e(t) ? electron.clipboard.read(r) : "")), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write", ((t, r) => e(t) ? electron.clipboard.write(r) : void 0)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-buffer", ((t, r) => e(t) ? new Uint8Array(electron.clipboard.readBuffer(r)) : new Uint8Array)), __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-buffer", ((t, r, n) => e(t) ? electron.clipboard.writeBuffer(r, Buffer.from(n)) : void 0))
+                }()
+
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-sidebar-state", (e, t) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:toggle-sidebar-expanded", e => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().toggleSidebarInNotion()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-sidebar-open", (e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().setSidebarOpenInNotion(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-window-sidebar-state", (e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.setWindowSidebarState(e.sender, t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-app-store-state", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.setAppStoreState(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-notion", (e, t, r, n) => {
+                    const o = __AppController.appController.getWindowControllerForWebContents(e.sender),
+                        a = __AppController.appController.getTabControllerForWebContents(e.sender);
                     if (!o || !a) return;
                     let i;
                     switch (n) {
@@ -4563,282 +4915,440 @@
                             (0, u.unreachable)(n)
                     }
                     o.newTab({initialUrl: t, makeActiveTab: r, position: i})
-                })), b.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.searchForNewTab({
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", e => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.searchForNewTab({
                         makeActiveTab: !0,
                         position: {type: "end"}
                     })
-                })), b.handleEventFromRenderer.addListener("notion:tab-clicked", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.makeTabActive(t)
-                })), b.handleEventFromRenderer.addListener("notion:show-tab-menu", ((e, t, r, n) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.showTabMenu({
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:tab-clicked", (e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.makeTabActive(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-menu", (e, t, r, n) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.showTabMenu({
                         tabIndex: t,
                         clientX: r,
                         clientY: n
                     })
-                })), b.handleEventFromRenderer.addListener("notion:close-tab", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.closeTab(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-start", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStartFromNotion(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-stop-from-notion", (e => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromNotion()
-                })), b.handleEventFromRenderer.addListener("notion:search-next", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchNextFromSearch(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-prev", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchPrevFromSearch(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-clear", (e => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchClearFromSearch()
-                })), b.handleEventFromRenderer.addListener("notion:search-stop-from-search", (e => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromSearch()
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-close", (() => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:close-tab", (e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.closeTab(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-start", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStartFromNotion(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-notion", e => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromNotion()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-next", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchNextFromSearch(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-prev", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchPrevFromSearch(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-clear", e => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchClearFromSearch()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-search", e => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromSearch()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-close", () => {
                     "visible" === _.Store.getState().quickSearch.visibilityState.type && _.Store.dispatch((0, w.toggleVisibilityStateIfReady)("navigation"))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-open-result", ((e, t) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-result", (e, t) => {
                     const r = (0, v.normalizeUrlProtocol)(t);
-                    r && f.appController.openURLOptionallySurfacingExistingTab(r)
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-ready", (() => {
+                    r && __AppController.appController.openURLOptionallySurfacingExistingTab(r)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-ready", () => {
                     _.Store.dispatch((0, w.setReadyState)({type: "ready"}))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-not-ready", (() => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-not-ready", () => {
                     _.Store.dispatch((0, w.setReadyState)({type: "not-ready"}))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-refresh", (() => {
-                    f.appController.quickSearchController?.reload()
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", (() => {
-                    f.appController.openUserSettings()
-                })), b.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getSpellcheckerLanguages() || [])), b.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getAvailableSpellcheckerLanguages() || [])), b.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerLanguages(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerEnabled(t)
-                })), b.handleEventFromRenderer.addListener("notion:replace-misspelling", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.replaceMisspelling(t)
-                })), b.handleEventFromRenderer.addListener("notion:add-to-dictionary", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.addToDictionary(t)
-                })), b.handleRequestFromRenderer.addListener("notion:get-substitutions", (e => {
-                    if (!s.systemPreferences.getUserDefault) return {value: []};
-                    const t = s.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-refresh", () => {
+                    __AppController.appController.quickSearchController?.reload()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", () => {
+                    __AppController.appController.openUserSettings()
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", e => __AppController.appController.getTabControllerForWebContents(e.sender)?.getSpellcheckerLanguages() || [])
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", e => __AppController.appController.getTabControllerForWebContents(e.sender)?.getAvailableSpellcheckerLanguages() || [])
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerLanguages(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerEnabled(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:replace-misspelling", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.replaceMisspelling(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:add-to-dictionary", (e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.addToDictionary(t)
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-substitutions", e => {
+                    if (!electron.systemPreferences.getUserDefault) return {value: []};
+                    const t = electron.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
                     return t ? {value: t} : {value: []}
-                })), b.handleEventFromRenderer.addListener("notion:navigation-meta-click", ((e, t) => {
-                    const r = f.appController.getWindowControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:navigation-meta-click", (e, t) => {
+                    const r = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     "back" === t ? r?.handleBackMetaClick() : r?.handleForwardMetaClick()
-                })), b.handleEventFromRenderer.addListener("notion:go-back", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goBack()
-                })), b.handleEventFromRenderer.addListener("notion:go-forward", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goForward()
-                })), b.handleEventFromRenderer.addListener("notion:show-tab-history-menu", ((e, t, r, n) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.showTabHistoryMenu({
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:go-back", e => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goBack()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:go-forward", e => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goForward()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-history-menu", (e, t, r, n) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.showTabHistoryMenu({
                         direction: t,
                         clientX: r,
                         clientY: n
                     })
-                })), b.handleEventFromRenderer.addListener("notion:create-window", ((e, t) => {
-                    f.appController.newWindow({initialUrl: t})
-                })), b.handleEventFromRenderer.addListener("notion:create-popup", ((e, t) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-window", (e, t) => {
+                    __AppController.appController.newWindow({initialUrl: t})
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-popup", (e, t) => {
                     (0, g.createPopup)(t)
-                })), b.handleEventFromRenderer.addListener("notion:create-google-drive-picker", ((e, t) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-google-drive-picker", (e, t) => {
                     (0, m.createGoogleDrivePicker)(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-window-title", ((e, t) => {
-                    const r = f.appController.getTabControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-window-title", (e, t) => {
+                    const r = __AppController.appController.getTabControllerForWebContents(e.sender);
                     r && r.setPageTitle(t.title)
-                })), b.handleEventFromRenderer.addListener("notion:set-badge", ((e, t) => {
-                    if (_.Store.dispatch((0, y.updateNotificationCount)(c.toNumber(t.badgeString))), s.app.dock) return void s.app.dock.setBadge(t.badgeString);
-                    const r = s.BrowserWindow.fromWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-badge", (e, t) => {
+                    if (_.Store.dispatch((0, y.updateNotificationCount)(lodash_1.toNumber(t.badgeString))), electron.app.dock) return void electron.app.dock.setBadge(t.badgeString);
+                    const r = electron.BrowserWindow.fromWebContents(e.sender);
                     if (!r) return;
                     if (!r.setOverlayIcon) return;
                     if ("" === t.badgeString || null === t.badgeImageDataUrl) return void r.setOverlayIcon(null, "");
-                    const n = s.nativeImage.createFromDataURL(t.badgeImageDataUrl).toPNG(),
-                        o = s.nativeImage.createFromBuffer(n, {scaleFactor: t.devicePixelRatio});
+                    const n = electron.nativeImage.createFromDataURL(t.badgeImageDataUrl).toPNG(),
+                        o = electron.nativeImage.createFromBuffer(n, {scaleFactor: t.devicePixelRatio});
                     r.setOverlayIcon(o, `${t.badgeString} unread notifications`)
-                })), b.handleEventFromRenderer.addListener("notion:clear-browser-history", (e => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:clear-browser-history", e => {
                     e.sender.clearHistory()
-                })), b.handleEventFromRenderer.addListener("notion:open-app-menu", (e => {
-                    s.Menu.getApplicationMenu()?.popup({x: 8, y: 8})
-                })), b.handleEventFromRenderer.addListener("notion:open-dev-tools", (e => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-app-menu", e => {
+                    electron.Menu.getApplicationMenu()?.popup({x: 8, y: 8})
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-dev-tools", e => {
                     e.sender.openDevTools()
-                })), b.handleEventFromRenderer.addListener("notion:download-url", ((e, t) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:download-url", (e, t) => {
                     e.sender.downloadURL(t.url)
-                })), b.handleEventFromRenderer.addListener("notion:open-external-url", ((e, t) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-external-url", (e, t) => {
                     const {url: r} = t;
-                    d.sanitizeUrlStrict(r) && s.shell.openExternal(r)
-                })), b.handleRequestFromRenderer.addListener("notion:ready", (e => Promise.resolve({value: void 0}))), b.handleEventFromRenderer.addListener("notion:alt-key-down", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
+                    d.sanitizeUrlStrict(r) && electron.shell.openExternal(r)
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:ready", e => Promise.resolve({value: void 0}))
+                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-down", e => {
+                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     t && "win32" === process.platform && (_.Store.getState().app.preferences.isUnifiedTitleBarEnabled ? t.setShouldShowAppMenuFromAltKey(!0) : t.maybeAddWindowsMenuBarSpacing())
-                })), b.handleEventFromRenderer.addListener("notion:alt-key-up", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-up", e => {
+                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     "win32" === process.platform && _.Store.getState().app.preferences.isUnifiedTitleBarEnabled && t && (t.toggleAppMenuPopup(), t.setShouldShowAppMenuFromAltKey(!1))
-                })), b.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", e => {
+                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     t?.setShouldShowAppMenuFromAltKey(!1)
-                })), b.handleEventFromRenderer.addListener("notion:broadcast", ((e, t) => {
-                    const r = s.BrowserWindow.fromWebContents(e.sender);
-                    r && s.BrowserWindow.getAllWindows().forEach((e => {
-                        r.id !== e.id && f.appController.getWindowControllerForWebContents(e.webContents)?.getActiveTabController()?.broadcast(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:broadcast", (e, t) => {
+                    const r = electron.BrowserWindow.fromWebContents(e.sender);
+                    r && electron.BrowserWindow.getAllWindows().forEach((e => {
+                        r.id !== e.id && __AppController.appController.getWindowControllerForWebContents(e.webContents)?.getActiveTabController()?.broadcast(t)
                     }))
-                })), b.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", (async (e, t) => (0, v.getIsProtocolRegistered)(t))), b.handleEventFromRenderer.addListener("notion:set-is-media-active", ((e, t) => {
-                    f.appController.updateMediaIndicator(e.sender, t)
-                }))
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", async (e, t) => (0, v.getIsProtocolRegistered)(t))
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-is-media-active", (e, t) => {
+                    __AppController.appController.updateMediaIndicator(e.sender, t)
+                })
             }
         },
-        15425: function (e, t, r) {
+
+        // isNavigationAllowed 设置页面导航规则
+        15425: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSecurity = t.isNavigationAllowed = void 0;
-            const o = r(4482), a = n(r(47419)), i = n(r(11239)), s = r(13387), l = r(49248),
-                c = `${i.default.protocol}:`, u = i.default.domainBaseUrl, d = u.replace(/\.so$/, ".com"), p = [u, d],
-                h = new URL(u).host,
-                f = ["https://accounts.google.com", "https://app.asana.com", "https://trello.com", "https://www.evernote.com", "https://slack.com", "https://login.microsoftonline.com", "https://connect.wustl.edu"],
-                m = [".okta.com", ".onelogin.com", ".jumpcloud.com", ".slack.com"],
-                g = [/^https:\/\/www\.google\.com\/accounts\//],
-                b = [/^http(s?):\/\/[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.slack\.com\/(archives|huddle)\//];
-            if (o.app.isPackaged) b.push(/^http:\/\//); else {
-                const e = i.default.domainName.replace(/:.*/, "");
-                g.push(new RegExp(`^http://${e}`)), g.push(/^http:\/\/localhost/)
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                electron_log = n(__require(47419)),
+                __config = n(__require(11239)),
+                s = __require(13387),
+                l = __require(49248),
+                c = `${__config.default.protocol}:`,
+                domainBaseUrl = __config.default.domainBaseUrl,
+                domainBaseUrl2 = domainBaseUrl.replace(/\.so$/, ".com"),
+                domainBaseUrlArray = [domainBaseUrl, domainBaseUrl2],
+                domainBaseHost = new URL(domainBaseUrl).host,
+                allowedOrigins = [
+                    "https://accounts.google.com",
+                    "https://app.asana.com",
+                    "https://trello.com",
+                    "https://www.evernote.com",
+                    "https://slack.com",
+                    "https://login.microsoftonline.com",
+                    "https://connect.wustl.edu"
+                ],
+                allowedSuffix = [".okta.com", ".onelogin.com", ".jumpcloud.com", ".slack.com"],
+                allowedHrefRE = [/^https:\/\/www\.google\.com\/accounts\//],
+                forbiddenHrefRE = [/^http(s?):\/\/[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.slack\.com\/(archives|huddle)\//];
+
+            if (electron.app.isPackaged) {
+                forbiddenHrefRE.push(/^http:\/\//);
+            } else {
+                const e = __config.default.domainName.replace(/:.*/, "");
+                allowedHrefRE.push(new RegExp(`^http://${e}`))
+                allowedHrefRE.push(/^http:\/\/localhost/)
             }
 
-            function v(e) {
-                const {protocol: t, origin: r, href: n, host: o} = e;
-                if (h === o || p.includes(r)) return !0;
-                let i = !1;
-                return f.includes(r) && (i = !0), m.find((e => "https:" === t && r.endsWith(e))) && (i = !0), g.find((e => e.test(n))) && (i = !0), b.find((e => e.test(n))) && (i = !1), a.default.silly(`Navigation to ${n} is ${i ? "allowed" : "disallowed"}`), i
+            function isNavigationAllowed(url) {
+                const {protocol, origin, href, host} = url;
+                if (domainBaseHost === host || domainBaseUrlArray.includes(origin)) {
+                    return true
+                }
+
+                let isAllowed = false;
+
+                allowedOrigins.includes(origin) && (isAllowed = true)
+                allowedSuffix.find((e => "https:" === protocol && origin.endsWith(e))) && (isAllowed = true)
+                allowedHrefRE.find((e => e.test(href))) && (isAllowed = true)
+                forbiddenHrefRE.find((e => e.test(href))) && (isAllowed = false)
+
+                electron_log.default.silly(`Navigation to ${href} is ${isAllowed ? "allowed" : "disallowed"}`)
+                return isAllowed
             }
 
-            t.isNavigationAllowed = v, t.setupSecurity = function () {
-                const e = o.session.fromPartition(s.electronSessionPartition);
-                e.setPermissionRequestHandler(((e, t, r, n) => {
+            exports.isNavigationAllowed = isNavigationAllowed
+            exports.setupSecurity = function () {
+                const session = electron.session.fromPartition(s.electronSessionPartition);
+                session.setPermissionRequestHandler((e, t, r, n) => {
                     const o = n.requestingUrl, {protocol: a} = new URL(o);
                     r(a === c)
-                })), "darwin" === process.platform && e.on("will-download", ((e, t, r) => {
-                    t.once("done", ((e, r) => {
-                        "completed" === r && (0, l.setQuarantine)(t.getSavePath())
-                    }))
-                }))
-            }, o.app.on("web-contents-created", ((e, t) => {
-                t.on("will-navigate", ((e, t, r, n) => {
-                    const a = new URL(t), {protocol: i} = a;
-                    n && !v(a) && (e.preventDefault(), "https:" !== i && "http:" !== i || o.shell.openExternal(t))
-                })), t.on("will-redirect", ((e, t, r, n) => {
-                    const o = new URL(t);
-                    n && !v(o) && e.preventDefault()
-                })), t.on("will-prevent-unload", (e => {
-                    e.preventDefault()
-                }))
-            }))
-        },
-        56116: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
+                })
+                if ("darwin" === process.platform) {
+                    session.on("will-download", (e, t, r) => {
+                        t.once("done", (e, r) => {
+                            "completed" === r && (0, l.setQuarantine)(t.getSavePath())
+                        })
+                    })
+                }
+            }
+
+            electron.app.on("web-contents-created", (event, webContents) => {
+                webContents.on("will-navigate", (event, path, isInPlace, isMainFrame) => {
+                    const url = new URL(path), {protocol} = url;
+                    if (isMainFrame && !isNavigationAllowed(url)) {
+                        event.preventDefault()
+                        "https:" !== protocol && "http:" !== protocol || electron.shell.openExternal(path)
                     }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.capture = t.captureMessage = t.initialize = void 0;
-            const s = a(r(66130)), l = i(r(11239)), c = r(94774);
-            t.initialize = function (e) {
-                "local" !== l.default.env && (s.init({
-                    dsn: "https://66b2079e34884cb5808c0b1fea463206@o324374.ingest.sentry.io/5701708",
-                    environment: l.default.env,
-                    release: e.getVersion()
-                }), s.configureScope((e => {
-                    e.setExtra("assetJsVersionAtLaunchTime", c.assetCache.version)
-                })))
-            }, t.captureMessage = function (e) {
-                "local" !== l.default.env && s.captureMessage(e, {extra: {assetsJsVersionAtErrorTime: c.assetCache.version}})
-            }, t.capture = function (e) {
-                "local" !== l.default.env && s.captureException(e, {extra: {assetsJsVersionAtErrorTime: c.assetCache.version}})
+                })
+                webContents.on("will-redirect", (evt, url, isInPlace, isMainFrame) => {
+                    const o = new URL(url);
+                    if (isMainFrame && !isNavigationAllowed(o)) {
+                        evt.preventDefault()
+                    }
+                })
+                webContents.on("will-prevent-unload", evt => {
+                    evt.preventDefault()
+                })
+            })
+        },
+
+        // sentry
+        56116: function (module, exports, __require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __sentry = a(__require(66130)),
+                __config = i(__require(11239)),
+                __assetCache = __require(94774);
+
+            exports.initialize = function (app) {
+                if ("local" !== __config.default.env) {
+                    __sentry.init({
+                        dsn: "https://66b2079e34884cb5808c0b1fea463206@o324374.ingest.sentry.io/5701708",
+                        environment: __config.default.env,
+                        release: app.getVersion()
+                    })
+                    __sentry.configureScope(scope => {
+                        scope.setExtra("assetJsVersionAtLaunchTime", __assetCache.assetCache.version)
+                    })
+                }
+            }
+            exports.captureMessage = function (message) {
+                if ("local" !== __config.default.env) {
+                    __sentry.captureMessage(message, {
+                        extra: {
+                            assetsJsVersionAtErrorTime: __assetCache.assetCache.version
+                        }
+                    })
+                }
+            }
+            exports.capture = function (exception) {
+                if ("local" !== __config.default.env) {
+                    __sentry.captureException(exception, {
+                        extra: {
+                            assetsJsVersionAtErrorTime: __assetCache.assetCache.version
+                        }
+                    })
+                }
             }
         },
-        13387: (e, t, r) => {
+        // session 下载进度展示
+        13387: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSessionListeners = t.getSession = t.electronSessionPartition = void 0;
-            const n = r(4482), o = r(21852);
-            let a;
-            t.electronSessionPartition = "persist:notion", t.getSession = function () {
-                return a || (a = n.session.fromPartition(t.electronSessionPartition)), a
-            }, t.setupSessionListeners = function () {
-                !function (e) {
-                    const t = new Set;
-                    let r = 0, a = 0, i = 0;
-                    e.addListener("will-download", ((e, s, l) => {
-                        const c = o.appController.getWindowControllerForWebContents(l)?.browserWindow;
-                        t.add(s), i += s.getTotalBytes(), s.on("updated", ((e, n) => {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                __AppController = __require(21852);
+
+            let _session;
+            exports.electronSessionPartition = "persist:notion"
+            exports.getSession = function () {
+                if (!_session) {
+                    _session = electron.session.fromPartition(exports.electronSessionPartition)
+                }
+                return _session
+            }
+            exports.setupSessionListeners = function () {
+                !function (session) {
+                    const set = new Set()
+                    let r = 0, downloadedBytes = 0, totalBytes = 0;
+                    session.addListener("will-download", (evt, item, webContents) => {
+                        const win = __AppController.appController.getWindowControllerForWebContents(webContents)?.browserWindow;
+                        set.add(item)
+                        totalBytes += item.getTotalBytes()
+                        item.on("updated", (event, state) => {
                             (() => {
-                                r = a;
-                                for (const e of t) r += e.getReceivedBytes()
-                            })(), c?.setProgressBar(r / i)
-                        })), s.on("done", ((e, o) => {
-                            a += s.getTotalBytes(), t.delete(s), c?.isDestroyed() || 0 !== t.size || (c?.setProgressBar(-1), r = 0, a = 0, i = 0), "completed" === o && "darwin" === process.platform && n.app.dock.downloadFinished(s.getSavePath())
-                        }))
-                    }))
-                }(n.session.fromPartition(t.electronSessionPartition))
+                                r = downloadedBytes;
+                                for (const item of set) {
+                                    r += item.getReceivedBytes()
+                                }
+                            })()
+                            win?.setProgressBar(r / totalBytes)
+                        })
+                        item.on("done", (event, state) => {
+                            downloadedBytes += item.getTotalBytes()
+                            set.delete(item)
+                            if (!win?.isDestroyed() && 0 === set.size) {
+                                win?.setProgressBar(-1)
+                                r = 0
+                                downloadedBytes = 0
+                                totalBytes = 0
+                            }
+                            if ("completed" === state && "darwin" === process.platform) {
+                                electron.app.dock.downloadFinished(item.getSavePath())
+                            }
+                        })
+                    })
+                }(electron.session.fromPartition(exports.electronSessionPartition))
             }
         },
-        34516: function (e, t, r) {
+
+        // setupSqliteServer
+        34516: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSqliteServer = void 0;
-            const s = i(r(76982)), l = i(r(16928)), c = r(4482), u = i(r(47419)), d = i(r(51359)), p = a(r(10454)),
-                h = a(r(56116));
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = i(__require(76982)),
+                l = i(__require(16928)),
+                electron = __require(4482),
+                electron_log = i(__require(47419)),
+                d = i(__require(51359)),
+                p = a(__require(10454)),
+                h = a(__require(56116));
+
             let f, m, g;
-            const b = u.default.scope("Sqlite");
-            t.setupSqliteServer = async function () {
-                m ? b.error("Tried to start SqliteServer but Sqlite child process is already running") : (f = s.default.randomBytes(20).toString("hex"), g = await (0, d.default)({host: "127.0.0.1"}), m = function () {
+            const logger = electron_log.default.scope("Sqlite");
+
+            exports.setupSqliteServer = async function () {
+                m ? logger.error("Tried to start SqliteServer but Sqlite child process is already running") : (f = s.default.randomBytes(20).toString("hex"), g = await (0, d.default)({host: "127.0.0.1"}), m = function () {
                     if (!g) throw new Error("No process port assigned.");
-                    const e = c.app.getPath("userData"), t = l.default.join(__dirname, "./SqliteServer.js");
-                    return m = c.utilityProcess.fork(t, [e, g.toString(), f], {
+                    const e = electron.app.getPath("userData"), t = l.default.join(__dirname, "./SqliteServer.js");
+                    return m = electron.utilityProcess.fork(t, [e, g.toString(), f], {
                         serviceName: "Sqlite Server",
                         stdio: ["ignore", "pipe", "pipe"]
                     }), m.on("exit", (e => {
-                        0 !== e && b.warn("Process unexpectedly closed", {code: e})
+                        0 !== e && logger.warn("Process unexpectedly closed", {code: e})
                     })), m.stderr?.on("data", (e => {
-                        h.captureMessage(e.toString()), b.info(`stderr: ${e}`)
+                        h.captureMessage(e.toString()), logger.info(`stderr: ${e}`)
                     })), m.stdout?.on("data", (e => {
-                        h.captureMessage(e.toString()), b.info(`stdout: ${e}`)
+                        h.captureMessage(e.toString()), logger.info(`stdout: ${e}`)
                     })), m
                 }(), p.handleRequestFromRenderer.addListener("notion:get-sqlite-meta", (e => {
                     if (!g) throw new Error("Port not yet assigned, should not be possible.");
                     return {value: {serverProcessPort: g, authToken: f}}
-                })), c.app.on("before-quit", (() => {
-                    b.info("Killing child process"), m?.kill()
-                })), b.info(`Child process running on ${g}`))
+                })), electron.app.on("before-quit", (() => {
+                    logger.info("Killing child process"), m?.kill()
+                })), logger.info(`Child process running on ${g}`))
             }
         },
 
@@ -5058,7 +5568,7 @@
 
 
             const __reduxToolkit = __require(6354),
-                l = __importStar(__require(6600)),
+                lodash_1 = __importStar(__require(6600)),
                 c = __importDefault(__require(80637)),
                 __appSlice = __require(73553),
                 __historySlice = __require(28192),
@@ -5089,7 +5599,7 @@
                 return rootState.windows[windowId]
             }
             exports.selectFocusedWindowDisplayState = function (rootState) {
-                const t = l.maxBy(Object.values(rootState.windows), (e => e.focusOrder));
+                const t = lodash_1.maxBy(Object.values(rootState.windows), (e => e.focusOrder));
                 return t?.displayState
             }
             exports.selectAppVisibilityBaseOnRenderers = function (rootState) {
@@ -5097,7 +5607,7 @@
             }
             exports.selectTabState = selectTabState
             exports.selectTabStates = function (rootState, t) {
-                return l.compact(t.map((t => rootState.tabs[t])))
+                return lodash_1.compact(t.map((t => rootState.tabs[t])))
             }
             exports.selectTabSearchingState = function (e, t) {
                 return selectTabState(e, t)?.searching
@@ -5126,7 +5636,10 @@
                 if (options) {
                     let leading = void 0 === options.leading || options.leading
                     let trailing = void 0 === options.trailing || options.trailing
-                    let throttledListener = l.throttle(listener, options.wait, {leading: leading, trailing: trailing})
+                    let throttledListener = lodash_1.throttle(listener, options.wait, {
+                        leading: leading,
+                        trailing: trailing
+                    })
                     let unsubscribe = exports.Store.subscribe(throttledListener);
                     return () => {
                         trailing
@@ -5262,7 +5775,7 @@
 
             const crypto = s(__require(76982)),
                 c = __require(6354),
-                u = i(__require(6600));
+                lodash_1 = i(__require(6600));
 
             exports.createWindowId = function () {
                 return crypto.default.randomUUID()
@@ -5320,7 +5833,7 @@
                         state[action.payload.windowId].isVisible = action.payload.isVisible
                     },
                     focusWindow(state, action) {
-                        const r = u.max(Object.values(state).map((e => e.focusOrder))) || 0;
+                        const r = lodash_1.max(Object.values(state).map((e => e.focusOrder))) || 0;
                         state[action.payload.windowId].focusOrder = r + 1
                     },
                     removeWindowState(state, action) {
@@ -5358,18 +5871,24 @@
             exports.setShouldShowAppMenuFromAlt = actions.setShouldShowAppMenuFromAlt
         },
 
-        30506: function (e, t, r) {
+        // appStatePersister
+        30506: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.appStatePersister = void 0;
-            const o = n(r(9245));
-            t.appStatePersister = new o.default({name: "state"})
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = n(__require(9245));
+
+            exports.appStatePersister = new o.default({name: "state"})
         },
-        50833: function (e, t, r) {
+        // setupSystemMenu
+        50833: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -5380,21 +5899,37 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSystemMenu = void 0;
-            const s = r(4482), l = r(36343), c = i(r(11239)), u = r(21852), d = r(94774), p = r(43579), h = r(83789),
-                f = r(73553), m = r(69340), g = a(r(48021)), b = a(r(98441)), v = (0, l.defineMessages)({
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.setupSystemMenu = void 0;
+
+            const electron = __require(4482),
+                l = __require(36343),
+                c = i(__require(11239)),
+                u = __require(21852),
+                d = __require(94774),
+                p = __require(43579),
+                h = __require(83789),
+                f = __require(73553),
+                m = __require(69340),
+                g = a(__require(48021)),
+                b = a(__require(98441)),
+                v = l.defineMessages({
                     fileMenuTitle: {id: "desktopTopbar.fileMenu.title", defaultMessage: "File"},
                     editMenuTitle: {id: "desktopTopbar.editMenu.title", defaultMessage: "Edit"},
                     viewMenuTitle: {id: "desktopTopbar.viewMenu.title", defaultMessage: "View"},
@@ -5644,8 +6179,10 @@
                 }))
             }
 
-            function w() {
-                const e = "darwin" === process.platform, t = u.appController.intl, r = function (e) {
+            function setupSystemMenu() {
+                const isDarwin = "darwin" === process.platform,
+                    t = u.appController.intl,
+                    r = function (e) {
                     const t = function (e) {
                         const t = [];
                         return t.push({
@@ -5691,16 +6228,18 @@
                         label: e.formatMessage(v.fileMenuTitle),
                         submenu: "darwin" === process.platform ? t : _(t, e)
                     }
-                }(t), n = [{role: "undo", label: t.formatMessage(v.undo)}, {
+                }(t),
+                    n = [{role: "undo", label: t.formatMessage(v.undo)}, {
                     role: "redo",
                     label: t.formatMessage(v.redo)
                 }, {type: "separator"}, {role: "cut", label: t.formatMessage(v.cut)}, {
                     role: "copy",
                     label: t.formatMessage(v.copy)
-                }, {role: "paste", label: t.formatMessage(v.paste)}], o = {
+                }, {role: "paste", label: t.formatMessage(v.paste)}],
+                    o = {
                     role: "editMenu",
                     label: t.formatMessage(v.editMenuTitle),
-                    submenu: e ? [...n, {
+                    submenu: isDarwin ? [...n, {
                         role: "pasteAndMatchStyle",
                         label: t.formatMessage(v.pasteAndMatchStyle)
                     }, {
@@ -5713,7 +6252,8 @@
                             label: t.formatMessage(v.startSpeaking)
                         }, {role: "stopSpeaking", label: t.formatMessage(v.stopSpeaking)}]
                     }] : [...n, {type: "separator"}, {role: "selectAll", label: t.formatMessage(v.selectAll)}]
-                }, a = {
+                },
+                    a = {
                     role: "viewMenu",
                     label: t.formatMessage(v.viewMenuTitle),
                     submenu: [{
@@ -5728,7 +6268,7 @@
                         }
                     }, {
                         label: t.formatMessage(v.toggleDevTools),
-                        accelerator: e ? "Alt+Command+I" : "Ctrl+Shift+I",
+                        accelerator: isDarwin ? "Alt+Command+I" : "Ctrl+Shift+I",
                         click() {
                             const e = u.appController.getFocusedWindowController()?.getActiveTabController();
                             e && e.toggleDevTools()
@@ -5760,7 +6300,8 @@
                             u.appController.resetZoom()
                         }
                     }, {role: "togglefullscreen", label: t.formatMessage(v.togglefullscreen)}]
-                }, i = {
+                },
+                    i = {
                     label: t.formatMessage(v.historyMenuTitle),
                     submenu: [{
                         accelerator: "CmdOrCtrl+[", label: t.formatMessage(v.historyBack), click() {
@@ -5771,10 +6312,11 @@
                             u.appController.getFocusedWindowController()?.getActiveTabController()?.goForward()
                         }
                     }]
-                }, l = {
+                },
+                    l = {
                     role: "windowMenu",
                     label: t.formatMessage(v.windowMenuTitle),
-                    submenu: e ? [{role: "minimize", label: t.formatMessage(v.minimize)}, {
+                    submenu: isDarwin ? [{role: "minimize", label: t.formatMessage(v.minimize)}, {
                         role: "zoom",
                         label: t.formatMessage(v.zoom)
                     }, {type: "separator"}, {
@@ -5803,7 +6345,8 @@
                             t && (t.isMaximized() ? t.unmaximize() : t.maximize())
                         }
                     }, ...T()]
-                }, w = function (e) {
+                },
+                    w = function (e) {
                     const {isHardwareAccelerationDisabled: t, logLevel: r} = m.Store.getState().app.preferences, n = {
                         role: "help", label: e.formatMessage(v.helpTitle), submenu: [{
                             label: e.formatMessage(v.troubleshootingTitle),
@@ -5818,7 +6361,7 @@
                                 }
                             }, {
                                 label: e.formatMessage(v.recordPerformanceTrace), async click(t, r) {
-                                    const {response: n} = await s.dialog.showMessageBox({
+                                    const {response: n} = await electron.dialog.showMessageBox({
                                         title: e.formatMessage(v.recordPerformanceTraceConfirmTitle),
                                         type: "question",
                                         textWidth: 300,
@@ -5830,15 +6373,15 @@
                             }, {type: "separator"}, {
                                 label: e.formatMessage(t ? v.enableHardwareAcceleration : v.disableHardwareAcceleration),
                                 click() {
-                                    m.Store.dispatch((0, f.updatePreferences)({isHardwareAccelerationDisabled: !t})), s.app.relaunch(), process.nextTick((() => {
-                                        s.app.quit()
+                                    m.Store.dispatch((0, f.updatePreferences)({isHardwareAccelerationDisabled: !t})), electron.app.relaunch(), process.nextTick((() => {
+                                        electron.app.quit()
                                     }))
                                 }
                             }, {
                                 label: e.formatMessage("debug" === r ? v.disableDebugLogging : v.enableDebugLogging),
                                 click() {
-                                    m.Store.dispatch((0, f.updatePreferences)({logLevel: "debug" === r ? "info" : "debug"})), s.app.relaunch(), process.nextTick((() => {
-                                        s.app.quit()
+                                    m.Store.dispatch((0, f.updatePreferences)({logLevel: "debug" === r ? "info" : "debug"})), electron.app.relaunch(), process.nextTick((() => {
+                                        electron.app.quit()
                                     }))
                                 }
                             }, {type: "separator"}, {
@@ -5847,12 +6390,12 @@
                             }]
                         }, {type: "separator"}, {
                             label: e.formatMessage(v.help), click() {
-                                s.shell.openExternal(`${c.default.domainBaseUrl}/help`)
+                                electron.shell.openExternal(`${c.default.domainBaseUrl}/help`)
                             }
                         }, {
                             label: "darwin" === process.platform ? e.formatMessage(v.whatsNewMacTitle) : e.formatMessage(v.whatsNewWindowsTitle),
                             click() {
-                                s.shell.openExternal(`${c.default.domainBaseUrl}/desktop/whats-new`)
+                                electron.shell.openExternal(`${c.default.domainBaseUrl}/desktop/whats-new`)
                             }
                         }]
                     };
@@ -5860,7 +6403,8 @@
                         role: "about",
                         label: e.formatMessage(v.about)
                     }, {type: "separator"}), n
-                }(t), S = {
+                }(t),
+                    S = {
                     role: "appMenu",
                     submenu: [{
                         role: "about",
@@ -5883,15 +6427,18 @@
                             u.appController.handleQuitWithoutSavingTabs()
                         }
                     }, {role: "quit", label: t.formatMessage(v.quitMac)}]
-                }, C = [r, o, a, i, l, w];
-                e && C.unshift(S), (0, h.shouldShowDebugMenu)() && C.push((0, h.getDebugMenu)());
-                const O = s.Menu.buildFromTemplate(y(C));
-                if (s.Menu.setApplicationMenu(O), e) {
-                    const e = s.Menu.buildFromTemplate([{
+                },
+                    C = [r, o, a, i, l, w];
+                isDarwin && C.unshift(S)
+                h.shouldShowDebugMenu() && C.push(h.getDebugMenu());
+                const menu = electron.Menu.buildFromTemplate(y(C));
+                electron.Menu.setApplicationMenu(menu)
+                if (isDarwin) {
+                    const menu = electron.Menu.buildFromTemplate([{
                         label: t.formatMessage(v.newWindow),
                         click: () => u.appController.newWindow({})
                     }]);
-                    s.app.dock.setMenu(e)
+                    electron.app.dock.setMenu(menu)
                 }
             }
 
@@ -5973,11 +6520,11 @@
                         let t = "", r = "";
                         try {
                             const n = await (0, p.checkForUpdate)();
-                            t = n.downloadPromise ? e.formatMessage(v.updateAvailable) : e.formatMessage(v.noUpdateAvailable), r = `${s.app.getVersion()} → ${n.updateInfo.version}`
+                            t = n.downloadPromise ? e.formatMessage(v.updateAvailable) : e.formatMessage(v.noUpdateAvailable), r = `${electron.app.getVersion()} → ${n.updateInfo.version}`
                         } catch (n) {
                             t = e.formatMessage(v.updateCheckFailed), r += `\n${n}`
                         }
-                        w(), s.dialog.showMessageBox({
+                        setupSystemMenu(), electron.dialog.showMessageBox({
                             title: e.formatMessage(v.checkForUpdateMessageTitle),
                             message: t,
                             detail: r
@@ -5986,46 +6533,61 @@
                 }
             }
 
-            t.setupSystemMenu = w
+            exports.setupSystemMenu = setupSystemMenu
         },
-        48021: function (e, t, r) {
+        // recordTraceAndPackage
+        48021: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.recordTraceAndPackage = void 0;
-            const s = r(4482), l = i(r(47419)), c = r(40041), u = i(r(80115)), d = i(r(11239)), p = i(r(4928)),
-                h = a(r(21852)), f = a(r(98441)), m = {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                electron_log = i(__require(47419)),
+                c = __require(40041),
+                u = i(__require(80115)),
+                d = i(__require(11239)),
+                p = i(__require(4928)),
+                h = a(__require(21852)),
+                f = a(__require(98441)),
+                m = {
                     seconds: 30,
                     includedCategories: ["electron", "ipc", "input", "navigation", "loading", "accessibility", "disabled-by-default-network", "disabled-by-default-net", "networkinfo", "devtools.timeline", "disabled-by-default-devtools.timeline", "disabled-by-default-devtools.timeline.frame", "disabled-by-default-devtools.timeline.stack", "v8.execute", "blink.console", "blink.user_timing", "latencyInfo", "disabled-by-default-v8.cpu_profiler", "disabled-by-default-v8.cpu_profiler.hires"]
                 };
-            t.recordTraceAndPackage = async function (e, t = m) {
-                const r = `${s.app.getName()}-profile-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
-                    n = `${s.app.getPath("downloads")}/${r}`, o = {...m, ...t}, a = await async function (e, t) {
-                        if (!s.app.isReady()) return l.default.error("recordTrace() called before app was ready"), null;
+
+            exports.recordTraceAndPackage = async function (e, t = m) {
+                const r = `${electron.app.getName()}-profile-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
+                    n = `${electron.app.getPath("downloads")}/${r}`, o = {...m, ...t}, a = await async function (e, t) {
+                        if (!electron.app.isReady()) return electron_log.default.error("recordTrace() called before app was ready"), null;
                         const r = h.appController.getWindowControllerForWebContents(e?.webContents)?.getActiveTabController()?.getProcessIds(),
                             n = process.pid, o = r ? [n, ...r] : void 0;
-                        l.default.info(`Recording trace for pids ${o?.join(", ") || "all"} for ${t.seconds} seconds`), await s.contentTracing.startRecording({
+                        electron_log.default.info(`Recording trace for pids ${o?.join(", ") || "all"} for ${t.seconds} seconds`), await electron.contentTracing.startRecording({
                             recording_mode: "record-until-full",
                             included_categories: t.includedCategories,
                             excluded_categories: ["*"],
@@ -6041,8 +6603,8 @@
                             };
                             r()
                         }(e, t), await new Promise((e => setTimeout(e, 1e3 * t.seconds)));
-                        const a = await s.contentTracing.stopRecording();
-                        return l.default.info(`Recorded trace to ${a}`), a
+                        const a = await electron.contentTracing.stopRecording();
+                        return electron_log.default.info(`Recorded trace to ${a}`), a
                     }(e, o);
                 if (!a) return;
                 const i = await async function (e) {
@@ -6050,24 +6612,32 @@
                         const t = (await u.default.readFile(e, "utf-8")).replaceAll(`${d.default.protocol}://`, "https://");
                         return await u.default.remove(e), t
                     } catch (e) {
-                        l.default.error("Tried to fix up trace but failed", e)
+                        electron_log.default.error("Tried to fix up trace but failed", e)
                     }
                     return null
                 }(a);
                 if (!i) return;
                 const g = await f.getAuxiliaryInfo(), b = await (0, p.default)({"trace.json": (0, c.strToU8)(i), ...g});
                 try {
-                    await u.default.writeFile(n, b), s.shell.showItemInFolder(n)
+                    await u.default.writeFile(n, b), electron.shell.showItemInFolder(n)
                 } catch (e) {
-                    l.default.error("recordTraceAndPackage(): Failed to write zip file", e)
+                    electron_log.default.error("recordTraceAndPackage(): Failed to write zip file", e)
                 }
             }
         },
-        63374: (e, t, r) => {
+        // buildTrayMenuTemplate
+        63374: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.buildTrayMenuTemplate = void 0;
-            const n = r(4482), o = r(36343), a = r(21852), i = r(73553), s = r(14473), l = r(69340),
-                c = (0, o.defineMessages)({
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __require(4482),
+                o = __require(36343),
+                a = __require(21852),
+                i = __require(73553),
+                s = __require(14473),
+                l = __require(69340),
+                c = o.defineMessages({
                     showNotionInMenuBar: {
                         id: "menuBarIcon.menu.showNotionInMenuBar",
                         defaultMessage: "Show Notion in menu bar",
@@ -6113,8 +6683,13 @@
                         defaultMessage: "Quit Notion",
                         description: "Menu item (when right clicking the icon in the top left) to quit the Notion app"
                     }
-                }), u = "open-on-login", d = "enable-quick-search", p = "keep-in-background", h = "show-immediately";
-            t.buildTrayMenuTemplate = function () {
+                }),
+                u = "open-on-login",
+                d = "enable-quick-search",
+                p = "keep-in-background",
+                h = "show-immediately";
+
+            exports.buildTrayMenuTemplate = function () {
                 const e = a.appController.intl, t = l.Store.getState().app.preferences, r = function (e, t) {
                     const {isQuickSearchEnabled: r, quickSearchShortcut: n} = t;
                     return r ? [{
@@ -6128,7 +6703,7 @@
                     }, {type: "separator"}] : []
                 }(e, t), o = [...r, {
                     label: e.formatMessage(c.quitNotion), click() {
-                        n.app.quit()
+                        electron.app.quit()
                     }
                 }];
                 return "win32" === process.platform ? o.splice(r.length, 0, function (e, t) {
@@ -6170,35 +6745,51 @@
                 }(e)), o
             }
         },
-        98441: function (e, t, r) {
+        98441: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.deleteLocalData = t.maybeDisableHardwareAcceleration = t.getAuxiliaryInfo = t.showLogsInShell = void 0;
-            const s = i(r(70857)), l = i(r(16928)), c = r(4482), u = i(r(47419)), d = r(40041), p = a(r(80115)),
-                h = r(36343), f = i(r(4928)), m = a(r(21852)), g = r(87309), b = r(13387), v = r(69340),
-                y = (0, h.defineMessages)({
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __os = i(__require(70857)),
+                l = i(__require(16928)),
+                electron = __require(4482),
+                electron_log = i(__require(47419)),
+                d = __require(40041),
+                p = a(__require(80115)),
+                h = __require(36343),
+                f = i(__require(4928)),
+                m = a(__require(21852)),
+                g = __require(87309),
+                b = __require(13387),
+                v = __require(69340),
+                y = h.defineMessages({
                     logsInShellFailedTitle: {
                         id: "desktopTroubleshooting.showLogs.error.title",
                         defaultMessage: "Showing the logs failed",
@@ -6216,163 +6807,99 @@
                     }
                 });
 
-            async function w() {
-                const e = JSON.stringify(c.app.getAppMetrics(), void 0, 2),
-                    t = JSON.stringify([c.app.getGPUFeatureStatus(), await c.app.getGPUInfo("complete")], void 0, 2),
+            async function getAuxiliaryInfo() {
+                const e = JSON.stringify(electron.app.getAppMetrics(), void 0, 2),
+                    t = JSON.stringify([electron.app.getGPUFeatureStatus(), await electron.app.getGPUInfo("complete")], void 0, 2),
                     r = JSON.stringify({
-                        platform: s.default.platform(),
-                        arch: s.default.arch(),
-                        release: s.default.release(),
-                        appVersion: c.app.getVersion(),
+                        platform: __os.default.platform(),
+                        arch: __os.default.arch(),
+                        release: __os.default.release(),
+                        appVersion: electron.app.getVersion(),
                         versions: process.versions
                     }, void 0, 2), n = {};
                 return n["app-info.json"] = (0, d.strToU8)(e), n["gpu-info.json"] = (0, d.strToU8)(t), n["environment.json"] = (0, d.strToU8)(r), n
             }
 
-            t.showLogsInShell = async function () {
+            exports.showLogsInShell = async function () {
                 try {
                     const e = await async function () {
-                            const e = l.default.dirname(u.default.transports.file.getFile().path), t = await p.readdir(e),
+                            const e = l.default.dirname(electron_log.default.transports.file.getFile().path),
+                                t = await p.readdir(e),
                                 r = {};
                             for (const n of t) {
                                 const t = l.default.join(e, n);
                                 r[n] = (0, d.strToU8)(await p.readFile(t, "utf8"))
                             }
-                            const n = await w();
+                            const n = await getAuxiliaryInfo();
                             return await (0, f.default)({...r, ...n})
-                        }(), t = `${c.app.getName()}-logs-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
-                        r = l.default.join(c.app.getPath("downloads"), t);
-                    await p.writeFile(r, e), c.shell.showItemInFolder(r)
+                        }(), t = `${electron.app.getName()}-logs-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
+                        r = l.default.join(electron.app.getPath("downloads"), t);
+                    await p.writeFile(r, e), electron.shell.showItemInFolder(r)
                 } catch (e) {
-                    u.default.error(`showLogsInShell() failed: ${e}`);
+                    electron_log.default.error(`showLogsInShell() failed: ${e}`);
                     const t = m.appController.intl,
                         r = "win32" === process.platform ? t.formatMessage(y.logsInShellFailedMessageWindows) : t.formatMessage(y.logsInShellFailedMessageMac);
-                    await c.dialog.showMessageBox({
+                    await electron.dialog.showMessageBox({
                         title: t.formatMessage(y.logsInShellFailedTitle),
                         type: "error",
                         message: `${r}\n\n${e}`
                     })
                 }
-            }, t.getAuxiliaryInfo = w, t.maybeDisableHardwareAcceleration = function () {
+            }
+            exports.getAuxiliaryInfo = getAuxiliaryInfo
+            exports.maybeDisableHardwareAcceleration = function () {
                 const {preferences: e} = v.Store.getState().app;
-                !c.app.isReady() && e.isHardwareAccelerationDisabled && (u.default.info("Disabling GPU hardware acceleration"), c.app.disableHardwareAcceleration())
-            }, t.deleteLocalData = async function (e) {
-                if (u.default.info("Resetting and erasing all local data"), "win32" !== process.platform) try {
-                    await p.remove(c.app.getPath("userData"))
+                !electron.app.isReady() && e.isHardwareAccelerationDisabled && (electron_log.default.info("Disabling GPU hardware acceleration"), electron.app.disableHardwareAcceleration())
+            }
+            exports.deleteLocalData = async function (e) {
+                if (electron_log.default.info("Resetting and erasing all local data"), "win32" !== process.platform) try {
+                    await p.remove(electron.app.getPath("userData"))
                 } catch (e) {
-                    u.default.warn("Failed to remove userData directory", e)
+                    electron_log.default.warn("Failed to remove userData directory", e)
                 } else if (e) {
-                    const e = c.session.fromPartition(b.electronSessionPartition);
+                    const e = electron.session.fromPartition(b.electronSessionPartition);
                     e.flushStorageData(), await e.clearStorageData(), e.flushStorageData();
-                    const t = c.app.getPath("userData"),
+                    const t = electron.app.getPath("userData"),
                         r = [l.default.join(t, g.assetCacheDirName), l.default.join(t, "state.json"), l.default.join(t, "window-state.json"), l.default.join(t, "sentry")];
                     for (const e of r) try {
                         await p.remove(e)
                     } catch (t) {
-                        u.default.info(`Tried to clear ${e}, but failed: ${t}`)
+                        electron_log.default.info(`Tried to clear ${e}, but failed: ${t}`)
                     }
                 }
                 process.nextTick((() => {
-                    c.app.relaunch(), c.app.exit()
+                    electron.app.relaunch(), electron.app.exit()
                 }))
             }
         },
-        49248: function (e, t, r) {
+        // setQuarantine
+        49248: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setQuarantine = void 0;
-            const o = r(76982), a = r(4482), i = n(r(47419)), s = r(31957);
-            t.setQuarantine = async function (e) {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = __require(76982),
+                electron = __require(4482),
+                electron_log = n(__require(47419)),
+                s = __require(31957);
+
+            exports.setQuarantine = async function (e) {
                 if ("darwin" !== process.platform) return;
                 const t = (0, o.randomUUID)().toUpperCase(),
-                    r = ["-w", "com.apple.quarantine", `0002;${Math.floor(Date.now() / 1e3).toString(16).toLowerCase()};${a.app.name};${t}`, e];
+                    r = ["-w", "com.apple.quarantine", `0002;${Math.floor(Date.now() / 1e3).toString(16).toLowerCase()};${electron.app.name};${t}`, e];
                 try {
                     const {stderr: e} = await (0, s.execFile)("/usr/bin/xattr", r);
-                    e && i.default.warn(`Stderr setting quarantine: ${e}`)
+                    e && electron_log.default.warn(`Stderr setting quarantine: ${e}`)
                 } catch (e) {
-                    i.default.warn(`Error setting quarantine: ${e}`)
+                    electron_log.default.warn(`Error setting quarantine: ${e}`)
                 }
             }
         },
-        50263: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__exportStar || function (e, t) {
-                for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
-            }, a = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.select = t.plural = t.number = void 0;
-            var i = r(78302);
-            Object.defineProperty(t, "number", {
-                enumerable: !0, get: function () {
-                    return a(i).default
-                }
-            }), o(r(78302), t);
-            var s = r(81453);
-            Object.defineProperty(t, "plural", {
-                enumerable: !0, get: function () {
-                    return a(s).default
-                }
-            }), o(r(81453), t);
-            var l = r(69467);
-            Object.defineProperty(t, "select", {
-                enumerable: !0, get: function () {
-                    return a(l).default
-                }
-            }), o(r(69467), t)
-        },
-        78302: (e, t) => {
-            "use strict";
-
-            function r(e) {
-                return null != e
-            }
-
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isNotNullish = void 0, t.isNotNullish = r, t.default = function (e, {
-                notation: t,
-                unit: n,
-                perUnit: o,
-                unitWidth: a,
-                precision: i,
-                roundingMode: s,
-                integerWidth: l,
-                scale: c,
-                grouping: u,
-                symbols: d,
-                sign: p,
-                decimal: h
-            } = {}) {
-                const f = [t, n, o, a, i, s, l, c, u, d, p, h].filter(r).join(" ");
-                return f ? `{${e}, number, :: ${f}}` : `{${e}, number}`
-            }
-        },
-        81453: (e, t) => {
-            "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.default = function (e, t) {
-                return `{${e}, plural, ${Object.entries(t).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
-            }
-        },
-        69467: (e, t) => {
-            "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.default = function (e, {other: t, ...r}) {
-                return `{${e}, select, ${Object.entries({...r, other: t}).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
-            }
-        },
-
-        36343: function (module, exports, __require) {
+        50263: function (module, exports, __require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -6388,7 +6915,103 @@
             }),
                 o = this && this.__exportStar || function (e, t) {
                 for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
+            },
+                a = this && this.__importDefault || function (e) {
+                return e && e.__esModule ? e : {default: e}
             };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+            exports.select = exports.plural = exports.number = void 0;
+
+            var i = __require(78302);
+            Object.defineProperty(exports, "number", {
+                enumerable: !0,
+                get: function () {
+                    return a(i).default
+                }
+            })
+            o(__require(78302), exports);
+
+            var s = __require(81453);
+            Object.defineProperty(exports, "plural", {
+                enumerable: !0, get: function () {
+                    return a(s).default
+                }
+            })
+            o(__require(81453), exports);
+
+            var l = __require(69467);
+            Object.defineProperty(exports, "select", {
+                enumerable: !0, get: function () {
+                    return a(l).default
+                }
+            })
+            o(__require(69467), exports)
+        },
+
+        78302: (module, exports) => {
+            "use strict";
+
+            function isNotNullish(e) {
+                return null != e
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.isNotNullish = isNotNullish
+            exports.default = function (e, {
+                notation,
+                unit,
+                perUnit,
+                unitWidth,
+                precision,
+                roundingMode,
+                integerWidth,
+                scale,
+                grouping,
+                symbols,
+                sign,
+                decimal
+            } = {}) {
+                const f = [notation, unit, perUnit, unitWidth, precision, roundingMode, integerWidth, scale, grouping, symbols, sign, decimal].filter(isNotNullish).join(" ");
+                return f ? `{${e}, number, :: ${f}}` : `{${e}, number}`
+            }
+        },
+        81453: (module, exports) => {
+            "use strict";
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.default = function (e, t) {
+                return `{${e}, plural, ${Object.entries(t).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
+            }
+        },
+        69467: (module, exports) => {
+            "use strict";
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.default = function (e, {other: t, ...r}) {
+                return `{${e}, select, ${Object.entries({...r, other: t}).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
+            }
+        },
+
+        36343: function (module, exports, __require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__exportStar || function (e, t) {
+                    for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
+                };
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
@@ -6633,6 +7256,7 @@
             exports.mutatePromiseIntoAsyncQueuePromise = mutatePromiseIntoAsyncQueuePromise
         },
 
+        // utils
         43067: function (module, exports, __require) {
             "use strict";
             let __createBinding = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -6664,7 +7288,7 @@
 
             const i = __require(78862),
                 s = __require(66614),
-                l = __importStar(__require(6600)),
+                lodash_1 = __importStar(__require(6600)),
                 c = __require(30072),
                 u = __require(45321),
                 d = __require(80004);
@@ -6735,7 +7359,7 @@
                 return new Promise(((n, o) => {
                     let a = 0;
                     const i = [], s = () => {
-                        const c = l.slice(e, a, a + t);
+                        const c = lodash_1.slice(e, a, a + t);
                         a += t, c.length > 0 ? r(c).then((e => {
                             i.push(e), setImmediate(s)
                         })).catch(o) : n(i)
@@ -6900,10 +7524,10 @@
             }
         },
 
-        30072: (e, t) => {
+        30072: (module, exports) => {
             "use strict";
 
-            function r(e) {
+            function catchErrors(e) {
                 try {
                     const t = e();
                     return function (e) {
@@ -6925,19 +7549,22 @@
                 }
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.catchErrors = t.Result = void 0, t.Result = {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.Result = {
                 isSuccess: e => !("error" in e),
                 isFail: e => "error" in e,
                 unwrap(e) {
-                    if (t.Result.isFail(e)) throw e.error;
+                    if (exports.Result.isFail(e)) throw e.error;
                     return e.value
                 },
-                unwrapOr: (e, r) => t.Result.isFail(e) ? r : e.value,
+                unwrapOr: (e, r) => exports.Result.isFail(e) ? r : e.value,
                 reduce(e, r) {
                     let n = {value: e[0]};
                     for (let o = 1; o < e.length; o++) {
                         const a = e[o];
-                        if (t.Result.isFail(n)) return n;
+                        if (exports.Result.isFail(n)) return n;
                         n = r(n.value, a)
                     }
                     return n
@@ -6946,23 +7573,28 @@
                     const n = [];
                     for (const o of e) {
                         const e = r(o);
-                        if (t.Result.isFail(e)) return e;
+                        if (exports.Result.isFail(e)) return e;
                         n.push(e.value)
                     }
                     return {value: n}
                 },
-                catchErrors: r
-            }, t.catchErrors = r
+                catchErrors: catchErrors
+            }
+            exports.catchErrors = catchErrors
         },
-        45321: (e, t) => {
+        45321: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.SYSTEM_TIME_SOURCE = void 0, t.SYSTEM_TIME_SOURCE = new class {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.SYSTEM_TIME_SOURCE = new class {
                 setTimeout(e, t, ...r) {
                     setTimeout(e, t, ...r)
                 }
             }
         },
-        37318: function (e, t, r) {
+        // cleanObjectForSerialization
+        37318: function (module, exports, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -6975,22 +7607,28 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.cleanObjectForSerialization = void 0;
-            const i = a(r(6600)), s = ["name", "message", "stack", "reason", "data", "info"];
-            t.cleanObjectForSerialization = function e(t, r = 10, n = new Set) {
-                if (i.isString(t) || i.isNumber(t) || i.isBoolean(t)) return t;
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const lodash_1 = a(__require(6600)),
+                s = ["name", "message", "stack", "reason", "data", "info"];
+            exports.cleanObjectForSerialization = function e(t, r = 10, n = new Set) {
+                if (lodash_1.isString(t) || lodash_1.isNumber(t) || lodash_1.isBoolean(t)) return t;
                 if (Array.isArray(t)) return n.has(t) || r <= 0 ? [{"@": "…"}] : (n.add(t), t.map((t => e(t, r - 1, n))));
-                if (i.isError(t) || i.isObjectLike(t)) {
+                if (lodash_1.isError(t) || lodash_1.isObjectLike(t)) {
                     if (n.has(t) || r <= 0) return {"@": "…"};
                     if (n.add(t), function (e) {
                         return Boolean("object" == typeof e && e && "toJSON" in e && "function" == typeof e.toJSON)
@@ -7043,7 +7681,7 @@
                 }
             })
         },
-        52869: function (e, t, r) {
+        52869: function (module, t, __require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -7056,18 +7694,26 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getHighlightColorStyle = t.getCalloutBlockColorStyle = t.getButtonBlockColorStyle = t.getBlockColorFromUserId = t.getBlockColorStyle = t.blockColorConfiguration = t.blockColorIsBackgroundColor = t.blockColorToAccentColor = t.getBoardSelectStyle = t.getPastelBoardSelectStyle = t.getSelectTokenStyle = t.getRGBFromHex = t.getHexFromRGB = t.flattenColorsByAlpha = t.findClosestThemeColor = t.findClosestSelectColor = t.findClosestColor = t.getDefaultTheme = t.commentContextBarBackground = t.commentUnderlineColorWithLevel = t.commentBackgroundWithLevel = t.interactiveAnnotationColor = t.selectColors = t.blockBackgroundColors = t.blockTextColors = t.blockColors = t.getTheme = t.accentColors = t.colors = t.grayscale = void 0;
-            const i = r(33824), s = a(r(6600)), l = r(73720), c = r(80004);
+
+            Object.defineProperty(t, "__esModule", {value: !0})
+
+            t.getHighlightColorStyle = t.getCalloutBlockColorStyle = t.getButtonBlockColorStyle = t.getBlockColorFromUserId = t.getBlockColorStyle = t.blockColorConfiguration = t.blockColorIsBackgroundColor = t.blockColorToAccentColor = t.getBoardSelectStyle = t.getPastelBoardSelectStyle = t.getSelectTokenStyle = t.getRGBFromHex = t.getHexFromRGB = t.flattenColorsByAlpha = t.findClosestThemeColor = t.findClosestSelectColor = t.findClosestColor = t.getDefaultTheme = t.commentContextBarBackground = t.commentUnderlineColorWithLevel = t.commentBackgroundWithLevel = t.interactiveAnnotationColor = t.selectColors = t.blockBackgroundColors = t.blockTextColors = t.blockColors = t.getTheme = t.accentColors = t.colors = t.grayscale = void 0;
+            const i = __require(33824),
+                lodash_1 = a(__require(6600)),
+                l = __require(73720),
+                c = __require(80004);
 
             function u(e) {
                 return `rgba(55, 53, 47, ${e})`
@@ -7097,7 +7743,8 @@
                 uiLightBlack: "#888",
                 uiLightBorder: "#F2F1F0",
                 uiLightGray: "#C4C4C4"
-            }, h = {
+            },
+                h = {
                 frontText: "#040404",
                 frontTextLight: "rgba(0,0,0,0.4)",
                 frontTextMedium: "rgba(0,0,0,0.6)",
@@ -7148,7 +7795,8 @@
                 frontBlueButtonBackground: "#2383E2",
                 frontBlueButtonHoveredBackground: (0, i.darken)("#2383E2", .3),
                 frontBlueButtonPressedBackground: (0, i.darken)("#2383E2", .6)
-            }, f = {
+            },
+                f = {
                 regularTextColor: u(1),
                 mediumTextColor: u(.7),
                 lightTextColor: u(.4),
@@ -7158,7 +7806,8 @@
                 dividerColor: (0, i.alpha)(t.grayscale.light.darkgray, .09),
                 invertedTextColor: (0, i.alpha)("white", .9),
                 selectionColor: "rgba(35, 131, 226, 0.28)"
-            }, m = {
+            },
+                m = {
                 halfWhite: "rgba(255, 255, 255, 0.5)",
                 diffTextColor: p.blue,
                 diffBackground: (0, i.alpha)(p.blue, .1),
@@ -7187,7 +7836,8 @@
                 UIDocNotificationsLightGrayBackground: "#F1F1F1",
                 UIDocNotificationsMediumGrayBackground: "#D7D7D7",
                 UIDocNotificationsMediumLightGrayBackground: "#E9E9E9", ...h, ...f, ...m
-            }, t.accentColors = {
+            }
+            t.accentColors = {
                 light: {
                     uiBlue: {
                         50: "rgba(35, 131, 226, .035)",
@@ -8408,12 +9058,19 @@
                 }
             }
 
-            t.getTheme = b, t.blockColors = ["default", "gray", "brown", "orange", "yellow", "teal", "blue", "purple", "pink", "red", "gray_background", "brown_background", "orange_background", "yellow_background", "teal_background", "blue_background", "purple_background", "pink_background", "red_background"], t.blockTextColors = t.blockColors.filter((e => -1 === e.indexOf("background"))), t.blockBackgroundColors = t.blockColors.filter((e => -1 !== e.indexOf("background"))), t.selectColors = ["default", "gray", "brown", "orange", "yellow", "green", "blue", "purple", "pink", "red"];
-            const v = "rgb(255, 212, 0)", y = {
+            t.getTheme = b
+            t.blockColors = ["default", "gray", "brown", "orange", "yellow", "teal", "blue", "purple", "pink", "red", "gray_background", "brown_background", "orange_background", "yellow_background", "teal_background", "blue_background", "purple_background", "pink_background", "red_background"]
+            t.blockTextColors = t.blockColors.filter((e => -1 === e.indexOf("background")))
+            t.blockBackgroundColors = t.blockColors.filter((e => -1 !== e.indexOf("background")))
+            t.selectColors = ["default", "gray", "brown", "orange", "yellow", "green", "blue", "purple", "pink", "red"];
+            const v = "rgb(255, 212, 0)",
+                y = {
                 comment: (0, i.colord)({r: 255, g: 203, b: 0}),
                 update: (0, i.colord)({r: 35, g: 131, b: 226}),
                 remove: (0, i.colord)({r: 120, g: 119, b: 116})
-            }, w = {comment: .8, update: .4, remove: .4}, _ = {
+            },
+                w = {comment: .8, update: .4, remove: .4},
+                _ = {
                 comment: {background: .15, underline: .4375},
                 update: {underline: .25, background: .09},
                 remove: {underline: .25, background: .09}
@@ -8428,7 +9085,7 @@
                         return {name: r, distance: 360}
                     }
                 }));
-                return s.minBy(r, (({distance: e}) => e)).name
+                return lodash_1.minBy(r, (({distance: e}) => e)).name
             }
 
             function T(e) {
@@ -8470,16 +9127,17 @@
                 }
             }
 
-            t.interactiveAnnotationColor = s.memoize((e => {
+            t.interactiveAnnotationColor = lodash_1.memoize((e => {
                 const {annotationType: t, type: r, selected: n, hovered: o, overlapping: a} = e, s = y[t], l = w[t],
                     c = _[t][r], u = 1.25 * l, d = (o || n ? "underline" === r ? 3 : 1 : 0) + (a ? 2 : 0);
                 return (0, i.getCSSColor)(s.alpha(Math.min(l * c * (1 + d), u)))
-            }), (e => s.values(e).join("_"))), t.commentBackgroundWithLevel = function ({
-                                                                                            level: e,
-                                                                                            selected: r,
-                                                                                            hovered: n,
-                                                                                            newStyling: o
-                                                                                        }) {
+            }), (e => lodash_1.values(e).join("_")))
+            t.commentBackgroundWithLevel = function ({
+                                                                                                   level: e,
+                                                                                                   selected: r,
+                                                                                                   hovered: n,
+                                                                                                   newStyling: o
+                                                                                               }) {
                 if (o) return (0, t.interactiveAnnotationColor)({
                     annotationType: "comment",
                     type: "background",
@@ -8489,7 +9147,8 @@
                 });
                 const a = r ? 3 : 0, s = n ? 2 : 0, l = (1 === e ? e : 2 * Math.min(e, 2)) + a + s;
                 return (0, i.alpha)(v, Math.min(.14 * l, 1))
-            }, t.commentUnderlineColorWithLevel = function ({level: e, selected: r, hovered: n, newStyling: o}) {
+            }
+            t.commentUnderlineColorWithLevel = function ({level: e, selected: r, hovered: n, newStyling: o}) {
                 return o ? (0, t.interactiveAnnotationColor)({
                     annotationType: "comment",
                     type: "underline",
@@ -8497,21 +9156,27 @@
                     hovered: n ?? !1,
                     overlapping: e > 1
                 }) : v
-            }, t.commentContextBarBackground = s.memoize((e => e ? (0, i.getCSSColor)(y.comment.alpha(.8 * w.comment)) : "rgba(255, 212, 0, 0.8)")), t.getDefaultTheme = function () {
+            }
+            t.commentContextBarBackground = lodash_1.memoize((e => e ? (0, i.getCSSColor)(y.comment.alpha(.8 * w.comment)) : "rgba(255, 212, 0, 0.8)"))
+            t.getDefaultTheme = function () {
                 return b({theme: "light"})
-            }, t.findClosestColor = k, t.findClosestSelectColor = function (e) {
+            }
+            t.findClosestColor = k
+            t.findClosestSelectColor = function (e) {
                 const r = {};
                 for (const e of t.selectColors) {
                     const t = S(b({theme: "light"}), e);
                     r[e] = t.backgroundColor
                 }
                 return k(e, r)
-            }, t.findClosestThemeColor = function (e) {
+            }
+            t.findClosestThemeColor = function (e) {
                 const t = {}, r = b({theme: "light"});
                 for (const [e, n] of Object.entries(r.accentColors)) for (const [r, o] of Object.entries(n)) t[`${e}:${r}`] = o;
                 const n = k(e, t), [o, a] = n.split(":");
                 return {colorName: o, shade: parseInt(a)}
-            }, t.flattenColorsByAlpha = function (e) {
+            }
+            t.flattenColorsByAlpha = function (e) {
                 const t = e.map((e => (0, i.colord)(e))).reverse();
                 let r = t.shift();
                 if (!r) return "red";
@@ -8525,7 +9190,8 @@
                     r = r.alpha(1).mix(e.alpha(1), a).alpha(o)
                 }
                 return (0, i.getCSSColor)(r)
-            }, t.getHexFromRGB = function (e) {
+            }
+            t.getHexFromRGB = function (e) {
                 if (!e) return;
                 const t = e.split(/\(|\)/);
                 if (3 !== t.length) return;
@@ -8535,7 +9201,8 @@
                 const a = Number(r[0]), i = Number(r[1]), s = Number(r[2]);
                 let l = `#${T(a)}${T(i)}${T(s)}`, c = 255;
                 return o && (c = Math.round(255 * Number(r[3]))), l = l.concat(T(c)), l.toUpperCase()
-            }, t.getRGBFromHex = function (e) {
+            }
+            t.getRGBFromHex = function (e) {
                 if (!e) return;
                 const t = e.startsWith("#") ? e.replace("#", "") : e;
                 try {
@@ -8544,7 +9211,9 @@
                 } catch (e) {
                     return
                 }
-            }, t.getSelectTokenStyle = S, t.getPastelBoardSelectStyle = function (e, t) {
+            }
+            t.getSelectTokenStyle = S
+            t.getPastelBoardSelectStyle = function (e, t) {
                 const r = E(e, t), n = !t || "default" === t,
                     o = {light: r[400], dark: n || "gray" === t ? r[600] : r[500]},
                     a = {light: r[30], dark: n ? r[75] : "gray" === t ? r[100] : r[50]},
@@ -8567,7 +9236,8 @@
                     cardHoveredBackgroundColor: l.light,
                     cardPressedBackgroundColor: c.light
                 }
-            }, t.getBoardSelectStyle = function (e, t) {
+            }
+            t.getBoardSelectStyle = function (e, t) {
                 const r = E(e, t), n = !t || "default" === t,
                     o = {light: r[400], dark: n || "gray" === t ? r[600] : r[500]},
                     a = {light: (0, i.alpha)(r[100], .7), dark: n || "gray" === t ? r[200] : r[50]},
@@ -8590,7 +9260,8 @@
                     cardHoveredBackgroundColor: c.light,
                     cardPressedBackgroundColor: u.light
                 }
-            }, t.blockColorToAccentColor = {
+            }
+            t.blockColorToAccentColor = {
                 default: void 0,
                 gray: "gray",
                 brown: "brown",
@@ -8610,7 +9281,9 @@
                 purple_background: "purple",
                 pink_background: "pink",
                 red_background: "red"
-            }, t.blockColorIsBackgroundColor = C, t.blockColorConfiguration = {
+            }
+            t.blockColorIsBackgroundColor = C
+            t.blockColorConfiguration = {
                 background: {
                     light: 50,
                     lightHovered: 100,
@@ -8628,11 +9301,14 @@
                     darkPressed: 200,
                     darkGray: 700
                 }
-            }, t.getBlockColorStyle = O, t.getBlockColorFromUserId = function (e, r) {
+            }
+            t.getBlockColorStyle = O
+            t.getBlockColorFromUserId = function (e, r) {
                 let n = 0;
                 for (let t = 0; t < e.length; t++) n += e.charCodeAt(t);
                 return n %= t.blockTextColors.length, O(t.blockTextColors[n], r).color || r.regularTextColor
-            }, t.getButtonBlockColorStyle = function (e, r) {
+            }
+            t.getButtonBlockColorStyle = function (e, r) {
                 if ("default" === e) return {color: "inherit", fill: "inherit"};
                 const n = t.blockColorToAccentColor[e];
                 if (!n) return {color: "inherit", fill: "inherit"};
@@ -8657,7 +9333,8 @@
                     hoveredBackground: "dark" === r.mode ? s.darkHovered : s.lightHovered,
                     pressedBackground: "dark" === r.mode ? s.darkPressed : s.lightPressed
                 }
-            }, t.getCalloutBlockColorStyle = function (e, r) {
+            }
+            t.getCalloutBlockColorStyle = function (e, r) {
                 if ("default" === e) return {color: r.regularTextColor};
                 const n = t.blockColorToAccentColor[e];
                 if (!n) return {color: r.regularTextColor};
@@ -8667,15 +9344,21 @@
                     color: "dark" === r.mode ? i.dark : i.light,
                     fill: "dark" === r.mode ? i.dark : i.light
                 }
-            }, t.getHighlightColorStyle = function (e, t) {
+            }
+            t.getHighlightColorStyle = function (e, t) {
                 return "default" === e ? {color: t.regularTextColor} : O(e, t)
-            }, t.default = t.colors
+            }
+            t.default = t.colors
         },
-        78862: (e, t) => {
+        78862: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getErrorCode = t.parseUnknownError = void 0, t.parseUnknownError = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.parseUnknownError = function (e) {
                 return e instanceof Error ? e : "object" == typeof e && null !== e ? Object.assign(new Error("Expected error, but caught non-error object"), e) : "string" == typeof e ? Object.assign(new Error(e), {cause: e}) : Object.assign(new Error(`Expected error, but caught \`${String(e)}\` (${typeof e})`), {cause: e})
-            }, t.getErrorCode = function (e) {
+            }
+            exports.getErrorCode = function (e) {
                 const {code: t} = e;
                 if ("number" == typeof t || "string" == typeof t) return t
             }
@@ -8691,7 +9374,10 @@
                 return "next" in e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.tracking = t.ensureReturned = t.cleanup = t.until = t.take = t.filter = t.flatten = t.map = t.chunk = t.withIndex = t.collect = t.AsyncIter = t.Iter = void 0, t.Iter = {
+            Object.defineProperty(t, "__esModule", {value: !0})
+
+
+            t.Iter = {
                 * fromValues(...e) {
                     yield* e
                 }, collect(e) {
@@ -8743,7 +9429,8 @@
                         t({length: r, totalTimeMs: n})
                     }
                 }
-            }, t.AsyncIter = {
+            }
+            t.AsyncIter = {
                 is: e => r(e), async* fromValues(...e) {
                     yield* e
                 }, async collect(e) {
@@ -8803,45 +9490,68 @@
                         t({length: r, totalTimeMs: n})
                     }
                 }
-            }, t.collect = function (e) {
+            }
+            t.collect = function (e) {
                 return r(e) ? t.AsyncIter.collect(e) : t.Iter.collect(e)
-            }, t.withIndex = function (e) {
+            }
+            t.withIndex = function (e) {
                 return r(e) ? t.AsyncIter.withIndex(e) : t.Iter.withIndex(e)
-            }, t.chunk = function (e, n) {
+            }
+            t.chunk = function (e, n) {
                 return r(e) ? t.AsyncIter.chunk(e, n) : t.Iter.chunk(e, n)
-            }, t.map = function (e, n) {
+            }
+            t.map = function (e, n) {
                 return r(e) ? t.AsyncIter.map(e, n) : t.Iter.map(e, n)
-            }, t.flatten = function (e) {
+            }
+            t.flatten = function (e) {
                 return r(e) ? t.AsyncIter.flatten(e) : t.Iter.flatten(e)
-            }, t.filter = function (e, n) {
+            }
+            t.filter = function (e, n) {
                 return r(e) ? t.AsyncIter.filter(e, n) : t.Iter.filter(e, n)
-            }, t.take = function (e, n) {
+            }
+            t.take = function (e, n) {
                 return r(e) ? t.AsyncIter.take(e, n) : t.Iter.take(e, n)
-            }, t.until = function (e, n) {
+            }
+            t.until = function (e, n) {
                 return r(e) ? t.AsyncIter.until(e, n) : t.Iter.until(e, n)
-            }, t.cleanup = function (e, n) {
+            }
+            t.cleanup = function (e, n) {
                 return r(e) ? t.AsyncIter.cleanup(e, n) : t.Iter.cleanup(e, n)
-            }, t.ensureReturned = function (e) {
+            }
+            t.ensureReturned = function (e) {
                 return r(e) ? t.AsyncIter.ensureReturned(e) : t.Iter.ensureReturned(e)
-            }, t.tracking = function (e, n) {
+            }
+            t.tracking = function (e, n) {
                 return r(e) ? t.AsyncIter.tracking(e, n) : t.Iter.tracking(e, n)
             }
         },
-        28902: (e, t) => {
+        28902: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getContentfulSupportedLocale = t.getContentfulLocale = t.localeFormatter = t.allLocales = t.deprecatedLocales = t.defaultLocale = t.getLocaleFromCookie = t.externalLocaleToNotionLocale = t.isSupportedLanguageCode = t.isPreferredLanguageCode = t.isPreferredLocaleOrigin = t.isPreferredLocaleExtended = t.isPreferredLocale = t.isBetaLocale = t.isDevelopmentLocale = t.languageCodeToPreferredLocaleExtended = t.languageCodeToPreferredLocale = t.countryToPreferredLocale = t.preferredContentfulLocales = t.ALL_LOCALE_ROUTES = t.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = t.ALL_LOCALES = t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = t.PSEUDOLOCALES = t.VALID_PREFERRED_LOCALES_IN_BETA = t.VALID_PREFERRED_LOCALES = t.VALID_PREFERRED_LOCALES_FOR_MARKETING = void 0, t.VALID_PREFERRED_LOCALES_FOR_MARKETING = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR"], t.VALID_PREFERRED_LOCALES = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"], t.VALID_PREFERRED_LOCALES_IN_BETA = ["ja-JP", "zh-CN", "zh-TW", "da-DK", "nl-NL", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"], t.PSEUDOLOCALES = ["pseudo"], t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = ["zh-CN", "zh-TW", ...t.PSEUDOLOCALES], t.ALL_LOCALES = [...t.VALID_PREFERRED_LOCALES, ...t.VALID_PREFERRED_LOCALES_IN_BETA, ...t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT], t.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.map((e => {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.VALID_PREFERRED_LOCALES_FOR_MARKETING = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR"]
+            exports.VALID_PREFERRED_LOCALES = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"]
+            exports.VALID_PREFERRED_LOCALES_IN_BETA = ["ja-JP", "zh-CN", "zh-TW", "da-DK", "nl-NL", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"]
+            exports.PSEUDOLOCALES = ["pseudo"]
+            exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = ["zh-CN", "zh-TW", ...exports.PSEUDOLOCALES]
+            exports.ALL_LOCALES = [...exports.VALID_PREFERRED_LOCALES, ...exports.VALID_PREFERRED_LOCALES_IN_BETA, ...exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT]
+            exports.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.map((e => {
                 const t = e.split("-").join(""), r = e.toLocaleLowerCase();
                 return {[t]: `/${r}`}
-            })).reduce(((e, t) => Object.assign(e, t)), {}), t.ALL_LOCALE_ROUTES = t.ALL_LOCALES.map((e => {
+            })).reduce(((e, t) => Object.assign(e, t)), {})
+            exports.ALL_LOCALE_ROUTES = exports.ALL_LOCALES.map((e => {
                 const t = e.split("-").join(""), r = e.toLocaleLowerCase();
                 return {[t]: `/${r}`}
             })).reduce(((e, t) => Object.assign(e, t)), {});
+
             const r = ["autodetect", "user_choice", "legacy", "inferred_from_inviter"];
-            t.preferredContentfulLocales = {
+            exports.preferredContentfulLocales = {
                 "es-LA": "es-419",
                 "zh-TW": "zh-Hant-TW",
                 pseudo: "yav"
-            }, t.countryToPreferredLocale = {
+            }
+            exports.countryToPreferredLocale = {
                 KR: "ko-KR",
                 US: "en-US",
                 JA: "ja-JP",
@@ -8869,15 +9579,16 @@
                 UY: "es-LA",
                 VE: "es-LA"
             };
+
             const n = ["en", "ko", "ja", "fr", "de", "es", "pt", "fi", "da", "nl", "nb", "sv"],
                 o = ["es", "fr", "pt", "zh"];
 
             function a(e) {
-                return t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.includes(e)
+                return exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.includes(e)
             }
 
             function i(e) {
-                return t.VALID_PREFERRED_LOCALES.includes(e)
+                return exports.VALID_PREFERRED_LOCALES.includes(e)
             }
 
             function s(e) {
@@ -8893,10 +9604,10 @@
             }
 
             function u(e) {
-                return e && t.deprecatedLocales.includes(e) ? t.defaultLocale : e?.replace(/(\-[a-z])\w+/g, (e => e.toUpperCase()))?.replace(/([A-Z]*[A-Z]\-)+/gm, (e => e.toLocaleLowerCase())) || t.defaultLocale
+                return e && exports.deprecatedLocales.includes(e) ? exports.defaultLocale : e?.replace(/(\-[a-z])\w+/g, (e => e.toUpperCase()))?.replace(/([A-Z]*[A-Z]\-)+/gm, (e => e.toLocaleLowerCase())) || exports.defaultLocale
             }
 
-            t.languageCodeToPreferredLocale = {
+            exports.languageCodeToPreferredLocale = {
                 de: "de-DE",
                 ko: "ko-KR",
                 en: "en-US",
@@ -8909,7 +9620,8 @@
                 nl: "nl-NL",
                 nb: "nb-NO",
                 sv: "sv-SE"
-            }, t.languageCodeToPreferredLocaleExtended = {
+            }
+            exports.languageCodeToPreferredLocaleExtended = {
                 de: "de-DE",
                 ko: "ko-KR",
                 en: "en-US",
@@ -8923,25 +9635,41 @@
                 nl: "nl-NL",
                 nb: "nb-NO",
                 sv: "sv-SE"
-            }, t.isDevelopmentLocale = a, t.isBetaLocale = function (e) {
-                return t.VALID_PREFERRED_LOCALES_IN_BETA.includes(e)
-            }, t.isPreferredLocale = i, t.isPreferredLocaleExtended = s, t.isPreferredLocaleOrigin = function (e) {
+            }
+            exports.isDevelopmentLocale = a
+            exports.isBetaLocale = function (e) {
+                return exports.VALID_PREFERRED_LOCALES_IN_BETA.includes(e)
+            }
+            exports.isPreferredLocale = i
+            exports.isPreferredLocaleExtended = s
+            exports.isPreferredLocaleOrigin = function (e) {
                 return r.includes(e)
-            }, t.isPreferredLanguageCode = l, t.isSupportedLanguageCode = c, t.externalLocaleToNotionLocale = function (e, r) {
+            }
+            exports.isPreferredLanguageCode = l
+            exports.isSupportedLanguageCode = c
+            exports.externalLocaleToNotionLocale = function (e, r) {
                 const [n, o] = e.split("-");
-                return n && !o && (Boolean(r) && l(n) || c(n)) ? t.languageCodeToPreferredLocaleExtended[n] : Boolean(r) && i(e) || s(e) ? e : "en-US"
-            }, t.getLocaleFromCookie = function (e) {
+                return n && !o && (Boolean(r) && l(n) || c(n)) ? exports.languageCodeToPreferredLocaleExtended[n] : Boolean(r) && i(e) || s(e) ? e : "en-US"
+            }
+            exports.getLocaleFromCookie = function (e) {
                 if ("" === e) return "en-US";
                 const [t] = decodeURIComponent(e).split("/");
                 return t && s(t) ? t : "en-US"
-            }, t.defaultLocale = "en-US", t.deprecatedLocales = ["ko"], t.allLocales = "*", t.localeFormatter = u, t.getContentfulLocale = function (e) {
+            }
+            exports.defaultLocale = "en-US"
+            exports.deprecatedLocales = ["ko"]
+            exports.allLocales = "*"
+            exports.localeFormatter = u
+            exports.getContentfulLocale = function (e) {
                 const r = u(e);
-                return t.preferredContentfulLocales[r] || r
-            }, t.getContentfulSupportedLocale = function (e) {
+                return exports.preferredContentfulLocales[r] || r
+            }
+            exports.getContentfulSupportedLocale = function (e) {
                 const r = u(e);
-                return [...t.VALID_PREFERRED_LOCALES, ...t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT, ...t.VALID_PREFERRED_LOCALES_IN_BETA].includes(r) ? r : t.defaultLocale
+                return [...exports.VALID_PREFERRED_LOCALES, ...exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT, ...exports.VALID_PREFERRED_LOCALES_IN_BETA].includes(r) ? r : exports.defaultLocale
             }
         },
+        // lodash
         6600: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -9900,13 +10628,15 @@
             }
         },
 
-        32289: function (e, t, r) {
+        32289: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.normalizeToHttpUrl = t.fixSchemeUrl = t.prependHttpToUrl = t.getHttpUrl = t.getSchemeUrl = t.forceConsistentEndingSlash = void 0;
-            const o = n(r(16857));
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = n(__require(16857));
 
             function a(e) {
                 return e.src.endsWith("/") ? e.dest.endsWith("/") ? e.dest : `${e.dest}/` : e.dest.endsWith("/") ? e.dest.slice(0, e.dest.length - 1) : e.dest
@@ -9919,26 +10649,32 @@
                 return a({src: e.schemeUrl, dest: n})
             }
 
-            t.forceConsistentEndingSlash = a, t.getSchemeUrl = function (e) {
+            exports.forceConsistentEndingSlash = a
+            exports.getSchemeUrl = function (e) {
                 const t = o.default.parse(e.httpUrl, !0);
                 t.protocol = `${e.protocol}:`, t.port = e.includePort ? t.port : null, t.host = null;
                 const r = o.default.format(t);
                 return a({src: e.httpUrl, dest: r})
-            }, t.getHttpUrl = i, t.prependHttpToUrl = function (e) {
+            }
+            exports.getHttpUrl = i
+            exports.prependHttpToUrl = function (e) {
                 const {url: t, isLocalHost: r} = e;
                 return `${r ? "http" : "https"}://${t}`
-            }, t.fixSchemeUrl = function (e) {
+            }
+            exports.fixSchemeUrl = function (e) {
                 if (!e.url.startsWith(`${e.protocol}:`)) return e.url;
                 const t = o.default.parse(e.baseUrl, !0);
                 return o.default.parse(e.url, !0).hostname === t.hostname ? e.url : e.url.replace(`${e.protocol}://*`, `${e.protocol}:/`)
-            }, t.normalizeToHttpUrl = function (e) {
+            }
+            exports.normalizeToHttpUrl = function (e) {
                 return e.url.startsWith(e.protocol) ? i({schemeUrl: e.url, baseUrl: e.domainBaseUrl}) : e.url
             }
         },
-        73720: (e, t, r) => {
+        // themeShadows
+        73720: (module, exports, __require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.themeShadows = void 0;
-            const n = r(33824);
+            Object.defineProperty(exports, "__esModule", {value: !0}), exports.themeShadows = void 0;
+            const n = __require(33824);
 
             function o(e = 1) {
                 return `rgba(84, 70, 35, ${e})`
@@ -9954,7 +10690,7 @@
                 frontCardShadow: "\n\t\t0px 4px 8px rgba(0, 0, 0, 0.04),\n\t\t0px 0px 2px rgba(0, 0, 0, 0.06),\n\t\t0px 0px 1px rgba(0, 0, 0, 0.04)\n\t",
                 frontDialogShadow: s({elevation: 5, color: (0, n.colord)("rgb(15, 15, 15)"), opacity: .1})
             };
-            t.default = a;
+            exports.default = a;
             const i = {light: (0, n.colord)("rgb(15, 15, 15)"), dark: (0, n.colord)("rgb(15, 15, 15)")};
 
             function s({elevation: e, color: t = (0, n.colord)({h: 0, s: 1, l: 7}), opacity: r = .1, inner: o = !1}) {
@@ -9969,7 +10705,7 @@
                 }
             }
 
-            t.themeShadows = {
+            exports.themeShadows = {
                 shadowColor: {light: i.light, dark: i.dark},
                 shadowOpacity: {light: .1, dark: .2},
                 lightBoxShadow: {
@@ -10133,14 +10869,14 @@
         80637: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0});
-            const n = r(6600);
+            const lodash_1 = r(6600);
 
             function o(e) {
-                return (0, n.isPlainObject)(e) && (0, n.isEmpty)(e)
+                return (0, lodash_1.isPlainObject)(e) && (0, lodash_1.isEmpty)(e)
             }
 
             function a(e) {
-                return Array.isArray(e) && (0, n.isEmpty)(e)
+                return Array.isArray(e) && (0, lodash_1.isEmpty)(e)
             }
 
             function i(e, t) {
@@ -10149,7 +10885,7 @@
 
             t.default = function e(t, r) {
                 if (i(t, r)) return !0;
-                if ((0, n.isPlainObject)(t) && (0, n.isPlainObject)(r)) {
+                if ((0, lodash_1.isPlainObject)(t) && (0, lodash_1.isPlainObject)(r)) {
                     for (const n in t) if (t.hasOwnProperty(n)) {
                         if (!r.hasOwnProperty(n)) return !1;
                         if (n.toLowerCase().endsWith("style") || n.toLowerCase().endsWith("props")) {
@@ -10421,7 +11157,7 @@
                 return o(t, e), t
             };
             Object.defineProperty(t, "__esModule", {value: !0}), t.snakeCaseObjectKeys = t.mergeLists = t.quickAssign = t.sleepMs = t.diff = t.safeJSONParse = t.groupBy = t.clamp = t.isNumber = t.regexpMatchAll = t.trimQuery = t.KiloByte = t.roundDownToNearestMinute = t.WeekMin = t.DayMin = t.HourMin = t.WeekS = t.DayS = t.HourS = t.MinuteS = t.SecondS = t.YearMs = t.WeekMs = t.DayMs = t.HourMs = t.MinuteMs = t.SecondMs = t.zipBy = t.invertRecord = t.filterOut = t.shiftN = t.popN = t.ignoreFirst = t.omit = t.pick = t.objectFromEntries = t.mapValues = t.values = t.keys = t.nullify = t.defaultValue = t.isNotDefined = t.uniq = t.uniqDeep = void 0;
-            const i = a(r(6600)), s = r(43067);
+            const lodash_1 = a(r(6600)), s = r(43067);
 
             function l(e) {
                 return null == e
@@ -10432,11 +11168,11 @@
             }
 
             function u(e, t) {
-                return i.mapValues(e, t)
+                return lodash_1.mapValues(e, t)
             }
 
             t.uniqDeep = function (e) {
-                return i.uniqWith(e, i.isEqual)
+                return lodash_1.uniqWith(e, lodash_1.isEqual)
             }, t.uniq = function (e) {
                 return Array.from(new Set(e))
             }, t.isNotDefined = l, t.defaultValue = function (e, t) {
@@ -10448,9 +11184,9 @@
             }, t.keys = c, t.values = function (e) {
                 return c(e).map((t => e[t]))
             }, t.mapValues = u, t.objectFromEntries = Object.fromEntries, t.pick = function (e, t) {
-                return i.pick(e, t)
+                return lodash_1.pick(e, t)
             }, t.omit = function (e, t) {
-                return i.omit(e, t)
+                return lodash_1.omit(e, t)
             }, t.ignoreFirst = function (e) {
                 let t = !1;
                 return (...r) => {
@@ -10476,9 +11212,9 @@
             }, t.invertRecord = function (e) {
                 return Object.fromEntries(Object.entries(e).map((([e, t]) => [t, e])))
             }, t.zipBy = function (e, t, r, n) {
-                const o = i.keyBy(r, n);
+                const o = lodash_1.keyBy(r, n);
                 if (Object.keys(o).length !== r.length) throw new Error("zipBy indexes must be unique for each value");
-                const a = i.keyBy(e, t);
+                const a = lodash_1.keyBy(e, t);
                 if (Object.keys(a).length !== e.length) throw new Error("zipBy indexes must be unique for each value");
                 const s = e.map((e => [e, o[t(e)]])), l = r.filter((e => !a[n(e)])).map((e => [void 0, e]));
                 return s.concat(l)
@@ -10486,7 +11222,7 @@
                 return Math.round(Math.floor(e / t.MinuteMs) * t.MinuteMs)
             }, t.KiloByte = 1024, t.trimQuery = function (e) {
                 const t = e.split("\n");
-                return i.map(t, (e => e.trim())).join("\n")
+                return lodash_1.map(t, (e => e.trim())).join("\n")
             }, t.regexpMatchAll = function (e, t) {
                 let r = e;
                 if (r.sticky || !r.global) {
@@ -10498,7 +11234,7 @@
                 for (; null !== (a = r.exec(t));) o.push(a);
                 return r.lastIndex = n, o
             }, t.isNumber = function (e) {
-                return i.isFinite(e)
+                return lodash_1.isFinite(e)
             }, t.clamp = function (e, t, r) {
                 return Math.max(t, Math.min(e, r))
             }, t.groupBy = function (e, t) {
@@ -10516,28 +11252,29 @@
                     return
                 }
             }, t.diff = function (e, t) {
-                const r = e => i.isNumber(e) ? !i.isFinite(e) || i.isNaN(e) : i.isNil(e), n = e => {
-                    if (Array.isArray(e)) return e.map((e => n(e)));
-                    if (i.isObject(e)) {
-                        const t = u(e, (e => n(e)));
-                        return i.omitBy(t, r)
-                    }
-                    return (e => {
-                        if (!Number.isNaN(e) && null !== e) return i.isFinite(e) ? Math.round(1e4 * e) : e
-                    })(e)
-                }, o = n(e), a = n(t);
-                return !i.isEqual(o, a)
+                const r = e => lodash_1.isNumber(e) ? !lodash_1.isFinite(e) || lodash_1.isNaN(e) : lodash_1.isNil(e),
+                    n = e => {
+                        if (Array.isArray(e)) return e.map((e => n(e)));
+                        if (lodash_1.isObject(e)) {
+                            const t = u(e, (e => n(e)));
+                            return lodash_1.omitBy(t, r)
+                        }
+                        return (e => {
+                            if (!Number.isNaN(e) && null !== e) return lodash_1.isFinite(e) ? Math.round(1e4 * e) : e
+                        })(e)
+                    }, o = n(e), a = n(t);
+                return !lodash_1.isEqual(o, a)
             }, t.sleepMs = async function (e) {
                 await (0, s.timeout)(e)
             }, t.quickAssign = function (e, t, r) {
                 return e[t] = r, e
             }, t.mergeLists = function (e, t) {
                 const r = e || [], n = t || [];
-                return i.compact(i.uniq([...r, ...n]))
+                return lodash_1.compact(lodash_1.uniq([...r, ...n]))
             }, t.snakeCaseObjectKeys = function e(t) {
                 return Object.keys(t).reduce(((r, n) => ({
                     ...r,
-                    [i.snakeCase(n)]: "object" == typeof t[n] ? e(t[n]) : t[n]
+                    [lodash_1.snakeCase(n)]: "object" == typeof t[n] ? e(t[n]) : t[n]
                 })), {})
             }
         },
@@ -10680,9 +11417,9 @@
                 return o(t, e), t
             };
             Object.defineProperty(t, "__esModule", {value: !0}), t.getPaddingRightForDesktopWindows = t.getPaddingLeftForDesktopMac = t.ELECTRON_DEFAULT_ZOOM = t.ELECTRON_ZOOM_INCREMENT = t.ELECTRON_ZOOM_MAXIMUM = t.ELECTRON_ZOOM_MINIMUM = void 0;
-            const i = a(r(6600));
+            const lodash_1 = a(r(6600));
             t.ELECTRON_ZOOM_MINIMUM = .5, t.ELECTRON_ZOOM_MAXIMUM = 4.9, t.ELECTRON_ZOOM_INCREMENT = .1, t.ELECTRON_DEFAULT_ZOOM = 1, t.getPaddingLeftForDesktopMac = function (e) {
-                switch (i.clamp(i.round(e, 1), t.ELECTRON_ZOOM_MINIMUM, t.ELECTRON_ZOOM_MAXIMUM)) {
+                switch (lodash_1.clamp(lodash_1.round(e, 1), t.ELECTRON_ZOOM_MINIMUM, t.ELECTRON_ZOOM_MAXIMUM)) {
                     case t.ELECTRON_ZOOM_MINIMUM:
                         return 155;
                     case.6:
@@ -10697,7 +11434,7 @@
                         return 75
                 }
             }, t.getPaddingRightForDesktopWindows = function (e) {
-                const r = i.clamp(i.round(e, 1), t.ELECTRON_ZOOM_MINIMUM, t.ELECTRON_ZOOM_MAXIMUM);
+                const r = lodash_1.clamp(lodash_1.round(e, 1), t.ELECTRON_ZOOM_MINIMUM, t.ELECTRON_ZOOM_MAXIMUM);
                 switch (r) {
                     case t.ELECTRON_ZOOM_MINIMUM:
                         return 273;
@@ -12755,87 +13492,124 @@
                 })
             }()
         },
-        66130: (e, t, r) => {
+
+        // @sentry/electron
+        66130: (module, exports, __require) => {
             "use strict";
-            r.r(t), r.d(t, {
-                ElectronIntegrations: () => _r,
+            __require.r(exports)
+            __require.d(exports, {
+                ElectronIntegrations: () => _ElectronIntegrations,
                 Hub: () => p.YZ,
-                MainBackend: () => br,
-                MainClient: () => vr,
-                NetTransport: () => pr,
-                NodeIntegrations: () => Lt,
+                MainBackend: () => _MainBackend,
+                MainClient: () => _MainClient,
+                NetTransport: () => _NetTransport,
+                NodeIntegrations: () => _NodeIntegrations,
                 Scope: () => C.H,
-                Severity: () => i,
-                Status: () => s,
-                addBreadcrumb: () => v,
+                Severity: () => _Severity,
+                Status: () => _Status,
+                addBreadcrumb: () => _addBreadcrumb,
                 addGlobalEventProcessor: () => C.l,
-                captureEvent: () => g,
-                captureException: () => f,
-                captureMessage: () => m,
-                captureMinidump: () => Er,
-                close: () => Cr,
-                configureScope: () => b,
-                flush: () => Sr,
+                captureEvent: () => _captureEvent,
+                captureException: () => _captureException,
+                captureMessage: () => _captureMessage,
+                captureMinidump: () => _captureMinidump,
+                close: () => _close,
+                configureScope: () => _configureScope,
+                flush: () => _flush,
                 getCurrentHub: () => p.BF,
                 getHubFromCarrier: () => p.Me,
-                init: () => kr,
-                setContext: () => y,
-                setExtra: () => k,
-                setExtras: () => w,
-                setTag: () => T,
-                setTags: () => _,
-                setUser: () => E,
-                showReportDialog: () => Tr,
-                withScope: () => S
+                init: () => _init,
+                setContext: () => _setContext,
+                setExtra: () => _setExtra,
+                setExtras: () => _setExtras,
+                setTag: () => _setTag,
+                setTags: () => _setTags,
+                setUser: () => _setUser,
+                showReportDialog: () => _showReportDialog,
+                withScope: () => _withScope
             });
-            var n = {};
-            r.r(n), r.d(n, {
-                Console: () => De,
-                Http: () => He,
-                LinkedErrors: () => Ye,
-                Modules: () => Qe,
-                OnUncaughtException: () => Ge,
-                OnUnhandledRejection: () => Ke
+
+            let n = {};
+            __require.r(n)
+            __require.d(n, {
+                Console: () => _Console,
+                Http: () => _Http,
+                LinkedErrors: () => _LinkedErrors,
+                Modules: () => _Modules,
+                OnUncaughtException: () => _OnUncaughtException,
+                OnUnhandledRejection: () => _OnUnhandledRejection
             });
-            var o = {};
-            r.r(o), r.d(o, {FunctionToString: () => Ne, InboundFilters: () => xe});
-            var a = {};
-            r.r(a), r.d(a, {Express: () => Ot, Mongo: () => Nt, Mysql: () => At, Postgres: () => It});
-            var i, s, l = r(18991);
-            !function (e) {
-                e.Fatal = "fatal", e.Error = "error", e.Warning = "warning", e.Log = "log", e.Info = "info", e.Debug = "debug", e.Critical = "critical"
-            }(i || (i = {})), function (e) {
-                e.fromString = function (t) {
+
+            let o = {};
+            __require.r(o)
+            __require.d(o, {
+                FunctionToString: () => _FunctionToString,
+                InboundFilters: () => _InboundFilters
+            });
+
+            let a = {};
+            __require.r(a)
+            __require.d(a, {
+                Express: () => _Express,
+                Mongo: () => _Mongo,
+                Mysql: () => _Mysql,
+                Postgres: () => _Postgres
+            });
+
+            var _Severity = {}, _Status = {}
+            let l = __require(18991);
+
+            void function (_Severity) {
+                _Severity.Fatal = "fatal"
+                _Severity.Error = "error"
+                _Severity.Warning = "warning"
+                _Severity.Log = "log"
+                _Severity.Info = "info"
+                _Severity.Debug = "debug"
+                _Severity.Critical = "critical"
+            }(_Severity)
+            void function (_Severity) {
+                _Severity.fromString = function (t) {
                     switch (t) {
                         case"debug":
-                            return e.Debug;
+                            return _Severity.Debug;
                         case"info":
-                            return e.Info;
+                            return _Severity.Info;
                         case"warn":
                         case"warning":
-                            return e.Warning;
+                            return _Severity.Warning;
                         case"error":
-                            return e.Error;
+                            return _Severity.Error;
                         case"fatal":
-                            return e.Fatal;
+                            return _Severity.Fatal;
                         case"critical":
-                            return e.Critical;
+                            return _Severity.Critical;
                         default:
-                            return e.Log
+                            return _Severity.Log
                     }
                 }
-            }(i || (i = {})), function (e) {
-                e.Unknown = "unknown", e.Skipped = "skipped", e.Success = "success", e.RateLimit = "rate_limit", e.Invalid = "invalid", e.Failed = "failed"
-            }(s || (s = {})), function (e) {
-                e.fromHttpCode = function (t) {
-                    return t >= 200 && t < 300 ? e.Success : 429 === t ? e.RateLimit : t >= 400 && t < 500 ? e.Invalid : t >= 500 ? e.Failed : e.Unknown
+            }(_Severity)
+
+            void function (_Status) {
+                _Status.Unknown = "unknown"
+                _Status.Skipped = "skipped"
+                _Status.Success = "success"
+                _Status.RateLimit = "rate_limit"
+                _Status.Invalid = "invalid"
+                _Status.Failed = "failed"
+            }(_Status)
+            void function (_Status) {
+                _Status.fromHttpCode = function (t) {
+                    return t >= 200 && t < 300 ? _Status.Success : 429 === t ? _Status.RateLimit : t >= 400 && t < 500 ? _Status.Invalid : t >= 500 ? _Status.Failed : _Status.Unknown
                 }
-            }(s || (s = {}));
-            var c = function () {
-                return c = Object.assign || function (e) {
+            }(_Status)
+
+            let _assign = function () {
+                _assign = Object.assign || function (e) {
                     for (var t, r = 1, n = arguments.length; r < n; r++) for (var o in t = arguments[r]) Object.prototype.hasOwnProperty.call(t, o) && (e[o] = t[o]);
                     return e
-                }, c.apply(this, arguments)
+                }
+                return _assign.apply(this, arguments)
             };
 
             function u(e, t) {
@@ -12861,7 +13635,7 @@
                 return e
             }
 
-            var p = r(57577);
+            var p = __require(57577);
 
             function h(e) {
                 for (var t = [], r = 1; r < arguments.length; r++) t[r - 1] = arguments[r];
@@ -12870,7 +13644,7 @@
                 throw new Error("No hub defined or " + e + " was not found on the hub, please open a bug report.")
             }
 
-            function f(e, t) {
+            function _captureException(e, t) {
                 var r;
                 try {
                     throw new Error("Sentry syntheticException")
@@ -12880,66 +13654,68 @@
                 return h("captureException", e, {captureContext: t, originalException: e, syntheticException: r})
             }
 
-            function m(e, t) {
+            function _captureMessage(e, t) {
                 var r;
                 try {
                     throw new Error(e)
                 } catch (e) {
                     r = e
                 }
-                return h("captureMessage", e, "string" == typeof t ? t : void 0, c({
+                return h("captureMessage", e, "string" == typeof t ? t : void 0, _assign({
                     originalException: e,
                     syntheticException: r
                 }, "string" != typeof t ? {captureContext: t} : void 0))
             }
 
-            function g(e) {
+            function _captureEvent(e) {
                 return h("captureEvent", e)
             }
 
-            function b(e) {
+            function _configureScope(e) {
                 h("configureScope", e)
             }
 
-            function v(e) {
+            function _addBreadcrumb(e) {
                 h("addBreadcrumb", e)
             }
 
-            function y(e, t) {
+            function _setContext(e, t) {
                 h("setContext", e, t)
             }
 
-            function w(e) {
+            function _setExtras(e) {
                 h("setExtras", e)
             }
 
-            function _(e) {
+            function _setTags(e) {
                 h("setTags", e)
             }
 
-            function k(e, t) {
+            function _setExtra(e, t) {
                 h("setExtra", e, t)
             }
 
-            function T(e, t) {
+            function _setTag(e, t) {
                 h("setTag", e, t)
             }
 
-            function E(e) {
+            function _setUser(e) {
                 h("setUser", e)
             }
 
-            function S(e) {
+            function _withScope(e) {
                 h("withScope", e)
             }
 
-            var C = r(12098), O = r(4870), M = function (e, t) {
-                return M = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (e, t) {
-                    e.__proto__ = t
-                } || function (e, t) {
-                    for (var r in t) t.hasOwnProperty(r) && (e[r] = t[r])
-                }, M(e, t)
-            };
+            var C = __require(12098),
+                O = __require(4870),
+                M = function (e, t) {
+                    return M = Object.setPrototypeOf || {__proto__: []} instanceof Array && function (e, t) {
+                        e.__proto__ = t
+                    } || function (e, t) {
+                        for (var r in t) t.hasOwnProperty(r) && (e[r] = t[r])
+                    }, M(e, t)
+                };
 
             function I(e, t) {
                 function r() {
@@ -12990,31 +13766,36 @@
                 return e
             }
 
-            var R = r(23840), L = Object.setPrototypeOf || ({__proto__: []} instanceof Array ? function (e, t) {
+            var R = __require(23840),
+                L = Object.setPrototypeOf || ({__proto__: []} instanceof Array ? function (e, t) {
                     return e.__proto__ = t, e
                 } : function (e, t) {
                     for (var r in t) e.hasOwnProperty(r) || (e[r] = t[r]);
                     return e
-                }), D = function (e) {
+                }),
+                D = function (e) {
                     function t(t) {
                         var r = this.constructor, n = e.call(this, t) || this;
                         return n.message = t, n.name = r.prototype.constructor.name, L(n, r.prototype), n
                     }
 
                     return (0, R.C6)(t, e), t
-                }(Error), j = r(78336), $ = function () {
+                }(Error),
+                j = __require(78336),
+                $ = function () {
                     function e() {
                     }
 
                     return e.prototype.sendEvent = function (e) {
                         return j.T.resolve({
                             reason: "NoopTransport: Event has been skipped because no Dsn is configured.",
-                            status: s.Skipped
+                            status: _Status.Skipped
                         })
                     }, e.prototype.close = function (e) {
                         return j.T.resolve(!0)
                     }, e
-                }(), F = function () {
+                }(),
+                F = function () {
                     function e(e) {
                         this._options = e, this._options.dsn || O.v.warn("No DSN provided, backend will not do anything."), this._transport = this._setupTransport()
                     }
@@ -13036,8 +13817,12 @@
                     }, e.prototype._setupTransport = function () {
                         return new $
                     }, e
-                }(), B = r(53390), U = r(41509), H = r(91666),
-                W = /^(?:(\w+):)\/\/(?:(\w+)(?::(\w+))?@)([\w.-]+)(?::(\d+))?\/(.+)/, z = "Invalid Dsn",
+                }(),
+                B = __require(53390),
+                U = __require(41509),
+                H = __require(91666),
+                W = /^(?:(\w+):)\/\/(?:(\w+)(?::(\w+))?@)([\w.-]+)(?::(\d+))?\/(.+)/,
+                z = "Invalid Dsn",
                 q = function () {
                     function e(e) {
                         "string" == typeof e ? this._fromString(e) : this._fromComponents(e), this._validate()
@@ -13075,7 +13860,8 @@
                         if ("http" !== this.protocol && "https" !== this.protocol) throw new D(z + ": Invalid protocol " + this.protocol);
                         if (this.port && isNaN(parseInt(this.port, 10))) throw new D(z + ": Invalid port " + this.port)
                     }, e
-                }(), V = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^/]+?|)(\.[^./]*|))(?:[/]*)$/;
+                }(),
+                V = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^/]+?|)(\.[^./]*|))(?:[/]*)$/;
 
             function G(e) {
                 var t = V.exec(e);
@@ -13087,7 +13873,10 @@
                 return r || n ? (n && (n = n.substr(0, n.length - 1)), r + n) : "."
             }
 
-            var Y = r(79896), J = r(81268), X = 7, Z = new J.LRUMap(100);
+            var Y = __require(79896),
+                J = __require(81268),
+                X = 7,
+                Z = new J.LRUMap(100);
 
             function Q(e) {
                 try {
@@ -13097,7 +13886,7 @@
                 }
             }
 
-            var ee = (r.c[r.s] && r.c[r.s].filename && K(r.c[r.s].filename) || global.process.cwd()) + "/";
+            var ee = (__require.c[__require.s] && __require.c[__require.s].filename && K(__require.c[__require.s].filename) || global.process.cwd()) + "/";
 
             function te(e) {
                 var t, r = (t = e).stack ? t.stack.split("\n").slice(1).map((function (e) {
@@ -13251,7 +14040,9 @@
                         var e = {sentry_key: this.getDsn().publicKey, sentry_version: "7"};
                         return (0, U.u4)(e)
                     }, e
-                }(), ie = "6.7.1", se = function () {
+                }(),
+                _nodeVersion = "6.7.1",
+                se = function () {
                     function e(e) {
                         this._limit = e, this._buffer = []
                     }
@@ -13283,20 +14074,32 @@
                             }))
                         }))
                     }, e
-                }(), le = r(16857),
-                ce = {event: "error", transaction: "transaction", session: "session", attachment: "attachment"},
+                }(),
+                le = __require(16857),
+                ce = {
+                    event: "error",
+                    transaction: "transaction",
+                    session: "session",
+                    attachment: "attachment"
+                },
                 ue = function () {
-                    function e(e) {
-                        this.options = e, this._buffer = new se(30), this._rateLimits = {}, this.urlParser = function (e) {
+                    function e(options) {
+                        this.options = options
+                        this._buffer = new se(30)
+                        this._rateLimits = {}
+                        this.urlParser = function (e) {
                             return new le.URL(e)
-                        }, this._api = new ae(e.dsn, e._metadata, e.tunnel)
+                        }
+                        this._api = new ae(options.dsn, options._metadata, options.tunnel)
                     }
 
-                    return e.prototype.sendEvent = function (e) {
+                    e.prototype.sendEvent = function (e) {
                         throw new D("Transport Class has to implement `sendEvent` method.")
-                    }, e.prototype.close = function (e) {
+                    }
+                    e.prototype.close = function (e) {
                         return this._buffer.drain(e)
-                    }, e.prototype._getProxy = function (e) {
+                    }
+                    e.prototype._getProxy = function (e) {
                         var t, r, n = process.env, o = n.no_proxy, a = n.http_proxy, i = n.https_proxy,
                             s = this.options, l = s.httpProxy, c = s.httpsProxy,
                             u = "http" === e ? l || a : c || l || i || a;
@@ -13317,24 +14120,35 @@
                             }
                         }
                         return u
-                    }, e.prototype._getRequestOptions = function (e) {
-                        var t = A(A({}, this._api.getRequestHeaders("sentry.javascript.node", ie)), this.options.headers),
-                            r = e.hostname, n = e.pathname, o = e.port, a = e.protocol, i = "" + n;
+                    }
+                    e.prototype._getRequestOptions = function (e) {
+                        var headers = A(A({}, this._api.getRequestHeaders("sentry.javascript.node", _nodeVersion)), this.options.headers),
+                            hostname = e.hostname,
+                            pathname = e.pathname,
+                            port = e.port,
+                            protocol = e.protocol,
+                            path = "" + pathname;
                         return A({
-                            agent: this.client,
-                            headers: t,
-                            hostname: r,
-                            method: "POST",
-                            path: i,
-                            port: o,
-                            protocol: a
-                        }, this.options.caCerts && {ca: Y.readFileSync(this.options.caCerts)})
-                    }, e.prototype._disabledUntil = function (e) {
+                                agent: this.client,
+                                headers: headers,
+                                hostname: hostname,
+                                method: "POST",
+                                path: path,
+                                port: port,
+                                protocol: protocol
+                            },
+                            this.options.caCerts && {
+                                ca: Y.readFileSync(this.options.caCerts)
+                            })
+                    }
+                    e.prototype._disabledUntil = function (e) {
                         var t = ce[e];
                         return this._rateLimits[t] || this._rateLimits.all
-                    }, e.prototype._isRateLimited = function (e) {
+                    }
+                    e.prototype._isRateLimited = function (e) {
                         return this._disabledUntil(e) > new Date(Date.now())
-                    }, e.prototype._handleRateLimit = function (e) {
+                    }
+                    e.prototype._handleRateLimit = function (e) {
                         var t, r, n, o, a = Date.now(), i = e["x-sentry-rate-limits"], s = e["retry-after"];
                         if (i) {
                             try {
@@ -13370,7 +14184,8 @@
                             return !0
                         }
                         return !!s && (this._rateLimits.all = new Date(a + (0, H.FA)(a, s)), !0)
-                    }, e.prototype._send = function (e, t) {
+                    }
+                    e.prototype._send = function (e, t) {
                         return r = this, n = void 0, a = function () {
                             var r = this;
                             return function (e, t) {
@@ -13449,7 +14264,7 @@
                                     if (!r.module) throw new D("No module available");
                                     var o = r._getRequestOptions(r.urlParser(e.url)),
                                         a = r.module.request(o, (function (o) {
-                                            var a = o.statusCode || 500, i = s.fromHttpCode(a);
+                                            var a = o.statusCode || 500, i = _Status.fromHttpCode(a);
                                             o.setEncoding("utf8");
                                             var l = o.headers ? o.headers["retry-after"] : "";
                                             l = Array.isArray(l) ? l[0] : l;
@@ -13457,7 +14272,7 @@
                                                 "x-sentry-rate-limits": c = Array.isArray(c) ? c[0] : c,
                                                 "retry-after": l
                                             };
-                                            if (r._handleRateLimit(u) && O.v.warn("Too many requests, backing off until: " + r._disabledUntil(e.type)), i === s.Success) t({status: i}); else {
+                                            if (r._handleRateLimit(u) && O.v.warn("Too many requests, backing off until: " + r._disabledUntil(e.type)), i === _Status.Success) t({status: i}); else {
                                                 var d = "HTTP Error (" + a + ")";
                                                 o.headers && o.headers["x-sentry-error"] && (d += ": " + o.headers["x-sentry-error"]), n(new D(d))
                                             }
@@ -13495,8 +14310,10 @@
                             l((a = a.apply(r, n || [])).next())
                         }));
                         var r, n, o, a
-                    }, e
-                }(), de = function () {
+                    }
+                    return e
+                }(),
+                de = function () {
                     return de = Object.assign || function (e) {
                         for (var t, r = 1, n = arguments.length; r < n; r++) for (var o in t = arguments[r]) Object.prototype.hasOwnProperty.call(t, o) && (e[o] = t[o]);
                         return e
@@ -13576,88 +14393,96 @@
                 return d
             }
 
-            var ve = r(58611), ye = function (e) {
-                function t(t) {
-                    var n = e.call(this, t) || this;
-                    n.options = t;
-                    var o = n._getProxy("http");
-                    return n.module = ve, n.client = o ? new (r(74958))(o) : new ve.Agent({
-                        keepAlive: !1,
-                        maxSockets: 30,
-                        timeout: 2e3
-                    }), n
-                }
-
-                return I(t, e), t.prototype.sendEvent = function (e) {
-                    return this._send(be(e, this._api), e)
-                }, t.prototype.sendSession = function (e) {
-                    return this._send(ge(e, this._api), e)
-                }, t
-            }(ue), we = r(65692), _e = function (e) {
-                function t(t) {
-                    var n = e.call(this, t) || this;
-                    n.options = t;
-                    var o = n._getProxy("https");
-                    return n.module = we, n.client = o ? new (r(74958))(o) : new we.Agent({
-                        keepAlive: !1,
-                        maxSockets: 30,
-                        timeout: 2e3
-                    }), n
-                }
-
-                return I(t, e), t.prototype.sendEvent = function (e) {
-                    return this._send(be(e, this._api), e)
-                }, t.prototype.sendSession = function (e) {
-                    return this._send(ge(e, this._api), e)
-                }, t
-            }(ue), ke = function (e) {
-                function t() {
-                    return null !== e && e.apply(this, arguments) || this
-                }
-
-                return I(t, e), t.prototype.eventFromException = function (e, t) {
-                    var r = this, n = e, o = t && t.data && t.data.mechanism || {handled: !0, type: "generic"};
-                    if (!(0, B.bJ)(e)) {
-                        if ((0, B.Qd)(e)) {
-                            var a = "Non-Error exception captured with keys: " + (0, U.HF)(e);
-                            (0, p.BF)().configureScope((function (t) {
-                                t.setExtra("__serialized__", (0, U.cd)(e))
-                            })), (n = t && t.syntheticException || new Error(a)).message = a
-                        } else (n = t && t.syntheticException || new Error(e)).message = e;
-                        o.synthetic = !0
+            var ve = __require(58611),
+                ye = function (e) {
+                    function t(t) {
+                        var n = e.call(this, t) || this;
+                        n.options = t;
+                        var o = n._getProxy("http");
+                        return n.module = ve, n.client = o ? new (__require(74958))(o) : new ve.Agent({
+                            keepAlive: !1,
+                            maxSockets: 30,
+                            timeout: 2e3
+                        }), n
                     }
-                    return new j.T((function (e, a) {
-                        return (i = n, s = r._options, new j.T((function (e) {
-                            return ne(i, s).then((function (t) {
-                                e({exception: {values: [t]}})
-                            }))
-                        }))).then((function (r) {
-                            (0, H.gO)(r, void 0, void 0), (0, H.M6)(r, o), e(A(A({}, r), {event_id: t && t.event_id}))
-                        })).then(null, a);
-                        var i, s
-                    }))
-                }, t.prototype.eventFromMessage = function (e, t, r) {
-                    var n = this;
-                    void 0 === t && (t = i.Info);
-                    var o = {event_id: r && r.event_id, level: t, message: e};
-                    return new j.T((function (e) {
-                        n._options.attachStacktrace && r && r.syntheticException ? re(r.syntheticException ? te(r.syntheticException) : [], n._options).then((function (t) {
-                            o.stacktrace = {frames: oe(t)}, e(o)
-                        })).then(null, (function () {
-                            e(o)
-                        })) : e(o)
-                    }))
-                }, t.prototype._setupTransport = function () {
-                    if (!this._options.dsn) return e.prototype._setupTransport.call(this);
-                    var t = new q(this._options.dsn),
-                        r = A(A(A(A(A({}, this._options.transportOptions), this._options.httpProxy && {httpProxy: this._options.httpProxy}), this._options.httpsProxy && {httpsProxy: this._options.httpsProxy}), this._options.caCerts && {caCerts: this._options.caCerts}), {
-                            dsn: this._options.dsn,
-                            tunnel: this._options.tunnel,
-                            _metadata: this._options._metadata
-                        });
-                    return this._options.transport ? new this._options.transport(r) : "http" === t.protocol ? new ye(r) : new _e(r)
-                }, t
-            }(F), Te = r(83776), Ee = r(3771), Se = r(58647), Ce = [];
+
+                    return I(t, e), t.prototype.sendEvent = function (e) {
+                        return this._send(be(e, this._api), e)
+                    }, t.prototype.sendSession = function (e) {
+                        return this._send(ge(e, this._api), e)
+                    }, t
+                }(ue),
+                we = __require(65692),
+                _e = function (e) {
+                    function t(t) {
+                        var n = e.call(this, t) || this;
+                        n.options = t;
+                        var o = n._getProxy("https");
+                        return n.module = we, n.client = o ? new (__require(74958))(o) : new we.Agent({
+                            keepAlive: !1,
+                            maxSockets: 30,
+                            timeout: 2e3
+                        }), n
+                    }
+
+                    return I(t, e), t.prototype.sendEvent = function (e) {
+                        return this._send(be(e, this._api), e)
+                    }, t.prototype.sendSession = function (e) {
+                        return this._send(ge(e, this._api), e)
+                    }, t
+                }(ue),
+                ke = function (e) {
+                    function t() {
+                        return null !== e && e.apply(this, arguments) || this
+                    }
+
+                    return I(t, e), t.prototype.eventFromException = function (e, t) {
+                        var r = this, n = e, o = t && t.data && t.data.mechanism || {handled: !0, type: "generic"};
+                        if (!(0, B.bJ)(e)) {
+                            if ((0, B.Qd)(e)) {
+                                var a = "Non-Error exception captured with keys: " + (0, U.HF)(e);
+                                (0, p.BF)().configureScope((function (t) {
+                                    t.setExtra("__serialized__", (0, U.cd)(e))
+                                })), (n = t && t.syntheticException || new Error(a)).message = a
+                            } else (n = t && t.syntheticException || new Error(e)).message = e;
+                            o.synthetic = !0
+                        }
+                        return new j.T((function (e, a) {
+                            return (i = n, s = r._options, new j.T((function (e) {
+                                return ne(i, s).then((function (t) {
+                                    e({exception: {values: [t]}})
+                                }))
+                            }))).then((function (r) {
+                                (0, H.gO)(r, void 0, void 0), (0, H.M6)(r, o), e(A(A({}, r), {event_id: t && t.event_id}))
+                            })).then(null, a);
+                            var i, s
+                        }))
+                    }, t.prototype.eventFromMessage = function (e, t, r) {
+                        var n = this;
+                        void 0 === t && (t = _Severity.Info);
+                        var o = {event_id: r && r.event_id, level: t, message: e};
+                        return new j.T((function (e) {
+                            n._options.attachStacktrace && r && r.syntheticException ? re(r.syntheticException ? te(r.syntheticException) : [], n._options).then((function (t) {
+                                o.stacktrace = {frames: oe(t)}, e(o)
+                            })).then(null, (function () {
+                                e(o)
+                            })) : e(o)
+                        }))
+                    }, t.prototype._setupTransport = function () {
+                        if (!this._options.dsn) return e.prototype._setupTransport.call(this);
+                        var t = new q(this._options.dsn),
+                            r = A(A(A(A(A({}, this._options.transportOptions), this._options.httpProxy && {httpProxy: this._options.httpProxy}), this._options.httpsProxy && {httpsProxy: this._options.httpsProxy}), this._options.caCerts && {caCerts: this._options.caCerts}), {
+                                dsn: this._options.dsn,
+                                tunnel: this._options.tunnel,
+                                _metadata: this._options._metadata
+                            });
+                        return this._options.transport ? new this._options.transport(r) : "http" === t.protocol ? new ye(r) : new _e(r)
+                    }, t
+                }(F),
+                Te = __require(83776),
+                Ee = __require(3771),
+                Se = __require(58647),
+                Ce = [];
 
             function Oe(e) {
                 return e.reduce((function (e, t) {
@@ -13667,415 +14492,422 @@
                 }), [])
             }
 
-            var Me, Ie = function () {
-                function e(e, t) {
-                    this._integrations = {}, this._processing = 0, this._backend = new e(t), this._options = t, t.dsn && (this._dsn = new q(t.dsn))
-                }
-
-                return e.prototype.captureException = function (e, t, r) {
-                    var n = this, o = t && t.event_id;
-                    return this._process(this._getBackend().eventFromException(e, t).then((function (e) {
-                        return n._captureEvent(e, t, r)
-                    })).then((function (e) {
-                        o = e
-                    }))), o
-                }, e.prototype.captureMessage = function (e, t, r, n) {
-                    var o = this, a = r && r.event_id,
-                        i = (0, B.sO)(e) ? this._getBackend().eventFromMessage(String(e), t, r) : this._getBackend().eventFromException(e, r);
-                    return this._process(i.then((function (e) {
-                        return o._captureEvent(e, r, n)
-                    })).then((function (e) {
-                        a = e
-                    }))), a
-                }, e.prototype.captureEvent = function (e, t, r) {
-                    var n = t && t.event_id;
-                    return this._process(this._captureEvent(e, t, r).then((function (e) {
-                        n = e
-                    }))), n
-                }, e.prototype.captureSession = function (e) {
-                    "string" != typeof e.release ? O.v.warn("Discarded session because of missing or non-string release") : (this._sendSession(e), e.update({init: !1}))
-                }, e.prototype.getDsn = function () {
-                    return this._dsn
-                }, e.prototype.getOptions = function () {
-                    return this._options
-                }, e.prototype.flush = function (e) {
-                    var t = this;
-                    return this._isClientProcessing(e).then((function (r) {
-                        return t._getBackend().getTransport().close(e).then((function (e) {
-                            return r && e
-                        }))
-                    }))
-                }, e.prototype.close = function (e) {
-                    var t = this;
-                    return this.flush(e).then((function (e) {
-                        return t.getOptions().enabled = !1, e
-                    }))
-                }, e.prototype.setupIntegrations = function () {
-                    var e, t;
-                    this._isEnabled() && (this._integrations = (e = this._options, t = {}, function (e) {
-                        var t = e.defaultIntegrations && he(e.defaultIntegrations) || [], r = e.integrations,
-                            n = he(Oe(t));
-                        Array.isArray(r) ? n = he(n.filter((function (e) {
-                            return r.every((function (t) {
-                                return t.name !== e.name
-                            }))
-                        })), Oe(r)) : "function" == typeof r && (n = r(n), n = Array.isArray(n) ? n : [n]);
-                        var o = n.map((function (e) {
-                            return e.name
-                        })), a = "Debug";
-                        return -1 !== o.indexOf(a) && n.push.apply(n, he(n.splice(o.indexOf(a), 1))), n
-                    }(e).forEach((function (e) {
-                        t[e.name] = e, function (e) {
-                            -1 === Ce.indexOf(e.name) && (e.setupOnce(C.l, p.BF), Ce.push(e.name), O.v.log("Integration installed: " + e.name))
-                        }(e)
-                    })), t))
-                }, e.prototype.getIntegration = function (e) {
-                    try {
-                        return this._integrations[e.id] || null
-                    } catch (t) {
-                        return O.v.warn("Cannot retrieve integration " + e.id + " from the current Client"), null
+            var Me,
+                Ie = function () {
+                    function e(e, t) {
+                        this._integrations = {}, this._processing = 0, this._backend = new e(t), this._options = t, t.dsn && (this._dsn = new q(t.dsn))
                     }
-                }, e.prototype._updateSessionFromEvent = function (e, t) {
-                    var r, n, o, a = !1, i = !1, s = t.exception && t.exception.values;
-                    if (s) {
-                        i = !0;
+
+                    return e.prototype.captureException = function (e, t, r) {
+                        var n = this, o = t && t.event_id;
+                        return this._process(this._getBackend().eventFromException(e, t).then((function (e) {
+                            return n._captureEvent(e, t, r)
+                        })).then((function (e) {
+                            o = e
+                        }))), o
+                    }, e.prototype.captureMessage = function (e, t, r, n) {
+                        var o = this, a = r && r.event_id,
+                            i = (0, B.sO)(e) ? this._getBackend().eventFromMessage(String(e), t, r) : this._getBackend().eventFromException(e, r);
+                        return this._process(i.then((function (e) {
+                            return o._captureEvent(e, r, n)
+                        })).then((function (e) {
+                            a = e
+                        }))), a
+                    }, e.prototype.captureEvent = function (e, t, r) {
+                        var n = t && t.event_id;
+                        return this._process(this._captureEvent(e, t, r).then((function (e) {
+                            n = e
+                        }))), n
+                    }, e.prototype.captureSession = function (e) {
+                        "string" != typeof e.release ? O.v.warn("Discarded session because of missing or non-string release") : (this._sendSession(e), e.update({init: !1}))
+                    }, e.prototype.getDsn = function () {
+                        return this._dsn
+                    }, e.prototype.getOptions = function () {
+                        return this._options
+                    }, e.prototype.flush = function (e) {
+                        var t = this;
+                        return this._isClientProcessing(e).then((function (r) {
+                            return t._getBackend().getTransport().close(e).then((function (e) {
+                                return r && e
+                            }))
+                        }))
+                    }, e.prototype.close = function (e) {
+                        var t = this;
+                        return this.flush(e).then((function (e) {
+                            return t.getOptions().enabled = !1, e
+                        }))
+                    }, e.prototype.setupIntegrations = function () {
+                        var e, t;
+                        this._isEnabled() && (this._integrations = (e = this._options, t = {}, function (e) {
+                            var t = e.defaultIntegrations && he(e.defaultIntegrations) || [], r = e.integrations,
+                                n = he(Oe(t));
+                            Array.isArray(r) ? n = he(n.filter((function (e) {
+                                return r.every((function (t) {
+                                    return t.name !== e.name
+                                }))
+                            })), Oe(r)) : "function" == typeof r && (n = r(n), n = Array.isArray(n) ? n : [n]);
+                            var o = n.map((function (e) {
+                                return e.name
+                            })), a = "Debug";
+                            return -1 !== o.indexOf(a) && n.push.apply(n, he(n.splice(o.indexOf(a), 1))), n
+                        }(e).forEach((function (e) {
+                            t[e.name] = e, function (e) {
+                                -1 === Ce.indexOf(e.name) && (e.setupOnce(C.l, p.BF), Ce.push(e.name), O.v.log("Integration installed: " + e.name))
+                            }(e)
+                        })), t))
+                    }, e.prototype.getIntegration = function (e) {
                         try {
-                            for (var l = function (e) {
-                                var t = "function" == typeof Symbol && Symbol.iterator, r = t && e[t], n = 0;
-                                if (r) return r.call(e);
-                                if (e && "number" == typeof e.length) return {
-                                    next: function () {
-                                        return e && n >= e.length && (e = void 0), {value: e && e[n++], done: !e}
+                            return this._integrations[e.id] || null
+                        } catch (t) {
+                            return O.v.warn("Cannot retrieve integration " + e.id + " from the current Client"), null
+                        }
+                    }, e.prototype._updateSessionFromEvent = function (e, t) {
+                        var r, n, o, a = !1, i = !1, s = t.exception && t.exception.values;
+                        if (s) {
+                            i = !0;
+                            try {
+                                for (var l = function (e) {
+                                    var t = "function" == typeof Symbol && Symbol.iterator, r = t && e[t], n = 0;
+                                    if (r) return r.call(e);
+                                    if (e && "number" == typeof e.length) return {
+                                        next: function () {
+                                            return e && n >= e.length && (e = void 0), {value: e && e[n++], done: !e}
+                                        }
+                                    };
+                                    throw new TypeError(t ? "Object is not iterable." : "Symbol.iterator is not defined.")
+                                }(s), c = l.next(); !c.done; c = l.next()) {
+                                    var u = c.value.mechanism;
+                                    if (u && !1 === u.handled) {
+                                        a = !0;
+                                        break
                                     }
-                                };
-                                throw new TypeError(t ? "Object is not iterable." : "Symbol.iterator is not defined.")
-                            }(s), c = l.next(); !c.done; c = l.next()) {
-                                var u = c.value.mechanism;
-                                if (u && !1 === u.handled) {
-                                    a = !0;
-                                    break
+                                }
+                            } catch (e) {
+                                r = {error: e}
+                            } finally {
+                                try {
+                                    c && !c.done && (n = l.return) && n.call(l)
+                                } finally {
+                                    if (r) throw r.error
                                 }
                             }
-                        } catch (e) {
-                            r = {error: e}
-                        } finally {
-                            try {
-                                c && !c.done && (n = l.return) && n.call(l)
-                            } finally {
-                                if (r) throw r.error
+                        }
+                        var d = t.user;
+                        if (!e.userAgent) {
+                            var p = t.request ? t.request.headers : {};
+                            for (var h in p) if ("user-agent" === h.toLowerCase()) {
+                                o = p[h];
+                                break
                             }
                         }
-                    }
-                    var d = t.user;
-                    if (!e.userAgent) {
-                        var p = t.request ? t.request.headers : {};
-                        for (var h in p) if ("user-agent" === h.toLowerCase()) {
-                            o = p[h];
-                            break
-                        }
-                    }
-                    e.update(de(de({}, a && {status: Te.P.Crashed}), {
-                        user: d,
-                        userAgent: o,
-                        errors: e.errors + Number(i || a)
-                    })), this.captureSession(e)
-                }, e.prototype._sendSession = function (e) {
-                    this._getBackend().sendSession(e)
-                }, e.prototype._isClientProcessing = function (e) {
-                    var t = this;
-                    return new j.T((function (r) {
-                        var n = 0, o = setInterval((function () {
-                            0 == t._processing ? (clearInterval(o), r(!0)) : (n += 1, e && n >= e && (clearInterval(o), r(!1)))
-                        }), 1)
-                    }))
-                }, e.prototype._getBackend = function () {
-                    return this._backend
-                }, e.prototype._isEnabled = function () {
-                    return !1 !== this.getOptions().enabled && void 0 !== this._dsn
-                }, e.prototype._prepareEvent = function (e, t, r) {
-                    var n = this, o = this.getOptions().normalizeDepth, a = void 0 === o ? 3 : o, i = de(de({}, e), {
-                        event_id: e.event_id || (r && r.event_id ? r.event_id : (0, H.eJ)()),
-                        timestamp: e.timestamp || (0, Ee.lu)()
-                    });
-                    this._applyClientOptions(i), this._applyIntegrationsMetadata(i);
-                    var s = t;
-                    r && r.captureContext && (s = C.H.clone(s).update(r.captureContext));
-                    var l = j.T.resolve(i);
-                    return s && (l = s.applyToEvent(i, r)), l.then((function (e) {
-                        return "number" == typeof a && a > 0 ? n._normalizeEvent(e, a) : e
-                    }))
-                }, e.prototype._normalizeEvent = function (e, t) {
-                    if (!e) return null;
-                    var r = de(de(de(de(de({}, e), e.breadcrumbs && {
-                        breadcrumbs: e.breadcrumbs.map((function (e) {
-                            return de(de({}, e), e.data && {data: (0, U.S8)(e.data, t)})
+                        e.update(de(de({}, a && {status: Te.P.Crashed}), {
+                            user: d,
+                            userAgent: o,
+                            errors: e.errors + Number(i || a)
+                        })), this.captureSession(e)
+                    }, e.prototype._sendSession = function (e) {
+                        this._getBackend().sendSession(e)
+                    }, e.prototype._isClientProcessing = function (e) {
+                        var t = this;
+                        return new j.T((function (r) {
+                            var n = 0, o = setInterval((function () {
+                                0 == t._processing ? (clearInterval(o), r(!0)) : (n += 1, e && n >= e && (clearInterval(o), r(!1)))
+                            }), 1)
                         }))
-                    }), e.user && {user: (0, U.S8)(e.user, t)}), e.contexts && {contexts: (0, U.S8)(e.contexts, t)}), e.extra && {extra: (0, U.S8)(e.extra, t)});
-                    return e.contexts && e.contexts.trace && (r.contexts.trace = e.contexts.trace), r
-                }, e.prototype._applyClientOptions = function (e) {
-                    var t = this.getOptions(), r = t.environment, n = t.release, o = t.dist, a = t.maxValueLength,
-                        i = void 0 === a ? 250 : a;
-                    "environment" in e || (e.environment = "environment" in t ? r : "production"), void 0 === e.release && void 0 !== n && (e.release = n), void 0 === e.dist && void 0 !== o && (e.dist = o), e.message && (e.message = (0, Se.xv)(e.message, i));
-                    var s = e.exception && e.exception.values && e.exception.values[0];
-                    s && s.value && (s.value = (0, Se.xv)(s.value, i));
-                    var l = e.request;
-                    l && l.url && (l.url = (0, Se.xv)(l.url, i))
-                }, e.prototype._applyIntegrationsMetadata = function (e) {
-                    var t = Object.keys(this._integrations);
-                    t.length > 0 && (e.sdk = e.sdk || {}, e.sdk.integrations = he(e.sdk.integrations || [], t))
-                }, e.prototype._sendEvent = function (e) {
-                    this._getBackend().sendEvent(e)
-                }, e.prototype._captureEvent = function (e, t, r) {
-                    return this._processEvent(e, t, r).then((function (e) {
-                        return e.event_id
-                    }), (function (e) {
-                        O.v.error(e)
-                    }))
-                }, e.prototype._processEvent = function (e, t, r) {
-                    var n = this, o = this.getOptions(), a = o.beforeSend, i = o.sampleRate;
-                    if (!this._isEnabled()) return j.T.reject(new D("SDK not enabled, will not send event."));
-                    var s = "transaction" === e.type;
-                    return !s && "number" == typeof i && Math.random() > i ? j.T.reject(new D("Discarding event because it's not included in the random sample (sampling rate = " + i + ")")) : this._prepareEvent(e, r, t).then((function (e) {
-                        if (null === e) throw new D("An event processor returned null, will not send event.");
-                        if (t && t.data && !0 === t.data.__sentry__ || s || !a) return e;
-                        var r = a(e, t);
-                        if (void 0 === r) throw new D("`beforeSend` method has to return `null` or a valid event.");
-                        return (0, B.Qg)(r) ? r.then((function (e) {
-                            return e
+                    }, e.prototype._getBackend = function () {
+                        return this._backend
+                    }, e.prototype._isEnabled = function () {
+                        return !1 !== this.getOptions().enabled && void 0 !== this._dsn
+                    }, e.prototype._prepareEvent = function (e, t, r) {
+                        var n = this, o = this.getOptions().normalizeDepth, a = void 0 === o ? 3 : o,
+                            i = de(de({}, e), {
+                                event_id: e.event_id || (r && r.event_id ? r.event_id : (0, H.eJ)()),
+                                timestamp: e.timestamp || (0, Ee.lu)()
+                            });
+                        this._applyClientOptions(i), this._applyIntegrationsMetadata(i);
+                        var s = t;
+                        r && r.captureContext && (s = C.H.clone(s).update(r.captureContext));
+                        var l = j.T.resolve(i);
+                        return s && (l = s.applyToEvent(i, r)), l.then((function (e) {
+                            return "number" == typeof a && a > 0 ? n._normalizeEvent(e, a) : e
+                        }))
+                    }, e.prototype._normalizeEvent = function (e, t) {
+                        if (!e) return null;
+                        var r = de(de(de(de(de({}, e), e.breadcrumbs && {
+                            breadcrumbs: e.breadcrumbs.map((function (e) {
+                                return de(de({}, e), e.data && {data: (0, U.S8)(e.data, t)})
+                            }))
+                        }), e.user && {user: (0, U.S8)(e.user, t)}), e.contexts && {contexts: (0, U.S8)(e.contexts, t)}), e.extra && {extra: (0, U.S8)(e.extra, t)});
+                        return e.contexts && e.contexts.trace && (r.contexts.trace = e.contexts.trace), r
+                    }, e.prototype._applyClientOptions = function (e) {
+                        var t = this.getOptions(), r = t.environment, n = t.release, o = t.dist, a = t.maxValueLength,
+                            i = void 0 === a ? 250 : a;
+                        "environment" in e || (e.environment = "environment" in t ? r : "production"), void 0 === e.release && void 0 !== n && (e.release = n), void 0 === e.dist && void 0 !== o && (e.dist = o), e.message && (e.message = (0, Se.xv)(e.message, i));
+                        var s = e.exception && e.exception.values && e.exception.values[0];
+                        s && s.value && (s.value = (0, Se.xv)(s.value, i));
+                        var l = e.request;
+                        l && l.url && (l.url = (0, Se.xv)(l.url, i))
+                    }, e.prototype._applyIntegrationsMetadata = function (e) {
+                        var t = Object.keys(this._integrations);
+                        t.length > 0 && (e.sdk = e.sdk || {}, e.sdk.integrations = he(e.sdk.integrations || [], t))
+                    }, e.prototype._sendEvent = function (e) {
+                        this._getBackend().sendEvent(e)
+                    }, e.prototype._captureEvent = function (e, t, r) {
+                        return this._processEvent(e, t, r).then((function (e) {
+                            return e.event_id
                         }), (function (e) {
-                            throw new D("beforeSend rejected with " + e)
-                        })) : r
-                    })).then((function (e) {
-                        if (null === e) throw new D("`beforeSend` returned `null`, will not send event.");
-                        var t = r && r.getSession && r.getSession();
-                        return !s && t && n._updateSessionFromEvent(t, e), n._sendEvent(e), e
-                    })).then(null, (function (e) {
-                        if (e instanceof D) throw e;
-                        throw n.captureException(e, {
-                            data: {__sentry__: !0},
-                            originalException: e
-                        }), new D("Event processing pipeline threw an error, original event will not be sent. Details have been sent as a new event.\nReason: " + e)
-                    }))
-                }, e.prototype._process = function (e) {
-                    var t = this;
-                    this._processing += 1, e.then((function (e) {
-                        return t._processing -= 1, e
-                    }), (function (e) {
-                        return t._processing -= 1, e
-                    }))
-                }, e
-            }(), Ae = function () {
-                function e(e, t) {
-                    var r = this;
-                    this.flushTimeout = 60, this._pendingAggregates = {}, this._isEnabled = !0, this._transport = e, this._intervalId = setInterval((function () {
-                        return r.flush()
-                    }), 1e3 * this.flushTimeout), this._sessionAttrs = t
-                }
-
-                return e.prototype.sendSessionAggregates = function (e) {
-                    this._transport.sendSession ? this._transport.sendSession(e).then(null, (function (e) {
-                        O.v.error("Error while sending session: " + e)
-                    })) : O.v.warn("Dropping session because custom transport doesn't implement sendSession")
-                }, e.prototype.flush = function () {
-                    var e = this.getSessionAggregates();
-                    0 !== e.aggregates.length && (this._pendingAggregates = {}, this.sendSessionAggregates(e))
-                }, e.prototype.getSessionAggregates = function () {
-                    var e = this, t = Object.keys(this._pendingAggregates).map((function (t) {
-                        return e._pendingAggregates[parseInt(t)]
-                    })), r = {attrs: this._sessionAttrs, aggregates: t};
-                    return (0, U.Ce)(r)
-                }, e.prototype.close = function () {
-                    clearInterval(this._intervalId), this._isEnabled = !1, this.flush()
-                }, e.prototype.incrementSessionStatusCount = function () {
-                    var e, t;
-                    if (this._isEnabled) {
-                        var r = (0, p.BF)().getScope(),
-                            n = null === (e = r) || void 0 === e ? void 0 : e.getRequestSession();
-                        n && n.status && (this._incrementSessionStatusCount(n.status, new Date), null === (t = r) || void 0 === t || t.setRequestSession(void 0))
-                    }
-                }, e.prototype._incrementSessionStatusCount = function (e, t) {
-                    var r = new Date(t).setSeconds(0, 0);
-                    this._pendingAggregates[r] = this._pendingAggregates[r] || {};
-                    var n = this._pendingAggregates[r];
-                    switch (n.started || (n.started = new Date(r).toISOString()), e) {
-                        case Te.m.Errored:
-                            return n.errored = (n.errored || 0) + 1, n.errored;
-                        case Te.m.Ok:
-                            return n.exited = (n.exited || 0) + 1, n.exited;
-                        case Te.m.Crashed:
-                            return n.crashed = (n.crashed || 0) + 1, n.crashed
-                    }
-                }, e
-            }(), Pe = (function (e) {
-                function t(t) {
-                    return t._metadata = t._metadata || {}, t._metadata.sdk = t._metadata.sdk || {
-                        name: "sentry.javascript.node",
-                        packages: [{name: "npm:@sentry/node", version: ie}],
-                        version: ie
-                    }, e.call(this, ke, t) || this
-                }
-
-                I(t, e), t.prototype.captureException = function (t, r, n) {
-                    if (this._options.autoSessionTracking && this._sessionFlusher && n) {
-                        var o = n.getRequestSession();
-                        o && o.status === Te.m.Ok && (o.status = Te.m.Errored)
-                    }
-                    return e.prototype.captureException.call(this, t, r, n)
-                }, t.prototype.captureEvent = function (t, r, n) {
-                    if (this._options.autoSessionTracking && this._sessionFlusher && n && "exception" === (t.type || "exception") && t.exception && t.exception.values && t.exception.values.length > 0) {
-                        var o = n.getRequestSession();
-                        o && o.status === Te.m.Ok && (o.status = Te.m.Errored)
-                    }
-                    return e.prototype.captureEvent.call(this, t, r, n)
-                }, t.prototype.close = function (t) {
-                    var r;
-                    return null === (r = this._sessionFlusher) || void 0 === r || r.close(), e.prototype.close.call(this, t)
-                }, t.prototype.initSessionFlusher = function () {
-                    var e = this._options, t = e.release, r = e.environment;
-                    t ? this._sessionFlusher = new Ae(this._backend.getTransport(), {
-                        release: t,
-                        environment: r
-                    }) : O.v.warn("Cannot initialise an instance of SessionFlusher if no release is provided!")
-                }, t.prototype._prepareEvent = function (t, r, n) {
-                    return t.platform = t.platform || "node", this.getOptions().serverName && (t.server_name = this.getOptions().serverName), e.prototype._prepareEvent.call(this, t, r, n)
-                }, t.prototype._captureRequestSession = function () {
-                    this._sessionFlusher ? this._sessionFlusher.incrementSessionStatusCount() : O.v.warn("Discarded request mode session because autoSessionTracking option was disabled")
-                }
-            }(Ie), [/^Script error\.?$/, /^Javascript error: Script error\.? on line 0$/]), xe = function () {
-                function e(t) {
-                    void 0 === t && (t = {}), this._options = t, this.name = e.id
-                }
-
-                return e.prototype.setupOnce = function () {
-                    (0, C.l)((function (t) {
-                        var r = (0, p.BF)();
-                        if (!r) return t;
-                        var n = r.getIntegration(e);
-                        if (n) {
-                            var o = r.getClient(), a = o ? o.getOptions() : {},
-                                i = "function" == typeof n._mergeOptions ? n._mergeOptions(a) : {};
-                            return "function" != typeof n._shouldDropEvent ? t : n._shouldDropEvent(t, i) ? null : t
-                        }
-                        return t
-                    }))
-                }, e.prototype._shouldDropEvent = function (e, t) {
-                    return this._isSentryError(e, t) ? (O.v.warn("Event dropped due to being internal Sentry Error.\nEvent: " + (0, H.$X)(e)), !0) : this._isIgnoredError(e, t) ? (O.v.warn("Event dropped due to being matched by `ignoreErrors` option.\nEvent: " + (0, H.$X)(e)), !0) : this._isDeniedUrl(e, t) ? (O.v.warn("Event dropped due to being matched by `denyUrls` option.\nEvent: " + (0, H.$X)(e) + ".\nUrl: " + this._getEventFilterUrl(e)), !0) : !this._isAllowedUrl(e, t) && (O.v.warn("Event dropped due to not being matched by `allowUrls` option.\nEvent: " + (0, H.$X)(e) + ".\nUrl: " + this._getEventFilterUrl(e)), !0)
-                }, e.prototype._isSentryError = function (e, t) {
-                    if (!t.ignoreInternal) return !1;
-                    try {
-                        return e && e.exception && e.exception.values && e.exception.values[0] && "SentryError" === e.exception.values[0].type || !1
-                    } catch (e) {
-                        return !1
-                    }
-                }, e.prototype._isIgnoredError = function (e, t) {
-                    return !(!t.ignoreErrors || !t.ignoreErrors.length) && this._getPossibleEventMessages(e).some((function (e) {
-                        return t.ignoreErrors.some((function (t) {
-                            return (0, Se._c)(e, t)
+                            O.v.error(e)
                         }))
-                    }))
-                }, e.prototype._isDeniedUrl = function (e, t) {
-                    if (!t.denyUrls || !t.denyUrls.length) return !1;
-                    var r = this._getEventFilterUrl(e);
-                    return !!r && t.denyUrls.some((function (e) {
-                        return (0, Se._c)(r, e)
-                    }))
-                }, e.prototype._isAllowedUrl = function (e, t) {
-                    if (!t.allowUrls || !t.allowUrls.length) return !0;
-                    var r = this._getEventFilterUrl(e);
-                    return !r || t.allowUrls.some((function (e) {
-                        return (0, Se._c)(r, e)
-                    }))
-                }, e.prototype._mergeOptions = function (e) {
-                    return void 0 === e && (e = {}), {
-                        allowUrls: he(this._options.whitelistUrls || [], this._options.allowUrls || [], e.whitelistUrls || [], e.allowUrls || []),
-                        denyUrls: he(this._options.blacklistUrls || [], this._options.denyUrls || [], e.blacklistUrls || [], e.denyUrls || []),
-                        ignoreErrors: he(this._options.ignoreErrors || [], e.ignoreErrors || [], Pe),
-                        ignoreInternal: void 0 === this._options.ignoreInternal || this._options.ignoreInternal
+                    }, e.prototype._processEvent = function (e, t, r) {
+                        var n = this, o = this.getOptions(), a = o.beforeSend, i = o.sampleRate;
+                        if (!this._isEnabled()) return j.T.reject(new D("SDK not enabled, will not send event."));
+                        var s = "transaction" === e.type;
+                        return !s && "number" == typeof i && Math.random() > i ? j.T.reject(new D("Discarding event because it's not included in the random sample (sampling rate = " + i + ")")) : this._prepareEvent(e, r, t).then((function (e) {
+                            if (null === e) throw new D("An event processor returned null, will not send event.");
+                            if (t && t.data && !0 === t.data.__sentry__ || s || !a) return e;
+                            var r = a(e, t);
+                            if (void 0 === r) throw new D("`beforeSend` method has to return `null` or a valid event.");
+                            return (0, B.Qg)(r) ? r.then((function (e) {
+                                return e
+                            }), (function (e) {
+                                throw new D("beforeSend rejected with " + e)
+                            })) : r
+                        })).then((function (e) {
+                            if (null === e) throw new D("`beforeSend` returned `null`, will not send event.");
+                            var t = r && r.getSession && r.getSession();
+                            return !s && t && n._updateSessionFromEvent(t, e), n._sendEvent(e), e
+                        })).then(null, (function (e) {
+                            if (e instanceof D) throw e;
+                            throw n.captureException(e, {
+                                data: {__sentry__: !0},
+                                originalException: e
+                            }), new D("Event processing pipeline threw an error, original event will not be sent. Details have been sent as a new event.\nReason: " + e)
+                        }))
+                    }, e.prototype._process = function (e) {
+                        var t = this;
+                        this._processing += 1, e.then((function (e) {
+                            return t._processing -= 1, e
+                        }), (function (e) {
+                            return t._processing -= 1, e
+                        }))
+                    }, e
+                }(),
+                Ae = function () {
+                    function e(e, t) {
+                        var r = this;
+                        this.flushTimeout = 60, this._pendingAggregates = {}, this._isEnabled = !0, this._transport = e, this._intervalId = setInterval((function () {
+                            return r.flush()
+                        }), 1e3 * this.flushTimeout), this._sessionAttrs = t
                     }
-                }, e.prototype._getPossibleEventMessages = function (e) {
-                    if (e.message) return [e.message];
-                    if (e.exception) try {
-                        var t = e.exception.values && e.exception.values[0] || {}, r = t.type,
-                            n = void 0 === r ? "" : r, o = t.value, a = void 0 === o ? "" : o;
-                        return ["" + a, n + ": " + a]
-                    } catch (t) {
-                        return O.v.error("Cannot extract message for event " + (0, H.$X)(e)), []
-                    }
-                    return []
-                }, e.prototype._getEventFilterUrl = function (e) {
-                    try {
-                        if (e.stacktrace) {
-                            var t = e.stacktrace.frames;
-                            return t && t[t.length - 1].filename || null
-                        }
-                        if (e.exception) {
-                            var r = e.exception.values && e.exception.values[0].stacktrace && e.exception.values[0].stacktrace.frames;
-                            return r && r[r.length - 1].filename || null
-                        }
-                        return null
-                    } catch (t) {
-                        return O.v.error("Cannot extract url for event " + (0, H.$X)(e)), null
-                    }
-                }, e.id = "InboundFilters", e
-            }(), Ne = function () {
-                function e() {
-                    this.name = e.id
-                }
 
-                return e.prototype.setupOnce = function () {
-                    Me = Function.prototype.toString, Function.prototype.toString = function () {
-                        for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
-                        var r = this.__sentry_original__ || this;
-                        return Me.apply(r, e)
-                    }
-                }, e.id = "FunctionToString", e
-            }();
-            const Re = require("domain");
-            var Le = r(39023), De = function () {
-                function e() {
-                    this.name = e.id
-                }
-
-                return e.prototype.setupOnce = function () {
-                    var e, t;
-                    try {
-                        for (var r = P(["debug", "info", "warn", "error", "log"]), n = r.next(); !n.done; n = r.next()) {
-                            var o = n.value;
-                            (0, U.GS)(console, o, je(o))
+                    return e.prototype.sendSessionAggregates = function (e) {
+                        this._transport.sendSession ? this._transport.sendSession(e).then(null, (function (e) {
+                            O.v.error("Error while sending session: " + e)
+                        })) : O.v.warn("Dropping session because custom transport doesn't implement sendSession")
+                    }, e.prototype.flush = function () {
+                        var e = this.getSessionAggregates();
+                        0 !== e.aggregates.length && (this._pendingAggregates = {}, this.sendSessionAggregates(e))
+                    }, e.prototype.getSessionAggregates = function () {
+                        var e = this, t = Object.keys(this._pendingAggregates).map((function (t) {
+                            return e._pendingAggregates[parseInt(t)]
+                        })), r = {attrs: this._sessionAttrs, aggregates: t};
+                        return (0, U.Ce)(r)
+                    }, e.prototype.close = function () {
+                        clearInterval(this._intervalId), this._isEnabled = !1, this.flush()
+                    }, e.prototype.incrementSessionStatusCount = function () {
+                        var e, t;
+                        if (this._isEnabled) {
+                            var r = (0, p.BF)().getScope(),
+                                n = null === (e = r) || void 0 === e ? void 0 : e.getRequestSession();
+                            n && n.status && (this._incrementSessionStatusCount(n.status, new Date), null === (t = r) || void 0 === t || t.setRequestSession(void 0))
                         }
-                    } catch (t) {
-                        e = {error: t}
-                    } finally {
+                    }, e.prototype._incrementSessionStatusCount = function (e, t) {
+                        var r = new Date(t).setSeconds(0, 0);
+                        this._pendingAggregates[r] = this._pendingAggregates[r] || {};
+                        var n = this._pendingAggregates[r];
+                        switch (n.started || (n.started = new Date(r).toISOString()), e) {
+                            case Te.m.Errored:
+                                return n.errored = (n.errored || 0) + 1, n.errored;
+                            case Te.m.Ok:
+                                return n.exited = (n.exited || 0) + 1, n.exited;
+                            case Te.m.Crashed:
+                                return n.crashed = (n.crashed || 0) + 1, n.crashed
+                        }
+                    }, e
+                }(),
+                Pe = (function (e) {
+                    function t(t) {
+                        return t._metadata = t._metadata || {}, t._metadata.sdk = t._metadata.sdk || {
+                            name: "sentry.javascript.node",
+                            packages: [{name: "npm:@sentry/node", version: _nodeVersion}],
+                            version: _nodeVersion
+                        }, e.call(this, ke, t) || this
+                    }
+
+                    I(t, e), t.prototype.captureException = function (t, r, n) {
+                        if (this._options.autoSessionTracking && this._sessionFlusher && n) {
+                            var o = n.getRequestSession();
+                            o && o.status === Te.m.Ok && (o.status = Te.m.Errored)
+                        }
+                        return e.prototype.captureException.call(this, t, r, n)
+                    }, t.prototype.captureEvent = function (t, r, n) {
+                        if (this._options.autoSessionTracking && this._sessionFlusher && n && "exception" === (t.type || "exception") && t.exception && t.exception.values && t.exception.values.length > 0) {
+                            var o = n.getRequestSession();
+                            o && o.status === Te.m.Ok && (o.status = Te.m.Errored)
+                        }
+                        return e.prototype.captureEvent.call(this, t, r, n)
+                    }, t.prototype.close = function (t) {
+                        var r;
+                        return null === (r = this._sessionFlusher) || void 0 === r || r.close(), e.prototype.close.call(this, t)
+                    }, t.prototype.initSessionFlusher = function () {
+                        var e = this._options, t = e.release, r = e.environment;
+                        t ? this._sessionFlusher = new Ae(this._backend.getTransport(), {
+                            release: t,
+                            environment: r
+                        }) : O.v.warn("Cannot initialise an instance of SessionFlusher if no release is provided!")
+                    }, t.prototype._prepareEvent = function (t, r, n) {
+                        return t.platform = t.platform || "node", this.getOptions().serverName && (t.server_name = this.getOptions().serverName), e.prototype._prepareEvent.call(this, t, r, n)
+                    }, t.prototype._captureRequestSession = function () {
+                        this._sessionFlusher ? this._sessionFlusher.incrementSessionStatusCount() : O.v.warn("Discarded request mode session because autoSessionTracking option was disabled")
+                    }
+                }(Ie), [/^Script error\.?$/, /^Javascript error: Script error\.? on line 0$/]),
+                _InboundFilters = function () {
+                    function e(t) {
+                        void 0 === t && (t = {}), this._options = t, this.name = e.id
+                    }
+
+                    return e.prototype.setupOnce = function () {
+                        (0, C.l)((function (t) {
+                            var r = (0, p.BF)();
+                            if (!r) return t;
+                            var n = r.getIntegration(e);
+                            if (n) {
+                                var o = r.getClient(), a = o ? o.getOptions() : {},
+                                    i = "function" == typeof n._mergeOptions ? n._mergeOptions(a) : {};
+                                return "function" != typeof n._shouldDropEvent ? t : n._shouldDropEvent(t, i) ? null : t
+                            }
+                            return t
+                        }))
+                    }, e.prototype._shouldDropEvent = function (e, t) {
+                        return this._isSentryError(e, t) ? (O.v.warn("Event dropped due to being internal Sentry Error.\nEvent: " + (0, H.$X)(e)), !0) : this._isIgnoredError(e, t) ? (O.v.warn("Event dropped due to being matched by `ignoreErrors` option.\nEvent: " + (0, H.$X)(e)), !0) : this._isDeniedUrl(e, t) ? (O.v.warn("Event dropped due to being matched by `denyUrls` option.\nEvent: " + (0, H.$X)(e) + ".\nUrl: " + this._getEventFilterUrl(e)), !0) : !this._isAllowedUrl(e, t) && (O.v.warn("Event dropped due to not being matched by `allowUrls` option.\nEvent: " + (0, H.$X)(e) + ".\nUrl: " + this._getEventFilterUrl(e)), !0)
+                    }, e.prototype._isSentryError = function (e, t) {
+                        if (!t.ignoreInternal) return !1;
                         try {
-                            n && !n.done && (t = r.return) && t.call(r)
-                        } finally {
-                            if (e) throw e.error
+                            return e && e.exception && e.exception.values && e.exception.values[0] && "SentryError" === e.exception.values[0].type || !1
+                        } catch (e) {
+                            return !1
                         }
+                    }, e.prototype._isIgnoredError = function (e, t) {
+                        return !(!t.ignoreErrors || !t.ignoreErrors.length) && this._getPossibleEventMessages(e).some((function (e) {
+                            return t.ignoreErrors.some((function (t) {
+                                return (0, Se._c)(e, t)
+                            }))
+                        }))
+                    }, e.prototype._isDeniedUrl = function (e, t) {
+                        if (!t.denyUrls || !t.denyUrls.length) return !1;
+                        var r = this._getEventFilterUrl(e);
+                        return !!r && t.denyUrls.some((function (e) {
+                            return (0, Se._c)(r, e)
+                        }))
+                    }, e.prototype._isAllowedUrl = function (e, t) {
+                        if (!t.allowUrls || !t.allowUrls.length) return !0;
+                        var r = this._getEventFilterUrl(e);
+                        return !r || t.allowUrls.some((function (e) {
+                            return (0, Se._c)(r, e)
+                        }))
+                    }, e.prototype._mergeOptions = function (e) {
+                        return void 0 === e && (e = {}), {
+                            allowUrls: he(this._options.whitelistUrls || [], this._options.allowUrls || [], e.whitelistUrls || [], e.allowUrls || []),
+                            denyUrls: he(this._options.blacklistUrls || [], this._options.denyUrls || [], e.blacklistUrls || [], e.denyUrls || []),
+                            ignoreErrors: he(this._options.ignoreErrors || [], e.ignoreErrors || [], Pe),
+                            ignoreInternal: void 0 === this._options.ignoreInternal || this._options.ignoreInternal
+                        }
+                    }, e.prototype._getPossibleEventMessages = function (e) {
+                        if (e.message) return [e.message];
+                        if (e.exception) try {
+                            var t = e.exception.values && e.exception.values[0] || {}, r = t.type,
+                                n = void 0 === r ? "" : r, o = t.value, a = void 0 === o ? "" : o;
+                            return ["" + a, n + ": " + a]
+                        } catch (t) {
+                            return O.v.error("Cannot extract message for event " + (0, H.$X)(e)), []
+                        }
+                        return []
+                    }, e.prototype._getEventFilterUrl = function (e) {
+                        try {
+                            if (e.stacktrace) {
+                                var t = e.stacktrace.frames;
+                                return t && t[t.length - 1].filename || null
+                            }
+                            if (e.exception) {
+                                var r = e.exception.values && e.exception.values[0].stacktrace && e.exception.values[0].stacktrace.frames;
+                                return r && r[r.length - 1].filename || null
+                            }
+                            return null
+                        } catch (t) {
+                            return O.v.error("Cannot extract url for event " + (0, H.$X)(e)), null
+                        }
+                    }, e.id = "InboundFilters", e
+                }(),
+                _FunctionToString = function () {
+                    function e() {
+                        this.name = e.id
                     }
-                }, e.id = "Console", e
-            }();
+
+                    return e.prototype.setupOnce = function () {
+                        Me = Function.prototype.toString, Function.prototype.toString = function () {
+                            for (var e = [], t = 0; t < arguments.length; t++) e[t] = arguments[t];
+                            var r = this.__sentry_original__ || this;
+                            return Me.apply(r, e)
+                        }
+                    }, e.id = "FunctionToString", e
+                }();
+            const Re = require("domain");
+            var Le = __require(39023),
+                _Console = function () {
+                    function e() {
+                        this.name = e.id
+                    }
+
+                    return e.prototype.setupOnce = function () {
+                        var e, t;
+                        try {
+                            for (var r = P(["debug", "info", "warn", "error", "log"]), n = r.next(); !n.done; n = r.next()) {
+                                var o = n.value;
+                                (0, U.GS)(console, o, je(o))
+                            }
+                        } catch (t) {
+                            e = {error: t}
+                        } finally {
+                            try {
+                                n && !n.done && (t = r.return) && t.call(r)
+                            } finally {
+                                if (e) throw e.error
+                            }
+                        }
+                    }, e.id = "Console", e
+                }();
 
             function je(e) {
                 return function (t) {
                     var r;
                     switch (e) {
                         case"debug":
-                            r = i.Debug;
+                            r = _Severity.Debug;
                             break;
                         case"error":
-                            r = i.Error;
+                            r = _Severity.Error;
                             break;
                         case"info":
-                            r = i.Info;
+                            r = _Severity.Info;
                             break;
                         case"warn":
-                            r = i.Warning;
+                            r = _Severity.Warning;
                             break;
                         default:
-                            r = i.Log
+                            r = _Severity.Log
                     }
                     return function () {
-                        (0, p.BF)().getIntegration(De) && (0, p.BF)().addBreadcrumb({
+                        (0, p.BF)().getIntegration(_Console) && (0, p.BF)().addBreadcrumb({
                             category: "console",
                             level: r,
                             message: Le.format.apply(void 0, arguments)
@@ -14108,46 +14940,47 @@
                 return "" !== e.port && (t.port = Number(e.port)), (e.username || e.password) && (t.auth = e.username + ":" + e.password), t
             }
 
-            var Ue = (0, H.kf)(process.versions.node), He = function () {
-                function e(t) {
-                    void 0 === t && (t = {}), this.name = e.id, this._breadcrumbs = void 0 === t.breadcrumbs || t.breadcrumbs, this._tracing = void 0 !== t.tracing && t.tracing
-                }
-
-                return e.prototype.setupOnce = function () {
-                    if (this._breadcrumbs || this._tracing) {
-                        var e, t, n = (e = this._breadcrumbs, t = this._tracing, function (r) {
-                            return function () {
-                                for (var n = [], o = 0; o < arguments.length; o++) n[o] = arguments[o];
-                                var a, i, s, l, c, u = function (e) {
-                                    var t, r;
-                                    return "function" == typeof e[e.length - 1] && (t = e.pop()), r = "string" == typeof e[0] ? Be(new le.URL(e[0])) : e[0] instanceof le.URL ? Be(e[0]) : e[0], 2 === e.length && (r = A(A({}, r), e[1])), t ? [r, t] : [r]
-                                }(n), d = u[0], h = $e(d);
-                                if (s = h, (c = null === (l = (0, p.BF)().getClient()) || void 0 === l ? void 0 : l.getDsn()) && s.includes(c.host)) return r.apply(this, u);
-                                var f = (0, p.BF)().getScope();
-                                if (f && t && (i = f.getSpan())) {
-                                    var m = (a = i.startChild({
-                                        description: (d.method || "GET") + " " + h,
-                                        op: "request"
-                                    })).toTraceparent();
-                                    O.v.log("[Tracing] Adding sentry-trace header " + m + " to outgoing request to " + h + ": "), d.headers = A(A({}, d.headers), {"sentry-trace": m})
-                                }
-                                return r.apply(this, u).once("response", (function (r) {
-                                    e && We("response", h, this, r), t && a && (r.statusCode && a.setHttpStatus(r.statusCode), a.description = Fe(a.description, d, this), a.finish())
-                                })).once("error", (function () {
-                                    e && We("error", h, this), t && a && (a.setHttpStatus(500), a.description = Fe(a.description, d, this), a.finish())
-                                }))
-                            }
-                        }), o = r(58611);
-                        if ((0, U.GS)(o, "get", n), (0, U.GS)(o, "request", n), Ue.major && Ue.major > 8) {
-                            var a = r(65692);
-                            (0, U.GS)(a, "get", n), (0, U.GS)(a, "request", n)
-                        }
+            var Ue = H.kf(process.versions.node),
+                _Http = function () {
+                    function e(t) {
+                        void 0 === t && (t = {}), this.name = e.id, this._breadcrumbs = void 0 === t.breadcrumbs || t.breadcrumbs, this._tracing = void 0 !== t.tracing && t.tracing
                     }
-                }, e.id = "Http", e
-            }();
+
+                    return e.prototype.setupOnce = function () {
+                        if (this._breadcrumbs || this._tracing) {
+                            var e, t, n = (e = this._breadcrumbs, t = this._tracing, function (r) {
+                                return function () {
+                                    for (var n = [], o = 0; o < arguments.length; o++) n[o] = arguments[o];
+                                    var a, i, s, l, c, u = function (e) {
+                                        var t, r;
+                                        return "function" == typeof e[e.length - 1] && (t = e.pop()), r = "string" == typeof e[0] ? Be(new le.URL(e[0])) : e[0] instanceof le.URL ? Be(e[0]) : e[0], 2 === e.length && (r = A(A({}, r), e[1])), t ? [r, t] : [r]
+                                    }(n), d = u[0], h = $e(d);
+                                    if (s = h, (c = null === (l = (0, p.BF)().getClient()) || void 0 === l ? void 0 : l.getDsn()) && s.includes(c.host)) return r.apply(this, u);
+                                    var f = (0, p.BF)().getScope();
+                                    if (f && t && (i = f.getSpan())) {
+                                        var m = (a = i.startChild({
+                                            description: (d.method || "GET") + " " + h,
+                                            op: "request"
+                                        })).toTraceparent();
+                                        O.v.log("[Tracing] Adding sentry-trace header " + m + " to outgoing request to " + h + ": "), d.headers = A(A({}, d.headers), {"sentry-trace": m})
+                                    }
+                                    return r.apply(this, u).once("response", (function (r) {
+                                        e && We("response", h, this, r), t && a && (r.statusCode && a.setHttpStatus(r.statusCode), a.description = Fe(a.description, d, this), a.finish())
+                                    })).once("error", (function () {
+                                        e && We("error", h, this), t && a && (a.setHttpStatus(500), a.description = Fe(a.description, d, this), a.finish())
+                                    }))
+                                }
+                            }), o = __require(58611);
+                            if ((0, U.GS)(o, "get", n), (0, U.GS)(o, "request", n), Ue.major && Ue.major > 8) {
+                                var a = __require(65692);
+                                (0, U.GS)(a, "get", n), (0, U.GS)(a, "request", n)
+                            }
+                        }
+                    }, e.id = "Http", e
+                }();
 
             function We(e, t, r, n) {
-                (0, p.BF)().getIntegration(He) && (0, p.BF)().addBreadcrumb({
+                (0, p.BF)().getIntegration(_Http) && (0, p.BF)().addBreadcrumb({
                     category: "http",
                     data: {method: r.method, status_code: n && n.statusCode, url: t},
                     type: "http"
@@ -14170,93 +15003,98 @@
                 })))
             }
 
-            var Ve, Ge = function () {
-                function e(t) {
-                    void 0 === t && (t = {}), this._options = t, this.name = e.id, this.handler = this._makeErrorHandler()
-                }
-
-                return e.prototype.setupOnce = function () {
-                    global.process.on("uncaughtException", this.handler.bind(this))
-                }, e.prototype._makeErrorHandler = function () {
-                    var t, r = this, n = !1, o = !1, a = !1;
-                    return function (s) {
-                        var l = qe, c = (0, p.BF)().getClient();
-                        if (r._options.onFatalError ? l = r._options.onFatalError : c && c.getOptions().onFatalError && (l = c.getOptions().onFatalError), n) a ? (O.v.warn("uncaught exception after calling fatal error shutdown callback - this is bad! forcing shutdown"), qe(s)) : o || (o = !0, setTimeout((function () {
-                            a || (a = !0, l(t, s))
-                        }), 2e3)); else {
-                            var u = (0, p.BF)();
-                            t = s, n = !0, u.getIntegration(e) ? u.withScope((function (e) {
-                                e.setLevel(i.Fatal), u.captureException(s, {
-                                    originalException: s,
-                                    data: {mechanism: {handled: !1, type: "onuncaughtexception"}}
-                                }), a || (a = !0, l(s))
-                            })) : a || (a = !0, l(s))
-                        }
+            var Ve,
+                _OnUncaughtException = function () {
+                    function e(t) {
+                        void 0 === t && (t = {}), this._options = t, this.name = e.id, this.handler = this._makeErrorHandler()
                     }
-                }, e.id = "OnUncaughtException", e
-            }(), Ke = function () {
-                function e(t) {
-                    void 0 === t && (t = {mode: "warn"}), this._options = t, this.name = e.id
-                }
 
-                return e.prototype.setupOnce = function () {
-                    global.process.on("unhandledRejection", this.sendUnhandledPromise.bind(this))
-                }, e.prototype.sendUnhandledPromise = function (t, r) {
-                    var n = (0, p.BF)();
-                    if (n.getIntegration(e)) {
-                        var o = r.domain && r.domain.sentryContext || {};
-                        n.withScope((function (e) {
-                            e.setExtra("unhandledPromiseRejection", !0), o.user && e.setUser(o.user), o.tags && e.setTags(o.tags), o.extra && e.setExtras(o.extra), n.captureException(t, {
-                                originalException: r,
-                                data: {mechanism: {handled: !1, type: "onunhandledrejection"}}
-                            })
-                        })), this._handleRejection(t)
-                    } else this._handleRejection(t)
-                }, e.prototype._handleRejection = function (e) {
-                    var t = "This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:";
-                    "warn" === this._options.mode ? (0, H.pq)((function () {
-                        console.warn(t), console.error(e && e.stack ? e.stack : e)
-                    })) : "strict" === this._options.mode && ((0, H.pq)((function () {
-                        console.warn(t)
-                    })), qe(e))
-                }, e.id = "OnUnhandledRejection", e
-            }(), Ye = function () {
-                function e(t) {
-                    void 0 === t && (t = {}), this.name = e.id, this._key = t.key || "cause", this._limit = t.limit || 5
-                }
-
-                return e.prototype.setupOnce = function () {
-                    (0, C.l)((function (t, r) {
-                        var n = (0, p.BF)().getIntegration(e);
-                        if (n) {
-                            var o = n._handler && n._handler.bind(n);
-                            return "function" == typeof o ? o(t, r) : t
+                    return e.prototype.setupOnce = function () {
+                        global.process.on("uncaughtException", this.handler.bind(this))
+                    }, e.prototype._makeErrorHandler = function () {
+                        var t, r = this, n = !1, o = !1, a = !1;
+                        return function (s) {
+                            var l = qe, c = (0, p.BF)().getClient();
+                            if (r._options.onFatalError ? l = r._options.onFatalError : c && c.getOptions().onFatalError && (l = c.getOptions().onFatalError), n) a ? (O.v.warn("uncaught exception after calling fatal error shutdown callback - this is bad! forcing shutdown"), qe(s)) : o || (o = !0, setTimeout((function () {
+                                a || (a = !0, l(t, s))
+                            }), 2e3)); else {
+                                var u = (0, p.BF)();
+                                t = s, n = !0, u.getIntegration(e) ? u.withScope((function (e) {
+                                    e.setLevel(_Severity.Fatal), u.captureException(s, {
+                                        originalException: s,
+                                        data: {mechanism: {handled: !1, type: "onuncaughtexception"}}
+                                    }), a || (a = !0, l(s))
+                                })) : a || (a = !0, l(s))
+                            }
                         }
-                        return t
-                    }))
-                }, e.prototype._handler = function (e, t) {
-                    var r = this;
-                    return e.exception && e.exception.values && t && (0, B.tH)(t.originalException, Error) ? new j.T((function (n) {
-                        r._walkErrorTree(t.originalException, r._key).then((function (t) {
-                            e && e.exception && e.exception.values && (e.exception.values = N(t, e.exception.values)), n(e)
-                        })).then(null, (function () {
-                            n(e)
+                    }, e.id = "OnUncaughtException", e
+                }(),
+                _OnUnhandledRejection = function () {
+                    function e(t) {
+                        void 0 === t && (t = {mode: "warn"}), this._options = t, this.name = e.id
+                    }
+
+                    return e.prototype.setupOnce = function () {
+                        global.process.on("unhandledRejection", this.sendUnhandledPromise.bind(this))
+                    }, e.prototype.sendUnhandledPromise = function (t, r) {
+                        var n = (0, p.BF)();
+                        if (n.getIntegration(e)) {
+                            var o = r.domain && r.domain.sentryContext || {};
+                            n.withScope((function (e) {
+                                e.setExtra("unhandledPromiseRejection", !0), o.user && e.setUser(o.user), o.tags && e.setTags(o.tags), o.extra && e.setExtras(o.extra), n.captureException(t, {
+                                    originalException: r,
+                                    data: {mechanism: {handled: !1, type: "onunhandledrejection"}}
+                                })
+                            })), this._handleRejection(t)
+                        } else this._handleRejection(t)
+                    }, e.prototype._handleRejection = function (e) {
+                        var t = "This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:";
+                        "warn" === this._options.mode ? (0, H.pq)((function () {
+                            console.warn(t), console.error(e && e.stack ? e.stack : e)
+                        })) : "strict" === this._options.mode && ((0, H.pq)((function () {
+                            console.warn(t)
+                        })), qe(e))
+                    }, e.id = "OnUnhandledRejection", e
+                }(),
+                _LinkedErrors = function () {
+                    function e(t) {
+                        void 0 === t && (t = {}), this.name = e.id, this._key = t.key || "cause", this._limit = t.limit || 5
+                    }
+
+                    return e.prototype.setupOnce = function () {
+                        (0, C.l)((function (t, r) {
+                            var n = (0, p.BF)().getIntegration(e);
+                            if (n) {
+                                var o = n._handler && n._handler.bind(n);
+                                return "function" == typeof o ? o(t, r) : t
+                            }
+                            return t
                         }))
-                    })) : j.T.resolve(e)
-                }, e.prototype._walkErrorTree = function (e, t, r) {
-                    var n = this;
-                    return void 0 === r && (r = []), !(0, B.tH)(e[t], Error) || r.length + 1 >= this._limit ? j.T.resolve(r) : new j.T((function (o, a) {
-                        ne(e[t]).then((function (i) {
-                            n._walkErrorTree(e[t], t, N([i], r)).then(o).then(null, (function () {
+                    }, e.prototype._handler = function (e, t) {
+                        var r = this;
+                        return e.exception && e.exception.values && t && (0, B.tH)(t.originalException, Error) ? new j.T((function (n) {
+                            r._walkErrorTree(t.originalException, r._key).then((function (t) {
+                                e && e.exception && e.exception.values && (e.exception.values = N(t, e.exception.values)), n(e)
+                            })).then(null, (function () {
+                                n(e)
+                            }))
+                        })) : j.T.resolve(e)
+                    }, e.prototype._walkErrorTree = function (e, t, r) {
+                        var n = this;
+                        return void 0 === r && (r = []), !(0, B.tH)(e[t], Error) || r.length + 1 >= this._limit ? j.T.resolve(r) : new j.T((function (o, a) {
+                            ne(e[t]).then((function (i) {
+                                n._walkErrorTree(e[t], t, N([i], r)).then(o).then(null, (function () {
+                                    a()
+                                }))
+                            })).then(null, (function () {
                                 a()
                             }))
-                        })).then(null, (function () {
-                            a()
                         }))
-                    }))
-                }, e.id = "LinkedErrors", e
-            }(), Je = r(16928);
-            var Xe, Ze, Qe = function () {
+                    }, e.id = "LinkedErrors", e
+                }(),
+                Je = __require(16928);
+            var Xe, Ze,
+                _Modules = function () {
                     function e() {
                         this.name = e.id
                     }
@@ -14267,9 +15105,9 @@
                             return r().getIntegration(e) ? A(A({}, t), {modules: n._getModules()}) : t
                         }))
                     }, e.prototype._getModules = function () {
-                        return Ve || (e = r.c[r.s] && r.c[r.s].paths || [], t = function () {
+                        return Ve || (e = __require.c[__require.s] && __require.c[__require.s].paths || [], t = function () {
                             try {
-                                return r.c ? Object.keys(r.c) : []
+                                return __require.c ? Object.keys(__require.c) : []
                             } catch (e) {
                                 return []
                             }
@@ -14291,14 +15129,23 @@
                         })), Ve = n), Ve;
                         var e, t, n, o
                     }, e.id = "Modules", e
-                }(), et = [new xe, new Ne, new De, new He, new Ge, new Ke, new Ye], tt = r(82697), rt = r(26936),
-                nt = r(71137), ot = r(90677), at = r(35038), it = (0, H.VZ)(), st = r(61110), lt = r(18660),
+                }(),
+                et = [new _InboundFilters, new _FunctionToString, new _Console, new _Http, new _OnUncaughtException, new _OnUnhandledRejection, new _LinkedErrors],
+                tt = __require(82697),
+                rt = __require(26936),
+                nt = __require(71137),
+                ot = __require(90677),
+                at = __require(35038),
+                it = H.VZ(),
+                st = __require(61110),
+                lt = __require(18660),
                 ct = function (e, t, r, n) {
                     var o;
                     return function () {
                         r && t.isFinal && r.disconnect(), t.value >= 0 && (n || t.isFinal || "hidden" === document.visibilityState) && (t.delta = t.value - (o || 0), (t.delta || t.isFinal || void 0 === o) && (e(t), o = t.value))
                     }
-                }, ut = function (e, t) {
+                },
+                ut = function (e, t) {
                     return void 0 === t && (t = -1), {
                         name: e,
                         value: t,
@@ -14307,7 +15154,8 @@
                         id: Date.now() + "-" + (Math.floor(8999999999999 * Math.random()) + 1e12),
                         isFinal: !1
                     }
-                }, dt = function (e, t) {
+                },
+                dt = function (e, t) {
                     try {
                         if (PerformanceObserver.supportedEntryTypes.includes(e)) {
                             var r = new PerformanceObserver((function (e) {
@@ -14317,15 +15165,20 @@
                         }
                     } catch (e) {
                     }
-                }, pt = !1, ht = !1, ft = function (e) {
+                },
+                pt = !1,
+                ht = !1,
+                ft = function (e) {
                     pt = !e.persisted
-                }, mt = function (e, t) {
+                },
+                mt = function (e, t) {
                     void 0 === t && (t = !1), ht || (addEventListener("pagehide", ft), addEventListener("beforeunload", (function () {
                     })), ht = !0), addEventListener("visibilitychange", (function (t) {
                         var r = t.timeStamp;
                         "hidden" === document.visibilityState && e({timeStamp: r, isUnloading: pt})
                     }), {capture: !0, once: t})
-                }, gt = function () {
+                },
+                gt = function () {
                     return void 0 === Xe && (Xe = "hidden" === document.visibilityState ? 0 : 1 / 0, mt((function (e) {
                         var t = e.timeStamp;
                         return Xe = t
@@ -14334,7 +15187,9 @@
                             return Xe
                         }
                     }
-                }, bt = (0, H.VZ)(), vt = function () {
+                },
+                bt = H.VZ(),
+                vt = function () {
                     function e() {
                         var e;
                         this._measurements = {}, this._performanceCursor = 0, !(0, st.wD)() && (null === (e = bt) || void 0 === e ? void 0 : e.performance) && (bt.performance.mark && bt.performance.mark("sentry-tracing-init"), this._trackCLS(), this._trackLCP(), this._trackFID())
@@ -14560,154 +15415,158 @@
                 return "number" == typeof e && isFinite(e)
             }
 
-            var kt = r(86936), Tt = {traceFetch: !0, traceXHR: !0, tracingOrigins: ["localhost", /^\//]};
-            var Et = (0, H.VZ)(), St = (0, tt.Cl)({
-                idleTimeout: nt.$F,
-                markBackgroundTransactions: !0,
-                maxTransactionDuration: 600,
-                routingInstrumentation: function (e, t, r) {
-                    if (void 0 === t && (t = !0), void 0 === r && (r = !0), Et && Et.location) {
-                        var n, o = Et.location.href;
-                        t && (n = e({
-                            name: Et.location.pathname,
-                            op: "pageload"
-                        })), r && (0, kt.O)({
-                            callback: function (t) {
-                                var r = t.to, a = t.from;
-                                void 0 === a && o && -1 !== o.indexOf(r) ? o = void 0 : a !== r && (o = void 0, n && (O.v.log("[Tracing] Finishing current transaction with op: " + n.op), n.finish()), n = e({
-                                    name: Et.location.pathname,
-                                    op: "navigation"
-                                }))
-                            }, type: "history"
-                        })
-                    } else O.v.warn("Could not initialize routing instrumentation due to invalid location")
-                },
-                startTransactionOnLocationChange: !0,
-                startTransactionOnPageLoad: !0
-            }, Tt), Ct = function () {
-                function e(t) {
-                    this.name = e.id, this._metrics = new vt, this._emitOptionsWarning = !1;
-                    var r = Tt.tracingOrigins;
-                    t && t.tracingOrigins && Array.isArray(t.tracingOrigins) && 0 !== t.tracingOrigins.length ? r = t.tracingOrigins : this._emitOptionsWarning = !0, this.options = (0, tt.Cl)((0, tt.Cl)((0, tt.Cl)({}, St), t), {tracingOrigins: r})
-                }
+            var kt = __require(86936),
+                Tt = {traceFetch: !0, traceXHR: !0, tracingOrigins: ["localhost", /^\//]};
+            var Et = H.VZ(),
+                St = tt.Cl({
+                    idleTimeout: nt.$F,
+                    markBackgroundTransactions: !0,
+                    maxTransactionDuration: 600,
+                    routingInstrumentation: function (e, t, r) {
+                        if (void 0 === t && (t = !0), void 0 === r && (r = !0), Et && Et.location) {
+                            var n, o = Et.location.href;
+                            t && (n = e({
+                                name: Et.location.pathname,
+                                op: "pageload"
+                            })), r && (0, kt.O)({
+                                callback: function (t) {
+                                    var r = t.to, a = t.from;
+                                    void 0 === a && o && -1 !== o.indexOf(r) ? o = void 0 : a !== r && (o = void 0, n && (O.v.log("[Tracing] Finishing current transaction with op: " + n.op), n.finish()), n = e({
+                                        name: Et.location.pathname,
+                                        op: "navigation"
+                                    }))
+                                }, type: "history"
+                            })
+                        } else O.v.warn("Could not initialize routing instrumentation due to invalid location")
+                    },
+                    startTransactionOnLocationChange: !0,
+                    startTransactionOnPageLoad: !0
+                }, Tt),
+                Ct = function () {
+                    function e(t) {
+                        this.name = e.id, this._metrics = new vt, this._emitOptionsWarning = !1;
+                        var r = Tt.tracingOrigins;
+                        t && t.tracingOrigins && Array.isArray(t.tracingOrigins) && 0 !== t.tracingOrigins.length ? r = t.tracingOrigins : this._emitOptionsWarning = !0, this.options = (0, tt.Cl)((0, tt.Cl)((0, tt.Cl)({}, St), t), {tracingOrigins: r})
+                    }
 
-                return e.prototype.setupOnce = function (e, t) {
-                    var r = this;
-                    this._getCurrentHub = t, this._emitOptionsWarning && (O.v.warn("[Tracing] You need to define `tracingOrigins` in the options. Set an array of urls or patterns to trace."), O.v.warn("[Tracing] We added a reasonable default for you: " + Tt.tracingOrigins));
-                    var n = this.options, o = n.routingInstrumentation, a = n.startTransactionOnLocationChange,
-                        i = n.startTransactionOnPageLoad, s = n.markBackgroundTransactions, l = n.traceFetch,
-                        c = n.traceXHR, u = n.tracingOrigins, d = n.shouldCreateSpanForRequest;
-                    o((function (e) {
-                        return r._createRouteTransaction(e)
-                    }), i, a), s && (it && it.document ? it.document.addEventListener("visibilitychange", (function () {
-                        var e = (0, at.Z7)();
-                        it.document.hidden && e && (O.v.log("[Tracing] Transaction: " + ot.F.Cancelled + " -> since tab moved to the background, op: " + e.op), e.status || e.setStatus(ot.F.Cancelled), e.setTag("visibilitychange", "document.hidden"), e.finish())
-                    })) : O.v.warn("[Tracing] Could not set up background tab detection due to lack of global document")), function (e) {
-                        var t = (0, tt.Cl)((0, tt.Cl)({}, Tt), e), r = t.traceFetch, n = t.traceXHR,
-                            o = t.tracingOrigins, a = t.shouldCreateSpanForRequest, i = {}, s = function (e) {
-                                if (i[e]) return i[e];
-                                var t = o;
-                                return i[e] = t.some((function (t) {
-                                    return (0, Se._c)(e, t)
-                                })) && !(0, Se._c)(e, "sentry_key"), i[e]
-                            }, l = s;
-                        "function" == typeof a && (l = function (e) {
-                            return s(e) && a(e)
-                        });
-                        var c = {};
-                        r && (0, kt.O)({
-                            callback: function (e) {
-                                !function (e, t, r) {
-                                    if ((0, at.wt)() && e.fetchData && t(e.fetchData.url)) if (e.endTimestamp && e.fetchData.__span) (o = r[e.fetchData.__span]) && (e.response ? o.setHttpStatus(e.response.status) : e.error && o.setStatus(ot.F.InternalError), o.finish(), delete r[e.fetchData.__span]); else {
-                                        var n = (0, at.Z7)();
-                                        if (n) {
-                                            var o = n.startChild({
-                                                data: (0, tt.Cl)((0, tt.Cl)({}, e.fetchData), {type: "fetch"}),
-                                                description: e.fetchData.method + " " + e.fetchData.url,
-                                                op: "http"
-                                            });
-                                            e.fetchData.__span = o.spanId, r[o.spanId] = o;
-                                            var a = e.args[0] = e.args[0], i = e.args[1] = e.args[1] || {},
-                                                s = i.headers;
-                                            (0, B.tH)(a, Request) && (s = a.headers), s ? "function" == typeof s.append ? s.append("sentry-trace", o.toTraceparent()) : s = Array.isArray(s) ? (0, tt.gz)(s, [["sentry-trace", o.toTraceparent()]]) : (0, tt.Cl)((0, tt.Cl)({}, s), {"sentry-trace": o.toTraceparent()}) : s = {"sentry-trace": o.toTraceparent()}, i.headers = s
-                                        }
-                                    }
-                                }(e, l, c)
-                            }, type: "fetch"
-                        }), n && (0, kt.O)({
-                            callback: function (e) {
-                                !function (e, t, r) {
-                                    var n, o;
-                                    if ((0, at.wt)() && !(null === (n = e.xhr) || void 0 === n ? void 0 : n.__sentry_own_request__) && (null === (o = e.xhr) || void 0 === o ? void 0 : o.__sentry_xhr__) && t(e.xhr.__sentry_xhr__.url)) {
-                                        var a = e.xhr.__sentry_xhr__;
-                                        if (e.endTimestamp && e.xhr.__sentry_xhr_span_id__) (s = r[e.xhr.__sentry_xhr_span_id__]) && (s.setHttpStatus(a.status_code), s.finish(), delete r[e.xhr.__sentry_xhr_span_id__]); else {
-                                            var i = (0, at.Z7)();
-                                            if (i) {
-                                                var s = i.startChild({
-                                                    data: (0, tt.Cl)((0, tt.Cl)({}, a.data), {
-                                                        type: "xhr",
-                                                        method: a.method,
-                                                        url: a.url
-                                                    }), description: a.method + " " + a.url, op: "http"
+                    return e.prototype.setupOnce = function (e, t) {
+                        var r = this;
+                        this._getCurrentHub = t, this._emitOptionsWarning && (O.v.warn("[Tracing] You need to define `tracingOrigins` in the options. Set an array of urls or patterns to trace."), O.v.warn("[Tracing] We added a reasonable default for you: " + Tt.tracingOrigins));
+                        var n = this.options, o = n.routingInstrumentation, a = n.startTransactionOnLocationChange,
+                            i = n.startTransactionOnPageLoad, s = n.markBackgroundTransactions, l = n.traceFetch,
+                            c = n.traceXHR, u = n.tracingOrigins, d = n.shouldCreateSpanForRequest;
+                        o((function (e) {
+                            return r._createRouteTransaction(e)
+                        }), i, a), s && (it && it.document ? it.document.addEventListener("visibilitychange", (function () {
+                            var e = (0, at.Z7)();
+                            it.document.hidden && e && (O.v.log("[Tracing] Transaction: " + ot.F.Cancelled + " -> since tab moved to the background, op: " + e.op), e.status || e.setStatus(ot.F.Cancelled), e.setTag("visibilitychange", "document.hidden"), e.finish())
+                        })) : O.v.warn("[Tracing] Could not set up background tab detection due to lack of global document")), function (e) {
+                            var t = (0, tt.Cl)((0, tt.Cl)({}, Tt), e), r = t.traceFetch, n = t.traceXHR,
+                                o = t.tracingOrigins, a = t.shouldCreateSpanForRequest, i = {}, s = function (e) {
+                                    if (i[e]) return i[e];
+                                    var t = o;
+                                    return i[e] = t.some((function (t) {
+                                        return (0, Se._c)(e, t)
+                                    })) && !(0, Se._c)(e, "sentry_key"), i[e]
+                                }, l = s;
+                            "function" == typeof a && (l = function (e) {
+                                return s(e) && a(e)
+                            });
+                            var c = {};
+                            r && (0, kt.O)({
+                                callback: function (e) {
+                                    !function (e, t, r) {
+                                        if ((0, at.wt)() && e.fetchData && t(e.fetchData.url)) if (e.endTimestamp && e.fetchData.__span) (o = r[e.fetchData.__span]) && (e.response ? o.setHttpStatus(e.response.status) : e.error && o.setStatus(ot.F.InternalError), o.finish(), delete r[e.fetchData.__span]); else {
+                                            var n = (0, at.Z7)();
+                                            if (n) {
+                                                var o = n.startChild({
+                                                    data: (0, tt.Cl)((0, tt.Cl)({}, e.fetchData), {type: "fetch"}),
+                                                    description: e.fetchData.method + " " + e.fetchData.url,
+                                                    op: "http"
                                                 });
-                                                if (e.xhr.__sentry_xhr_span_id__ = s.spanId, r[e.xhr.__sentry_xhr_span_id__] = s, e.xhr.setRequestHeader) try {
-                                                    e.xhr.setRequestHeader("sentry-trace", s.toTraceparent())
-                                                } catch (e) {
+                                                e.fetchData.__span = o.spanId, r[o.spanId] = o;
+                                                var a = e.args[0] = e.args[0], i = e.args[1] = e.args[1] || {},
+                                                    s = i.headers;
+                                                (0, B.tH)(a, Request) && (s = a.headers), s ? "function" == typeof s.append ? s.append("sentry-trace", o.toTraceparent()) : s = Array.isArray(s) ? (0, tt.gz)(s, [["sentry-trace", o.toTraceparent()]]) : (0, tt.Cl)((0, tt.Cl)({}, s), {"sentry-trace": o.toTraceparent()}) : s = {"sentry-trace": o.toTraceparent()}, i.headers = s
+                                            }
+                                        }
+                                    }(e, l, c)
+                                }, type: "fetch"
+                            }), n && (0, kt.O)({
+                                callback: function (e) {
+                                    !function (e, t, r) {
+                                        var n, o;
+                                        if ((0, at.wt)() && !(null === (n = e.xhr) || void 0 === n ? void 0 : n.__sentry_own_request__) && (null === (o = e.xhr) || void 0 === o ? void 0 : o.__sentry_xhr__) && t(e.xhr.__sentry_xhr__.url)) {
+                                            var a = e.xhr.__sentry_xhr__;
+                                            if (e.endTimestamp && e.xhr.__sentry_xhr_span_id__) (s = r[e.xhr.__sentry_xhr_span_id__]) && (s.setHttpStatus(a.status_code), s.finish(), delete r[e.xhr.__sentry_xhr_span_id__]); else {
+                                                var i = (0, at.Z7)();
+                                                if (i) {
+                                                    var s = i.startChild({
+                                                        data: (0, tt.Cl)((0, tt.Cl)({}, a.data), {
+                                                            type: "xhr",
+                                                            method: a.method,
+                                                            url: a.url
+                                                        }), description: a.method + " " + a.url, op: "http"
+                                                    });
+                                                    if (e.xhr.__sentry_xhr_span_id__ = s.spanId, r[e.xhr.__sentry_xhr_span_id__] = s, e.xhr.setRequestHeader) try {
+                                                        e.xhr.setRequestHeader("sentry-trace", s.toTraceparent())
+                                                    } catch (e) {
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                }(e, l, c)
-                            }, type: "xhr"
-                        })
-                    }({traceFetch: l, traceXHR: c, tracingOrigins: u, shouldCreateSpanForRequest: d})
-                }, e.prototype._createRouteTransaction = function (e) {
-                    var t = this;
-                    if (this._getCurrentHub) {
-                        var r = this.options, n = r.beforeNavigate, o = r.idleTimeout, a = r.maxTransactionDuration,
-                            i = "pageload" === e.op ? function () {
-                                var e,
-                                    t = ("sentry-trace", (e = document.querySelector("meta[name=sentry-trace]")) ? e.getAttribute("content") : null);
-                                if (t) return (0, at.nc)(t)
-                            }() : void 0, s = (0, tt.Cl)((0, tt.Cl)((0, tt.Cl)({}, e), i), {trimEnd: !0}),
-                            l = "function" == typeof n ? n(s) : s,
-                            c = void 0 === l ? (0, tt.Cl)((0, tt.Cl)({}, s), {sampled: !1}) : l;
-                        !1 === c.sampled && O.v.log("[Tracing] Will not send " + c.op + " transaction because of beforeNavigate."), O.v.log("[Tracing] Starting " + c.op + " transaction on scope");
-                        var u = this._getCurrentHub(), d = (0, H.VZ)().location,
-                            p = (0, rt.pd)(u, c, o, !0, {location: d});
-                        return p.registerBeforeFinishCallback((function (e, r) {
-                            t._metrics.addPerformanceEntries(e), function (e, t, r) {
-                                var n = r - t.startTimestamp;
-                                r && (n > e || n < 0) && (t.setStatus(ot.F.DeadlineExceeded), t.setTag("maxTransactionDurationExceeded", "true"))
-                            }((0, at.vO)(a), e, r)
-                        })), p
+                                    }(e, l, c)
+                                }, type: "xhr"
+                            })
+                        }({traceFetch: l, traceXHR: c, tracingOrigins: u, shouldCreateSpanForRequest: d})
+                    }, e.prototype._createRouteTransaction = function (e) {
+                        var t = this;
+                        if (this._getCurrentHub) {
+                            var r = this.options, n = r.beforeNavigate, o = r.idleTimeout, a = r.maxTransactionDuration,
+                                i = "pageload" === e.op ? function () {
+                                    var e,
+                                        t = ("sentry-trace", (e = document.querySelector("meta[name=sentry-trace]")) ? e.getAttribute("content") : null);
+                                    if (t) return (0, at.nc)(t)
+                                }() : void 0, s = (0, tt.Cl)((0, tt.Cl)((0, tt.Cl)({}, e), i), {trimEnd: !0}),
+                                l = "function" == typeof n ? n(s) : s,
+                                c = void 0 === l ? (0, tt.Cl)((0, tt.Cl)({}, s), {sampled: !1}) : l;
+                            !1 === c.sampled && O.v.log("[Tracing] Will not send " + c.op + " transaction because of beforeNavigate."), O.v.log("[Tracing] Starting " + c.op + " transaction on scope");
+                            var u = this._getCurrentHub(), d = (0, H.VZ)().location,
+                                p = (0, rt.pd)(u, c, o, !0, {location: d});
+                            return p.registerBeforeFinishCallback((function (e, r) {
+                                t._metrics.addPerformanceEntries(e), function (e, t, r) {
+                                    var n = r - t.startTimestamp;
+                                    r && (n > e || n < 0) && (t.setStatus(ot.F.DeadlineExceeded), t.setTag("maxTransactionDurationExceeded", "true"))
+                                }((0, at.vO)(a), e, r)
+                            })), p
+                        }
+                        O.v.warn("[Tracing] Did not create " + e.op + " transaction because _getCurrentHub is invalid.")
+                    }, e.id = "BrowserTracing", e
+                }(),
+                _Express = function () {
+                    function e(t) {
+                        void 0 === t && (t = {}), this.name = e.id, this._router = t.router || t.app, this._methods = (Array.isArray(t.methods) ? t.methods : []).concat("use")
                     }
-                    O.v.warn("[Tracing] Did not create " + e.op + " transaction because _getCurrentHub is invalid.")
-                }, e.id = "BrowserTracing", e
-            }(), Ot = function () {
-                function e(t) {
-                    void 0 === t && (t = {}), this.name = e.id, this._router = t.router || t.app, this._methods = (Array.isArray(t.methods) ? t.methods : []).concat("use")
-                }
 
-                return e.prototype.setupOnce = function () {
-                    var e, t;
-                    this._router ? (e = this._router, void 0 === (t = this._methods) && (t = []), t.forEach((function (t) {
-                        return function (e, t) {
-                            var r = e[t];
-                            return e[t] = function () {
-                                for (var e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
-                                return r.call.apply(r, (0, tt.gz)([this], function (e, t) {
-                                    return e.map((function (e) {
-                                        return "function" == typeof e ? Mt(e, t) : Array.isArray(e) ? e.map((function (e) {
-                                            return "function" == typeof e ? Mt(e, t) : e
-                                        })) : e
-                                    }))
-                                }(e, t)))
-                            }, e
-                        }(e, t)
-                    }))) : O.v.error("ExpressIntegration is missing an Express instance")
-                }, e.id = "Express", e
-            }();
+                    return e.prototype.setupOnce = function () {
+                        var e, t;
+                        this._router ? (e = this._router, void 0 === (t = this._methods) && (t = []), t.forEach((function (t) {
+                            return function (e, t) {
+                                var r = e[t];
+                                return e[t] = function () {
+                                    for (var e = [], n = 0; n < arguments.length; n++) e[n] = arguments[n];
+                                    return r.call.apply(r, (0, tt.gz)([this], function (e, t) {
+                                        return e.map((function (e) {
+                                            return "function" == typeof e ? Mt(e, t) : Array.isArray(e) ? e.map((function (e) {
+                                                return "function" == typeof e ? Mt(e, t) : e
+                                            })) : e
+                                        }))
+                                    }(e, t)))
+                                }, e
+                            }(e, t)
+                        }))) : O.v.error("ExpressIntegration is missing an Express instance")
+                    }, e.id = "Express", e
+                }();
 
             function Mt(e, t) {
                 var r = e.length;
@@ -14750,7 +15609,7 @@
                 }
             }
 
-            var It = function () {
+            var _Postgres = function () {
                     function e() {
                         this.name = e.id
                     }
@@ -14780,7 +15639,8 @@
                             }
                         })) : O.v.error("Postgres Integration was unable to require `pg` package.")
                     }, e.id = "Postgres", e
-                }(), At = function () {
+                }(),
+                _Mysql = function () {
                     function e() {
                         this.name = e.id
                     }
@@ -14828,7 +15688,8 @@
                     replaceOne: ["filter", "doc"],
                     updateMany: ["filter", "update"],
                     updateOne: ["filter", "update"]
-                }, Nt = function () {
+                },
+                _Mongo = function () {
                     function e(t) {
                         void 0 === t && (t = {}), this.name = e.id, this._operations = Array.isArray(t.operations) ? t.operations : Pt, this._describeOperations = !("describeOperations" in t) || t.describeOperations, this._useMongoose = !!t.useMongoose
                     }
@@ -14880,19 +15741,30 @@
                         return o
                     }, e.id = "Mongo", e
                 }();
-            (0, tt.Cl)((0, tt.Cl)({}, a), {BrowserTracing: Ct}), (0, rt.lk)(), r(72941);
-            var Rt = r(70857), Lt = A(A({}, o), n), Dt = (0, p.EU)();
-            Dt.__SENTRY__ && (Dt.__SENTRY__.extensions = Dt.__SENTRY__.extensions || {}, Dt.__SENTRY__.extensions.domain = Dt.__SENTRY__.extensions.domain || Re);
-            var jt = r(4482), $t = "sentry-electron.ping";
+
+            tt.Cl(tt.Cl({}, a), {BrowserTracing: Ct})
+            rt.lk()
+            __require(72941);
+
+            var __os = __require(70857),
+                _NodeIntegrations = A(A({}, o), n),
+                Dt = p.EU();
+
+            if (Dt.__SENTRY__) {
+                Dt.__SENTRY__.extensions = Dt.__SENTRY__.extensions || {}
+                Dt.__SENTRY__.extensions.domain = Dt.__SENTRY__.extensions.domain || Re
+            }
+            var electron = __require(4482),
+                $t = "sentry-electron.ping";
 
             function Ft() {
-                var e = r(4482);
-                if (e && e.app) {
-                    var t = e.app;
+                var electron = __require(4482);
+                if (electron && electron.app) {
+                    var t = electron.app;
                     return t.name || t.getName()
                 }
-                if (!e || !e.remote) throw new D("The Electron `remote` module was not available to get appName. Please ensure you pass `appName` to Sentry options");
-                var n = e.remote.app;
+                if (!electron || !electron.remote) throw new D("The Electron `remote` module was not available to get appName. Please ensure you pass `appName` to Sentry options");
+                var n = electron.remote.app;
                 return n.name || n.getName()
             }
 
@@ -14901,7 +15773,7 @@
                 return {major: e.major || 0, minor: e.minor || 0, patch: e.patch || 0}
             }
 
-            var Ut = r(35317);
+            var Ut = __require(35317);
 
             function Ht(e, t) {
                 return (0, l.sH)(this, void 0, void 0, (function () {
@@ -14991,7 +15863,8 @@
                 }))
             }
 
-            var Yt, Jt = "2.5.4",
+            var Yt,
+                _electronVersion = "2.5.4",
                 Xt = {aix: "IBM AIX", freebsd: "FreeBSD", openbsd: "OpenBSD", sunos: "SunOS", win32: "Windows"},
                 Zt = [{name: "fedora-release", distros: ["Fedora"]}, {
                     name: "redhat-release",
@@ -15008,7 +15881,8 @@
                 }, {name: "gentoo-release", distros: ["Gentoo Linux"]}, {
                     name: "novell-release",
                     distros: ["SUSE Linux"]
-                }, {name: "alpine-release", distros: ["Alpine Linux"]}], Qt = {
+                }, {name: "alpine-release", distros: ["Alpine Linux"]}],
+                Qt = {
                     alpine: function (e) {
                         return e
                     }, arch: function (e) {
@@ -15042,9 +15916,9 @@
                         switch (r.label) {
                             case 0:
                                 e = {
-                                    kernel_version: (0, Rt.release)(),
+                                    kernel_version: (0, __os.release)(),
                                     name: "Mac OS X",
-                                    version: "10." + (Number((0, Rt.release)().split(".")[0]) - 4)
+                                    version: "10." + (Number((0, __os.release)().split(".")[0]) - 4)
                                 }, r.label = 1;
                             case 1:
                                 return r.trys.push([1, 3, , 4]), [4, new Promise((function (e, t) {
@@ -15073,7 +15947,7 @@
                     return (0, l.YH)(this, (function (i) {
                         switch (i.label) {
                             case 0:
-                                e = {kernel_version: (0, Rt.release)(), name: "Linux"}, i.label = 1;
+                                e = {kernel_version: (0, __os.release)(), name: "Linux"}, i.label = 1;
                             case 1:
                                 return i.trys.push([1, 4, , 5]), [4, Kt("/etc")];
                             case 2:
@@ -15097,13 +15971,13 @@
                 return (0, l.sH)(this, void 0, void 0, (function () {
                     var e;
                     return (0, l.YH)(this, (function (t) {
-                        switch (e = (0, Rt.platform)()) {
+                        switch (e = (0, __os.platform)()) {
                             case"darwin":
                                 return [2, tr()];
                             case"linux":
                                 return [2, nr()];
                             default:
-                                return [2, {name: Xt[e] || e, version: (0, Rt.release)()}]
+                                return [2, {name: Xt[e] || e, version: (0, __os.release)()}]
                         }
                         return [2]
                     }))
@@ -15111,12 +15985,12 @@
             }
 
             function ar(e, t) {
-                return (0, l.sH)(this, void 0, void 0, (function () {
+                return l.sH(this, void 0, void 0, (function () {
                     var r, n, o, a, i, s;
-                    return (0, l.YH)(this, (function (c) {
+                    return l.YH(this, (function (c) {
                         switch (c.label) {
                             case 0:
-                                return Yt || (Yt = function (e) {
+                                Yt || (Yt = function (e) {
                                     return (0, l.sH)(this, void 0, void 0, (function () {
                                         var t, r, n;
                                         return (0, l.YH)(this, (function (o) {
@@ -15125,7 +15999,7 @@
                                                     return t = e || Ft(), r = {}, n = {
                                                         app: {
                                                             app_name: t,
-                                                            app_version: jt.app.getVersion(),
+                                                            app_version: electron.app.getVersion(),
                                                             build_type: process.mas ? "app-store" : process.windowsStore ? "windows-store" : void 0
                                                         },
                                                         browser: {name: "Chrome"},
@@ -15145,37 +16019,43 @@
                                                     return [2, (r.contexts = (n.os = o.sent(), n.runtime = {
                                                         name: "Electron",
                                                         version: process.versions.electron
-                                                    }, n), r.environment = process.defaultApp ? "development" : "production", r.extra = {crashed_process: "browser"}, r.release = t.replace(/\W/g, "-") + "@" + jt.app.getVersion(), r.user = {ip_address: "{{auto}}"}, r)]
+                                                    }, n), r.environment = process.defaultApp ? "development" : "production", r.extra = {crashed_process: "browser"}, r.release = t.replace(/\W/g, "-") + "@" + electron.app.getVersion(), r.user = {ip_address: "{{auto}}"}, r)]
                                             }
                                         }))
                                     }))
-                                }(e)), r = t.contexts, n = void 0 === r ? {} : r, [4, Yt];
+                                }(e))
+                                r = t.contexts
+                                n = void 0 === r ? {} : r
+                                return [4, Yt];
                             case 1:
-                                return o = c.sent(), a = o.contexts, i = void 0 === a ? {} : a, s = (0, l.Tt)(o, ["contexts"]), [2, (0, l.Cl)((0, l.Cl)((0, l.Cl)({}, s), t), {
+                                o = c.sent()
+                                a = o.contexts
+                                i = void 0 === a ? {} : a
+                                s = l.Tt(o, ["contexts"])
+                                return [2, l.Cl(l.Cl(l.Cl({}, s), t), {
                                     sdk: {
                                         name: "sentry.javascript.electron",
-                                        packages: [{name: "npm:@sentry/electron", version: Jt}],
-                                        version: Jt
+                                        packages: [{name: "npm:@sentry/electron", version: _electronVersion}],
+                                        version: _electronVersion
                                     },
-                                    contexts: (0, l.Cl)((0, l.Cl)((0, l.Cl)({}, i), n), {
+                                    contexts: l.Cl(l.Cl(l.Cl({}, i), n), {
                                         app: (0, l.Cl)((0, l.Cl)({}, i.app), n.app),
                                         device: (0, l.Cl)((0, l.Cl)({}, i.device), n.device),
                                         os: (0, l.Cl)((0, l.Cl)({}, i.os), n.os),
                                         runtime: (0, l.Cl)((0, l.Cl)({}, i.runtime), n.runtime)
                                     }),
-                                    extra: (0, l.Cl)((0, l.Cl)({}, s.extra), t.extra),
-                                    user: (0, l.Cl)((0, l.Cl)({}, s.user), t.user)
+                                    extra: l.Cl(l.Cl({}, s.extra), t.extra),
+                                    user: l.Cl(l.Cl({}, s.user), t.user)
                                 })]
                         }
                     }))
                 }))
             }
 
-            var ir = jt.app.getAppPath().replace(/\\/g, "/");
+            var _appPath = electron.app.getAppPath().replace(/\\/g, "/");
 
-            function sr(e, t) {
-                void 0 === t && (t = ir);
-                var r = t.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&"), n = e;
+            function sr(e, _path = _appPath) {
+                var r = _path.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&"), n = e;
                 try {
                     n = decodeURI(e)
                 } catch (e) {
@@ -15203,401 +16083,408 @@
             }
 
             var cr = function () {
-                function e(e, t, r) {
-                    this._path = (0, Je.join)(e, t + ".json"), this._initial = r, this._flushing = !1
-                }
-
-                return e.prototype.set = function (e) {
-                    var t = this;
-                    this._data = e, this._flushing || (this._flushing = !0, setImmediate((function () {
-                        t._flush()
-                    })))
-                }, e.prototype.update = function (e) {
-                    this.set(e(this.get()))
-                }, e.prototype.get = function () {
-                    if (void 0 === this._data) try {
-                        this._data = (0, Y.existsSync)(this._path) ? JSON.parse((0, Y.readFileSync)(this._path, "utf8")) : this._initial
-                    } catch (e) {
-                        this._data = this._initial
+                    function e(e, t, r) {
+                        this._path = (0, Je.join)(e, t + ".json"), this._initial = r, this._flushing = !1
                     }
-                    return this._data
-                }, e.prototype.clear = function () {
-                    this.set(this._initial)
-                }, e.prototype._flush = function () {
-                    try {
-                        qt((0, Je.dirname)(this._path)), (0, Y.writeFileSync)(this._path, JSON.stringify(this._data))
-                    } catch (e) {
-                        O.v.warn("Failed to flush store", e)
-                    } finally {
-                        this._flushing = !1
-                    }
-                }, e
-            }(), ur = r(2203);
-            const dr = require("zlib");
-            var pr = function (e) {
-                function t(t) {
-                    var r = e.call(this, t) || this;
-                    return r.options = t, r._buffer = new se(30), r
-                }
 
-                return (0, l.C6)(t, e), t.prototype.sendEvent = function (e) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var t, r, n, o, a;
-                        return (0, l.YH)(this, (function (i) {
-                            return t = JSON.stringify({
-                                event_id: e.event_id,
-                                sent_at: new Date(1e3 * (0, Ee.LU)()).toISOString()
-                            }), r = "transaction" === e.type ? "transaction" : "event", n = JSON.stringify({
-                                content_type: "application/json",
-                                type: "transaction" === e.type ? "transaction" : "event"
-                            }), this._isRateLimited(r) ? [2, Promise.reject(new D("Transport locked till " + JSON.stringify(this._rateLimits, null, 2) + " due to too many requests."))] : (o = JSON.stringify(e), a = Buffer.from(t + "\n" + n + "\n" + o + "\n"), [2, this.sendRequest({
-                                body: a,
-                                url: this._api.getEnvelopeEndpointWithUrlEncodedAuth(),
-                                type: r
-                            })])
+                    e.prototype.set = function (e) {
+                        var t = this;
+                        this._data = e, this._flushing || (this._flushing = !0, setImmediate((function () {
+                            t._flush()
+                        })))
+                    }
+                    e.prototype.update = function (e) {
+                        this.set(e(this.get()))
+                    }
+                    e.prototype.get = function () {
+                        if (void 0 === this._data) try {
+                            this._data = (0, Y.existsSync)(this._path) ? JSON.parse((0, Y.readFileSync)(this._path, "utf8")) : this._initial
+                        } catch (e) {
+                            this._data = this._initial
+                        }
+                        return this._data
+                    }
+                    e.prototype.clear = function () {
+                        this.set(this._initial)
+                    }
+                    e.prototype._flush = function () {
+                        try {
+                            qt((0, Je.dirname)(this._path)), (0, Y.writeFileSync)(this._path, JSON.stringify(this._data))
+                        } catch (e) {
+                            O.v.warn("Failed to flush store", e)
+                        } finally {
+                            this._flushing = !1
+                        }
+                    }
+                    return e
+                }(),
+                __stream = __require(2203);
+            const __zlib = require("zlib");
+            var _NetTransport = function (e) {
+                    function t(t) {
+                        var r = e.call(this, t) || this;
+                        return r.options = t, r._buffer = new se(30), r
+                    }
+
+                    return (0, l.C6)(t, e), t.prototype.sendEvent = function (e) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var t, r, n, o, a;
+                            return (0, l.YH)(this, (function (i) {
+                                return t = JSON.stringify({
+                                    event_id: e.event_id,
+                                    sent_at: new Date(1e3 * (0, Ee.LU)()).toISOString()
+                                }), r = "transaction" === e.type ? "transaction" : "event", n = JSON.stringify({
+                                    content_type: "application/json",
+                                    type: "transaction" === e.type ? "transaction" : "event"
+                                }), this._isRateLimited(r) ? [2, Promise.reject(new D("Transport locked till " + JSON.stringify(this._rateLimits, null, 2) + " due to too many requests."))] : (o = JSON.stringify(e), a = Buffer.from(t + "\n" + n + "\n" + o + "\n"), [2, this.sendRequest({
+                                    body: a,
+                                    url: this._api.getEnvelopeEndpointWithUrlEncodedAuth(),
+                                    type: r
+                                })])
+                            }))
                         }))
-                    }))
-                }, t.prototype.isRateLimited = function (e) {
-                    return this._isRateLimited(e)
-                }, t.prototype.sendRequest = function (e) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var t, r, n = this;
-                        return (0, l.YH)(this, (function (o) {
-                            switch (o.label) {
-                                case 0:
-                                    return this._buffer.isReady() ? [4, mr()] : [2, Promise.reject(new D("Not adding Promise due to buffer limit reached."))];
-                                case 1:
-                                    return o.sent(), (t = this._getRequestOptions(new le.URL(e.url))).headers = (0, l.Cl)((0, l.Cl)({}, t.headers), {"Content-Type": "application/x-sentry-envelope"}), a = e.body, r = new ur.Readable({
-                                        read: function () {
-                                            this.push(a), this.push(null)
-                                        }
-                                    }), e.body.length > 32768 && (t.headers["Content-Encoding"] = "gzip", r = r.pipe((0, dr.createGzip)())), [2, this._buffer.add(new Promise((function (o, a) {
-                                        var i = jt.net.request(t);
-                                        i.on("error", a), i.on("response", (function (t) {
-                                            t.on("error", a);
-                                            var r = s.fromHttpCode(t.statusCode);
-                                            if (t.statusCode && t.statusCode >= 200 && t.statusCode < 300) o({status: r}); else {
-                                                if (r === s.RateLimit) {
-                                                    var i = t.headers ? t.headers["retry-after"] : "";
-                                                    i = Array.isArray(i) ? i[0] : i;
-                                                    var l = t.headers ? t.headers["x-sentry-rate-limits"] : "", c = {
-                                                        "x-sentry-rate-limits": l = Array.isArray(l) ? l[0] : l,
-                                                        "retry-after": i
-                                                    };
-                                                    n._handleRateLimit(c) && O.v.warn("Too many requests, backing off until: " + n._disabledUntil(e.type))
-                                                }
-                                                if (t.headers && t.headers["x-sentry-error"]) {
-                                                    var u = t.headers["x-sentry-error"];
-                                                    Array.isArray(u) && (u = u.join(", ")), a(new D("HTTP Error (" + t.statusCode + "): " + u))
-                                                } else a(new D("HTTP Error (" + t.statusCode + ")"))
+                    }, t.prototype.isRateLimited = function (e) {
+                        return this._isRateLimited(e)
+                    }, t.prototype.sendRequest = function (e) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var t, r, n = this;
+                            return (0, l.YH)(this, (function (o) {
+                                switch (o.label) {
+                                    case 0:
+                                        return this._buffer.isReady() ? [4, mr()] : [2, Promise.reject(new D("Not adding Promise due to buffer limit reached."))];
+                                    case 1:
+                                        return o.sent(), (t = this._getRequestOptions(new le.URL(e.url))).headers = (0, l.Cl)((0, l.Cl)({}, t.headers), {"Content-Type": "application/x-sentry-envelope"}), a = e.body, r = new __stream.Readable({
+                                            read: function () {
+                                                this.push(a), this.push(null)
                                             }
-                                            t.on("data", (function () {
-                                            })), t.on("end", (function () {
-                                            }))
-                                        })), r.pipe(i)
-                                    })))]
-                            }
-                            var a
+                                        }), e.body.length > 32768 && (t.headers["Content-Encoding"] = "gzip", r = r.pipe((0, __zlib.createGzip)())), [2, this._buffer.add(new Promise((function (o, a) {
+                                            var i = electron.net.request(t);
+                                            i.on("error", a), i.on("response", (function (t) {
+                                                t.on("error", a);
+                                                var r = _Status.fromHttpCode(t.statusCode);
+                                                if (t.statusCode && t.statusCode >= 200 && t.statusCode < 300) o({status: r}); else {
+                                                    if (r === _Status.RateLimit) {
+                                                        var i = t.headers ? t.headers["retry-after"] : "";
+                                                        i = Array.isArray(i) ? i[0] : i;
+                                                        var l = t.headers ? t.headers["x-sentry-rate-limits"] : "", c = {
+                                                            "x-sentry-rate-limits": l = Array.isArray(l) ? l[0] : l,
+                                                            "retry-after": i
+                                                        };
+                                                        n._handleRateLimit(c) && O.v.warn("Too many requests, backing off until: " + n._disabledUntil(e.type))
+                                                    }
+                                                    if (t.headers && t.headers["x-sentry-error"]) {
+                                                        var u = t.headers["x-sentry-error"];
+                                                        Array.isArray(u) && (u = u.join(", ")), a(new D("HTTP Error (" + t.statusCode + "): " + u))
+                                                    } else a(new D("HTTP Error (" + t.statusCode + ")"))
+                                                }
+                                                t.on("data", (function () {
+                                                })), t.on("end", (function () {
+                                                }))
+                                            })), r.pipe(i)
+                                        })))]
+                                }
+                                var a
+                            }))
                         }))
-                    }))
-                }, t
-            }(ue), hr = function () {
-                function e(e, t, r, n) {
-                    this._crashesDirectory = t, this._cacheDirectory = r, this._transport = n;
-                    var o = "win32" === process.platform && Bt().major >= 6;
-                    this._type = "darwin" === process.platform || o ? "crashpad" : "breakpad", this._crashpadSubDirectory = "darwin" === process.platform ? "completed" : "reports", this._knownPaths = [], this._api = new ae(e), this._queue = new cr(this._cacheDirectory, "queue", [])
-                }
+                    }, t
+                }(ue),
+                hr = function () {
+                    function e(e, t, r, n) {
+                        this._crashesDirectory = t, this._cacheDirectory = r, this._transport = n;
+                        var o = "win32" === process.platform && Bt().major >= 6;
+                        this._type = "darwin" === process.platform || o ? "crashpad" : "breakpad", this._crashpadSubDirectory = "darwin" === process.platform ? "completed" : "reports", this._knownPaths = [], this._api = new ae(e), this._queue = new cr(this._cacheDirectory, "queue", [])
+                    }
 
-                return e.minidumpUrlFromDsn = function (e) {
-                    var t = e.host, r = e.path, n = e.projectId, o = e.port;
-                    return e.protocol + "://" + t + ("" !== o ? ":" + o : "") + ("" !== r ? "/" + r : "") + "/api/" + n + "/minidump/?sentry_key=" + e.user
-                }, e.prototype.uploadMinidump = function (e) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var t, r, n, o;
-                        return (0, l.YH)(this, (function (a) {
-                            switch (a.label) {
-                                case 0:
-                                    if ("function" != typeof this._transport.sendRequest) return O.v.warn("Your transport doesn't implement sendRequest"), O.v.warn("Skipping sending minidump"), [2];
-                                    O.v.log("Sending minidump", e.path), t = this._transport, a.label = 1;
-                                case 1:
-                                    return a.trys.push([1, 10, , 13]), r = void 0, t.isRateLimited("event") ? [3, 4] : [4, this._toMinidumpRequest(t, e.event, e.path)];
-                                case 2:
-                                    return n = a.sent(), [4, t.sendRequest(n)];
-                                case 3:
-                                    r = a.sent(), a.label = 4;
-                                case 4:
-                                    return a.trys.push([4, 6, , 7]), [4, Gt(e.path)];
-                                case 5:
-                                    return a.sent(), [3, 7];
-                                case 6:
-                                    return a.sent(), O.v.warn("Could not delete", e.path), [3, 7];
-                                case 7:
-                                    return this._queue.update((function (t) {
-                                        return t.filter((function (t) {
-                                            return t !== e
-                                        }))
-                                    })), this._knownPaths.splice(this._knownPaths.indexOf(e.path), 1), r && r.status === s.Success ? [4, this.flushQueue()] : [3, 9];
-                                case 8:
-                                    a.sent(), a.label = 9;
-                                case 9:
-                                    return [3, 13];
-                                case 10:
-                                    return o = a.sent(), O.v.warn("Failed to upload minidump", o), "ENOTFOUND" !== (o || {code: ""}).code ? [3, 12] : [4, this._queueMinidump(e)];
-                                case 11:
-                                    a.sent(), a.label = 12;
-                                case 12:
-                                    return [3, 13];
-                                case 13:
-                                    return [2]
-                            }
-                        }))
-                    }))
-                }, e.prototype.getNewMinidumps = function () {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var e, t, r, n = this;
-                        return (0, l.YH)(this, (function (o) {
-                            switch (o.label) {
-                                case 0:
-                                    return "crashpad" !== this._type ? [3, 2] : [4, this._scanCrashpadFolder()];
-                                case 1:
-                                    return t = o.sent(), [3, 4];
-                                case 2:
-                                    return [4, this._scanBreakpadFolder()];
-                                case 3:
-                                    t = o.sent(), o.label = 4;
-                                case 4:
-                                    return e = t, O.v.log("Found " + e.length + " minidumps"), r = (new Date).getTime() - 2592e6, [2, this._filterAsync(e, (function (e) {
-                                        return (0, l.sH)(n, void 0, void 0, (function () {
-                                            return (0, l.YH)(this, (function (t) {
-                                                switch (t.label) {
-                                                    case 0:
-                                                        return this._knownPaths.indexOf(e) >= 0 ? [2, !1] : (this._knownPaths.push(e), [4, Vt(e)]);
-                                                    case 1:
-                                                        if (!(t.sent().birthtimeMs < r)) return [3, 6];
-                                                        t.label = 2;
-                                                    case 2:
-                                                        return t.trys.push([2, 4, , 5]), [4, Gt(e)];
-                                                    case 3:
-                                                        return t.sent(), [3, 5];
-                                                    case 4:
-                                                        return t.sent(), O.v.warn("Could not delete", e), [3, 5];
-                                                    case 5:
-                                                        return this._knownPaths.splice(this._knownPaths.indexOf(e), 1), [2, !1];
-                                                    case 6:
-                                                        return [2, !0]
-                                                }
+                    return e.minidumpUrlFromDsn = function (e) {
+                        var t = e.host, r = e.path, n = e.projectId, o = e.port;
+                        return e.protocol + "://" + t + ("" !== o ? ":" + o : "") + ("" !== r ? "/" + r : "") + "/api/" + n + "/minidump/?sentry_key=" + e.user
+                    }, e.prototype.uploadMinidump = function (e) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var t, r, n, o;
+                            return (0, l.YH)(this, (function (a) {
+                                switch (a.label) {
+                                    case 0:
+                                        if ("function" != typeof this._transport.sendRequest) return O.v.warn("Your transport doesn't implement sendRequest"), O.v.warn("Skipping sending minidump"), [2];
+                                        O.v.log("Sending minidump", e.path), t = this._transport, a.label = 1;
+                                    case 1:
+                                        return a.trys.push([1, 10, , 13]), r = void 0, t.isRateLimited("event") ? [3, 4] : [4, this._toMinidumpRequest(t, e.event, e.path)];
+                                    case 2:
+                                        return n = a.sent(), [4, t.sendRequest(n)];
+                                    case 3:
+                                        r = a.sent(), a.label = 4;
+                                    case 4:
+                                        return a.trys.push([4, 6, , 7]), [4, Gt(e.path)];
+                                    case 5:
+                                        return a.sent(), [3, 7];
+                                    case 6:
+                                        return a.sent(), O.v.warn("Could not delete", e.path), [3, 7];
+                                    case 7:
+                                        return this._queue.update((function (t) {
+                                            return t.filter((function (t) {
+                                                return t !== e
                                             }))
-                                        }))
-                                    }))]
-                            }
+                                        })), this._knownPaths.splice(this._knownPaths.indexOf(e.path), 1), r && r.status === _Status.Success ? [4, this.flushQueue()] : [3, 9];
+                                    case 8:
+                                        a.sent(), a.label = 9;
+                                    case 9:
+                                        return [3, 13];
+                                    case 10:
+                                        return o = a.sent(), O.v.warn("Failed to upload minidump", o), "ENOTFOUND" !== (o || {code: ""}).code ? [3, 12] : [4, this._queueMinidump(e)];
+                                    case 11:
+                                        a.sent(), a.label = 12;
+                                    case 12:
+                                        return [3, 13];
+                                    case 13:
+                                        return [2]
+                                }
+                            }))
                         }))
-                    }))
-                }, e.prototype.flushQueue = function () {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var e = this;
-                        return (0, l.YH)(this, (function (t) {
-                            switch (t.label) {
-                                case 0:
-                                    return [4, Promise.all(this._queue.get().map((function (t) {
-                                        return (0, l.sH)(e, void 0, void 0, (function () {
-                                            return (0, l.YH)(this, (function (e) {
-                                                return [2, this.uploadMinidump(t)]
+                    }, e.prototype.getNewMinidumps = function () {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var e, t, r, n = this;
+                            return (0, l.YH)(this, (function (o) {
+                                switch (o.label) {
+                                    case 0:
+                                        return "crashpad" !== this._type ? [3, 2] : [4, this._scanCrashpadFolder()];
+                                    case 1:
+                                        return t = o.sent(), [3, 4];
+                                    case 2:
+                                        return [4, this._scanBreakpadFolder()];
+                                    case 3:
+                                        t = o.sent(), o.label = 4;
+                                    case 4:
+                                        return e = t, O.v.log("Found " + e.length + " minidumps"), r = (new Date).getTime() - 2592e6, [2, this._filterAsync(e, (function (e) {
+                                            return (0, l.sH)(n, void 0, void 0, (function () {
+                                                return (0, l.YH)(this, (function (t) {
+                                                    switch (t.label) {
+                                                        case 0:
+                                                            return this._knownPaths.indexOf(e) >= 0 ? [2, !1] : (this._knownPaths.push(e), [4, Vt(e)]);
+                                                        case 1:
+                                                            if (!(t.sent().birthtimeMs < r)) return [3, 6];
+                                                            t.label = 2;
+                                                        case 2:
+                                                            return t.trys.push([2, 4, , 5]), [4, Gt(e)];
+                                                        case 3:
+                                                            return t.sent(), [3, 5];
+                                                        case 4:
+                                                            return t.sent(), O.v.warn("Could not delete", e), [3, 5];
+                                                        case 5:
+                                                            return this._knownPaths.splice(this._knownPaths.indexOf(e), 1), [2, !1];
+                                                        case 6:
+                                                            return [2, !0]
+                                                    }
+                                                }))
                                             }))
-                                        }))
-                                    })))];
-                                case 1:
-                                    return t.sent(), [2]
-                            }
+                                        }))]
+                                }
+                            }))
                         }))
-                    }))
-                }, e.prototype._filterAsync = function (e, t, r) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var n;
-                        return (0, l.YH)(this, (function (o) {
-                            switch (o.label) {
-                                case 0:
-                                    return [4, Promise.all(e.map(t, r))];
-                                case 1:
-                                    return n = o.sent(), [2, e.filter((function (e, t) {
-                                        return n[t]
-                                    }))]
-                            }
-                        }))
-                    }))
-                }, e.prototype._scanCrashpadFolder = function () {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var e;
-                        return (0, l.YH)(this, (function (t) {
-                            switch (t.label) {
-                                case 0:
-                                    return ze(this._deleteCrashpadMetadataFile()), [4, Kt(e = (0, Je.join)(this._crashesDirectory, this._crashpadSubDirectory))];
-                                case 1:
-                                    return [2, t.sent().filter((function (e) {
-                                        return e.endsWith(".dmp")
-                                    })).map((function (t) {
-                                        return (0, Je.join)(e, t)
-                                    }))]
-                            }
-                        }))
-                    }))
-                }, e.prototype._deleteCrashpadMetadataFile = function (e) {
-                    return void 0 === e && (e = 100), (0, l.sH)(this, void 0, void 0, (function () {
-                        var t, r, n = this;
-                        return (0, l.YH)(this, (function (o) {
-                            switch (o.label) {
-                                case 0:
-                                    if (e > 2e3) return [2];
-                                    t = (0, Je.join)(this._crashesDirectory, "metadata"), o.label = 1;
-                                case 1:
-                                    return o.trys.push([1, 3, , 4]), [4, Gt(t)];
-                                case 2:
-                                    return o.sent(), O.v.log("Deleted Crashpad metadata file", t), [3, 4];
-                                case 3:
-                                    return (r = o.sent()).code && "EBUSY" == r.code && setTimeout((function () {
-                                        return (0, l.sH)(n, void 0, void 0, (function () {
-                                            return (0, l.YH)(this, (function (t) {
-                                                switch (t.label) {
-                                                    case 0:
-                                                        return [4, this._deleteCrashpadMetadataFile(2 * e)];
-                                                    case 1:
-                                                        return t.sent(), [2]
-                                                }
+                    }, e.prototype.flushQueue = function () {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var e = this;
+                            return (0, l.YH)(this, (function (t) {
+                                switch (t.label) {
+                                    case 0:
+                                        return [4, Promise.all(this._queue.get().map((function (t) {
+                                            return (0, l.sH)(e, void 0, void 0, (function () {
+                                                return (0, l.YH)(this, (function (e) {
+                                                    return [2, this.uploadMinidump(t)]
+                                                }))
                                             }))
-                                        }))
-                                    }), e), [3, 4];
-                                case 4:
-                                    return [2]
-                            }
+                                        })))];
+                                    case 1:
+                                        return t.sent(), [2]
+                                }
+                            }))
                         }))
-                    }))
-                }, e.prototype._scanBreakpadFolder = function () {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var e, t = this;
-                        return (0, l.YH)(this, (function (r) {
-                            switch (r.label) {
-                                case 0:
-                                    return [4, Kt(this._crashesDirectory)];
-                                case 1:
-                                    return e = r.sent(), Promise.all(e.filter((function (e) {
-                                        return e.endsWith(".txt") && !e.endsWith("log.txt")
-                                    })).map((function (e) {
-                                        return (0, l.sH)(t, void 0, void 0, (function () {
-                                            var t;
-                                            return (0, l.YH)(this, (function (r) {
-                                                switch (r.label) {
-                                                    case 0:
-                                                        t = (0, Je.join)(this._crashesDirectory, e), r.label = 1;
-                                                    case 1:
-                                                        return r.trys.push([1, 3, , 4]), [4, Gt(t)];
-                                                    case 2:
-                                                        return r.sent(), [3, 4];
-                                                    case 3:
-                                                        return r.sent(), O.v.warn("Could not delete", t), [3, 4];
-                                                    case 4:
-                                                        return [2]
-                                                }
+                    }, e.prototype._filterAsync = function (e, t, r) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var n;
+                            return (0, l.YH)(this, (function (o) {
+                                switch (o.label) {
+                                    case 0:
+                                        return [4, Promise.all(e.map(t, r))];
+                                    case 1:
+                                        return n = o.sent(), [2, e.filter((function (e, t) {
+                                            return n[t]
+                                        }))]
+                                }
+                            }))
+                        }))
+                    }, e.prototype._scanCrashpadFolder = function () {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var e;
+                            return (0, l.YH)(this, (function (t) {
+                                switch (t.label) {
+                                    case 0:
+                                        return ze(this._deleteCrashpadMetadataFile()), [4, Kt(e = (0, Je.join)(this._crashesDirectory, this._crashpadSubDirectory))];
+                                    case 1:
+                                        return [2, t.sent().filter((function (e) {
+                                            return e.endsWith(".dmp")
+                                        })).map((function (t) {
+                                            return (0, Je.join)(e, t)
+                                        }))]
+                                }
+                            }))
+                        }))
+                    }, e.prototype._deleteCrashpadMetadataFile = function (e) {
+                        return void 0 === e && (e = 100), (0, l.sH)(this, void 0, void 0, (function () {
+                            var t, r, n = this;
+                            return (0, l.YH)(this, (function (o) {
+                                switch (o.label) {
+                                    case 0:
+                                        if (e > 2e3) return [2];
+                                        t = (0, Je.join)(this._crashesDirectory, "metadata"), o.label = 1;
+                                    case 1:
+                                        return o.trys.push([1, 3, , 4]), [4, Gt(t)];
+                                    case 2:
+                                        return o.sent(), O.v.log("Deleted Crashpad metadata file", t), [3, 4];
+                                    case 3:
+                                        return (r = o.sent()).code && "EBUSY" == r.code && setTimeout((function () {
+                                            return (0, l.sH)(n, void 0, void 0, (function () {
+                                                return (0, l.YH)(this, (function (t) {
+                                                    switch (t.label) {
+                                                        case 0:
+                                                            return [4, this._deleteCrashpadMetadataFile(2 * e)];
+                                                        case 1:
+                                                            return t.sent(), [2]
+                                                    }
+                                                }))
                                             }))
-                                        }))
-                                    }))), [2, e.filter((function (e) {
-                                        return e.endsWith(".dmp")
-                                    })).map((function (e) {
-                                        return (0, Je.join)(t._crashesDirectory, e)
-                                    }))]
-                            }
+                                        }), e), [3, 4];
+                                    case 4:
+                                        return [2]
+                                }
+                            }))
                         }))
-                    }))
-                }, e.prototype._parseBreakpadMultipartFile = function (e) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var t, r, n;
-                        return (0, l.YH)(this, (function (o) {
-                            return (t = e.lastIndexOf("Content-Type: application/octet-stream")) > 0 && (r = e.indexOf("MDMP", t), n = e.lastIndexOf("----------------------------"), r > 0 && n > 0 && n > r) ? [2, e.slice(r, n)] : [2, void 0]
-                        }))
-                    }))
-                }, e.prototype._queueMinidump = function (e) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var t, r, n, o, a = this;
-                        return (0, l.YH)(this, (function (i) {
-                            switch (i.label) {
-                                case 0:
-                                    return t = (0, Je.basename)(e.path), this._queue.get().some((function (e) {
-                                        return (0, Je.basename)(e.path) === t
-                                    })) ? [2] : (r = (0, Je.join)(this._cacheDirectory, t), [4, zt(this._cacheDirectory)]);
-                                case 1:
-                                    return i.sent(), [4, (s = e.path, c = r, new Promise((function (e, t) {
-                                        (0, Y.rename)(s, c, (function (r) {
-                                            r ? t(r) : e()
-                                        }))
-                                    })))];
-                                case 2:
-                                    return i.sent(), n = (0, l.fX)((0, l.fX)([], (0, l.zs)(this._queue.get())), [(0, l.Cl)((0, l.Cl)({}, e), {path: r})]), o = n.splice(-10), this._queue.set(n), [4, Promise.all(o.map((function (e) {
-                                        return (0, l.sH)(a, void 0, void 0, (function () {
-                                            return (0, l.YH)(this, (function (t) {
-                                                switch (t.label) {
-                                                    case 0:
-                                                        return t.trys.push([0, 2, , 3]), [4, Gt(e.path)];
-                                                    case 1:
-                                                        return t.sent(), [3, 3];
-                                                    case 2:
-                                                        return t.sent(), O.v.warn("Could not delete", e.path), [3, 3];
-                                                    case 3:
-                                                        return [2]
-                                                }
+                    }, e.prototype._scanBreakpadFolder = function () {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var e, t = this;
+                            return (0, l.YH)(this, (function (r) {
+                                switch (r.label) {
+                                    case 0:
+                                        return [4, Kt(this._crashesDirectory)];
+                                    case 1:
+                                        return e = r.sent(), Promise.all(e.filter((function (e) {
+                                            return e.endsWith(".txt") && !e.endsWith("log.txt")
+                                        })).map((function (e) {
+                                            return (0, l.sH)(t, void 0, void 0, (function () {
+                                                var t;
+                                                return (0, l.YH)(this, (function (r) {
+                                                    switch (r.label) {
+                                                        case 0:
+                                                            t = (0, Je.join)(this._crashesDirectory, e), r.label = 1;
+                                                        case 1:
+                                                            return r.trys.push([1, 3, , 4]), [4, Gt(t)];
+                                                        case 2:
+                                                            return r.sent(), [3, 4];
+                                                        case 3:
+                                                            return r.sent(), O.v.warn("Could not delete", t), [3, 4];
+                                                        case 4:
+                                                            return [2]
+                                                    }
+                                                }))
                                             }))
-                                        }))
-                                    })))];
-                                case 3:
-                                    return i.sent(), [2]
-                            }
-                            var s, c
+                                        }))), [2, e.filter((function (e) {
+                                            return e.endsWith(".dmp")
+                                        })).map((function (e) {
+                                            return (0, Je.join)(t._crashesDirectory, e)
+                                        }))]
+                                }
+                            }))
                         }))
-                    }))
-                }, e.prototype._toMinidumpRequest = function (e, t, r) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var n, o, a, i, s, c, u;
-                        return (0, l.YH)(this, (function (l) {
-                            switch (l.label) {
-                                case 0:
-                                    return n = JSON.stringify({
-                                        event_id: t.event_id,
-                                        sent_at: new Date(1e3 * (0, Ee.LU)()).toISOString()
-                                    }), e.isRateLimited("attachment") && (t.message = "Ratelimited - Minidump Event"), o = JSON.stringify({
-                                        content_type: "application/json",
-                                        type: "event"
-                                    }), a = JSON.stringify(t), i = Buffer.from(n + "\n" + o + "\n" + a + "\n"), e.isRateLimited("attachment") ? [3, 4] : [4, Ht(r)];
-                                case 1:
-                                    return s = l.sent(), "crashpad" === this._type ? [3, 3] : [4, this._parseBreakpadMultipartFile(s)];
-                                case 2:
-                                    (c = l.sent()) && (s = c), l.label = 3;
-                                case 3:
-                                    return u = JSON.stringify({
-                                        attachment_type: "event.minidump",
-                                        length: s.length,
-                                        type: "attachment",
-                                        filename: (0, Je.basename)(r)
-                                    }), i = Buffer.concat([i, Buffer.from(u + "\n"), s, Buffer.from("\n")]), [3, 5];
-                                case 4:
-                                    O.v.warn("Will not add minidump to request since they are rate limited."), l.label = 5;
-                                case 5:
-                                    return [2, {
-                                        body: i,
-                                        url: this._api.getEnvelopeEndpointWithUrlEncodedAuth(),
-                                        type: "event"
-                                    }]
-                            }
+                    }, e.prototype._parseBreakpadMultipartFile = function (e) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var t, r, n;
+                            return (0, l.YH)(this, (function (o) {
+                                return (t = e.lastIndexOf("Content-Type: application/octet-stream")) > 0 && (r = e.indexOf("MDMP", t), n = e.lastIndexOf("----------------------------"), r > 0 && n > 0 && n > r) ? [2, e.slice(r, n)] : [2, void 0]
+                            }))
                         }))
-                    }))
-                }, e
-            }();
+                    }, e.prototype._queueMinidump = function (e) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var t, r, n, o, a = this;
+                            return (0, l.YH)(this, (function (i) {
+                                switch (i.label) {
+                                    case 0:
+                                        return t = (0, Je.basename)(e.path), this._queue.get().some((function (e) {
+                                            return (0, Je.basename)(e.path) === t
+                                        })) ? [2] : (r = (0, Je.join)(this._cacheDirectory, t), [4, zt(this._cacheDirectory)]);
+                                    case 1:
+                                        return i.sent(), [4, (s = e.path, c = r, new Promise((function (e, t) {
+                                            (0, Y.rename)(s, c, (function (r) {
+                                                r ? t(r) : e()
+                                            }))
+                                        })))];
+                                    case 2:
+                                        return i.sent(), n = (0, l.fX)((0, l.fX)([], (0, l.zs)(this._queue.get())), [(0, l.Cl)((0, l.Cl)({}, e), {path: r})]), o = n.splice(-10), this._queue.set(n), [4, Promise.all(o.map((function (e) {
+                                            return (0, l.sH)(a, void 0, void 0, (function () {
+                                                return (0, l.YH)(this, (function (t) {
+                                                    switch (t.label) {
+                                                        case 0:
+                                                            return t.trys.push([0, 2, , 3]), [4, Gt(e.path)];
+                                                        case 1:
+                                                            return t.sent(), [3, 3];
+                                                        case 2:
+                                                            return t.sent(), O.v.warn("Could not delete", e.path), [3, 3];
+                                                        case 3:
+                                                            return [2]
+                                                    }
+                                                }))
+                                            }))
+                                        })))];
+                                    case 3:
+                                        return i.sent(), [2]
+                                }
+                                var s, c
+                            }))
+                        }))
+                    }, e.prototype._toMinidumpRequest = function (e, t, r) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var n, o, a, i, s, c, u;
+                            return (0, l.YH)(this, (function (l) {
+                                switch (l.label) {
+                                    case 0:
+                                        return n = JSON.stringify({
+                                            event_id: t.event_id,
+                                            sent_at: new Date(1e3 * (0, Ee.LU)()).toISOString()
+                                        }), e.isRateLimited("attachment") && (t.message = "Ratelimited - Minidump Event"), o = JSON.stringify({
+                                            content_type: "application/json",
+                                            type: "event"
+                                        }), a = JSON.stringify(t), i = Buffer.from(n + "\n" + o + "\n" + a + "\n"), e.isRateLimited("attachment") ? [3, 4] : [4, Ht(r)];
+                                    case 1:
+                                        return s = l.sent(), "crashpad" === this._type ? [3, 3] : [4, this._parseBreakpadMultipartFile(s)];
+                                    case 2:
+                                        (c = l.sent()) && (s = c), l.label = 3;
+                                    case 3:
+                                        return u = JSON.stringify({
+                                            attachment_type: "event.minidump",
+                                            length: s.length,
+                                            type: "attachment",
+                                            filename: (0, Je.basename)(r)
+                                        }), i = Buffer.concat([i, Buffer.from(u + "\n"), s, Buffer.from("\n")]), [3, 5];
+                                    case 4:
+                                        O.v.warn("Will not add minidump to request since they are rate limited."), l.label = 5;
+                                    case 5:
+                                        return [2, {
+                                            body: i,
+                                            url: this._api.getEnvelopeEndpointWithUrlEncodedAuth(),
+                                            type: "event"
+                                        }]
+                                }
+                            }))
+                        }))
+                    }, e
+                }();
 
             function fr() {
-                return (0, Je.join)(jt.app.getPath("userData"), "sentry")
+                return (0, Je.join)(electron.app.getPath("userData"), "sentry")
             }
 
             function mr() {
                 return (0, l.sH)(this, void 0, void 0, (function () {
                     return (0, l.YH)(this, (function (e) {
-                        return [2, jt.app.isReady() || new Promise((function (e) {
-                            jt.app.once("ready", (function () {
+                        return [2, electron.app.isReady() || new Promise((function (e) {
+                            electron.app.once("ready", (function () {
                                 e(!0)
                             }))
                         }))]
@@ -15609,346 +16496,388 @@
                 return null != e && Object.keys(e).length > 0
             }
 
-            var br = function (e) {
-                function t(t) {
-                    var r = this;
-                    return t.autoSessionTracking = !1, (r = e.call(this, t) || this)._inner = new ke(t), r._scopeStore = new cr(fr(), "scope_v2", new C.H), r._scopeLastRun = r._scopeStore.get(), r._updateEpoch = 0, r._setupScopeListener(), r._isNativeEnabled() && ze(r._installNativeHandler()), r._installIPC(), r
-                }
-
-                return (0, l.C6)(t, e), t.prototype.eventFromException = function (e, t) {
-                    return this._inner.eventFromException(e, t)
-                }, t.prototype.eventFromMessage = function (e, t, r) {
-                    return void 0 === t && (t = i.Info), this._inner.eventFromMessage(e, t, r)
-                }, t.prototype.sendEvent = function (e) {
-                    this._inner.sendEvent(e)
-                }, t.prototype.uploadMinidump = function (e, t) {
-                    void 0 === t && (t = {}), this._uploader && ze(this._uploader.uploadMinidump({path: e, event: t}))
-                }, t.prototype._setupTransport = function () {
-                    if (!this._options.dsn) return e.prototype._setupTransport.call(this);
-                    var t = (0, l.Cl)((0, l.Cl)((0, l.Cl)((0, l.Cl)((0, l.Cl)({}, this._options.transportOptions), this._options.httpProxy && {httpProxy: this._options.httpProxy}), this._options.httpsProxy && {httpsProxy: this._options.httpsProxy}), this._options.caCerts && {caCerts: this._options.caCerts}), {dsn: this._options.dsn});
-                    return this._options.transport ? new this._options.transport(t) : new pr(t)
-                }, t.prototype._setupScopeListener = function () {
-                    var e = this, t = (0, p.BF)().getScope();
-                    t && t.addScopeListener((function (t) {
-                        var r = C.H.clone(t);
-                        r._eventProcessors = [], r._scopeListeners = [], e._scopeStore.set(r), !0 === e._options.useCrashpadMinidumpUploader && "linux" !== process.platform && e._updateExtraParams(r)
-                    }))
-                }, t.prototype._updateExtraParams = function (e) {
-                    var t = this;
-                    this._updateEpoch += 1;
-                    var r = this._updateEpoch;
-                    ze(this._getNativeUploaderEvent(e).then((function (e) {
-                        var n, o;
-                        if (r === t._updateEpoch) {
-                            var a = t._getNativeUploaderExtraParams(e);
-                            try {
-                                for (var i = (0, l.Ju)(Object.keys(a)), s = i.next(); !s.done; s = i.next()) {
-                                    var c = s.value;
-                                    jt.crashReporter.addExtraParameter(c, a[c])
-                                }
-                            } catch (e) {
-                                n = {error: e}
-                            } finally {
-                                try {
-                                    s && !s.done && (o = i.return) && o.call(i)
-                                } finally {
-                                    if (n) throw n.error
-                                }
-                            }
-                        }
-                    })))
-                }, t.prototype._getNativeUploaderEvent = function (e) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var t;
-                        return (0, l.YH)(this, (function (r) {
-                            switch (r.label) {
-                                case 0:
-                                    return t = {tags: {event_type: "native"}}, [4, e.applyToEvent(t)];
-                                case 1:
-                                    return r.sent(), [4, ar(this._options.appName, t)];
-                                case 2:
-                                    return [2, lr(t = r.sent())]
-                            }
-                        }))
-                    }))
-                }, t.prototype._getNativeUploaderExtraParams = function (e) {
-                    for (var t = 20300, r = Buffer.from(JSON.stringify(e)), n = []; r.length;) {
-                        var o = r.lastIndexOf(34, 20301);
-                        o < 0 && (o = r.lastIndexOf(32, 20301)), o < 0 && (o = r.indexOf(34, t)), o < 0 && (o = r.indexOf(32, t)), o < 0 && (o = t), n.push(r.slice(0, o + 1).toString()), r = r.slice(o + 1)
+            var _MainBackend = function (e) {
+                    function t(t) {
+                        let _this = this;
+                        t.autoSessionTracking = false
+                        ;(_this = e.call(this, t) || this)._inner = new ke(t)
+                        _this._scopeStore = new cr(fr(), "scope_v2", new C.H)
+                        _this._scopeLastRun = _this._scopeStore.get()
+                        _this._updateEpoch = 0
+                        _this._setupScopeListener()
+                        _this._isNativeEnabled() && ze(_this._installNativeHandler())
+                        _this._installIPC()
+                        return _this
                     }
-                    return n.reduce((function (e, t, r) {
-                        return e["sentry__" + (r + 1)] = t, e
-                    }), {})
-                }, t.prototype._isNativeEnabled = function () {
-                    return !process.mas && !1 !== this._options.enableNative
-                }, t.prototype._installNativeHandler = function () {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var e, t, r, n, o, a = this;
-                        return (0, l.YH)(this, (function (s) {
-                            if (!(e = this._options.dsn)) throw new D("Attempted to enable Electron native crash reporter but no DSN was supplied");
-                            var c, u;
-                            return t = "linux" !== process.platform ? {
-                                sentry___initialScope: JSON.stringify((c = this._options, u = (0, p.BF)().getScope(), u ? (0, l.Cl)((0, l.Cl)((0, l.Cl)({
-                                    release: c.release,
-                                    environment: c.environment
-                                }, gr(u._user) && {user: u._user}), gr(u._tags) && {tags: u._tags}), gr(u._extra) && {extra: u._extra}) : {}))
-                            } : void 0, r = new q(e), jt.crashReporter.start({
-                                companyName: "",
-                                ignoreSystemCrashHandler: !0,
-                                productName: this._options.appName || Ft(),
-                                submitURL: hr.minidumpUrlFromDsn(r),
-                                uploadToServer: this._options.useCrashpadMinidumpUploader || !1,
-                                compress: !0,
-                                globalExtra: t
-                            }), !1 !== this._options.useSentryMinidumpUploader && (n = Bt().major >= 9 ? jt.app.getPath("crashDumps") : jt.crashReporter.getCrashesDirectory(), this._uploader = new hr(r, n, fr(), this.getTransport()), ze(this._uploader.flushQueue()), ze(this._sendNativeCrashes({}))), o = function (e, t) {
-                                return (0, l.sH)(a, void 0, void 0, (function () {
-                                    var r;
-                                    return (0, l.YH)(this, (function (n) {
-                                        switch (n.label) {
+
+                    l.C6(t, e)
+                    t.prototype.eventFromException = function (e, t) {
+                        return this._inner.eventFromException(e, t)
+                    }
+                    t.prototype.eventFromMessage = function (e, t, r) {
+                        return void 0 === t && (t = _Severity.Info), this._inner.eventFromMessage(e, t, r)
+                    }
+                    t.prototype.sendEvent = function (e) {
+                        this._inner.sendEvent(e)
+                    }
+                    t.prototype.uploadMinidump = function (e, t) {
+                        void 0 === t && (t = {}), this._uploader && ze(this._uploader.uploadMinidump({path: e, event: t}))
+                    }
+                    t.prototype._setupTransport = function () {
+                        if (!this._options.dsn) return e.prototype._setupTransport.call(this);
+                        var t = (0, l.Cl)((0, l.Cl)((0, l.Cl)((0, l.Cl)((0, l.Cl)({}, this._options.transportOptions), this._options.httpProxy && {httpProxy: this._options.httpProxy}), this._options.httpsProxy && {httpsProxy: this._options.httpsProxy}), this._options.caCerts && {caCerts: this._options.caCerts}), {dsn: this._options.dsn});
+                        return this._options.transport ? new this._options.transport(t) : new _NetTransport(t)
+                    }
+                    t.prototype._setupScopeListener = function () {
+                        var e = this, t = (0, p.BF)().getScope();
+                        t && t.addScopeListener((function (t) {
+                            var r = C.H.clone(t);
+                            r._eventProcessors = [], r._scopeListeners = [], e._scopeStore.set(r), !0 === e._options.useCrashpadMinidumpUploader && "linux" !== process.platform && e._updateExtraParams(r)
+                        }))
+                    }
+                    t.prototype._updateExtraParams = function (e) {
+                        var t = this;
+                        this._updateEpoch += 1;
+                        var r = this._updateEpoch;
+                        ze(this._getNativeUploaderEvent(e).then((function (e) {
+                            var n, o;
+                            if (r === t._updateEpoch) {
+                                var a = t._getNativeUploaderExtraParams(e);
+                                try {
+                                    for (var i = (0, l.Ju)(Object.keys(a)), s = i.next(); !s.done; s = i.next()) {
+                                        var c = s.value;
+                                        electron.crashReporter.addExtraParameter(c, a[c])
+                                    }
+                                } catch (e) {
+                                    n = {error: e}
+                                } finally {
+                                    try {
+                                        s && !s.done && (o = i.return) && o.call(i)
+                                    } finally {
+                                        if (n) throw n.error
+                                    }
+                                }
+                            }
+                        })))
+                    }
+                    t.prototype._getNativeUploaderEvent = function (e) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var t;
+                            return (0, l.YH)(this, (function (r) {
+                                switch (r.label) {
+                                    case 0:
+                                        return t = {tags: {event_type: "native"}}, [4, e.applyToEvent(t)];
+                                    case 1:
+                                        return r.sent(), [4, ar(this._options.appName, t)];
+                                    case 2:
+                                        return [2, lr(t = r.sent())]
+                                }
+                            }))
+                        }))
+                    }
+                    t.prototype._getNativeUploaderExtraParams = function (e) {
+                        for (var t = 20300, r = Buffer.from(JSON.stringify(e)), n = []; r.length;) {
+                            var o = r.lastIndexOf(34, 20301);
+                            o < 0 && (o = r.lastIndexOf(32, 20301)), o < 0 && (o = r.indexOf(34, t)), o < 0 && (o = r.indexOf(32, t)), o < 0 && (o = t), n.push(r.slice(0, o + 1).toString()), r = r.slice(o + 1)
+                        }
+                        return n.reduce((function (e, t, r) {
+                            return e["sentry__" + (r + 1)] = t, e
+                        }), {})
+                    }
+                    t.prototype._isNativeEnabled = function () {
+                        return !process.mas && !1 !== this._options.enableNative
+                    }
+                    t.prototype._installNativeHandler = function () {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var e, t, r, n, o, a = this;
+                            return (0, l.YH)(this, (function (s) {
+                                if (!(e = this._options.dsn)) throw new D("Attempted to enable Electron native crash reporter but no DSN was supplied");
+                                var c, u;
+                                return t = "linux" !== process.platform ? {
+                                    sentry___initialScope: JSON.stringify((c = this._options, u = (0, p.BF)().getScope(), u ? (0, l.Cl)((0, l.Cl)((0, l.Cl)({
+                                        release: c.release,
+                                        environment: c.environment
+                                    }, gr(u._user) && {user: u._user}), gr(u._tags) && {tags: u._tags}), gr(u._extra) && {extra: u._extra}) : {}))
+                                } : void 0, r = new q(e), electron.crashReporter.start({
+                                    companyName: "",
+                                    ignoreSystemCrashHandler: !0,
+                                    productName: this._options.appName || Ft(),
+                                    submitURL: hr.minidumpUrlFromDsn(r),
+                                    uploadToServer: this._options.useCrashpadMinidumpUploader || !1,
+                                    compress: !0,
+                                    globalExtra: t
+                                }), !1 !== this._options.useSentryMinidumpUploader && (n = Bt().major >= 9 ? electron.app.getPath("crashDumps") : electron.crashReporter.getCrashesDirectory(), this._uploader = new hr(r, n, fr(), this.getTransport()), ze(this._uploader.flushQueue()), ze(this._sendNativeCrashes({}))), o = function (e, t) {
+                                    return (0, l.sH)(a, void 0, void 0, (function () {
+                                        var r;
+                                        return (0, l.YH)(this, (function (n) {
+                                            switch (n.label) {
+                                                case 0:
+                                                    if (!1 === this._options.useSentryMinidumpUploader) return [3, 4];
+                                                    n.label = 1;
+                                                case 1:
+                                                    return n.trys.push([1, 3, , 4]), [4, this._sendNativeCrashes(this._getNewEventWithElectronContext(e, t))];
+                                                case 2:
+                                                    return n.sent(), [3, 4];
+                                                case 3:
+                                                    return r = n.sent(), console.error(r), [3, 4];
+                                                case 4:
+                                                    return _addBreadcrumb({
+                                                        category: "exception",
+                                                        level: _Severity.Critical,
+                                                        message: "Renderer Crashed"
+                                                    }), [2]
+                                            }
+                                        }))
+                                    }))
+                                }, electron.app.on("web-contents-created", (function (e, t) {
+                                    !function () {
+                                        var e = Bt(), t = e.major, r = e.minor;
+                                        return 8 === t && r >= 4 || 9 === t && r >= 1 || t >= 10
+                                    }() ? t.on("crashed", (function () {
+                                        return (0, l.sH)(a, void 0, void 0, (function () {
+                                            return (0, l.YH)(this, (function (e) {
+                                                switch (e.label) {
+                                                    case 0:
+                                                        return [4, o(t)];
+                                                    case 1:
+                                                        return e.sent(), [2]
+                                                }
+                                            }))
+                                        }))
+                                    })) : t.on("render-process-gone", (function (e, r) {
+                                        return (0, l.sH)(a, void 0, void 0, (function () {
+                                            return (0, l.YH)(this, (function (e) {
+                                                switch (e.label) {
+                                                    case 0:
+                                                        return [4, o(t, r)];
+                                                    case 1:
+                                                        return e.sent(), [2]
+                                                }
+                                            }))
+                                        }))
+                                    })), !1 !== a._options.enableUnresponsive && t.on("unresponsive", (function () {
+                                        _captureMessage("BrowserWindow Unresponsive")
+                                    }))
+                                })), [2]
+                            }))
+                        }))
+                    }
+                    t.prototype._installIPC = function () {
+                        var e = this;
+                        electron.ipcMain.on($t, (function (e) {
+                            e.sender.send($t)
+                        })), electron.ipcMain.on("sentry-electron.event", (function (t, r) {
+                            var n;
+                            try {
+                                n = JSON.parse(r)
+                            } catch (e) {
+                                return void console.warn("sentry-electron received an invalid IPC_EVENT message")
+                            }
+                            n.contexts = (0, l.Cl)((0, l.Cl)({}, e._getNewEventWithElectronContext(t.sender).contexts), n.contexts), _captureEvent(n)
+                        })), electron.ipcMain.on("sentry-electron.scope", (function (t, r) {
+                            var n;
+                            try {
+                                n = JSON.parse(r)
+                            } catch (e) {
+                                return void console.warn("sentry-electron received an invalid IPC_SCOPE message")
+                            }
+                            var o = C.H.clone(n);
+                            _configureScope((function (t) {
+                                gr(o._user) && t.setUser(o._user), gr(o._tags) && t.setTags(o._tags), gr(o._extra) && t.setExtras(o._extra), t.addBreadcrumb(o._breadcrumbs.pop(), e._options.maxBreadcrumbs)
+                            }))
+                        }))
+                    }
+                    t.prototype._sendNativeCrashes = function (e) {
+                        return (0, l.sH)(this, void 0, void 0, (function () {
+                            var t, r, n, o;
+                            return (0, l.YH)(this, (function (a) {
+                                switch (a.label) {
+                                    case 0:
+                                        if (!1 === this._options.useSentryMinidumpUploader) return [2];
+                                        if (void 0 === (t = this._uploader)) throw new D("Invariant violation: Native crashes not enabled");
+                                        a.label = 1;
+                                    case 1:
+                                        return a.trys.push([1, 7, , 8]), [4, t.getNewMinidumps()];
+                                    case 2:
+                                        return (r = a.sent()).length > 0 ? (n = C.H.clone((0, p.BF)().getScope()), [4, C.H.clone(this._scopeLastRun).applyToEvent(e)]) : [3, 6];
+                                    case 3:
+                                        return (o = a.sent()) ? [4, n.applyToEvent(o)] : [3, 5];
+                                    case 4:
+                                        o = a.sent(), r.map((function (e) {
+                                            _captureMinidump(e, (0, l.Cl)({}, o))
+                                        })), a.label = 5;
+                                    case 5:
+                                        this._scopeLastRun = void 0, a.label = 6;
+                                    case 6:
+                                        return [3, 8];
+                                    case 7:
+                                        return a.sent(), O.v.error("Error while sending native crash."), [3, 8];
+                                    case 8:
+                                        return [2]
+                                }
+                            }))
+                        }))
+                    }
+                    t.prototype._getNewEventWithElectronContext = function (e, t) {
+                        var r = {
+                            crashed_process: this._options.getRendererName && this._options.getRendererName(e) || "renderer[" + e.id + "]",
+                            crashed_url: sr(e.getURL())
+                        };
+                        return t && (r.details = t), {contexts: {electron: r}}
+                    }
+
+                    return t
+                }(F),
+                _MainClient = function (e) {
+                    function t(t) {
+                        return e.call(this, _MainBackend, t) || this
+                    }
+
+                    l.C6(t, e)
+                    t.prototype.captureMinidump = function (e, t, r) {
+                        var n, o = this;
+                        return void 0 === t && (t = {}), this._processing += 1, t.tags = (0, l.Cl)({event_type: "native"}, t.tags), this._prepareEvent(t, r, void 0).then((function (t) {
+                            t && (n = t && t.event_id, o._getBackend().uploadMinidump(e, t)), o._processing -= 1
+                        }), (function (e) {
+                            O.v.error(e), o._processing -= 1
+                        })), n
+                    }
+                    t.prototype.captureEvent = function (t, r, n) {
+                        return t.tags = (0, l.Cl)({event_type: "javascript"}, t.tags), e.prototype.captureEvent.call(this, t, r, n)
+                    }
+                    t.prototype.showReportDialog = function (e) {
+                    }
+                    t.prototype._prepareEvent = function (t, r, n) {
+                        var o = this;
+                        return t.platform = t.platform || "node", e.prototype._prepareEvent.call(this, t, r, n).then((function (e) {
+                            return new j.T((function (t) {
+                                return (0, l.sH)(o, void 0, void 0, (function () {
+                                    var r, n;
+                                    return (0, l.YH)(this, (function (o) {
+                                        switch (o.label) {
                                             case 0:
-                                                if (!1 === this._options.useSentryMinidumpUploader) return [3, 4];
-                                                n.label = 1;
+                                                return e ? (r = t, n = lr, [4, ar(this._options.appName, e)]) : [3, 2];
                                             case 1:
-                                                return n.trys.push([1, 3, , 4]), [4, this._sendNativeCrashes(this._getNewEventWithElectronContext(e, t))];
+                                                return r.apply(void 0, [n.apply(void 0, [o.sent()])]), [3, 3];
                                             case 2:
-                                                return n.sent(), [3, 4];
+                                                t(e), o.label = 3;
                                             case 3:
-                                                return r = n.sent(), console.error(r), [3, 4];
-                                            case 4:
-                                                return v({
-                                                    category: "exception",
-                                                    level: i.Critical,
-                                                    message: "Renderer Crashed"
-                                                }), [2]
+                                                return [2]
                                         }
                                     }))
                                 }))
-                            }, jt.app.on("web-contents-created", (function (e, t) {
-                                !function () {
-                                    var e = Bt(), t = e.major, r = e.minor;
-                                    return 8 === t && r >= 4 || 9 === t && r >= 1 || t >= 10
-                                }() ? t.on("crashed", (function () {
-                                    return (0, l.sH)(a, void 0, void 0, (function () {
-                                        return (0, l.YH)(this, (function (e) {
-                                            switch (e.label) {
-                                                case 0:
-                                                    return [4, o(t)];
-                                                case 1:
-                                                    return e.sent(), [2]
-                                            }
-                                        }))
-                                    }))
-                                })) : t.on("render-process-gone", (function (e, r) {
-                                    return (0, l.sH)(a, void 0, void 0, (function () {
-                                        return (0, l.YH)(this, (function (e) {
-                                            switch (e.label) {
-                                                case 0:
-                                                    return [4, o(t, r)];
-                                                case 1:
-                                                    return e.sent(), [2]
-                                            }
-                                        }))
-                                    }))
-                                })), !1 !== a._options.enableUnresponsive && t.on("unresponsive", (function () {
-                                    m("BrowserWindow Unresponsive")
-                                }))
-                            })), [2]
-                        }))
-                    }))
-                }, t.prototype._installIPC = function () {
-                    var e = this;
-                    jt.ipcMain.on($t, (function (e) {
-                        e.sender.send($t)
-                    })), jt.ipcMain.on("sentry-electron.event", (function (t, r) {
-                        var n;
-                        try {
-                            n = JSON.parse(r)
-                        } catch (e) {
-                            return void console.warn("sentry-electron received an invalid IPC_EVENT message")
-                        }
-                        n.contexts = (0, l.Cl)((0, l.Cl)({}, e._getNewEventWithElectronContext(t.sender).contexts), n.contexts), g(n)
-                    })), jt.ipcMain.on("sentry-electron.scope", (function (t, r) {
-                        var n;
-                        try {
-                            n = JSON.parse(r)
-                        } catch (e) {
-                            return void console.warn("sentry-electron received an invalid IPC_SCOPE message")
-                        }
-                        var o = C.H.clone(n);
-                        b((function (t) {
-                            gr(o._user) && t.setUser(o._user), gr(o._tags) && t.setTags(o._tags), gr(o._extra) && t.setExtras(o._extra), t.addBreadcrumb(o._breadcrumbs.pop(), e._options.maxBreadcrumbs)
-                        }))
-                    }))
-                }, t.prototype._sendNativeCrashes = function (e) {
-                    return (0, l.sH)(this, void 0, void 0, (function () {
-                        var t, r, n, o;
-                        return (0, l.YH)(this, (function (a) {
-                            switch (a.label) {
-                                case 0:
-                                    if (!1 === this._options.useSentryMinidumpUploader) return [2];
-                                    if (void 0 === (t = this._uploader)) throw new D("Invariant violation: Native crashes not enabled");
-                                    a.label = 1;
-                                case 1:
-                                    return a.trys.push([1, 7, , 8]), [4, t.getNewMinidumps()];
-                                case 2:
-                                    return (r = a.sent()).length > 0 ? (n = C.H.clone((0, p.BF)().getScope()), [4, C.H.clone(this._scopeLastRun).applyToEvent(e)]) : [3, 6];
-                                case 3:
-                                    return (o = a.sent()) ? [4, n.applyToEvent(o)] : [3, 5];
-                                case 4:
-                                    o = a.sent(), r.map((function (e) {
-                                        Er(e, (0, l.Cl)({}, o))
-                                    })), a.label = 5;
-                                case 5:
-                                    this._scopeLastRun = void 0, a.label = 6;
-                                case 6:
-                                    return [3, 8];
-                                case 7:
-                                    return a.sent(), O.v.error("Error while sending native crash."), [3, 8];
-                                case 8:
-                                    return [2]
-                            }
-                        }))
-                    }))
-                }, t.prototype._getNewEventWithElectronContext = function (e, t) {
-                    var r = {
-                        crashed_process: this._options.getRendererName && this._options.getRendererName(e) || "renderer[" + e.id + "]",
-                        crashed_url: sr(e.getURL())
-                    };
-                    return t && (r.details = t), {contexts: {electron: r}}
-                }, t
-            }(F), vr = function (e) {
-                function t(t) {
-                    return e.call(this, br, t) || this
-                }
-
-                return (0, l.C6)(t, e), t.prototype.captureMinidump = function (e, t, r) {
-                    var n, o = this;
-                    return void 0 === t && (t = {}), this._processing += 1, t.tags = (0, l.Cl)({event_type: "native"}, t.tags), this._prepareEvent(t, r, void 0).then((function (t) {
-                        t && (n = t && t.event_id, o._getBackend().uploadMinidump(e, t)), o._processing -= 1
-                    }), (function (e) {
-                        O.v.error(e), o._processing -= 1
-                    })), n
-                }, t.prototype.captureEvent = function (t, r, n) {
-                    return t.tags = (0, l.Cl)({event_type: "javascript"}, t.tags), e.prototype.captureEvent.call(this, t, r, n)
-                }, t.prototype.showReportDialog = function (e) {
-                }, t.prototype._prepareEvent = function (t, r, n) {
-                    var o = this;
-                    return t.platform = t.platform || "node", e.prototype._prepareEvent.call(this, t, r, n).then((function (e) {
-                        return new j.T((function (t) {
-                            return (0, l.sH)(o, void 0, void 0, (function () {
-                                var r, n;
-                                return (0, l.YH)(this, (function (o) {
-                                    switch (o.label) {
-                                        case 0:
-                                            return e ? (r = t, n = lr, [4, ar(this._options.appName, e)]) : [3, 2];
-                                        case 1:
-                                            return r.apply(void 0, [n.apply(void 0, [o.sent()])]), [3, 3];
-                                        case 2:
-                                            t(e), o.label = 3;
-                                        case 3:
-                                            return [2]
-                                    }
-                                }))
+                            })).then((function (e) {
+                                return e
                             }))
-                        })).then((function (e) {
-                            return e
                         }))
-                    }))
-                }, t
-            }(Ie), yr = function () {
-                function e() {
-                    this.name = e.id
-                }
-
-                return e.prototype.setupOnce = function () {
-                    var e = this;
-                    this._instrumentBreadcrumbs("app", jt.app, (function (e) {
-                        return !e.startsWith("remote-")
-                    })), jt.app.once("ready", (function () {
-                        e._instrumentBreadcrumbs("Screen", jt.screen), e._instrumentBreadcrumbs("PowerMonitor", jt.powerMonitor)
-                    })), jt.app.on("web-contents-created", (function (t, r) {
-                        setImmediate((function () {
-                            if (!r.isDestroyed()) {
-                                var t = (0, p.BF)().getClient().getOptions(),
-                                    n = t.getRendererName && t.getRendererName(r);
-                                e._instrumentBreadcrumbs(n || "WebContents[" + r.id + "]", r, (function (e) {
-                                    return ["dom-ready", "load-url", "destroyed"].includes(e)
-                                }))
-                            }
-                        }))
-                    }))
-                }, e.prototype._instrumentBreadcrumbs = function (t, r, n) {
-                    var o = r.emit.bind(r);
-                    r.emit = function (r) {
-                        for (var a = [], i = 1; i < arguments.length; i++) a[i - 1] = arguments[i];
-                        if (void 0 === n || n(r)) {
-                            var s = {
-                                category: "electron",
-                                message: t + "." + r,
-                                timestamp: (new Date).getTime() / 1e3,
-                                type: "ui"
-                            };
-                            (0, p.BF)().getIntegration(e) && (0, p.BF)().addBreadcrumb(s)
-                        }
-                        return o.apply(void 0, (0, l.fX)([r], (0, l.zs)(a)))
                     }
-                }, e.id = "Electron", e
-            }(), wr = function () {
-                function e(t) {
-                    void 0 === t && (t = {}), this._options = t, this.name = e.id
-                }
+                    return t
+                }(Ie),
+                Electron = function () {
+                    function Electron() {
+                        this.name = Electron.id
+                    }
 
-                return e.prototype.setupOnce = function () {
-                    var t = this;
-                    global.process.on("uncaughtException", (function (r) {
-                        (0, p.BF)().getIntegration(e) && (0, p.BF)().withScope((function (e) {
-                            return (0, l.sH)(t, void 0, void 0, (function () {
-                                var t, n, o, a, s, c = this;
-                                return (0, l.YH)(this, (function (u) {
-                                    switch (u.label) {
-                                        case 0:
-                                            return e.addEventProcessor((function (e) {
-                                                return (0, l.sH)(c, void 0, void 0, (function () {
-                                                    return (0, l.YH)(this, (function (t) {
-                                                        return [2, (0, l.Cl)((0, l.Cl)({}, e), {level: i.Fatal})]
+                    Electron.prototype.setupOnce = function () {
+                        var e = this;
+                        this._instrumentBreadcrumbs("app", electron.app, (function (e) {
+                            return !e.startsWith("remote-")
+                        })), electron.app.once("ready", (function () {
+                            e._instrumentBreadcrumbs("Screen", electron.screen), e._instrumentBreadcrumbs("PowerMonitor", electron.powerMonitor)
+                        })), electron.app.on("web-contents-created", (function (t, r) {
+                            setImmediate((function () {
+                                if (!r.isDestroyed()) {
+                                    var t = (0, p.BF)().getClient().getOptions(),
+                                        n = t.getRendererName && t.getRendererName(r);
+                                    e._instrumentBreadcrumbs(n || "WebContents[" + r.id + "]", r, (function (e) {
+                                        return ["dom-ready", "load-url", "destroyed"].includes(e)
+                                    }))
+                                }
+                            }))
+                        }))
+                    }
+                    Electron.prototype._instrumentBreadcrumbs = function (t, r, n) {
+                        var o = r.emit.bind(r);
+                        r.emit = function (r) {
+                            for (var a = [], i = 1; i < arguments.length; i++) a[i - 1] = arguments[i];
+                            if (void 0 === n || n(r)) {
+                                var s = {
+                                    category: "electron",
+                                    message: t + "." + r,
+                                    timestamp: (new Date).getTime() / 1e3,
+                                    type: "ui"
+                                };
+                                (0, p.BF)().getIntegration(Electron) && (0, p.BF)().addBreadcrumb(s)
+                            }
+                            return o.apply(void 0, (0, l.fX)([r], (0, l.zs)(a)))
+                        }
+                    }
+                    Electron.id = "Electron"
+                    return Electron
+                }(),
+                OnUncaughtException = function () {
+                    function OnUncaughtException(options = {}) {
+                        this._options = options
+                        this.name = OnUncaughtException.id
+                    }
+
+                    OnUncaughtException.prototype.setupOnce = function () {
+                        var t = this;
+                        global.process.on("uncaughtException", (function (r) {
+                            (0, p.BF)().getIntegration(OnUncaughtException) && (0, p.BF)().withScope((function (e) {
+                                return (0, l.sH)(t, void 0, void 0, (function () {
+                                    var t, n, o, a, s, c = this;
+                                    return (0, l.YH)(this, (function (u) {
+                                        switch (u.label) {
+                                            case 0:
+                                                return e.addEventProcessor((function (e) {
+                                                    return (0, l.sH)(c, void 0, void 0, (function () {
+                                                        return (0, l.YH)(this, (function (t) {
+                                                            return [2, (0, l.Cl)((0, l.Cl)({}, e), {level: _Severity.Fatal})]
+                                                        }))
                                                     }))
-                                                }))
-                                            })), t = r, !(0, B.bJ)(r) && r.stack && ((t = new Error).message = r.message, t.stack = r.stack, t.name = r.name), (n = (0, p.BF)().getClient()).captureException(t, {originalException: r}, (0, p.BF)().getScope()), [4, n.flush(n.getOptions().shutdownTimeout || 2e3)];
-                                        case 1:
-                                            return u.sent(), this._options.onFatalError ? this._options.onFatalError(r) : global.process.listenerCount("uncaughtException") <= 2 && (console.error("Uncaught Exception:"), console.error(r), o = r.stack, a = void 0 !== o ? o : r.name + ": " + r.message, s = "Uncaught Exception:\n" + a, jt.dialog.showErrorBox("A JavaScript error occurred in the main process", s)), [2]
-                                    }
+                                                })), t = r, !(0, B.bJ)(r) && r.stack && ((t = new Error).message = r.message, t.stack = r.stack, t.name = r.name), (n = (0, p.BF)().getClient()).captureException(t, {originalException: r}, (0, p.BF)().getScope()), [4, n.flush(n.getOptions().shutdownTimeout || 2e3)];
+                                            case 1:
+                                                return u.sent(), this._options.onFatalError ? this._options.onFatalError(r) : global.process.listenerCount("uncaughtException") <= 2 && (console.error("Uncaught Exception:"), console.error(r), o = r.stack, a = void 0 !== o ? o : r.name + ": " + r.message, s = "Uncaught Exception:\n" + a, electron.dialog.showErrorBox("A JavaScript error occurred in the main process", s)), [2]
+                                        }
+                                    }))
                                 }))
                             }))
                         }))
-                    }))
-                }, e.id = "OnUncaughtException", e
-            }(), _r = {Electron: yr, OnUncaughtException: wr};
+                    }
+                    OnUncaughtException.id = "OnUncaughtException"
+                    return OnUncaughtException
+                }(),
+                _ElectronIntegrations = {
+                    Electron: Electron,
+                    OnUncaughtException: OnUncaughtException
+                };
 
-            function kr(e) {
+            function _init(e) {
                 var t = et.filter((function (e) {
                     return "OnUncaughtException" !== e.name
                 }));
-                void 0 === e.defaultIntegrations && (e.defaultIntegrations = (0, l.fX)((0, l.fX)([], (0, l.zs)(t)), [new wr({onFatalError: e.onFatalError}), new yr])), function (e, t) {
+                void 0 === e.defaultIntegrations && (e.defaultIntegrations = (0, l.fX)((0, l.fX)([], (0, l.zs)(t)), [new OnUncaughtException({onFatalError: e.onFatalError}), new Electron])), function (e, t) {
                     var r;
                     !0 === t.debug && O.v.enable();
                     var n = (0, p.BF)();
                     null === (r = n.getScope()) || void 0 === r || r.update(t.initialScope);
                     var o = new e(t);
                     n.bindClient(o)
-                }(vr, (0, l.Cl)({transport: pr}, e))
+                }(_MainClient, (0, l.Cl)({transport: _NetTransport}, e))
             }
 
-            function Tr() {
+            function _showReportDialog() {
             }
 
-            function Er(e, t) {
+            function _captureMinidump(e, t) {
                 void 0 === t && (t = {}), function (e) {
                     for (var t = [], r = 1; r < arguments.length; r++) t[r - 1] = arguments[r];
                     h.apply(void 0, d(["_invokeClient", e], t))
                 }("captureMinidump", e, t)
             }
 
-            function Sr(e) {
+            function _flush(e) {
                 return (0, l.sH)(this, void 0, void 0, (function () {
                     var t;
                     return (0, l.YH)(this, (function (r) {
@@ -15957,7 +16886,7 @@
                 }))
             }
 
-            function Cr(e) {
+            function _close(e) {
                 return (0, l.sH)(this, void 0, void 0, (function () {
                     var t;
                     return (0, l.YH)(this, (function (r) {
@@ -17699,12 +18628,16 @@
                 return i
             }
         },
-        69642: function (e, t, r) {
+        69642: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            const o = r(24434), a = n(r(55623)), i = n(r(70)), s = a.default("agent-base");
+
+            const o = __require(24434),
+                __debug = n(__require(55623)),
+                i = n(__require(70)),
+                s = __debug.default("agent-base");
 
             function l() {
                 const {stack: e} = new Error;
@@ -17785,7 +18718,8 @@
                 }
 
                 e.Agent = t, e.prototype = e.Agent.prototype
-            }(c || (c = {})), e.exports = c
+            }(c || (c = {}))
+            module.exports = c
         },
         70: (e, t) => {
             "use strict";
@@ -26962,13 +27896,13 @@
         },
         21789: (e, t, r) => {
             "use strict";
-            var n, o = r(16928);
+            var electron, o = r(16928);
             try {
-                n = r(4482)
+                electron = r(4482)
             } catch (e) {
-                n = null
+                electron = null
             }
-            var a = r(70857);
+            var __os = r(70857);
 
             function i() {
                 return l("app")
@@ -26980,11 +27914,11 @@
             }
 
             function l(e) {
-                return n ? n[e] ? n[e] : n.remote ? n.remote[e] : null : null
+                return electron ? electron[e] ? electron[e] : electron.remote ? electron.remote[e] : null : null
             }
 
             function c() {
-                return "browser" === process.type && n && n.ipcMain ? n.ipcMain : "renderer" === process.type && n && n.ipcRenderer ? n.ipcRenderer : null
+                return "browser" === process.type && electron && electron.ipcMain ? electron.ipcMain : "renderer" === process.type && electron && electron.ipcRenderer ? electron.ipcRenderer : null
             }
 
             function u() {
@@ -27005,7 +27939,7 @@
                     return {
                         app: s() + " " + u(),
                         electron: "Electron " + process.versions.electron,
-                        os: (e = a.type().replace("_", " "), t = a.release(), "Darwin" === e && (e = "macOS", t = "10." + (Number(a.release().split(".")[0]) - 4)), e + " " + t)
+                        os: (e = __os.type().replace("_", " "), t = __os.release(), "Darwin" === e && (e = "macOS", t = "10." + (Number(__os.release().split(".")[0]) - 4)), e + " " + t)
                     };
                     var e, t
                 }, isDev: function () {
@@ -27031,7 +27965,7 @@
                     r && r.openExternal(e).catch(t)
                 }, sendIpc: function (e, t) {
                     "browser" === process.type ? function (e, t) {
-                        n && n.BrowserWindow && n.BrowserWindow.getAllWindows().forEach((function (r) {
+                        electron && electron.BrowserWindow && electron.BrowserWindow.getAllWindows().forEach((function (r) {
                             r.webContents && !r.webContents.isDestroyed() && r.webContents.send(e, t)
                         }))
                     }(e, t) : "renderer" === process.type && function (e, t) {
@@ -27415,7 +28349,7 @@
         },
         17235: (e, t, r) => {
             "use strict";
-            var n = r(24434), o = r(79896), a = r(70857), i = r(16928), s = r(16857), l = r(39023);
+            var n = r(24434), o = r(79896), __os = r(70857), i = r(16928), s = r(16857), l = r(39023);
 
             function c(e, t, r) {
                 n.call(this), this.path = e, this.initialSize = void 0, this.bytesWritten = 0, this.writeAsync = Boolean(r), this.asyncWriteQueue = [], this.hasActiveAsyncWritting = !1, this.writeOptions = t || {
@@ -27457,7 +28391,7 @@
             }, c.prototype.crop = function (e) {
                 try {
                     var t = (r = this.path, n = e || 4096, i = Buffer.alloc(n), s = o.statSync(r), l = Math.min(s.size, n), c = Math.max(0, s.size - n), u = o.openSync(r, "r"), d = o.readSync(u, i, 0, l, c), o.closeSync(u), i.toString("utf8", 0, d));
-                    this.clear(), this.writeLine("[log cropped]" + a.EOL + t)
+                    this.clear(), this.writeLine("[log cropped]" + __os.EOL + t)
                 } catch (e) {
                     this.emit("error", new Error("Couldn't crop file " + this.path + ". " + e.message), this)
                 }
@@ -27467,7 +28401,7 @@
             }, c.prototype.reset = function () {
                 this.initialSize = void 0, this.bytesWritten = 0
             }, c.prototype.writeLine = function (e) {
-                if (e += a.EOL, this.writeAsync) return this.asyncWriteQueue.push(e), void this.nextAsyncWrite();
+                if (e += __os.EOL, this.writeAsync) return this.asyncWriteQueue.push(e), void this.nextAsyncWrite();
                 try {
                     o.writeFileSync(this.path, e, this.writeOptions), this.increaseBytesWrittenCounter(e)
                 } catch (e) {
@@ -27519,7 +28453,7 @@
         },
         36209: (e, t, r) => {
             "use strict";
-            var n = r(79896), o = r(16928), a = r(70857), i = r(39023), s = r(33396), l = r(17235).FileRegistry,
+            var n = r(79896), o = r(16928), __os = r(70857), i = r(39023), s = r(33396), l = r(17235).FileRegistry,
                 c = r(61820);
             e.exports = function (e, t) {
                 var r = c.getPathVariables(process.platform), l = t || u;
@@ -27551,7 +28485,7 @@
                         return o.join(s, e)
                     })).filter(t).map((function (e) {
                         try {
-                            return {path: e, lines: n.readFileSync(e, "utf8").split(a.EOL)}
+                            return {path: e, lines: n.readFileSync(e, "utf8").split(__os.EOL)}
                         } catch (e) {
                             return null
                         }
@@ -27649,7 +28583,7 @@
         },
         61820: (e, t, r) => {
             "use strict";
-            var n = r(70857), o = r(16928), a = r(21789), i = r(97251);
+            var __os = r(70857), o = r(16928), a = r(21789), i = r(97251);
 
             function s(e) {
                 var t = a.getPath("appData");
@@ -27666,7 +28600,7 @@
             }
 
             function l() {
-                return n.homedir ? n.homedir() : process.env.HOME
+                return __os.homedir ? __os.homedir() : process.env.HOME
             }
 
             function c(e, t) {
@@ -27703,7 +28637,7 @@
                         home: l(),
                         libraryDefaultDir: c(e, r),
                         libraryTemplate: u(e),
-                        temp: a.getPath("temp") || n.tmpdir(),
+                        temp: a.getPath("temp") || __os.tmpdir(),
                         userData: p(e, r)
                     }
                 },
@@ -27758,26 +28692,40 @@
                 }
             }
         },
-        9245: (e, t, r) => {
+        9245: (module, exports, __require) => {
             "use strict";
-            const n = r(16928), {app: o, ipcMain: a, ipcRenderer: i, shell: s} = r(4482), l = r(25054);
+            const __path = __require(16928)
+            const {app, ipcMain, ipcRenderer, shell} = __require(4482)
+            const l = __require(25054);
+
             let c = !1;
             const u = () => {
-                if (!a || !o) throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
-                const e = {defaultCwd: o.getPath("userData"), appVersion: o.getVersion()};
-                return c || (a.on("electron-store-get-data", (t => {
+                if (!ipcMain || !app) throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
+                const e = {defaultCwd: app.getPath("userData"), appVersion: app.getVersion()};
+                return c || (ipcMain.on("electron-store-get-data", (t => {
                     t.returnValue = e
                 })), c = !0), e
             };
-            e.exports = class extends l {
+
+            module.exports = class extends l {
                 constructor(e) {
                     let t, r;
-                    if (i) {
-                        const e = i.sendSync("electron-store-get-data");
+                    if (ipcRenderer) {
+                        const e = ipcRenderer.sendSync("electron-store-get-data");
                         if (!e) throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
                         ({defaultCwd: t, appVersion: r} = e)
-                    } else a && o && ({defaultCwd: t, appVersion: r} = u());
-                    (e = {name: "config", ...e}).projectVersion || (e.projectVersion = r), e.cwd ? e.cwd = n.isAbsolute(e.cwd) ? e.cwd : n.join(t, e.cwd) : e.cwd = t, e.configName = e.name, delete e.name, super(e)
+                    } else {
+                        ipcMain && app && ({defaultCwd: t, appVersion: r} = u());
+                    }
+                    (e = {name: "config", ...e}).projectVersion || (e.projectVersion = r)
+                    e.cwd
+                        ? e.cwd = __path.isAbsolute(e.cwd)
+                            ? e.cwd
+                            : __path.join(t, e.cwd)
+                        : e.cwd = t
+                    e.configName = e.name
+                    delete e.name
+                    super(e)
                 }
 
                 static initRenderer() {
@@ -27785,7 +28733,7 @@
                 }
 
                 openInEditor() {
-                    s.openPath(this.path)
+                    shell.openPath(this.path)
                 }
             }
         },
@@ -30521,10 +31469,10 @@
             }
 
             function a() {
-                const e = r(4482);
+                const electron = r(4482);
                 return a = function () {
-                    return e
-                }, e
+                    return electron
+                }, electron
             }
 
             function i() {
@@ -31981,10 +32929,10 @@
             }
 
             function o() {
-                const e = r(4482);
+                const electron = r(4482);
                 return o = function () {
-                    return e
-                }, e
+                    return electron
+                }, electron
             }
 
             Object.defineProperty(t, "__esModule", {value: !0}), t.getNetSession = i, t.ElectronHttpExecutor = t.NET_SESSION_NAME = void 0;
@@ -32753,7 +33701,7 @@
                         n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                     }
                     return t.default = e, t
-                }(r(70857));
+                }(r(70857)); // os
                 return a = function () {
                     return e
                 }, e
@@ -32798,38 +33746,39 @@
         },
         54719: (e, t, r) => {
             "use strict";
-            const n = r(16928), o = r(70857), a = o.homedir(), i = o.tmpdir(), {env: s} = process, l = (e, t) => {
-                if ("string" != typeof e) throw new TypeError("Expected string, got " + typeof e);
-                return (t = Object.assign({suffix: "nodejs"}, t)).suffix && (e += `-${t.suffix}`), "darwin" === process.platform ? (e => {
-                    const t = n.join(a, "Library");
-                    return {
-                        data: n.join(t, "Application Support", e),
-                        config: n.join(t, "Preferences", e),
-                        cache: n.join(t, "Caches", e),
-                        log: n.join(t, "Logs", e),
-                        temp: n.join(i, e)
-                    }
-                })(e) : "win32" === process.platform ? (e => {
-                    const t = s.APPDATA || n.join(a, "AppData", "Roaming"),
-                        r = s.LOCALAPPDATA || n.join(a, "AppData", "Local");
-                    return {
-                        data: n.join(r, e, "Data"),
-                        config: n.join(t, e, "Config"),
-                        cache: n.join(r, e, "Cache"),
-                        log: n.join(r, e, "Log"),
-                        temp: n.join(i, e)
-                    }
-                })(e) : (e => {
-                    const t = n.basename(a);
-                    return {
-                        data: n.join(s.XDG_DATA_HOME || n.join(a, ".local", "share"), e),
-                        config: n.join(s.XDG_CONFIG_HOME || n.join(a, ".config"), e),
-                        cache: n.join(s.XDG_CACHE_HOME || n.join(a, ".cache"), e),
-                        log: n.join(s.XDG_STATE_HOME || n.join(a, ".local", "state"), e),
-                        temp: n.join(i, t, e)
-                    }
-                })(e)
-            };
+            const n = r(16928), __os = r(70857), a = __os.homedir(), i = __os.tmpdir(), {env: s} = process,
+                l = (e, t) => {
+                    if ("string" != typeof e) throw new TypeError("Expected string, got " + typeof e);
+                    return (t = Object.assign({suffix: "nodejs"}, t)).suffix && (e += `-${t.suffix}`), "darwin" === process.platform ? (e => {
+                        const t = n.join(a, "Library");
+                        return {
+                            data: n.join(t, "Application Support", e),
+                            config: n.join(t, "Preferences", e),
+                            cache: n.join(t, "Caches", e),
+                            log: n.join(t, "Logs", e),
+                            temp: n.join(i, e)
+                        }
+                    })(e) : "win32" === process.platform ? (e => {
+                        const t = s.APPDATA || n.join(a, "AppData", "Roaming"),
+                            r = s.LOCALAPPDATA || n.join(a, "AppData", "Local");
+                        return {
+                            data: n.join(r, e, "Data"),
+                            config: n.join(t, e, "Config"),
+                            cache: n.join(r, e, "Cache"),
+                            log: n.join(r, e, "Log"),
+                            temp: n.join(i, e)
+                        }
+                    })(e) : (e => {
+                        const t = n.basename(a);
+                        return {
+                            data: n.join(s.XDG_DATA_HOME || n.join(a, ".local", "share"), e),
+                            config: n.join(s.XDG_CONFIG_HOME || n.join(a, ".config"), e),
+                            cache: n.join(s.XDG_CACHE_HOME || n.join(a, ".cache"), e),
+                            log: n.join(s.XDG_STATE_HOME || n.join(a, ".local", "state"), e),
+                            temp: n.join(i, t, e)
+                        }
+                    })(e)
+                };
             e.exports = l, e.exports.default = l
         },
         88719: e => {
@@ -33682,11 +34631,11 @@
         },
         57213: (e, t, r) => {
             "use strict";
-            const n = r(83641), o = r(70857), a = r(16928);
+            const n = r(83641), __os = r(70857), a = r(16928);
             e.exports = {
                 hasMillisRes: function (e) {
                     let t = a.join("millis-test" + Date.now().toString() + Math.random().toString().slice(2));
-                    t = a.join(o.tmpdir(), t);
+                    t = a.join(__os.tmpdir(), t);
                     const r = new Date(1435410243862);
                     n.writeFile(t, "https://github.com/jprichardson/node-fs-extra/pull/141", (o => {
                         if (o) return e(o);
@@ -33706,7 +34655,7 @@
                     }))
                 }, hasMillisResSync: function () {
                     let e = a.join("millis-test-sync" + Date.now().toString() + Math.random().toString().slice(2));
-                    e = a.join(o.tmpdir(), e);
+                    e = a.join(__os.tmpdir(), e);
                     const t = new Date(1435410243862);
                     n.writeFileSync(e, "https://github.com/jprichardson/node-fs-extra/pull/141");
                     const r = n.openSync(e, "r+");
@@ -34247,41 +35196,50 @@
                 return t
             }
         },
-        56123: function (e, t, r) {
+        56123: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__awaiter || function (e, t, r, n) {
-                return new (r || (r = Promise))((function (o, a) {
-                    function i(e) {
-                        try {
-                            l(n.next(e))
-                        } catch (e) {
-                            a(e)
+            let n = this && this.__awaiter || function (e, t, r, n) {
+                    return new (r || (r = Promise))((function (o, a) {
+                        function i(e) {
+                            try {
+                                l(n.next(e))
+                            } catch (e) {
+                                a(e)
+                            }
                         }
-                    }
 
-                    function s(e) {
-                        try {
-                            l(n.throw(e))
-                        } catch (e) {
-                            a(e)
+                        function s(e) {
+                            try {
+                                l(n.throw(e))
+                            } catch (e) {
+                                a(e)
+                            }
                         }
-                    }
 
-                    function l(e) {
-                        var t;
-                        e.done ? o(e.value) : (t = e.value, t instanceof r ? t : new r((function (e) {
-                            e(t)
-                        }))).then(i, s)
-                    }
+                        function l(e) {
+                            var t;
+                            e.done ? o(e.value) : (t = e.value, t instanceof r ? t : new r((function (e) {
+                                e(t)
+                            }))).then(i, s)
+                        }
 
-                    l((n = n.apply(e, t || [])).next())
-                }))
-            }, o = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const a = o(r(69278)), i = o(r(64756)), s = o(r(16857)), l = o(r(42613)), c = o(r(55623)), u = r(69642),
-                d = o(r(50278)), p = c.default("https-proxy-agent:agent");
+                        l((n = n.apply(e, t || [])).next())
+                    }))
+                },
+                o = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            const a = o(__require(69278)),
+                i = o(__require(64756)),
+                s = o(__require(16857)),
+                l = o(__require(42613)),
+                __debug = o(__require(55623)),
+                u = __require(69642),
+                d = o(__require(50278))
+
+            const p = __debug.default("https-proxy-agent:agent");
 
             class h extends u.Agent {
                 constructor(e) {
@@ -34335,7 +35293,7 @@
                 e.resume()
             }
 
-            t.default = h
+            exports.default = h
         },
         74958: function (e, t, r) {
             "use strict";
@@ -34351,15 +35309,20 @@
                 e.HttpsProxyAgent = n.default, e.prototype = n.default.prototype
             }(o || (o = {})), e.exports = o
         },
-        50278: function (e, t, r) {
+
+        // https-proxy-agent:parse-proxy-response
+        50278: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const o = n(r(55623)).default("https-proxy-agent:parse-proxy-response");
-            t.default = function (e) {
-                return new Promise(((t, r) => {
+
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            const o = n(__require(55623)).default("https-proxy-agent:parse-proxy-response");
+
+            exports.default = function (e) {
+                return new Promise((resolve, reject) => {
                     let n = 0;
                     const a = [];
 
@@ -34370,7 +35333,7 @@
                             const r = Buffer.concat(a, n);
                             if (-1 === r.indexOf("\r\n\r\n")) return o("have not received end of HTTP headers yet..."), void i();
                             const s = r.toString("ascii", 0, r.indexOf("\r\n")), l = +s.split(" ")[1];
-                            o("got proxy server response: %o", s), t({statusCode: l, buffered: r})
+                            o("got proxy server response: %o", s), resolve({statusCode: l, buffered: r})
                         }(r) : e.once("readable", i)
                     }
 
@@ -34383,16 +35346,17 @@
                     }
 
                     e.on("error", (function t(n) {
-                        e.removeListener("end", l), e.removeListener("error", t), e.removeListener("close", s), e.removeListener("readable", i), o("onerror %o", n), r(n)
+                        e.removeListener("end", l), e.removeListener("error", t), e.removeListener("close", s), e.removeListener("readable", i), o("onerror %o", n), reject(n)
                     })), e.on("close", s), e.on("end", l), i()
-                }))
+                })
             }
         },
-        30623: e => {
+        // isObjOrFunc
+        30623: module => {
             "use strict";
-            e.exports = e => {
-                const t = typeof e;
-                return null !== e && ("object" === t || "function" === t)
+            module.exports = obj => {
+                const type = typeof obj;
+                return null !== obj && ("object" === type || "function" === type)
             }
         },
         61259: (e, t, r) => {
@@ -43586,7 +44550,7 @@
         },
         96809: (e, t, r) => {
             "use strict";
-            const n = r(70857), o = r(52018), a = r(26690), {env: i} = process;
+            const __os = r(70857), o = r(52018), a = r(26690), {env: i} = process;
             let s;
 
             function l(e) {
@@ -43601,7 +44565,7 @@
                 const r = s || 0;
                 if ("dumb" === i.TERM) return r;
                 if ("win32" === process.platform) {
-                    const e = n.release().split(".");
+                    const e = __os.release().split(".");
                     return Number(e[0]) >= 10 && Number(e[2]) >= 10586 ? Number(e[2]) >= 14931 ? 3 : 2 : 1
                 }
                 if ("CI" in i) return ["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some((e => e in i)) || "codeship" === i.CI_NAME ? 1 : r;
