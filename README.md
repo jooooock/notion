@@ -22,7 +22,25 @@
 94774: AssetCache 实例
 
 43579: initializeAutoUpdater
-94625: autoUpdater
+
+
+94625: electron-updater/main.js 入口
+35778: electron-updater/NsisUpdater
+95136: electron-updater/MacUpdater
+49619: electron-updater/AppImageUpdater
+45414: electron-updater/Provider
+96064: electron-updater/AppUpdater
+5931: electron-updater/electronHttpExecutor
+33200: electron-updater/ElectronAppAdapter
+17660: electron-updater/DownloadedUpdateHelper
+54679: electron-updater/providerFactory
+86216: electron-updater/BaseUpdater
+
+
+
+79529: builder-util-runtime
+
+
 
 56116: sentry
 34516: setupSqliteServer
@@ -61,6 +79,9 @@
 
 43067: 工具类 utils
 
+54679: createClient
+
+
 // nodejs模块
 70857: os
 57075: node:stream
@@ -92,4 +113,5 @@
 81047: debug for nodejs
 55623: debug
 6600: lodash
+44993: semver
 ```
