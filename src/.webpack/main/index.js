@@ -3266,7 +3266,7 @@
 
             const electron = __require(4482),
                 electron_log = i(__require(47419)),
-                __autoUpdater = __require(94625),
+                __electron_updater = __require(94625),
                 u = __require(36343),
                 __cleanObjectForSerialization = __require(37318),
                 lodash_1 = a(__require(6600)),
@@ -3305,7 +3305,7 @@
 
             let T, E;
 
-            __autoUpdater.autoUpdater.logger = electron_log.default.scope("AutoUpdater")
+            __electron_updater.autoUpdater.logger = electron_log.default.scope("AutoUpdater")
 
             // setting autoUpdater channel
             void function () {
@@ -3313,18 +3313,18 @@
                     isDarwin = "darwin" === process.platform,
                     isArm64 = "arm64" === process.arch || electron.app.runningUnderARM64Translation;
                 if (updaterChannel) {
-                    __autoUpdater.autoUpdater.channel = updaterChannel
+                    __electron_updater.autoUpdater.channel = updaterChannel
                     electron_log.default.info(`Setting autoUpdater channel to "${updaterChannel}" (from preferences)`)
                     return
                 }
                 if (isDarwin && isArm64) {
-                    __autoUpdater.autoUpdater.channel = "arm64"
+                    __electron_updater.autoUpdater.channel = "arm64"
                     electron_log.default.info('Setting autoUpdater channel to "arm64"')
                 } else if (isDarwin) {
-                    __autoUpdater.autoUpdater.channel = "latest"
+                    __electron_updater.autoUpdater.channel = "latest"
                     electron_log.default.info('Setting autoUpdater channel to "latest" (for Intel)')
                 }
-                __autoUpdater.autoUpdater.allowDowngrade = false
+                __electron_updater.autoUpdater.allowDowngrade = false
             }();
 
             const autoUpdateStatus = {
@@ -3373,7 +3373,7 @@
                 if (T) {
                     return T
                 }
-                T = __autoUpdater.autoUpdater.checkForUpdates().then(e => {
+                T = __electron_updater.autoUpdater.checkForUpdates().then(e => {
                     T = void 0
                     return e
                 }).catch(e => {
@@ -3387,7 +3387,7 @@
                 process.nextTick(() => {
                     __AppController.appController.handleQuit()
                     if (exports.autoUpdateStatus.downloaded) {
-                        __autoUpdater.autoUpdater.quitAndInstall(Boolean(silent), Boolean(launch))
+                        __electron_updater.autoUpdater.quitAndInstall(Boolean(silent), Boolean(launch))
                     } else {
                         electron.app.relaunch()
                         electron.app.quit()
@@ -3406,11 +3406,11 @@
 
             exports.autoUpdateStatus = {...autoUpdateStatus}
 
-            __autoUpdater.autoUpdater.autoDownload = false
-            __autoUpdater.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform
+            __electron_updater.autoUpdater.autoDownload = false
+            __electron_updater.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform
 
             exports.initializeAutoUpdater = function () {
-                __autoUpdater.autoUpdater.on("error", e => {
+                __electron_updater.autoUpdater.on("error", e => {
                     updateStatus(autoUpdateStatus)
                     T = void 0
                     if (e && e.message && ["ERR_CONNECTION_REFUSED", "ECONNREFUSED"].some(t => -1 !== e.message.indexOf(t))) {
@@ -3479,17 +3479,17 @@
 
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-error", __cleanObjectForSerialization.cleanObjectForSerialization(e))
                 })
-                __autoUpdater.autoUpdater.on("checking-for-update", () => {
+                __electron_updater.autoUpdater.on("checking-for-update", () => {
                     electron_log.default.info("Checking for update")
                     updateStatus({checking: true})
                     __AppController.appController.sendMainToAllNotionInstances("notion:checking-for-update")
                 })
-                __autoUpdater.autoUpdater.on("update-available", info => {
+                __electron_updater.autoUpdater.on("update-available", info => {
                     electron_log.default.info("Update available", {info: info});
                     const r = exports.autoUpdateStatus.downloaded?.version !== info.version;
                     if (r) {
                         electron_log.default.info("Downloading update", {info: info})
-                        __autoUpdater.autoUpdater.downloadUpdate()
+                        __electron_updater.autoUpdater.downloadUpdate()
                     }
                     updateStatus({
                         checking: void 0,
@@ -3499,7 +3499,7 @@
                     __setupSystemMenu.setupSystemMenu()
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-available", info)
                 })
-                __autoUpdater.autoUpdater.on("update-not-available", () => {
+                __electron_updater.autoUpdater.on("update-not-available", () => {
                     updateStatus({
                         checking: void 0,
                         available: void 0
@@ -3512,8 +3512,8 @@
                     __AppController.appController.sendMainToAllNotionInstances("notion:update-progress", e)
                     __setupSystemMenu.setupSystemMenu()
                 }, 300)
-                __autoUpdater.autoUpdater.on("download-progress", e)
-                __autoUpdater.autoUpdater.on("update-downloaded", info => {
+                __electron_updater.autoUpdater.on("download-progress", e)
+                __electron_updater.autoUpdater.on("update-downloaded", info => {
                     electron_log.default.info("Update downloaded", {info: info})
                     updateStatus({
                         ...autoUpdateStatus,
@@ -31964,7 +31964,10 @@
                 }
 
                 async loadUpdateConfig() {
-                    return null == this._appUpdateConfigPath && (this._appUpdateConfigPath = this.app.appUpdateConfigPath), (0, l().safeLoad)(await (0, s().readFile)(this._appUpdateConfigPath, "utf-8"))
+                    if (null == this._appUpdateConfigPath) {
+                        this._appUpdateConfigPath = this.app.appUpdateConfigPath
+                    }
+                    return l().safeLoad(await (s().readFile)(this._appUpdateConfigPath, "utf-8"))
                 }
 
                 computeRequestHeaders(e) {
@@ -32006,14 +32009,19 @@
                 }
 
                 async getOrCreateDownloadHelper() {
-                    let e = this.downloadedUpdateHelper;
-                    if (null == e) {
-                        const t = (await this.configOnDisk.value).updaterCacheDirName, r = this._logger;
-                        null == t && r.error("updaterCacheDirName is not specified in app-update.yml Was app build using at least electron-builder 20.34.0?");
-                        const n = __path.join(this.app.baseCachePath, t || this.app.name);
-                        null != r.debug && r.debug(`updater cache dir: ${n}`), e = new (p().DownloadedUpdateHelper)(n), this.downloadedUpdateHelper = e
+                    let downloadedUpdateHelper = this.downloadedUpdateHelper;
+                    if (null == downloadedUpdateHelper) {
+                        const updaterCacheDirName = (await this.configOnDisk.value).updaterCacheDirName
+                        let log = this._logger;
+                        if (null == updaterCacheDirName) {
+                            log.error("updaterCacheDirName is not specified in app-update.yml Was app build using at least electron-builder 20.34.0?")
+                        }
+                        const n = __path.join(this.app.baseCachePath, updaterCacheDirName || this.app.name);
+                        null != log.debug && log.debug(`updater cache dir: ${n}`)
+                        downloadedUpdateHelper = new (p().DownloadedUpdateHelper)(n)
+                        this.downloadedUpdateHelper = downloadedUpdateHelper
                     }
-                    return e
+                    return downloadedUpdateHelper
                 }
 
                 async executeDownload(taskOptions) {
@@ -32075,7 +32083,7 @@
                             log.info("Cancelled")
                             this.emit("update-cancelled", updateInfo)
                         }
-                        throw  e
+                        throw e
                     }
                     log.info(`New version ${version} has been downloaded to ${updateFile}`)
                     return await done(true)
@@ -32098,63 +32106,94 @@
             exports.NoOpLogger = NoOpLogger
         },
         // electron-updater/BaseUpdater
-        86216: (e, t, r) => {
+        86216: (module, exports, __require) => {
             "use strict";
 
+            // AppUpdater
             function n() {
-                const e = r(96064);
-                return n = function () {
+                const e = __require(96064);
+                n = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.BaseUpdater = void 0;
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            class o extends n().AppUpdater {
-                constructor(e, t) {
-                    super(e, t), this.quitAndInstallCalled = !1, this.quitHandlerAdded = !1
+
+            class BaseUpdater extends n().AppUpdater {
+                constructor(options, app) {
+                    super(options, app)
+                    this.quitAndInstallCalled = false
+                    this.quitHandlerAdded = false
                 }
 
-                quitAndInstall(e = !1, t = !1) {
-                    this._logger.info("Install on explicit quitAndInstall"), this.install(e, !e || t) ? setImmediate((() => {
-                        this.app.quit()
-                    })) : this.quitAndInstallCalled = !1
+                quitAndInstall(isSilent = false, isForceRunAfter = false) {
+                    this._logger.info("Install on explicit quitAndInstall")
+                    this.install(isSilent, !isSilent || isForceRunAfter)
+                        ? setImmediate(() => {
+                            this.app.quit()
+                        })
+                        : this.quitAndInstallCalled = false
                 }
 
-                executeDownload(e) {
-                    return super.executeDownload(Object.assign({}, e, {
-                        done: async e => {
-                            this.dispatchUpdateDownloaded(e), this.addQuitHandler()
+                executeDownload(taskOptions) {
+                    return super.executeDownload({
+                        ...taskOptions,
+                        done: async event => {
+                            this.dispatchUpdateDownloaded(event)
+                            this.addQuitHandler()
                         }
-                    }))
+                    })
                 }
 
-                install(e, t) {
-                    if (this.quitAndInstallCalled) return this._logger.warn("install call ignored: quitAndInstallCalled is set to true"), !1;
-                    const r = this.downloadedUpdateHelper, n = null == r ? null : r.file,
-                        o = null == r ? null : r.downloadedFileInfo;
-                    if (null == n || null == o) return this.dispatchError(new Error("No valid update available, can't quit and install")), !1;
-                    this.quitAndInstallCalled = !0;
+                install(isSilent, isForceRunAfter) {
+                    if (this.quitAndInstallCalled) {
+                        this._logger.warn("install call ignored: quitAndInstallCalled is set to true")
+                        return false
+                    }
+
+                    const downloadedUpdateHelper = this.downloadedUpdateHelper
+                    const installerPath = null == downloadedUpdateHelper ? null : downloadedUpdateHelper.file
+                    const downloadedFileInfo = null == downloadedUpdateHelper ? null : downloadedUpdateHelper.downloadedFileInfo;
+                    if (null == installerPath || null == downloadedFileInfo) {
+                        this.dispatchError(new Error("No valid update available, can't quit and install"))
+                        return false
+                    }
+
+                    this.quitAndInstallCalled = true
                     try {
-                        return this._logger.info(`Install: isSilent: ${e}, isForceRunAfter: ${t}`), this.doInstall({
-                            installerPath: n,
-                            isSilent: e,
-                            isForceRunAfter: t,
-                            isAdminRightsRequired: o.isAdminRightsRequired
+                        this._logger.info(`Install: isSilent: ${isSilent}, isForceRunAfter: ${isForceRunAfter}`)
+                        return this.doInstall({
+                            installerPath: installerPath,
+                            isSilent: isSilent,
+                            isForceRunAfter: isForceRunAfter,
+                            isAdminRightsRequired: downloadedFileInfo.isAdminRightsRequired
                         })
                     } catch (e) {
-                        return this.dispatchError(e), !1
+                        this.dispatchError(e)
+                        return false
                     }
                 }
 
                 addQuitHandler() {
-                    !this.quitHandlerAdded && this.autoInstallOnAppQuit && (this.quitHandlerAdded = !0, this.app.onQuit((e => {
-                        this.quitAndInstallCalled ? this._logger.info("Update installer has already been triggered. Quitting application.") : 0 === e ? (this._logger.info("Auto install update on quit"), this.install(!0, !1)) : this._logger.info(`Update will be not installed on quit because application is quitting with exit code ${e}`)
-                    })))
+                    if (!this.quitHandlerAdded && this.autoInstallOnAppQuit) {
+                        this.quitHandlerAdded = true
+                        this.app.onQuit(exitCode => {
+                            if (this.quitAndInstallCalled) {
+                                this._logger.info("Update installer has already been triggered. Quitting application.")
+                            } else if (0 === exitCode) {
+                                this._logger.info("Auto install update on quit")
+                                this.install(true, false)
+                            } else {
+                                this._logger.info(`Update will be not installed on quit because application is quitting with exit code ${exitCode}`)
+                            }
+                        })
+                    }
                 }
             }
 
-            t.BaseUpdater = o
+            exports.BaseUpdater = BaseUpdater
         },
         // electron-updater/DownloadedUpdateHelper
         17660: (module, exports, __require) => {
@@ -32167,45 +32206,68 @@
                 }, e
             }
 
-            Object.defineProperty(exports, "__esModule", {value: !0}), exports.createTempUpdateFile = async function (e, t, r) {
-                let n = 0, o = s.join(t, e);
-                for (let a = 0; a < 3; a++) try {
-                    return await (0, i().unlink)(o), o
-                } catch (a) {
-                    if ("ENOENT" === a.code) return o;
-                    r.warn(`Error on remove temp update file: ${a}`), o = s.join(t, `${n++}-${e}`)
-                }
-                return o
-            }, exports.DownloadedUpdateHelper = void 0;
-            var o = __require(79896);
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
+            exports.createTempUpdateFile = async function (name, cacheDir, log) {
+                let nameCounter = 0
+                let result = __path.join(cacheDir, name);
+                for (let a = 0; a < 3; a++) {
+                    try {
+                        await (i().unlink)(result)
+                        return result
+                    } catch (a) {
+                        if ("ENOENT" === a.code) {
+                            return result;
+                        }
+
+                        log.warn(`Error on remove temp update file: ${a}`)
+                        result = __path.join(cacheDir, `${nameCounter++}-${name}`)
+                    }
+                }
+                return result
+            }
+
+            let o = __require(79896);
+
+            // isEqual
             function a() {
                 const e = (t = __require(50328)) && t.__esModule ? t : {default: t};
                 var t;
-                return a = function () {
+                a = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function i() {
                 const e = __require(80115);
-                return i = function () {
+                i = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
-            var s = function (e) {
-                if (e && e.__esModule) return e;
+            let __path = function (module) {
+                if (module && module.__esModule) return module;
                 var t = {};
-                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
-                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
-                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
-                }
-                return t.default = e, t
+                if (null != module)
+                    for (var r in module)
+                        if (Object.prototype.hasOwnProperty.call(module, r)) {
+                            var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(module, r) : {};
+                            n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = module[r]
+                        }
+                t.default = module
+                return t
             }(__require(16928)); // path
+
             exports.DownloadedUpdateHelper = class {
-                constructor(e) {
-                    this.cacheDir = e, this._file = null, this._packageFile = null, this.versionInfo = null, this.fileInfo = null, this._downloadedFileInfo = null
+                constructor(cacheDir) {
+                    this.cacheDir = cacheDir
+                    this._file = null
+                    this._packageFile = null
+                    this.versionInfo = null
+                    this.fileInfo = null
+                    this._downloadedFileInfo = null
                 }
 
                 get downloadedFileInfo() {
@@ -32221,60 +32283,116 @@
                 }
 
                 get cacheDirForPendingUpdate() {
-                    return s.join(this.cacheDir, "pending")
+                    return __path.join(this.cacheDir, "pending")
                 }
 
-                async validateDownloadedPath(e, t, r, n) {
-                    if (null != this.versionInfo && this.file === e && null != this.fileInfo) return (0, a().default)(this.versionInfo, t) && (0, a().default)(this.fileInfo.info, r.info) && await (0, i().pathExists)(e) ? e : null;
-                    const o = await this.getValidCachedUpdateFile(r, n);
-                    return null == o ? null : (n.info(`Update has already been downloaded to ${e}).`), this._file = o, o)
+                async validateDownloadedPath(updateFile, updateInfo, fileInfo, logger) {
+                    if (null != this.versionInfo && this.file === updateFile && null != this.fileInfo) {
+                        return a().default(this.versionInfo, updateInfo) && a().default(this.fileInfo.info, fileInfo.info) && await i().pathExists(updateFile)
+                            ? updateFile
+                            : null;
+                    }
+
+                    const cachedUpdateFile = await this.getValidCachedUpdateFile(fileInfo, logger);
+                    if (null == cachedUpdateFile) {
+                        return null
+                    }
+
+                    logger.info(`Update has already been downloaded to ${updateFile}).`)
+                    this._file = cachedUpdateFile
+                    return cachedUpdateFile
                 }
 
-                async setDownloadedFile(e, t, r, n, o, a) {
-                    this._file = e, this._packageFile = t, this.versionInfo = r, this.fileInfo = n, this._downloadedFileInfo = {
-                        fileName: o,
-                        sha512: n.info.sha512,
-                        isAdminRightsRequired: !0 === n.info.isAdminRightsRequired
-                    }, a && await (0, i().outputJson)(this.getUpdateInfoFile(), this._downloadedFileInfo)
+                async setDownloadedFile(downloadedFile, packageFile, versionInfo, fileInfo, updateFileName, isSaveCache) {
+                    this._file = downloadedFile
+                    this._packageFile = packageFile
+                    this.versionInfo = versionInfo
+                    this.fileInfo = fileInfo
+                    this._downloadedFileInfo = {
+                        fileName: updateFileName,
+                        sha512: fileInfo.info.sha512,
+                        isAdminRightsRequired: !0 === fileInfo.info.isAdminRightsRequired
+                    }
+                    if (isSaveCache) {
+                        await (i().outputJson)(this.getUpdateInfoFile(), this._downloadedFileInfo)
+                    }
                 }
 
                 async clear() {
-                    this._file = null, this._packageFile = null, this.versionInfo = null, this.fileInfo = null, await this.cleanCacheDirForPendingUpdate()
+                    this._file = null
+                    this._packageFile = null
+                    this.versionInfo = null
+                    this.fileInfo = null
+                    await this.cleanCacheDirForPendingUpdate()
                 }
 
                 async cleanCacheDirForPendingUpdate() {
                     try {
-                        await (0, i().emptyDir)(this.cacheDirForPendingUpdate)
+                        await (i().emptyDir)(this.cacheDirForPendingUpdate)
                     } catch (e) {
                     }
                 }
 
-                async getValidCachedUpdateFile(e, t) {
-                    let r;
-                    const a = this.getUpdateInfoFile();
+                async getValidCachedUpdateFile(fileInfo, logger) {
+                    let cachedInfo;
+                    const updateInfoFilePath = this.getUpdateInfoFile();
                     try {
-                        r = await (0, i().readJson)(a)
+                        cachedInfo = await (i().readJson)(updateInfoFilePath)
                     } catch (e) {
-                        let r = "No cached update info available";
-                        return "ENOENT" !== e.code && (await this.cleanCacheDirForPendingUpdate(), r += ` (error on read: ${e.message})`), t.info(r), null
+                        let message = "No cached update info available";
+                        if ("ENOENT" !== e.code) {
+                            await this.cleanCacheDirForPendingUpdate()
+                            message += ` (error on read: ${e.message})`
+                        }
+                        logger.info(message)
+                        return null
                     }
-                    if (null == r.fileName) return t.warn("Cached update info is corrupted: no fileName, directory for cached update will be cleaned"), await this.cleanCacheDirForPendingUpdate(), null;
-                    if (e.info.sha512 !== r.sha512) return t.info(`Cached update sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${r.sha512}, expected: ${e.info.sha512}. Directory for cached update will be cleaned`), await this.cleanCacheDirForPendingUpdate(), null;
-                    const l = s.join(this.cacheDirForPendingUpdate, r.fileName);
-                    if (!await (0, i().pathExists)(l)) return t.info("Cached update file doesn't exist, directory for cached update will be cleaned"), await this.cleanCacheDirForPendingUpdate(), null;
-                    const c = await function (e, t = "sha512", r = "base64", a) {
-                        return new Promise(((i, s) => {
-                            const l = (0, n().createHash)(t);
-                            l.on("error", s).setEncoding(r), (0, o.createReadStream)(e, Object.assign({}, a, {highWaterMark: 1048576})).on("error", s).on("end", (() => {
-                                l.end(), i(l.read())
-                            })).pipe(l, {end: !1})
-                        }))
-                    }(l);
-                    return e.info.sha512 !== c ? (t.warn(`Sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${c}, expected: ${e.info.sha512}`), await this.cleanCacheDirForPendingUpdate(), null) : (this._downloadedFileInfo = r, l)
+
+                    if (null == cachedInfo.fileName) {
+                        logger.warn("Cached update info is corrupted: no fileName, directory for cached update will be cleaned")
+                        await this.cleanCacheDirForPendingUpdate()
+                        return null;
+                    }
+                    if (fileInfo.info.sha512 !== cachedInfo.sha512) {
+                        logger.info(`Cached update sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${cachedInfo.sha512}, expected: ${fileInfo.info.sha512}. Directory for cached update will be cleaned`)
+                        await this.cleanCacheDirForPendingUpdate()
+                        return null;
+                    }
+
+                    const updateFile = __path.join(this.cacheDirForPendingUpdate, cachedInfo.fileName);
+                    if (!await (i().pathExists)(updateFile)) {
+                        logger.info("Cached update file doesn't exist, directory for cached update will be cleaned")
+                        await this.cleanCacheDirForPendingUpdate()
+                        return null;
+                    }
+
+                    const sha512 = await function (file, algorithm = "sha512", encoding = "base64", options) {
+                        return new Promise((resolve, reject) => {
+                            const hash = n().createHash(algorithm);
+                            hash.on("error", reject).setEncoding(encoding)
+
+                            o.createReadStream(file, Object.assign({}, options, {highWaterMark: 1048576}))
+                                .on("error", reject)
+                                .on("end", () => {
+                                    hash.end()
+                                    resolve(hash.read())
+                                })
+                                .pipe(hash, {end: false})
+                        })
+                    }(updateFile);
+
+                    if (fileInfo.info.sha512 !== sha512) {
+                        logger.warn(`Sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${sha512}, expected: ${fileInfo.info.sha512}`)
+                        await this.cleanCacheDirForPendingUpdate()
+                        return null
+                    }
+
+                    this._downloadedFileInfo = cachedInfo
+                    return updateFile
                 }
 
                 getUpdateInfoFile() {
-                    return s.join(this.cacheDirForPendingUpdate, "update-info.json")
+                    return __path.join(this.cacheDirForPendingUpdate, "update-info.json")
                 }
             }
         },
@@ -32602,14 +32720,17 @@
                 }
 
                 async verifySignature(e) {
-                    let t;
+                    let publisherName;
                     try {
-                        if (t = (await this.configOnDisk.value).publisherName, null == t) return null
+                        publisherName = (await this.configOnDisk.value).publisherName
+                        if (null == publisherName) {
+                            return null
+                        }
                     } catch (e) {
                         if ("ENOENT" === e.code) return null;
                         throw e
                     }
-                    return await (0, p().verifySignature)(Array.isArray(t) ? t : [t], e, this._logger)
+                    return await (p().verifySignature)(Array.isArray(publisherName) ? publisherName : [publisherName], e, this._logger)
                 }
 
                 doInstall(e) {
