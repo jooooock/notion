@@ -6,13 +6,13 @@
   "author": "Jock",
   "license": "MIT",
   "scripts": {
-    "dev": "electron src",
+    "dev": "electron src/v3.6.0",
     "debug": "electron --inspect-brk src",
     "start": "electron old-resources/app"
   },
   "dependencies": {
     "@electron/remote": "2.0.11",
-    "electron": "^27.1.2"
+    "electron": "29.3.0"
   },
   "devDependencies": {
     "@electron/asar": "^3.2.8"

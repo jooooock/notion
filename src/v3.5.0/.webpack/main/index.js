@@ -559,7 +559,7 @@
 
                 newWindow(e) {
                     this.trackAnalyticsEvent("electron_new_window");
-                    const t = __WindowController.WindowController.newInstanceWithUrl({
+                    const windowController = __WindowController.WindowController.newInstanceWithUrl({
                         intl: this.intl,
                         windowId: e.windowId || __windowSlice.createWindowId(),
                         initialTabUrl: w.normalizeUrlProtocolWithDefault(e.initialUrl),
@@ -568,11 +568,11 @@
                         initialParentTabId: e.initialParentTabId,
                         showWhenLoaded: e.showWhenLoaded
                     });
-                    this.windowControllers.push(t)
-                    t.browserWindow.on("focus", () => {
-                        this.mostRecentlyFocusedWindowController = t
+                    this.windowControllers.push(windowController)
+                    windowController.browserWindow.on("focus", () => {
+                        this.mostRecentlyFocusedWindowController = windowController
                     })
-                    return t
+                    return windowController
                 }
 
                 createWindowForTabController(tabController) {
@@ -884,7 +884,7 @@
                 __path = i(__require(16928)),
                 electron = a(__require(4482)),
                 electron_log = i(__require(47419)),
-                d = i(__require(80115)),
+                __fse = i(__require(80115)),
                 __events = i(__require(45437)),
                 __AsyncQueue = __require(4058),
                 f = __require(28902),
@@ -912,76 +912,131 @@
                     this.assetsJsonFileName = "assets.json"
                     this.assetHeadersFileName = "headers.json"
                     this.assetsDirName = "assets"
+
+                    // /Library/Application Support/Notion/notionAssetCache-v2
                     this.cacheDir = __path.default.join(this.args.baseDir, exports.assetCacheDirName)
+
+                    // /Library/Application Support/Notion/notionAssetCache-v2/latestVersion.json
                     this.latestVersionPath = __path.default.join(this.cacheDir, this.latestVersionFileName)
                 }
 
                 async handleRequest(req) {
                     const t = v.parse(req.url),
-                        r = t.host,
-                        n = t.pathname || "/";
-                    if (r !== __config.default.domainName) return;
+                        host = t.host,
+                        pathname = t.pathname || "/";
+
+                    if (host !== __config.default.domainName) return;
                     if (!this.assetCacheState) return;
-                    const o = this.assetCacheState;
-                    if (o.assetsJson.proxyServerPathPrefixes.some((e => n.startsWith(e)))) return;
-                    const a = o.assetsJson.files.find((e => e.path === n));
-                    if (a) {
-                        const e = this.getAssetsDir(o.assetsJson.version), t = __path.default.join(e, a.path);
-                        return (0, __logging.shouldLog)("silly") && logger.silly("Performing file request", {
-                            absolutePath: t,
-                            urlPath: n
-                        }), {absolutePath: t, headers: this.getHeaders(a.path)}
+
+                    const assetCacheState = this.assetCacheState;
+                    if (assetCacheState.assetsJson.proxyServerPathPrefixes.some(path => pathname.startsWith(path))) return;
+
+                    const targetFile = assetCacheState.assetsJson.files.find(file => file.path === pathname);
+                    if (targetFile) {
+                        // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208/assets
+                        const assetsDir = this.getAssetsDir(assetCacheState.assetsJson.version)
+                        const absolutePath = __path.default.join(assetsDir, targetFile.path)
+                        if (__logging.shouldLog("silly")) {
+                            logger.silly("Performing file request", {
+                                absolutePath: absolutePath,
+                                urlPath: pathname
+                            })
+                        }
+                        return {
+                            absolutePath: absolutePath,
+                            headers: this.getHeaders(targetFile.path)
+                        }
                     }
-                    if ([".js", ".json", ".css", ".woff", ".woff2", ".png", ".svg"].some((e => n.endsWith(e)))) return void __ServerLogger.serverLogger.rateLimitedLog({
-                        level: "error",
-                        from: "AssetCache",
-                        type: "obviouslyIncorrectPathForIndex",
-                        data: {url: n}
-                    });
-                    const i = this.getAssetsDir(o.assetsJson.version);
-                    let s = o.assetsJson.entry;
-                    if (o.assetsJson.localeHtml) {
-                        const e = electron.session.fromPartition(__session.electronSessionPartition).cookies, [t] = await e.get({name: "notion_locale"});
-                        let r = "en-US";
-                        t && (r = (0, f.getLocaleFromCookie)(t.value));
-                        const n = o.assetsJson.localeHtml[r];
-                        n && (s = n)
-                    }
-                    const u = o.assetsJson.files.find((e => e.path === s));
-                    if (u) {
-                        n.includes(".") && __ServerLogger.serverLogger.rateLimitedLog({
+
+                    if ([
+                        ".js",
+                        ".json",
+                        ".css",
+                        ".woff",
+                        ".woff2",
+                        ".png",
+                        ".svg"
+                    ].some(ext => pathname.endsWith(ext))
+                    ) {
+                        __ServerLogger.serverLogger.rateLimitedLog({
                             level: "error",
                             from: "AssetCache",
-                            type: "requestReturnedAsIndexV2",
-                            data: {url: n}
-                        });
-                        const e = __path.default.join(i, u.path);
-                        return (0, __logging.shouldLog)("silly") && logger.silly("Performing file request (2)", {
-                            absolutePath: e,
-                            urlPath: n
-                        }), {absolutePath: e, headers: this.getHeaders(u.path)}
+                            type: "obviouslyIncorrectPathForIndex",
+                            data: {url: pathname}
+                        })
+                        return
+                    }
+
+                    // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208/assets
+                    const assetsDir = this.getAssetsDir(assetCacheState.assetsJson.version);
+                    let assetEntry = assetCacheState.assetsJson.entry;
+                    if (assetCacheState.assetsJson.localeHtml) {
+                        const cookies = electron.session.fromPartition(__session.electronSessionPartition).cookies
+                        const [t] = await cookies.get({name: "notion_locale"});
+                        let locale = "en-US";
+                        if (t) {
+                            locale = f.getLocaleFromCookie(t.value)
+                        }
+                        const n = assetCacheState.assetsJson.localeHtml[locale];
+                        if (n) {
+                            assetEntry = n
+                        }
+                    }
+                    const assetEntryFile = assetCacheState.assetsJson.files.find(file => file.path === assetEntry);
+                    if (assetEntryFile) {
+                        if (pathname.includes(".")) {
+                            __ServerLogger.serverLogger.rateLimitedLog({
+                                level: "error",
+                                from: "AssetCache",
+                                type: "requestReturnedAsIndexV2",
+                                data: {url: pathname}
+                            })
+                        }
+
+                        // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208/assets
+                        const absolutePath = __path.default.join(assetsDir, assetEntryFile.path);
+                        if (__logging.shouldLog("silly")) {
+                            logger.silly("Performing file request (2)", {
+                                absolutePath: absolutePath,
+                                urlPath: pathname
+                            })
+                        }
+                        return {
+                            absolutePath: absolutePath,
+                            headers: this.getHeaders(assetEntryFile.path)
+                        }
                     }
                     __ServerLogger.serverLogger.rateLimitedLog({
                         level: "error",
                         from: "AssetCache",
                         type: "cannotFindIndex",
-                        data: {url: n}
+                        data: {url: pathname}
                     })
                 }
 
                 initialize() {
-                    return this.ready || (this.ready = (async () => {
-                        logger.debug("Latest version", {latestVersionPath: this.latestVersionPath}), this.latestVersion = await this.loadJson(this.latestVersionPath), logger.debug("Current version loaded", {
-                            version: this.latestVersion?.version,
-                            hash: this.latestVersion?.hash
-                        }), await this.syncVersions(), logger.debug("Current synced assets.json", {version: this.assetCacheState?.assetsJson.version}), await this.cleanOldVersions()
-                    })()), this.ready
+                    if (!this.ready) {
+                        this.ready = (async () => {
+                            logger.debug("Latest version", {latestVersionPath: this.latestVersionPath})
+                            this.latestVersion = await this.loadJson(this.latestVersionPath)
+                            logger.debug("Current version loaded", {
+                                version: this.latestVersion?.version,
+                                hash: this.latestVersion?.hash
+                            })
+                            await this.syncVersions()
+                            logger.debug("Current synced assets.json", {version: this.assetCacheState?.assetsJson.version})
+                            await this.cleanOldVersions()
+                        })()
+                    }
+                    return this.ready
                 }
 
                 async reset() {
-                    return this.queue.enqueue((async () => {
-                        this.assetCacheState = void 0, this.latestVersion = void 0, await this.cleanOldVersions()
-                    }))
+                    return this.queue.enqueue(async () => {
+                        this.assetCacheState = void 0
+                        this.latestVersion = void 0
+                        await this.cleanOldVersions()
+                    })
                 }
 
                 get version() {
@@ -989,71 +1044,119 @@
                 }
 
                 async checkForUpdates() {
-                    if (0 === this.queue.getStats().queue) return logger.debug("Enqueue update"), this.queue.enqueue((() => this.checkForUpdatesNow()));
+                    if (0 === this.queue.getStats().queue) {
+                        logger.debug("Enqueue update")
+                        return this.queue.enqueue(() => this.checkForUpdatesNow())
+                    }
                     logger.debug("Update already queued")
                 }
 
                 async checkForUpdatesNow() {
-                    const e = Date.now();
-                    logger.debug("Checking for app.js update"), this.events.emit("checking-for-update");
-                    const t = Date.now(), r = this.assetCacheState,
-                        n = this.latestVersion && this.latestVersion.hash || r && r.assetsJson.hash || "";
-                    let o;
+                    const checkForUpdatesStartTime = Date.now();
+                    logger.debug("Checking for app.js update")
+                    this.events.emit("checking-for-update");
+                    const updateAssetsFetchStartTime = Date.now()
+                    const assetCacheState = this.assetCacheState
+                    const hash = this.latestVersion && this.latestVersion.hash || assetCacheState && assetCacheState.assetsJson.hash || "";
+
+                    let appJsUpdateResp;
                     try {
-                        const e = new AbortController,
-                            t = await (0, b.raceWithTimeout)(3e4, fetch(v.resolve(this.args.baseUrl, "/api/v3/getAssetsJsonV2"), {
-                                method: "post",
-                                headers: {"content-type": "application/json"},
-                                body: JSON.stringify({hash: n}),
-                                signal: e.signal
-                            }));
-                        if (t.timeout) return logger.error("Timeout: Fetch request"), void e.abort();
-                        o = t.result
-                    } catch (e) {
-                        return logger.debug("no app.js update available (because offline)", {error: e}), void this.events.emit("update-not-available")
-                    }
-                    if (200 !== o.status) {
-                        const e = new Error(`${o.status}: ${o.statusText}`);
-                        return logger.error(`no app update available (${o.status}: ${o.statusText})`, {data: this.createErrorDataMetrics(t)}), void this.events.emit("error", e)
-                    }
-                    this.logPerformance("updateAssetsFetch", t);
-                    const a = Date.now();
-                    let i;
-                    try {
-                        const e = await (0, b.raceWithTimeout)(3e4, o.json());
-                        if (e.timeout) return void logger.error("Timeout: JSON.parse");
-                        i = e.result
-                    } catch (e) {
-                        return logger.error("Failed to parse assets JSON", {
-                            error: e,
-                            data: this.createErrorDataMetrics(a)
-                        }), void this.events.emit("error", e)
-                    }
-                    this.logPerformance("updateAssetsResponseParse", a);
-                    const s = Date.now();
-                    if (!("version" in i) || this.latestVersion && this.latestVersion.version === i.version) return logger.debug("No app update available (noAppUpdateAvailable2)"), void this.events.emit("update-not-available");
-                    logger.debug("App update available", {version: i.version}), this.events.emit("update-available", i);
-                    const c = {}, u = this.getCacheDir(i.version), p = this.getAssetsDir(i.version),
-                        f = this.getAssetsJsonPath(i.version), m = this.getAssetHeadersPath(i.version),
-                        y = await this.directoryExists(u), w = new Set;
-                    if (!y) {
-                        try {
-                            await d.default.mkdirp(u)
-                        } catch (e) {
-                            return logger.error("Failed to run fs.mkdirp", {
-                                error: e,
-                                data: this.createErrorDataMetrics(s)
-                            }), void this.events.emit("error", e)
+                        const abortController = new AbortController
+
+                        // https://www.notion.so/api/v3/getAssetsJsonV2
+                        const t = await b.raceWithTimeout(30_000, fetch(v.resolve(this.args.baseUrl, "/api/v3/getAssetsJsonV2"), {
+                            method: "post",
+                            headers: {"content-type": "application/json"},
+                            body: JSON.stringify({hash: hash}),
+                            signal: abortController.signal
+                        }));
+                        if (t.timeout) {
+                            logger.error("Timeout: Fetch request")
+                            abortController.abort()
+                            return
                         }
-                        if (r) {
-                            const e = r.assetsJson, t = r.assetHeaders, n = new Set(e.files.map((e => e.path))),
-                                o = i.files.filter((e => n.has(e.path))), a = this.getCacheDir(e.version),
-                                u = __path.default.join(a, this.assetsDirName);
-                            for (const e of o) {
-                                const r = e.path, n = __path.default.join(u, r), o = __path.default.join(p, r);
-                                c[r] = t[r];
+                        appJsUpdateResp = t.result
+                    } catch (error) {
+                        logger.debug("no app.js update available (because offline)", {error: error})
+                        this.events.emit("update-not-available")
+                        return
+                    }
+
+                    if (200 !== appJsUpdateResp.status) {
+                        const error = new Error(`${appJsUpdateResp.status}: ${appJsUpdateResp.statusText}`);
+                        logger.error(`no app update available (${appJsUpdateResp.status}: ${appJsUpdateResp.statusText})`, {data: this.createErrorDataMetrics(updateAssetsFetchStartTime)})
+                        this.events.emit("error", error)
+                        return
+                    }
+                    this.logPerformance("updateAssetsFetch", updateAssetsFetchStartTime);
+
+                    const updateAssetsResponseParseStartTime = Date.now();
+                    let appJsUpdateJson;
+                    try {
+                        const e = await b.raceWithTimeout(30_000, appJsUpdateResp.json());
+                        if (e.timeout) {
+                            return void logger.error("Timeout: JSON.parse");
+                        }
+                        appJsUpdateJson = e.result
+                    } catch (error) {
+                        logger.error("Failed to parse assets JSON", {
+                            error: error,
+                            data: this.createErrorDataMetrics(updateAssetsResponseParseStartTime)
+                        })
+                        this.events.emit("error", error)
+                        return
+                    }
+                    this.logPerformance("updateAssetsResponseParse", updateAssetsResponseParseStartTime);
+
+                    const s = Date.now();
+                    if (!("version" in appJsUpdateJson) || this.latestVersion && this.latestVersion.version === appJsUpdateJson.version) {
+                        logger.debug("No app update available (noAppUpdateAvailable2)")
+                        this.events.emit("update-not-available")
+                        return
+                    }
+                    logger.debug("App update available", {version: appJsUpdateJson.version})
+                    this.events.emit("update-available", appJsUpdateJson);
+
+                    const headers = {}
+
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}
+                    const u = this.getCacheDir(appJsUpdateJson.version)
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}/assets
+                    const p = this.getAssetsDir(appJsUpdateJson.version)
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}/assets.json
+                    const f = this.getAssetsJsonPath(appJsUpdateJson.version)
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}/headers.json
+                    const m = this.getAssetHeadersPath(appJsUpdateJson.version)
+
+                    const versionCacheDirExist = await this.directoryExists(u)
+                    const w = new Set()
+                    if (!versionCacheDirExist) {
+                        try {
+                            await __fse.default.mkdirp(u)
+                        } catch (error) {
+                            logger.error("Failed to run fs.mkdirp", {
+                                error: error,
+                                data: this.createErrorDataMetrics(s)
+                            })
+                            this.events.emit("error", error)
+                            return
+                        }
+                        if (assetCacheState) {
+                            const assetsJson = assetCacheState.assetsJson
+                            const assetHeaders = assetCacheState.assetHeaders
+                            const assetFilePaths = new Set(assetsJson.files.map(file => file.path))
+                            const updateFiles = appJsUpdateJson.files.filter(file => assetFilePaths.has(file.path))
+                            // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208
+                            const currentVersionCacheDir = this.getCacheDir(assetsJson.version)
+                            const u = __path.default.join(currentVersionCacheDir, this.assetsDirName)
+                            for (const file of updateFiles) {
+                                const path = file.path
+                                const n = __path.default.join(u, path)
+                                const o = __path.default.join(p, path)
+                                headers[path] = assetHeaders[path];
                                 try {
-                                    await d.default.copy(n, o), w.add(r)
+                                    await __fse.default.copy(n, o)
+                                    w.add(path)
                                 } catch (e) {
                                     logger.error("Failed to run fs.copy", {
                                         error: e,
@@ -1065,214 +1168,328 @@
                             }
                         }
                     }
-                    let _ = 0, k = 0;
-                    const E = i.files.length, S = () => {
-                        const e = Date.now();
-                        (0 === k || k === E || e >= _ + 5e3) && (_ = e, this.events.emit("download-progress", {
-                            downloaded: k,
-                            total: E
-                        }))
-                    };
-                    S(), this.logPerformance("assetJson", s);
-                    const C = Date.now(), O = new __AsyncQueue.AsyncQueue(8), M = [];
-                    await Promise.all(i.files.map((e => O.enqueue((async () => {
-                        if (w.has(e.path) && await this.verifyAsset(p, e)) return k++, void S();
-                        const t = __path.default.join(p, e.path);
+
+                    let _ = 0, downloaded = 0;
+                    const totalFiles = appJsUpdateJson.files.length
+                    const S = () => {
+                            const now = Date.now();
+                            if (0 === downloaded || downloaded === totalFiles || now >= _ + 5e3) {
+                                _ = now
+                                this.events.emit("download-progress", {
+                                    downloaded: downloaded,
+                                    total: totalFiles
+                                })
+                            }
+                        }
+                    S()
+                    this.logPerformance("assetJson", s);
+
+                    const C = Date.now(),
+                        O = new __AsyncQueue.AsyncQueue(8),
+                        errors = [];
+                    await Promise.all(appJsUpdateJson.files.map(file => O.enqueue(async () => {
+                        if (w.has(file.path) && await this.verifyAsset(p, file)) {
+                            downloaded++
+                            S()
+                            return
+                        }
+
+                        const dest = __path.default.join(p, file.path);
                         try {
-                            const r = await this.downloadFile(v.resolve(this.args.baseUrl, e.path), t);
-                            if (c[e.path] = r, await this.verifyAsset(p, e)) k++, S(); else {
+                            // https://www.notion.so/images/emoji/apple-emoji-spritesheet-64.60ccb2c3.png
+                            headers[file.path] = await this.downloadFile(v.resolve(this.args.baseUrl, file.path), dest)
+                            if (await this.verifyAsset(p, file)) {
+                                downloaded++
+                                S()
+                            } else {
                                 const t = new Error("Invalid asset hash");
-                                t.data = {filePath: e.path}, M.push(t)
+                                t.data = {filePath: file.path}
+                                errors.push(t)
                             }
                         } catch (t) {
-                            t.data = {filePath: e.path}, M.push(t)
+                            t.data = {filePath: file.path}
+                            errors.push(t)
                         }
-                    }))))), this.logPerformance("prepare", C);
-                    const I = Date.now();
-                    if (M.length > 0) return logger.error("Found errors (downloadError)", {
-                        miscErrorString: (0, __logglyHelpers.safelyConvertAnyToString)({errors: M.slice(0, 100)}),
-                        data: this.createErrorDataMetrics(s)
-                    }), void this.events.emit("error", M[0]);
-                    if (!await this.writeJson(m, c)) return void this.events.emit("error", new Error("Cannot write headers.json"));
-                    if (!await this.writeJson(f, i)) return void this.events.emit("error", new Error("Cannot write assets.json"));
-                    const A = {version: i.version, hash: i.hash};
-                    await this.writeJson(this.latestVersionPath, A) ? (this.latestVersion = A, logger.debug("Checking for app.js update (2)"), logger.info("App.js update download complete", {version: i.version}), this.events.emit("update-downloaded", i), logger.info("Installing app.js update", {version: i.version}), this.events.emit("update-finished", i), this.logPerformance("download", I), this.logPerformance("checkForUpdatesNow", e)) : this.events.emit("error", new Error("Cannot write latestVersion.json"))
+                    })))
+
+                    this.logPerformance("prepare", C);
+                    const downloadStartTime = Date.now();
+                    if (errors.length > 0) {
+                        logger.error("Found errors (downloadError)", {
+                            miscErrorString: __logglyHelpers.safelyConvertAnyToString({errors: errors.slice(0, 100)}),
+                            data: this.createErrorDataMetrics(s)
+                        })
+                        this.events.emit("error", errors[0])
+                        return
+                    }
+
+                    if (!await this.writeJson(m, headers)) {
+                        this.events.emit("error", new Error("Cannot write headers.json"));
+                        return
+                    }
+                    if (!await this.writeJson(f, appJsUpdateJson)) {
+                        this.events.emit("error", new Error("Cannot write assets.json"));
+                        return
+                    }
+                    const versionInfo = {
+                        version: appJsUpdateJson.version,
+                        hash: appJsUpdateJson.hash
+                    };
+                    if (await this.writeJson(this.latestVersionPath, versionInfo)) {
+                        this.latestVersion = versionInfo
+                        logger.debug("Checking for app.js update (2)")
+                        logger.info("App.js update download complete", {version: appJsUpdateJson.version})
+                        this.events.emit("update-downloaded", appJsUpdateJson)
+                        logger.info("Installing app.js update", {version: appJsUpdateJson.version})
+                        this.events.emit("update-finished", appJsUpdateJson)
+                        this.logPerformance("download", downloadStartTime)
+                        this.logPerformance("checkForUpdatesNow", checkForUpdatesStartTime)
+                    } else {
+                        this.events.emit("error", new Error("Cannot write latestVersion.json"))
+                    }
                 }
 
-                updateAppState(e, t) {
-                    this.appActive = e, this.lastAppStateChangeTime = t
+                updateAppState(appActive, lastChangeTime) {
+                    this.appActive = appActive
+                    this.lastAppStateChangeTime = lastChangeTime
                 }
 
-                logPerformance(e, t) {
-                    if (!(0, __logging.shouldLog)("debug")) return;
-                    const r = Date.now();
-                    !this.appActive || t < this.lastAppStateChangeTime || logger.log(`performance.${e}`, {duration: r - t})
+                logPerformance(name, start) {
+                    if (!__logging.shouldLog("debug")) return;
+                    const now = Date.now();
+                    if (this.appActive && start >= this.lastAppStateChangeTime) {
+                        logger.log(`performance.${name}`, {duration: now - start})
+                    }
                 }
 
                 createErrorDataMetrics(e) {
-                    const t = Date.now();
-                    return !this.appActive || e < this.lastAppStateChangeTime ? {} : {duration: t - e}
+                    const now = Date.now();
+                    return !this.appActive || e < this.lastAppStateChangeTime
+                        ? {}
+                        : {duration: now - e}
                 }
 
                 async syncVersions() {
-                    if (!this.latestVersion) return logger.debug("Sync version: No last version"), void this.events.emit("update-applied");
-                    if (this.assetCacheState && this.latestVersion.version === this.assetCacheState.assetsJson.version) return logger.debug("Sync version: Skipping, same version"), void this.events.emit("update-applied");
-                    const e = this.getAssetsJsonPath(this.latestVersion.version),
-                        t = this.getAssetHeadersPath(this.latestVersion.version);
-                    logger.info("Sync version", {assetsJsonPath: e, headersJsonPath: t});
-                    const r = await this.loadJson(e), n = await this.loadJson(t);
-                    r && n && (this.assetCacheState = {
-                        assetsJson: r,
-                        assetHeaders: n
-                    }), this.events.emit("update-applied")
+                    if (!this.latestVersion) {
+                        logger.debug("Sync version: No last version")
+                        this.events.emit("update-applied")
+                        return
+                    }
+                    if (this.assetCacheState && this.latestVersion.version === this.assetCacheState.assetsJson.version) {
+                        logger.debug("Sync version: Skipping, same version")
+                        this.events.emit("update-applied")
+                        return
+                    }
+                    const assetsJsonPath = this.getAssetsJsonPath(this.latestVersion.version),
+                        headersJsonPath = this.getAssetHeadersPath(this.latestVersion.version);
+                    logger.info("Sync version", {assetsJsonPath: assetsJsonPath, headersJsonPath: headersJsonPath});
+                    const assetsJson = await this.loadJson(assetsJsonPath),
+                        assetHeaders = await this.loadJson(headersJsonPath);
+                    if (assetsJson && assetHeaders) {
+                        this.assetCacheState = {
+                            assetsJson: assetsJson,
+                            assetHeaders: assetHeaders
+                        }
+                    }
+                    this.events.emit("update-applied")
                 }
 
                 isUpdateAvailable() {
-                    if (!this.latestVersion) return !1;
-                    const e = this.assetCacheState?.assetsJson;
-                    return !!e && this.latestVersion.version !== e.version
+                    if (!this.latestVersion) {
+                        return false
+                    }
+                    const assetsJson = this.assetCacheState?.assetsJson;
+                    return !!assetsJson && this.latestVersion.version !== assetsJson.version
                 }
 
                 async cleanOldVersions() {
-                    let e = await this.readDir(this.cacheDir);
+                    // /Library/Application Support/Notion/notionAssetCache-v2
+                    let cacheDir = await this.readDir(this.cacheDir);
                     if (this.assetCacheState && this.latestVersion) {
-                        const t = this.assetCacheState, r = this.latestVersion.version;
-                        e = e.filter((e => e !== this.latestVersionFileName && e !== t.assetsJson.version && e !== r))
+                        const assetCacheState = this.assetCacheState
+                        const latestVersion = this.latestVersion.version;
+                        cacheDir = cacheDir.filter(name =>
+                            name !== this.latestVersionFileName &&
+                            name !== assetCacheState.assetsJson.version &&
+                            name !== latestVersion)
                     }
-                    await Promise.all(e.map((async e => this.remove(this.getCacheDir(e)))))
+                    await Promise.all(cacheDir.map(async name => this.remove(this.getCacheDir(name))))
                 }
 
-                async verifyAsset(e, t) {
-                    const r = __path.default.join(e, t.path);
-                    return await this.getFileHash(r) === t.hash
+                async verifyAsset(assetDir, file) {
+                    const absolutePath = __path.default.join(assetDir, file.path);
+                    return await this.getFileHash(absolutePath) === file.hash
                 }
 
-                getHeaders(e) {
-                    const t = this.assetCacheState;
-                    if (!t) return {};
-                    const r = t.assetHeaders[e];
-                    if (!r) return {};
-                    const n = {};
-                    for (const e in r) n[e.toLowerCase()] = r[e];
-                    const o = {}, a = t.assetsJson.headersWhitelist;
-                    for (const e of a) {
-                        const t = e.toLowerCase();
-                        n[t] && (o[t] = n[t])
+                getHeaders(path) {
+                    const assetCacheState = this.assetCacheState;
+                    if (!assetCacheState) {
+                        return {};
                     }
-                    return o
+
+                    const assetHeader = assetCacheState.assetHeaders[path];
+                    if (!assetHeader) {
+                        return {};
+                    }
+
+                    const headers = {};
+                    for (const key in assetHeader) {
+                        headers[key.toLowerCase()] = assetHeader[key];
+                    }
+
+                    const result = {}
+                    const headersWhitelist = assetCacheState.assetsJson.headersWhitelist;
+                    for (const key of headersWhitelist) {
+                        const _key = key.toLowerCase();
+                        if (headers[_key]) {
+                            result[_key] = headers[_key]
+                        }
+                    }
+                    return result
                 }
 
-                async loadJson(e) {
+                async loadJson(absolutePath) {
                     try {
-                        return await d.default.readJSON(e)
-                    } catch (t) {
-                        logger.error("Error reading and parsing JSON", {error: t, absolutePath: e})
+                        return await __fse.default.readJSON(absolutePath)
+                    } catch (error) {
+                        logger.error("Error reading and parsing JSON", {error: error, absolutePath: absolutePath})
                     }
                 }
 
-                async writeJson(e, t) {
+                async writeJson(absolutePath, content) {
                     try {
-                        return void 0 === t ? await d.default.remove(e) : await d.default.writeJSON(e, t), !0
+                        void 0 === content
+                            ? await __fse.default.remove(absolutePath)
+                            : await __fse.default.writeJSON(absolutePath, content)
+                        return true
                     } catch (t) {
-                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
-                        return r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({absolutePath: e}), __ServerLogger.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({absolutePath: absolutePath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToWriteFile",
-                            error: r
-                        }), !1
+                            error: error
+                        })
+                        return false
                     }
                 }
 
-                getCacheDir(e) {
-                    return __path.default.join(this.cacheDir, e)
+                // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208
+                getCacheDir(version) {
+                    return __path.default.join(this.cacheDir, version)
                 }
 
-                getAssetsDir(e) {
-                    return __path.default.join(this.getCacheDir(e), this.assetsDirName)
+                // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208/assets
+                getAssetsDir(version) {
+                    return __path.default.join(this.getCacheDir(version), this.assetsDirName)
                 }
 
-                getAssetsJsonPath(e) {
-                    return __path.default.join(this.getCacheDir(e), this.assetsJsonFileName)
+                // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208/assets.json
+                getAssetsJsonPath(version) {
+                    return __path.default.join(this.getCacheDir(version), this.assetsJsonFileName)
                 }
 
-                getAssetHeadersPath(e) {
-                    return __path.default.join(this.getCacheDir(e), this.assetHeadersFileName)
+                // /Library/Application Support/Notion/notionAssetCache-v2/23.13.0.208/headers.json
+                getAssetHeadersPath(version) {
+                    return __path.default.join(this.getCacheDir(version), this.assetHeadersFileName)
                 }
 
-                async directoryExists(e) {
+                async directoryExists(dirPath) {
                     try {
-                        return (await d.default.stat(e)).isDirectory()
+                        return (await __fse.default.stat(dirPath)).isDirectory()
                     } catch (e) {
-                        return !1
+                        return false
                     }
                 }
 
-                async readDir(e) {
+                async readDir(dirPath) {
                     try {
-                        return await d.default.readdir(e)
+                        return await __fse.default.readdir(dirPath)
                     } catch (t) {
-                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
-                        return r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({dirPath: e}), __ServerLogger.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({dirPath: dirPath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToReadDir",
-                            error: r
-                        }), []
+                            error: error
+                        })
+                        return []
                     }
                 }
 
-                async remove(e) {
+                async remove(dirOrFilePath) {
                     try {
-                        await d.default.remove(e)
+                        await __fse.default.remove(dirOrFilePath)
                     } catch (t) {
-                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
-                        r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({dirOrFilePath: e}), __ServerLogger.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({dirOrFilePath: dirOrFilePath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToRemoveDir",
-                            error: r
+                            error: error
                         })
                     }
                 }
 
-                async getFileHash(e) {
+                async getFileHash(filepath) {
                     try {
-                        const t = d.default.createReadStream(e), r = crypto.default.createHash("md5");
-                        return t.on("data", (e => r.update(e))), await new Promise(((e, n) => {
-                            t.on("error", (function (e) {
-                                n(e)
-                            })), t.on("end", (function () {
-                                e(r.digest("hex"))
-                            }))
-                        }))
+                        const readStream = __fse.default.createReadStream(filepath),
+                            hash = crypto.default.createHash("md5");
+                        readStream.on("data", e => hash.update(e))
+                        return await new Promise((resolve, reject) => {
+                            readStream.on("error", function (e) {
+                                reject(e)
+                            })
+                            readStream.on("end", function () {
+                                resolve(hash.digest("hex"))
+                            })
+                        })
                     } catch (t) {
-                        const r = (0, __logglyHelpers.convertErrorToLog)(t);
-                        r.miscDataString = (0, __logglyHelpers.safelyConvertAnyToString)({filePath: e}), __ServerLogger.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({filePath: filepath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToGetFileHash",
-                            error: r
+                            error: error
                         })
                     }
                 }
 
-                async downloadFile(e, t) {
-                    await d.default.mkdirp(__path.default.parse(t).dir), this.session = this.session || electron.session.fromPartition(__session.electronSessionPartition);
-                    const r = electron.default.net.request({url: e, session: this.session}),
-                        n = d.default.createWriteStream(t), o = {};
-                    return r.on("response", (function (e) {
-                        const {statusCode: t, statusMessage: a} = e;
-                        if (e.once("error", lodash_1.identity), (t < 200 || t > 299) && 304 !== t) {
-                            const e = new Error(`Response code ${t} (${a})`);
-                            r.emit("error", e)
+                async downloadFile(url, dest) {
+                    await __fse.default.mkdirp(__path.default.parse(dest).dir)
+                    this.session = this.session || electron.session.fromPartition(__session.electronSessionPartition);
+                    const r = electron.default.net.request({url: url, session: this.session}),
+                        writeStream = __fse.default.createWriteStream(dest),
+                        headers = {};
+                    r.on("response", function (response) {
+                        const {statusCode, statusMessage} = response;
+                        response.once("error", lodash_1.identity)
+                        if ((statusCode < 200 || statusCode > 299) && 304 !== statusCode) {
+                            const error = new Error(`Response code ${statusCode} (${statusMessage})`);
+                            r.emit("error", error)
                         } else {
-                            for (const [t, r] of Object.entries(e.headers)) "string" == typeof r ? o[t] = r : Array.isArray(r) && r.length > 0 && (o[t] = r.join(", "));
-                            e.pipe(n)
+                            for (const [headerName, headerValue] of Object.entries(response.headers)) {
+                                if ("string" == typeof headerValue) {
+                                    headers[headerName] = headerValue
+                                } else {
+                                    if (Array.isArray(headerValue) && headerValue.length > 0) {
+                                        headers[headerName] = headerValue.join(", ")
+                                    }
+                                }
+                            }
+                            response.pipe(writeStream)
                         }
-                    })), new Promise(((e, t) => {
-                        r.on("error", t), n.on("error", t), n.on("finish", (() => e(o))), r.end()
-                    }))
+                    })
+                    return new Promise((resolve, reject) => {
+                        r.on("error", reject)
+                        writeStream.on("error", reject)
+                        writeStream.on("finish", () => resolve(headers))
+                        r.end()
+                    })
                 }
             }
         },
@@ -2180,7 +2397,11 @@
                         if (this.backgroundInterval) return;
                         this.backgroundInterval = setInterval(async () => {
                             if (this.pendingUpdate) {
-                                this.isAppVisible || Date.now() < this.pendingUpdate.applyUpdateAfter || (electron_log.default.info("Sending update install notification to all windows"), await this.assetCache.syncVersions(), __AppController.appController.refreshAll(!0))
+                                if (!this.isAppVisible && Date.now() >= this.pendingUpdate.applyUpdateAfter) {
+                                    electron_log.default.info("Sending update install notification to all windows")
+                                    await this.assetCache.syncVersions()
+                                    __AppController.appController.refreshAll(true)
+                                }
                             }
                         }, 6e4)
                     } else if (this.backgroundInterval) {
@@ -3160,7 +3381,7 @@
         // assetCache
         94774: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                     void 0 === n && (n = r);
                     var o = Object.getOwnPropertyDescriptor(t, r);
                     o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -3198,7 +3419,7 @@
                 __notionIPC = a(__require(10454));
 
             exports.assetCache = new __AssetCache.AssetCache({
-                baseUrl: __config.default.domainBaseUrl,
+                baseUrl: __config.default.domainBaseUrl, // https://www.notion.so
                 baseDir: electron.default.app.getPath("userData"),
                 tempDir: electron.default.app.getPath("temp")
             })
@@ -3262,7 +3483,6 @@
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            debugger
 
             const electron = __require(4482),
                 electron_log = i(__require(47419)),
@@ -3303,7 +3523,7 @@
                 }
             });
 
-            let T, E;
+            let checkForUpdatesPromise, E;
 
             __electron_updater.autoUpdater.logger = electron_log.default.scope("AutoUpdater")
 
@@ -3370,17 +3590,17 @@
             }
 
             function checkForUpdate() {
-                if (T) {
-                    return T
+                if (checkForUpdatesPromise) {
+                    return checkForUpdatesPromise
                 }
-                T = __electron_updater.autoUpdater.checkForUpdates().then(e => {
-                    T = void 0
-                    return e
+                checkForUpdatesPromise = __electron_updater.autoUpdater.checkForUpdates().then(updateCheckResult => {
+                    checkForUpdatesPromise = void 0
+                    return updateCheckResult
                 }).catch(e => {
-                    T = void 0
+                    checkForUpdatesPromise = void 0
                     throw e
                 })
-                return T
+                return checkForUpdatesPromise
             }
 
             function restartToApplyUpdate({silent, launch} = {}) {
@@ -3412,7 +3632,7 @@
             exports.initializeAutoUpdater = function () {
                 __electron_updater.autoUpdater.on("error", e => {
                     updateStatus(autoUpdateStatus)
-                    T = void 0
+                    checkForUpdatesPromise = void 0
                     if (e && e.message && ["ERR_CONNECTION_REFUSED", "ECONNREFUSED"].some(t => -1 !== e.message.indexOf(t))) {
                         electron_log.default.info("No electron update -- offline")
                         __AppController.appController.sendMainToAllNotionInstances("notion:update-not-available")
@@ -4200,10 +4420,19 @@
             }
             exports.waitForWebpack = async function e() {
                 if (electron.app.isPackaged) return;
-                const t = [require("path").resolve(__dirname, "../renderer", "tabs", "preload.js"), require("path").resolve(__dirname, "../renderer", "search", "preload.js"), require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"), require("path").resolve(__dirname, "../renderer", "popup", "preload.js")].filter((e => !__fs.default.existsSync(e)));
+                const t = [
+                    require("path").resolve(__dirname, "../renderer", "tabs", "preload.js"),
+                    require("path").resolve(__dirname, "../renderer", "search", "preload.js"),
+                    require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"),
+                    require("path").resolve(__dirname, "../renderer", "popup", "preload.js")
+                ].filter(e => !__fs.default.existsSync(e))
+
                 if (t.length > 0) {
-                    const r = __path.default.dirname(__dirname), n = t.map((e => e.replace(r, ""))).join(", ");
-                    return electron_log.default.info(`Waiting for webpack to build: ${n}`), await new Promise((e => setTimeout(e, 1e3))), e()
+                    const r = __path.default.dirname(__dirname),
+                        n = t.map(e => e.replace(r, "")).join(", ");
+                    electron_log.default.info(`Waiting for webpack to build: ${n}`)
+                    await new Promise(resolve => setTimeout(resolve, 1000))
+                    return e()
                 }
             }
         },
@@ -4401,8 +4630,6 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            debugger
-
             const __electron = __require(4482);
 
             __require(84041); // crash reporter
@@ -4413,7 +4640,6 @@
             const __AppController = __require(21852)
             const __assetCache = __require(94774)
 
-            debugger
 
             const __initializeAutoUpdater = __require(43579)
             const d = __require(68516)
@@ -4431,23 +4657,31 @@
             const T = __require(98441)
             const __WebUpdater = __require(19628);
 
-            let S, C;
+            let initialUrl, C;
 
             function handleActivate() {
+                debugger
+
                 const e = __AppController.appController.getMostRecentlyFocusedWindowController();
                 if (e) {
-                    const t = __AppController.appController.rehydrateEntireAppInForeground(S);
-                    S && !t && e.loadUrlInActiveTab(S)
+                    const t = __AppController.appController.rehydrateEntireAppInForeground(initialUrl);
+                    initialUrl && !t && e.loadUrlInActiveTab(initialUrl)
                     e.browserWindow.show()
                 } else if (m.getWasOpenedAsHidden()) {
-                    __AppController.appController.rehydrateSingleTabInBackground(S) || __AppController.appController.newWindow({
-                        initialUrl: S,
-                        showWhenLoaded: !1
-                    })
+                    if (!__AppController.appController.rehydrateSingleTabInBackground(initialUrl)) {
+                        __AppController.appController.newWindow({
+                            initialUrl: initialUrl,
+                            showWhenLoaded: false
+                        })
+                    }
                 } else {
-                    __AppController.appController.rehydrateEntireAppInForeground(S) || __AppController.appController.newWindow({initialUrl: S}).browserWindow.show()
+                    if (!__AppController.appController.rehydrateEntireAppInForeground(initialUrl)) {
+                        __AppController.appController.newWindow({
+                            initialUrl: initialUrl
+                        }).browserWindow.show()
+                    }
                 }
-                S = void 0
+                initialUrl = void 0
             }
 
             __electron.dialog.showErrorBox = function (title, content) {
@@ -4455,45 +4689,71 @@
             exports.handleActivate = handleActivate
 
             void async function () {
-                debugger
-
                 __logging.setupLogging()
                 T.maybeDisableHardwareAcceleration()
                 __electron.app.setAsDefaultProtocolClient(__config.default.protocol)
-                "darwin" === process.platform
-                    ? __electron.app.on("open-url", ((e, t) => {
-                        if (e.preventDefault(), __electron.app.isReady()) {
-                            const e = (0, g.normalizeUrlProtocol)(t);
-                            __AppController.appController.rehydrateEntireAppInForeground(e) || __AppController.appController.handleProtocolUrl((0, g.normalizeUrlProtocol)(t))
+
+                if ("darwin" === process.platform) {
+                    __electron.app.on("open-url", (evt, url) => {
+                        evt.preventDefault()
+                        if (__electron.app.isReady()) {
+                            const e = g.normalizeUrlProtocol(url);
+                            if (!__AppController.appController.rehydrateEntireAppInForeground(e)) {
+                                __AppController.appController.handleProtocolUrl(g.normalizeUrlProtocol(url))
+                            }
                         }
-                    }))
-                    : "win32" === process.platform && (__electron.app.requestSingleInstanceLock() ? __electron.app.on("second-instance", ((e, t) => {
-                    S = (0, g.findNotionProtocolUrl)(t), handleActivate()
-                })) : __electron.app.quit(), S = (0, g.findNotionProtocolUrl)(process.argv))
+                    })
+                } else if ("win32" === process.platform) {
+                    __electron.app.requestSingleInstanceLock()
+                        ? __electron.app.on("second-instance", (e, t) => {
+                            initialUrl = g.findNotionProtocolUrl(t)
+                            handleActivate()
+                        })
+                        : __electron.app.quit()
+                    initialUrl = g.findNotionProtocolUrl(process.argv)
+                }
                 __electron.Menu.setApplicationMenu(null)
                 __electron.app.setAppUserModelId(__config.default.desktopAppId)
+
                 void function () {
-                    if (C = new __WebUpdater.WebUpdater(__electron.app, __assetCache.assetCache), !__config.default.isLocalhost || __config.default.offline) {
-                        const e = "production" === __config.default.env ? 6e5 : 6e4;
-                        setInterval((async () => {
+                    C = new __WebUpdater.WebUpdater(__electron.app, __assetCache.assetCache)
+                    if (!__config.default.isLocalhost || __config.default.offline) {
+                        const interval = "production" === __config.default.env ? 6e5 : 6e4;
+                        setInterval(async () => {
                             try {
                                 await __assetCache.assetCache.checkForUpdates()
                             } catch (e) {
-                                const t = (0, __logglyHelpers.convertErrorToLog)(e);
+                                const error = __logglyHelpers.convertErrorToLog(e);
                                 __ServerLogger.serverLogger.log({
                                     level: "error",
                                     from: "AssetCache",
                                     type: "topLevelAssetPollingError",
-                                    error: t
+                                    error: error
                                 })
                             }
-                        }), e)
+                        }, interval)
                     }
                 }()
+
                 await __electron.app.whenReady()
                 await p.waitForWebpack()
+
+                debugger
+
                 void async function () {
-                    (0, __initializeAutoUpdater.initializeAutoUpdater)(), (0, __setupSystemMenu.setupSystemMenu)(), await __assetCache.assetCache.initialize(), await (0, __setupSqliteServer.setupSqliteServer)(), (0, v.setupSecurity)(), (0, __session.setupSessionListeners)(), (0, __setupRendererListeners.setupRendererListeners)(), __store.Store.getState().app.preferences.isUsingHttps || (0, __handleNotionProtocol.handleNotionProtocol)(), handleActivate(), await (0, d.wipeTransientCsrfCookie)(), __AppController.appController.onAppReady(), __electron.app.on("before-quit", (() => __AppController.appController.handleQuit())), __electron.app.on("activate", handleActivate)
+                    __initializeAutoUpdater.initializeAutoUpdater()
+                    __setupSystemMenu.setupSystemMenu()
+                    await __assetCache.assetCache.initialize()
+                    await __setupSqliteServer.setupSqliteServer()
+                    v.setupSecurity()
+                    __session.setupSessionListeners()
+                    __setupRendererListeners.setupRendererListeners()
+                    __store.Store.getState().app.preferences.isUsingHttps || __handleNotionProtocol.handleNotionProtocol()
+                    handleActivate()
+                    await d.wipeTransientCsrfCookie()
+                    __AppController.appController.onAppReady()
+                    __electron.app.on("before-quit", (() => __AppController.appController.handleQuit()))
+                    __electron.app.on("activate", handleActivate)
                 }()
             }()
         },
@@ -11065,15 +11325,21 @@
                 for (const r of t) e.push(r)
             }
         },
-        60411: function (e, t, r) {
+
+        // 辅助函数
+        60411: function (module, exports, __require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isValidUrl = t.getDomain = t.getAbsoluteUrl = t.getPublicIntegrationAuthUrl = t.getUrlParams = t.getNativeRedirectUrl = t.sluggify = t.getUrlAnalytics = t.tryUrl = t.getWorkspaceDomainFromHostname = t.removeUrlFromString = t.sanitizeUrlStrict = t.sanitizeUrl = t.allowedProtocols = t.getQueryParam = t.addQueryParams = t.removeQueryParam = t.resolve = t.replacePathname = t.setBaseUrl = t.isStrictRelativeUrl = t.isRelativeUrl = t.removeBaseUrl = t.makeUrl = t.format = t.parse = t.inferFilenameFromUrl = void 0;
-            const o = n(r(16857)), a = r(80004), i = r(65076);
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            function s(e, t = {}) {
+
+            const o = n(__require(16857)),
+                a = __require(80004),
+                i = __require(65076);
+
+            function parse(e, t = {}) {
                 try {
                     return o.default.parse(e, !0, t.slashesDenoteHost)
                 } catch (t) {
@@ -11085,51 +11351,63 @@
                 }
             }
 
-            function l(e) {
+            function format(e) {
                 return o.default.format(e)
             }
 
-            function c(e) {
-                const t = s(e.url);
-                return t.search = null, t.query = e.query || {}, t.hash = e.hash || null, l(t)
+            function makeUrl(e) {
+                const t = parse(e.url);
+                return t.search = null, t.query = e.query || {}, t.hash = e.hash || null, format(t)
             }
 
-            function u(e) {
-                const t = s(e.relativeUrl), r = s(e.baseUrl);
-                return t.protocol = r.protocol, t.host = r.host, t.hostname = r.hostname, l(t)
+            function setBaseUrl(e) {
+                const t = parse(e.relativeUrl), r = parse(e.baseUrl);
+                return t.protocol = r.protocol, t.host = r.host, t.hostname = r.hostname, format(t)
             }
 
-            function d(e) {
-                const t = s(e.url);
-                return t.path = null, t.pathname = e.pathname, l(t)
+            function replacePathname(e) {
+                const t = parse(e.url);
+                return t.path = null, t.pathname = e.pathname, format(t)
             }
 
-            t.inferFilenameFromUrl = function (e) {
+            exports.inferFilenameFromUrl = function (e) {
                 try {
                     e = decodeURI(e)
                 } catch (e) {
                     if (!(e instanceof URIError)) throw e
                 }
                 return e.substring(e.lastIndexOf("/") + 1)
-            }, t.parse = s, t.format = l, t.makeUrl = c, t.removeBaseUrl = function (e) {
-                const t = s(e);
-                return t.protocol = null, t.host = null, t.hostname = null, t.slashes = !1, l(t)
-            }, t.isRelativeUrl = function (e) {
-                const t = s(e);
+            }
+            exports.parse = parse
+            exports.format = format
+            exports.makeUrl = makeUrl
+            exports.removeBaseUrl = function (e) {
+                const t = parse(e);
+                return t.protocol = null, t.host = null, t.hostname = null, t.slashes = !1, format(t)
+            }
+            exports.isRelativeUrl = function (e) {
+                const t = parse(e);
                 return Boolean(!t.host && !t.hostname)
-            }, t.isStrictRelativeUrl = function (e) {
-                const t = s(e);
+            }
+            exports.isStrictRelativeUrl = function (e) {
+                const t = parse(e);
                 return Boolean(!t.host && !t.hostname && !t.protocol)
-            }, t.setBaseUrl = u, t.replacePathname = d, t.resolve = function (e, t) {
-                return d({url: e, pathname: t})
-            }, t.removeQueryParam = function (e, t) {
-                const r = s(e);
-                return r.search = null, delete r.query[t], l(r)
-            }, t.addQueryParams = function (e, t) {
-                const r = s(e);
-                return r.search = null, r.query = {...r.query, ...t}, l(r)
-            }, t.getQueryParam = function (e, t) {
-                return s(e).query[t]
+            }
+            exports.setBaseUrl = setBaseUrl
+            exports.replacePathname = replacePathname
+            exports.resolve = function (e, t) {
+                return replacePathname({url: e, pathname: t})
+            }
+            exports.removeQueryParam = function (e, t) {
+                const r = parse(e);
+                return r.search = null, delete r.query[t], format(r)
+            }
+            exports.addQueryParams = function (e, t) {
+                const r = parse(e);
+                return r.search = null, r.query = {...r.query, ...t}, format(r)
+            }
+            exports.getQueryParam = function (e, t) {
+                return parse(e).query[t]
             };
             const p = {
                 "thumpmagical.top": !0,
@@ -11146,16 +11424,16 @@
                 "clangchapshop.xyz": !0
             };
 
-            function h(e) {
+            function sanitizeUrlStrict(e) {
                 if (e) try {
                     const r = new URL(e);
                     if (p[r.host]) return;
-                    if (t.allowedProtocols.includes(r.protocol)) return r.href
+                    if (exports.allowedProtocols.includes(r.protocol)) return r.href
                 } catch {
                 }
             }
 
-            function f(e) {
+            function tryUrl(e) {
                 try {
                     return new URL(e)
                 } catch {
@@ -11163,12 +11441,13 @@
                 }
             }
 
-            t.allowedProtocols = ["http:", "https:", "mailto:", "itms-apps:", "tel:", "cron:", "x-apple.systempreferences:"], t.sanitizeUrl = function (e) {
+            exports.allowedProtocols = ["http:", "https:", "mailto:", "itms-apps:", "tel:", "cron:", "x-apple.systempreferences:"]
+            exports.sanitizeUrl = function (e) {
                 const {str: r, allowNoProtocol: n} = e;
                 if (r && "string" == typeof r) try {
-                    const e = s(r);
+                    const e = parse(r);
                     if (e.host && p[e.host]) return;
-                    if (e.protocol && e.host) return h(r);
+                    if (e.protocol && e.host) return sanitizeUrlStrict(r);
                     if (!e.protocol) {
                         try {
                             const {host: e} = new URL(`stub:${r}`);
@@ -11181,18 +11460,23 @@
                         } catch {
                         }
                     }
-                    if (e.protocol && t.allowedProtocols.includes(e.protocol) || n && !e.protocol) return r
+                    if (e.protocol && exports.allowedProtocols.includes(e.protocol) || n && !e.protocol) return r
                 } catch (e) {
                     return
                 }
-            }, t.sanitizeUrlStrict = h, t.removeUrlFromString = function (e) {
+            }
+            exports.sanitizeUrlStrict = sanitizeUrlStrict
+            exports.removeUrlFromString = function (e) {
                 return (e || "").replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")
-            }, t.getWorkspaceDomainFromHostname = function ({publicDomainName: e}, t) {
+            }
+            exports.getWorkspaceDomainFromHostname = function ({publicDomainName: e}, t) {
                 if (!e || !t) return;
                 const r = Array.from(new Set([e, e.split(":")[0]]).values());
                 for (const e of r) if (t.endsWith(`.${e}`)) return t.substring(0, t.length - e.length - 1)
-            }, t.tryUrl = f;
-            const m = "none", g = {utm_source: m, utm_medium: m, utm_campaign: m, utm_term: m, utm_content: m},
+            }
+            exports.tryUrl = tryUrl
+            const m = "none",
+                g = {utm_source: m, utm_medium: m, utm_campaign: m, utm_term: m, utm_content: m},
                 b = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid", "gclid", "device", "targetid", "criterionid", "previous_path", "ps_partner_key", "ps_xid", "trial_source"];
 
             function v(e) {
@@ -11202,8 +11486,8 @@
                 })), t
             }
 
-            t.getUrlAnalytics = function (e, t) {
-                const r = f(e);
+            exports.getUrlAnalytics = function (e, t) {
+                const r = tryUrl(e);
                 if (!r) return;
                 const {searchParams: n} = r, o = {...v(n), pathname: r.pathname, query: r.search}, s = {...g, ...t},
                     l = {...o};
@@ -11211,30 +11495,37 @@
                     const t = s[e];
                     (0, a.isDefined)(l[e]) || (0, i.isNotDefined)(t) || (l[e] = t)
                 })), l
-            }, t.sluggify = function (e) {
+            }
+            exports.sluggify = function (e) {
                 e = e.trim().toLowerCase();
                 for (var t = 0; t < 28; t++) e = e.replace(new RegExp("àáäâèéëêìíïîòóöôùúüûñç·/_,:;".charAt(t), "g"), "aaaaeeeeiiiioooouuuunc------".charAt(t));
                 return e.replace(/[<>:"/\\|?*\x00-\x1F]| +$/g, "").replace(/\s+/g, "-").replace(/-+/g, "-")
-            }, t.getNativeRedirectUrl = function (e) {
-                const t = s(e);
+            }
+            exports.getNativeRedirectUrl = function (e) {
+                const t = parse(e);
                 if (t.pathname?.startsWith("/native")) throw new Error("Already on native redirect URL");
-                return t.pathname = `/native${t.pathname}`, l(t)
-            }, t.getUrlParams = function (e) {
-                const t = f(e);
+                return t.pathname = `/native${t.pathname}`, format(t)
+            }
+            exports.getUrlParams = function (e) {
+                const t = tryUrl(e);
                 if (t) return t.searchParams
-            }, t.getPublicIntegrationAuthUrl = function (e) {
+            }
+            exports.getPublicIntegrationAuthUrl = function (e) {
                 const {baseUrl: t, clientId: r, redirectUri: n, state: o} = e,
                     a = {client_id: r, response_type: "code", owner: "user", redirect_uri: n};
-                return o && (a.state = o), c({url: u({baseUrl: t, relativeUrl: "/v1/oauth/authorize"}), query: a})
-            }, t.getAbsoluteUrl = function (e = "", t = "") {
+                return o && (a.state = o), makeUrl({url: setBaseUrl({baseUrl: t, relativeUrl: "/v1/oauth/authorize"}), query: a})
+            }
+            exports.getAbsoluteUrl = function (e = "", t = "") {
                 try {
                     return new URL(t, e).toString()
                 } catch (e) {
                     return ""
                 }
-            }, t.getDomain = function (e) {
+            }
+            exports.getDomain = function (e) {
                 return new URL(e).host.replace("www.", "")
-            }, t.isValidUrl = function (e = "") {
+            }
+            exports.isValidUrl = function (e = "") {
                 try {
                     const t = new URL(e);
                     return null !== t && t.protocol.startsWith("http")

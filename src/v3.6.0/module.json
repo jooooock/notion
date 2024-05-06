@@ -1,0 +1,4 @@
+{
+    "imports": ["shared", "shared-intl", "shared-utils", "test-framework"],
+    "typeImports": []
+}
