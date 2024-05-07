@@ -1,20 +1,30 @@
 (() => {
     const __modules = {
-        11239: (e, t, r) => {
+        // config
+        11239: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const n = r(68272);
-            t.default = n
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            exports.default = __webpack_require(68272)
         },
-        60522: (e, t) => {
+        // 定义 TabBar 尺寸
+        60522: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.MIN_TAB_WIDTH_PX = t.MAX_TAB_WIDTH_PX = t.TAB_BAR_HEIGHT_PX = void 0, t.TAB_BAR_HEIGHT_PX = 36, t.MAX_TAB_WIDTH_PX = 200, t.MIN_TAB_WIDTH_PX = 52
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.TAB_BAR_HEIGHT_PX = 36
+            exports.MAX_TAB_WIDTH_PX = 200
+            exports.MIN_TAB_WIDTH_PX = 52
         },
-        27683: (e, t, r) => {
+        // 定义 TabColors 和 ElectronColors
+        27683: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.electronColors = t.tabColors = void 0;
-            const n = r(52869);
-            t.tabColors = {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const n = __webpack_require(52869);
+            exports.tabColors = {
                 default: {light: "#F7F7F5", dark: "#202020"},
                 active: {light: n.colors.white, dark: n.accentColors.dark.gray[50]},
                 hovered: {light: "#EFEEEE", dark: n.accentColors.dark.gray[300]},
@@ -22,7 +32,8 @@
                 border: {light: n.accentColors.light.gray[75], dark: n.accentColors.dark.gray[400]},
                 textActive: {light: n.accentColors.light.gray[900], dark: n.accentColors.dark.gray[850]},
                 textInactive: {light: n.accentColors.light.gray[600], dark: n.accentColors.dark.gray[700]}
-            }, t.electronColors = {
+            }
+            exports.electronColors = {
                 tabBarBackground: {light: "#F7F7F5", dark: "#202020"},
                 notionBackground: {light: n.colors.white, dark: "#191919"},
                 buttonBackground: {light: "#DDDDDC", dark: "#434343"},
@@ -36,82 +47,134 @@
                 titleBarOverlayBackground: {light: "rgba(255, 255, 255, 0.1)", dark: "rgba(0, 0, 0, 0)"}
             }
         },
-        51916: function (e, t, r) {
+        // throwIfNotProd 函数
+        51916: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.throwIfNotProd = void 0;
-            const o = n(r(11239));
-            t.throwIfNotProd = function (e) {
-                if ("production" !== o.default.env) throw new Error(e)
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __config = n(__webpack_require(11239));
+            exports.throwIfNotProd = function (message) {
+                if ("production" !== __config.default.env) {
+                    throw new Error(message)
+                }
             }
         },
-        31957: (e, t, r) => {
+        // child_process 的 exec/execFile 函数
+        31957: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.execFile = t.exec = void 0;
-            const n = r(35317);
-            t.exec = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __child_process = __webpack_require(35317);
+            exports.exec = function (e) {
                 return new Promise(((t, r) => {
-                    (0, n.exec)(e, ((e, n, o) => {
+                    (0, __child_process.exec)(e, ((e, n, o) => {
                         if (e) return r(e);
                         t({stdout: n, stderr: o})
                     }))
                 }))
-            }, t.execFile = function (e, t) {
+            }
+            exports.execFile = function (e, t) {
                 return new Promise(((r, o) => {
-                    (0, n.execFile)(e, t, ((e, t, n) => {
+                    (0, __child_process.execFile)(e, t, ((e, t, n) => {
                         if (e) return o(e);
                         r({stdout: t, stderr: n})
                     }))
                 }))
             }
         },
-        55108: (e, t) => {
+        // isNotionWebContents 函数
+        55108: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isNotionWebContents = void 0, t.isNotionWebContents = function (e) {
-                const t = e.getURL(), {hostname: r, protocol: n} = new URL(t);
-                return !("notion.so" !== r && "notion.site" !== r && "notion.com" !== r && !r.endsWith(".notion.so")) || "file:" === n || "localhost" === r
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.isNotionWebContents = function (webContents) {
+                const url = webContents.getURL()
+                const {hostname, protocol} = new URL(url)
+                if (
+                    "notion.so" === hostname ||
+                    "notion.site" === hostname ||
+                    "notion.com" === hostname ||
+                    hostname.endsWith(".notion.so")
+                ) {
+                    return true
+                } else if ("file:" === protocol) {
+                    return true
+                } else {
+                    return "localhost" === hostname
+                }
             }
         },
-        55870: function (e, t, r) {
+        // intl 相关
+        55870: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createIntlShape = t.getMessages = void 0;
-            const o = r(36343), a = n(r(16813)), i = n(r(39687)), s = n(r(29499)), l = n(r(58545)), c = n(r(85395)),
-                u = n(r(61993)), d = n(r(27290)), p = n(r(8332)), h = n(r(16996)), f = n(r(63969)), m = n(r(39301)),
-                g = n(r(86144)), b = n(r(49596)), v = n(r(36044));
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            function y(e) {
+            exports.createIntlShape = exports.getMessages = void 0;
+            const o = __webpack_require(36343),
+                da_DK = n(__webpack_require(16813)),
+                de_DE = n(__webpack_require(39687)),
+                es_LA = n(__webpack_require(29499)),
+                es_ES = n(__webpack_require(58545)),
+                fi_FI = n(__webpack_require(85395)),
+                fr_FR = n(__webpack_require(61993)),
+                ja_JP = n(__webpack_require(27290)),
+                ko_KR = n(__webpack_require(8332)),
+                nb_NO = n(__webpack_require(16996)),
+                nl_NL = n(__webpack_require(63969)),
+                pt_BR = n(__webpack_require(39301)),
+                sv_SE = n(__webpack_require(86144)),
+                zh_CN = n(__webpack_require(49596)),
+                zh_TW = n(__webpack_require(36044));
+
+            function getMessages(locale) {
                 return {
-                    "ko-KR": p.default,
-                    "es-ES": l.default,
-                    "es-LA": s.default,
-                    "fr-FR": u.default,
-                    "ja-JP": d.default,
-                    "pt-BR": m.default,
-                    "zh-CN": b.default,
-                    "zh-TW": v.default,
-                    "de-DE": i.default,
-                    "da-DK": a.default,
-                    "fi-FI": c.default,
-                    "nb-NO": h.default,
-                    "nl-NL": f.default,
-                    "sv-SE": g.default
-                }[e]
+                    "ko-KR": ko_KR.default,
+                    "es-ES": es_ES.default,
+                    "es-LA": es_LA.default,
+                    "fr-FR": fr_FR.default,
+                    "ja-JP": ja_JP.default,
+                    "pt-BR": pt_BR.default,
+                    "zh-CN": zh_CN.default,
+                    "zh-TW": zh_TW.default,
+                    "de-DE": de_DE.default,
+                    "da-DK": da_DK.default,
+                    "fi-FI": fi_FI.default,
+                    "nb-NO": nb_NO.default,
+                    "nl-NL": nl_NL.default,
+                    "sv-SE": sv_SE.default
+                }[locale]
             }
 
-            t.getMessages = y, t.createIntlShape = function (e) {
-                const t = y(e), r = (0, o.createIntlCache)();
-                return (0, o.createIntl)({locale: e, defaultLocale: "en-US", messages: t}, r)
+            exports.getMessages = getMessages
+            exports.createIntlShape = function (locale) {
+                const messages = getMessages(locale),
+                    r = o.createIntlCache();
+                return o.createIntl({
+                    locale: locale,
+                    defaultLocale: "en-US",
+                    messages: messages,
+                }, r)
             }
         },
-        49960: (e, t) => {
+        // getHumanPlatformName 函数
+        49960: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getHumanPlatformName = void 0, t.getHumanPlatformName = function () {
-                if (navigator) return navigator.userAgentData?.platform;
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.getHumanPlatformName = function () {
+                if (navigator) {
+                    return navigator.userAgentData?.platform;
+                }
                 switch (process?.platform) {
                     case"darwin":
                         return "macOS";
@@ -122,42 +185,59 @@
                 }
             }
         },
-        3420: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.serverLogger = t.ServerLogger = void 0;
-            const s = i(r(70857)), l = r(4482), c = i(r(47419)), u = a(r(6600)), d = r(21248), p = r(43067),
-                h = i(r(11239));
 
-            class f {
+        // ServerLogger 对应老版本的 helpers/loggly.js
+        3420: function (module, exports, __webpack_require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const __os = i(__webpack_require(70857)),
+                electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                lodash = a(__webpack_require(6600)),
+                __logglyHelpers = __webpack_require(21248), //shared/logglyHelpers
+                p = __webpack_require(43067),
+                __config = i(__webpack_require(11239));
+
+            class ServerLogger {
                 static {
                     this.PLATFORM = "electron"
                 }
 
-                constructor(e) {
-                    this.args = e, this.extraLoggingContext = {}, this.queue = [], this.flushing = !1, this.rateLimitedLog = u.throttle(this.log.bind(this), 500), this.flush = async () => {
+                constructor(args) {
+                    this.args = args
+                    this.extraLoggingContext = {}
+                    this.queue = []
+                    this.flushing = false
+                    this.rateLimitedLog = lodash.throttle(this.log.bind(this), 500)
+                    this.flush = async () => {
                         if (!this.flushing && this.queue.length > 0) {
                             this.flushing = !0;
                             const e = this.queue.splice(0, Math.max(this.queue.length, 50)),
@@ -176,7 +256,7 @@
                                         type: "unreachableSplunk",
                                         error: {
                                             message: "Could not reach Splunk!",
-                                            miscErrorString: (0, d.safelyConvertAnyToString)({
+                                            miscErrorString: (0, __logglyHelpers.safelyConvertAnyToString)({
                                                 status: t.status,
                                                 statusText: t.statusText,
                                                 responseText: await t.text()
@@ -190,28 +270,46 @@
                             }
                         }
                     };
-                    const {env: t, splunkConfig: r} = e;
-                    this.env = t, this.loggingContext = {os: e.os, platform: f.PLATFORM}, this.splunkConfig = r
+                    const {env, splunkConfig} = args;
+                    this.env = env
+                    this.loggingContext = {
+                        os: args.os,
+                        platform: ServerLogger.PLATFORM
+                    }
+                    this.splunkConfig = splunkConfig
                 }
 
-                async log(e) {
-                    const t = this.appendAdditionalFields(this.prepareMessage(e));
-                    this.args.logger.log(t), "local" !== this.args.env && (this.queue.push(t), await this.flush())
+                async log(message) {
+                    const t = this.appendAdditionalFields(this.prepareMessage(message));
+                    this.args.logger.log(t)
+                    if ("local" !== this.args.env) {
+                        this.queue.push(t)
+                        await this.flush()
+                    }
                 }
 
-                prepareMessage(e) {
-                    const {data: t, ...r} = e;
-                    return {environment: this.env, data: t ? (0, d.stringifyMiscData)(t) : void 0, ...r}
+                prepareMessage(message) {
+                    const {data, ...r} = message;
+                    return {
+                        environment: this.env,
+                        data: data ? __logglyHelpers.stringifyMiscData(data) : void 0,
+                        ...r
+                    }
                 }
 
-                appendAdditionalFields(e) {
-                    return {...this.loggingContext, ...this.extraLoggingContext, ...e}
+                appendAdditionalFields(message) {
+                    return {
+                        ...this.loggingContext,
+                        ...this.extraLoggingContext,
+                        ...message
+                    }
                 }
             }
 
-            t.ServerLogger = f, t.serverLogger = new f({
+            exports.ServerLogger = ServerLogger
+            exports.serverLogger = new ServerLogger({
                 os: function () {
-                    switch (s.default.platform()) {
+                    switch (__os.default.platform()) {
                         case"darwin":
                             return "mac";
                         case"win32":
@@ -219,36 +317,58 @@
                         default:
                             return "unknown"
                     }
-                }(), env: h.default.env, logger: {
+                }(),
+                env: __config.default.env,
+                logger: {
                     log(e) {
-                        c.default.log(e)
-                    }, error(e) {
-                        c.default.error(e)
+                        electron_log.default.log(e)
+                    },
+                    error(e) {
+                        electron_log.default.error(e)
                     }
-                }, splunkConfig: h.default.splunkConfig
+                },
+                splunkConfig: __config.default.splunkConfig
             });
-            const m = s.default.cpus(), g = m && m[0] && m[0].model,
-                b = `${Math.round(s.default.totalmem() / 1024 / 1024 / 1024)}G`;
-            t.serverLogger.extraLoggingContext.desktopVersion = l.app.getVersion(), t.serverLogger.extraLoggingContext.desktopCPU = g, t.serverLogger.extraLoggingContext.desktopRAM = b
+
+            const cpus = __os.default.cpus()
+            const desktopCPU = cpus && cpus[0] && cpus[0].model
+            const desktopRAM = `${Math.round(__os.default.totalmem() / 1024 / 1024 / 1024)}G`
+
+            exports.serverLogger.extraLoggingContext.desktopVersion = electron.app.getVersion()
+            exports.serverLogger.extraLoggingContext.desktopCPU = desktopCPU
+            exports.serverLogger.extraLoggingContext.desktopRAM = desktopRAM
         },
-        18503: (e, t) => {
+
+        // getTrafficLightPosition
+        18503: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getTrafficLightPosition = t.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS = void 0, t.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS = {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS = {
                 x: 10,
                 y: 10
-            }, t.getTrafficLightPosition = function (e, r) {
+            }
+            exports.getTrafficLightPosition = function (e, r) {
                 return {
-                    x: r > 1 ? Math.ceil(e / 2) - 8 : t.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS.x,
+                    x: r > 1 ? Math.ceil(e / 2) - 8 : exports.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS.x,
                     y: Math.ceil(e / 2) - 8
                 }
             }
         },
-        4928: (e, t, r) => {
+        // zip
+        4928: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const n = r(39023), o = r(40041), a = (0, n.promisify)(o.zip);
-            t.default = a
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            const util = __webpack_require(39023)
+            const o = __webpack_require(40041)
+
+            exports.default = util.promisify(o.zip)
         },
+
+
+        // AppController
         21852: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -633,6 +753,8 @@
 
             t.appController = new A, t.AppController_TEST_ONLY = A
         },
+
+        // AssetCache 类
         87309: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -1025,6 +1147,8 @@
                 }
             }
         },
+
+        // QuickSearchController
         26760: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.QuickSearchController = void 0;
@@ -1138,6 +1262,8 @@
                 }
             }
         },
+
+        // TabController
         52728: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -1616,6 +1742,8 @@
 
             t.TabController = T
         },
+
+        // TrayController
         84087: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -1689,6 +1817,8 @@
                 }
             }
         },
+
+        // WebUpdater
         19628: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -1748,6 +1878,8 @@
                 }
             }
         },
+
+        // WindowController
         1147: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -2620,6 +2752,8 @@
 
             t.WindowController = E
         },
+
+        // getAnalyticsInfo
         68543: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -2657,6 +2791,8 @@
                 }
             }
         },
+
+        // assetCache 实例
         94774: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -2706,6 +2842,8 @@
                 t.assetCache.checkForUpdates()
             }))
         },
+
+        // initializeAutoUpdater
         43579: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -2898,6 +3036,8 @@
                 }
             }()
         },
+
+        // closeLastBrowserTab
         68115: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -2933,6 +3073,8 @@
                 }(e)
             }
         },
+
+        // wipeTransientCsrfCookie
         68516: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -2978,6 +3120,8 @@
                 r.set({...t, url: l.default.domainBaseUrl, expirationDate: t.expires})
             }))
         },
+
+        // crash reporter
         84041: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -3018,6 +3162,8 @@
                 }
             }))
         },
+
+        // createGoogleDrivePicker
         89304: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -3070,6 +3216,8 @@
                 d.handleEventFromRenderer.addListener("notion:post-message", a), o.addListener("close", i), o.loadURL(t)
             }
         },
+
+        // createPopup
         43041: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -3122,6 +3270,7 @@
                 d.handleEventFromRenderer.addListener("notion:post-message", f), h.addListener("close", m), h.loadURL(t)
             }
         },
+        // ensureCspFrameAncestorsParityWithNotionWebsite
         66991: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.ensureCspFrameAncestorsParityWithNotionWebsite = void 0;
@@ -3131,6 +3280,8 @@
                 return r && (r.includes("https:") || r.includes("*")) ? (r.push(`${e.customProtocol}:`), t.csp.convertToString().trim()) : e.cspHeader
             }
         },
+
+        // getDebugMenu
         83789: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -3353,6 +3504,8 @@
                 }
             }
         },
+
+        // setupLogging
         5554: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -3449,6 +3602,8 @@
                 }))
             }, t.setupLocalLogging = g, t.shouldLog = b
         },
+
+        // 入口
         64982: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -3505,6 +3660,8 @@
                 }()
             }()
         },
+
+        // notion IPC
         10454: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -3534,6 +3691,8 @@
                 }
             }
         },
+
+        // handleNotionProtocol
         77514: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -3634,6 +3793,7 @@
                 }))
             }
         },
+        // open at login
         26605: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -3654,6 +3814,8 @@
                 }))
             }
         },
+
+        // showOpenAtLoginErrorDialog
         88493: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.showOpenAtLoginErrorDialog = void 0;
@@ -3680,6 +3842,8 @@
                 })
             }
         },
+
+        // url protocol utils
         29902: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -3727,6 +3891,8 @@
                 return d(e.find((e => e.startsWith(`${s.default.protocol}:`))))
             }
         },
+
+        // setupRendererListeners
         35219: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -3951,6 +4117,8 @@
                 }))
             }
         },
+
+        // isNavigationAllowed 设置页面导航规则
         15425: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -3998,6 +4166,8 @@
                 }))
             }))
         },
+
+        // sentry
         56116: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -4039,6 +4209,8 @@
                 "local" !== l.default.env && s.captureException(e, {extra: {assetsJsVersionAtErrorTime: c.assetCache.version}})
             }
         },
+
+        // session 下载进度展示
         13387: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.setupSessionListeners = t.getSession = t.electronSessionPartition = void 0;
@@ -4064,6 +4236,8 @@
                 }(n.session.fromPartition(t.electronSessionPartition))
             }
         },
+
+        // setupSqliteServer
         34516: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -4116,6 +4290,8 @@
                 })), b.info(`Child process running on ${g}`))
             }
         },
+
+        // app slice
         73553: function (e, t, r) {
             "use strict";
             var n, o = this && this.__importDefault || function (e) {
@@ -4172,6 +4348,8 @@
                 }
             }), n = t.appSlice.actions, t.updateZoomFactor = n.updateZoomFactor, t.updateTheme = n.updateTheme, t.updatePreferences = n.updatePreferences, t.updateNotificationCount = n.updateNotificationCount
         },
+
+        // history slice
         28192: (e, t, r) => {
             "use strict";
             var n;
@@ -4196,6 +4374,8 @@
                 }
             }), n = t.historySlice.actions, t.updateLastFocusedWindowDisplayState = n.updateLastFocusedWindowDisplayState, t.popCloseEvent = n.popCloseEvent, t.insertCloseEvent = n.insertCloseEvent, t.setAppRestorationState = n.setAppRestorationState, t.resetHistoryState = n.resetHistoryState
         },
+
+        // quick search slice
         14473: (e, t, r) => {
             "use strict";
             var n;
@@ -4216,6 +4396,8 @@
                 }
             }), n = t.quickSearchSlice.actions, t.toggleVisibilityStateIfReady = n.toggleVisibilityStateIfReady, t.setReadyState = n.setReadyState
         },
+
+        // redux store
         69340: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -4295,6 +4477,8 @@
                 return {...u.ALWAYS_SET_ELECTRON_APP_FEATURES, ...e, preferences: r, zoomFactor: n}
             }
         },
+
+        // tab slice
         54417: function (e, t, r) {
             "use strict";
             var n, o = this && this.__importDefault || function (e) {
@@ -4338,6 +4522,8 @@
                 }
             }), n = t.tabSlice.actions, t.initializeTabState = n.initializeTabState, t.updateTabTitle = n.updateTabTitle, t.updatePageHistoryFaviconMap = n.updatePageHistoryFaviconMap, t.updateParentWindowControllerId = n.updateParentWindowControllerId, t.updateTabSearchingState = n.updateTabSearchingState, t.updateTabUrl = n.updateTabUrl, t.updateTabColors = n.updateTabColors, t.updateTabIsOverlayActive = n.updateTabIsOverlayActive, t.updateTabIsMediaInputActive = n.updateTabIsMediaInputActive, t.updateAppStoreState = n.updateAppStoreState, t.removeTabState = n.removeTabState, t.resetTabState = n.resetTabState
         },
+
+        // window slice
         772: function (e, t, r) {
             "use strict";
             var n, o = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -4422,6 +4608,8 @@
                 }
             }), n = t.windowSlice.actions, t.initializeWindowState = n.initializeWindowState, t.updateWindowSidebarState = n.updateWindowSidebarState, t.updateActiveTabId = n.updateActiveTabId, t.addTabToWindow = n.addTabToWindow, t.removeTabFromWindow = n.removeTabFromWindow, t.sliceTabRange = n.sliceTabRange, t.closeAllNonActiveTabs = n.closeAllNonActiveTabs, t.updateDisplayState = n.updateDisplayState, t.updateIsWindowVisible = n.updateIsWindowVisible, t.focusWindow = n.focusWindow, t.removeWindowState = n.removeWindowState, t.setTabOrder = n.setTabOrder, t.resetWindowState = n.resetWindowState, t.setShouldShowAppMenuFromAlt = n.setShouldShowAppMenuFromAlt
         },
+
+        // appStatePersister
         30506: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -4543,6 +4731,8 @@
                 if (e) return e.focusOrder === t
             })), t.focusChangedSelector = (0, l.createSelector)([t.isFocusedWindowSelector, t.windowActiveTabSelector], ((e, t) => !e || void 0 !== t))
         },
+
+        // setupSystemMenu
         50833: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -5164,6 +5354,8 @@
 
             t.setupSystemMenu = w
         },
+
+        // recordTraceAndPackage
         48021: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -5239,6 +5431,8 @@
                 }
             }
         },
+
+        // buildTrayMenuTemplate
         63374: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.buildTrayMenuTemplate = void 0;
@@ -5453,6 +5647,7 @@
                 }))
             }
         },
+        // setQuarantine
         49248: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -5510,6 +5705,7 @@
                 }
             }), o(r(69467), t)
         },
+
         78302: (e, t) => {
             "use strict";
 
@@ -5547,6 +5743,7 @@
                 return `{${e}, select, ${Object.entries({...r, other: t}).map((([e, t]) => `${e} {${t}}`)).join(" ")}}`
             }
         },
+
         36343: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -5605,6 +5802,8 @@
                 }
             })
         },
+
+        // AsyncQueue
         4058: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -5767,6 +5966,8 @@
 
             t.AsyncQueue = s, t.mutatePromiseIntoAsyncQueuePromise = l
         },
+
+        // utils 工具类
         43067: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -6018,6 +6219,8 @@
                 }
             }
         },
+
+        // cleanObjectForSerialization
         37318: function (e, t, r) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -6099,7 +6302,7 @@
                 }
             })
         },
-        52869: function (e, t, r) {
+        52869: function (module, t, __webpack_require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
@@ -6123,7 +6326,8 @@
                 return o(t, e), t
             };
             Object.defineProperty(t, "__esModule", {value: !0}), t.getTemporaryHighlightColorStyle = t.getHighlightColorStyle = t.getCalloutBlockColorStyle = t.getButtonBlockColorStyle = t.getBlockColorFromUserId = t.getBlockColorStyle = t.blockColorConfiguration = t.blockColorIsBackgroundColor = t.blockColorToAccentColor = t.getBoardSelectStyle = t.CHART_COLORS = t.getSelectTokenStyle = t.getRGBFromHex = t.getHexFromRGB = t.flattenColorsByAlpha = t.findClosestThemeColor = t.findClosestSelectColor = t.findClosestColor = t.getDefaultTheme = t.commentContextBarBackground = t.commentUnderlineColorWithLevel = t.commentBackgroundWithLevel = t.interactiveAnnotationColor = t.selectColors = t.teamIconBackgroundColorConfiguration = t.blockBackgroundColors = t.blockTextColors = t.blockColors = t.getTheme = t.themeModes = t.accentColors = t.colors = t.grayscale = void 0;
-            const i = r(33824), s = a(r(6600)), l = r(73720), c = r(80004);
+            const i = __webpack_require(33824), s = a(__webpack_require(6600)), l = __webpack_require(73720),
+                c = __webpack_require(80004);
 
             function u(e) {
                 return `rgba(55, 53, 47, ${e})`
@@ -7490,19 +7694,28 @@
                 }
             }
 
-            t.getTheme = b, t.blockColors = ["default", "gray", "brown", "orange", "yellow", "teal", "blue", "purple", "pink", "red", "gray_background", "brown_background", "orange_background", "yellow_background", "teal_background", "blue_background", "purple_background", "pink_background", "red_background"], t.blockTextColors = t.blockColors.filter((e => -1 === e.indexOf("background"))), t.blockBackgroundColors = t.blockColors.filter((e => -1 !== e.indexOf("background"))), t.teamIconBackgroundColorConfiguration = {
+            t.getTheme = b
+            t.blockColors = ["default", "gray", "brown", "orange", "yellow", "teal", "blue", "purple", "pink", "red", "gray_background", "brown_background", "orange_background", "yellow_background", "teal_background", "blue_background", "purple_background", "pink_background", "red_background"]
+            t.blockTextColors = t.blockColors.filter((e => -1 === e.indexOf("background")))
+            t.blockBackgroundColors = t.blockColors.filter((e => -1 !== e.indexOf("background")))
+            t.teamIconBackgroundColorConfiguration = {
                 light: 100,
                 dark: 300
-            }, t.selectColors = ["default", "gray", "brown", "orange", "yellow", "green", "blue", "purple", "pink", "red"];
-            const v = "rgb(255, 212, 0)", y = {
-                comment: (0, i.colord)({r: 255, g: 203, b: 0}),
-                update: (0, i.colord)({r: 35, g: 131, b: 226}),
-                remove: (0, i.colord)({r: 120, g: 119, b: 116})
-            }, w = {comment: {light: .8, dark: .8}, update: {light: .4, dark: .6}, remove: {light: .4, dark: .6}}, _ = {
-                comment: {background: .15, underline: .4375},
-                update: {underline: .25, background: .09},
-                remove: {underline: .25, background: .09}
-            };
+            }
+            t.selectColors = ["default", "gray", "brown", "orange", "yellow", "green", "blue", "purple", "pink", "red"];
+
+            const v = "rgb(255, 212, 0)",
+                y = {
+                    comment: (0, i.colord)({r: 255, g: 203, b: 0}),
+                    update: (0, i.colord)({r: 35, g: 131, b: 226}),
+                    remove: (0, i.colord)({r: 120, g: 119, b: 116})
+                },
+                w = {comment: {light: .8, dark: .8}, update: {light: .4, dark: .6}, remove: {light: .4, dark: .6}},
+                _ = {
+                    comment: {background: .15, underline: .4375},
+                    update: {underline: .25, background: .09},
+                    remove: {underline: .25, background: .09}
+                };
 
             function k(e, t) {
                 const r = (0, c.objectKeys)(t).map((r => {
@@ -7559,13 +7772,14 @@
                 const {annotationType: t, type: r, selected: n, hovered: o, overlapping: a, mode: s} = e, l = y[t],
                     c = w[t][s], u = _[t][r], d = 1.25 * c, p = (o || n ? "underline" === r ? 3 : 1 : 0) + (a ? 2 : 0);
                 return (0, i.getCSSColor)(l.alpha(Math.min(c * u * (1 + p), d)))
-            }), (e => s.values(e).join("_"))), t.commentBackgroundWithLevel = function ({
-                                                                                            level: e,
-                                                                                            selected: r,
-                                                                                            hovered: n,
-                                                                                            newStyling: o,
-                                                                                            mode: a
-                                                                                        }) {
+            }), (e => s.values(e).join("_")))
+            t.commentBackgroundWithLevel = function ({
+                                                         level: e,
+                                                         selected: r,
+                                                         hovered: n,
+                                                         newStyling: o,
+                                                         mode: a
+                                                     }) {
                 if (o) return (0, t.interactiveAnnotationColor)({
                     annotationType: "comment",
                     type: "background",
@@ -7576,13 +7790,14 @@
                 });
                 const s = r ? 3 : 0, l = n ? 2 : 0, c = (1 === e ? e : 2 * Math.min(e, 2)) + s + l;
                 return (0, i.alpha)(v, Math.min(.14 * c, 1))
-            }, t.commentUnderlineColorWithLevel = function ({
-                                                                level: e,
-                                                                selected: r,
-                                                                hovered: n,
-                                                                newStyling: o,
-                                                                mode: a
-                                                            }) {
+            }
+            t.commentUnderlineColorWithLevel = function ({
+                                                             level: e,
+                                                             selected: r,
+                                                             hovered: n,
+                                                             newStyling: o,
+                                                             mode: a
+                                                         }) {
                 return o ? (0, t.interactiveAnnotationColor)({
                     annotationType: "comment",
                     type: "underline",
@@ -7591,21 +7806,27 @@
                     overlapping: e > 1,
                     mode: a
                 }) : v
-            }, t.commentContextBarBackground = s.memoize(((e, t) => e ? (0, i.getCSSColor)(y.comment.alpha(.8 * w.comment[t])) : "rgba(255, 212, 0, 0.8)"), ((...e) => s.values(e).join("_"))), t.getDefaultTheme = function () {
+            }
+            t.commentContextBarBackground = s.memoize(((e, t) => e ? (0, i.getCSSColor)(y.comment.alpha(.8 * w.comment[t])) : "rgba(255, 212, 0, 0.8)"), ((...e) => s.values(e).join("_")))
+            t.getDefaultTheme = function () {
                 return b({theme: "light"})
-            }, t.findClosestColor = k, t.findClosestSelectColor = function (e) {
+            }
+            t.findClosestColor = k
+            t.findClosestSelectColor = function (e) {
                 const r = {};
                 for (const e of t.selectColors) {
                     const t = E(b({theme: "light"}), e);
                     r[e] = t.backgroundColor
                 }
                 return k(e, r)
-            }, t.findClosestThemeColor = function (e) {
+            }
+            t.findClosestThemeColor = function (e) {
                 const t = {}, r = b({theme: "light"});
                 for (const [e, n] of Object.entries(r.accentColors)) for (const [r, o] of Object.entries(n)) t[`${e}:${r}`] = o;
                 const n = k(e, t), [o, a] = n.split(":");
                 return {colorName: o, shade: parseInt(a)}
-            }, t.flattenColorsByAlpha = function (e) {
+            }
+            t.flattenColorsByAlpha = function (e) {
                 const t = e.map((e => (0, i.colord)(e))).reverse();
                 let r = t.shift();
                 if (!r) return "red";
@@ -7619,7 +7840,8 @@
                     r = r.alpha(1).mix(e.alpha(1), a).alpha(o)
                 }
                 return (0, i.getCSSColor)(r)
-            }, t.getHexFromRGB = function (e) {
+            }
+            t.getHexFromRGB = function (e) {
                 if (!e) return;
                 const t = e.split(/\(|\)/);
                 if (3 !== t.length) return;
@@ -7629,7 +7851,8 @@
                 const a = Number(r[0]), i = Number(r[1]), s = Number(r[2]);
                 let l = `#${T(a)}${T(i)}${T(s)}`, c = 255;
                 return o && (c = Math.round(255 * Number(r[3]))), l = l.concat(T(c)), l.toUpperCase()
-            }, t.getRGBFromHex = function (e) {
+            }
+            t.getRGBFromHex = function (e) {
                 if (!e) return;
                 const t = e.startsWith("#") ? e.replace("#", "") : e;
                 try {
@@ -7638,7 +7861,9 @@
                 } catch (e) {
                     return
                 }
-            }, t.getSelectTokenStyle = E, t.CHART_COLORS = {
+            }
+            t.getSelectTokenStyle = E
+            t.CHART_COLORS = {
                 colorful: ["#2483e2", "#dea028", "#4faa79", "#9065cc", "#00a1c1", "#e17634", "#d25390", "#d44c47"],
                 white: ["#d6d6d6", "#a3a3a3", "#5e5e5e", "#303030"],
                 black: ["#666666", "#737373", "#bababa", "#e5e5e5"],
@@ -7654,7 +7879,8 @@
                 gray: ["#91918e"],
                 default: ["#c7c6c4"],
                 translucentGray: ["#e3e2e0"]
-            }, t.getBoardSelectStyle = function (e, r) {
+            }
+            t.getBoardSelectStyle = function (e, r) {
                 const n = S(e, r), o = !r || "default" === r,
                     a = {light: n[400], dark: o || "gray" === r ? n[600] : n[500]},
                     i = {light: n[30], dark: o ? n[75] : "gray" === r ? n[100] : n[50]},
@@ -7679,7 +7905,8 @@
                     cardPressedBackgroundColor: u.light,
                     chartColor: r ? t.CHART_COLORS[r]?.[0] : t.CHART_COLORS.default?.[0]
                 }
-            }, t.blockColorToAccentColor = {
+            }
+            t.blockColorToAccentColor = {
                 default: void 0,
                 gray: "gray",
                 brown: "brown",
@@ -7699,7 +7926,9 @@
                 purple_background: "purple",
                 pink_background: "pink",
                 red_background: "red"
-            }, t.blockColorIsBackgroundColor = C, t.blockColorConfiguration = {
+            }
+            t.blockColorIsBackgroundColor = C
+            t.blockColorConfiguration = {
                 background: {
                     light: 50,
                     lightHovered: 100,
@@ -7717,11 +7946,14 @@
                     darkPressed: 200,
                     darkGray: 700
                 }
-            }, t.getBlockColorStyle = O, t.getBlockColorFromUserId = function (e, r) {
+            }
+            t.getBlockColorStyle = O
+            t.getBlockColorFromUserId = function (e, r) {
                 let n = 0;
                 for (let t = 0; t < e.length; t++) n += e.charCodeAt(t);
                 return n %= t.blockTextColors.length, O(t.blockTextColors[n], r).color || r.regularTextColor
-            }, t.getButtonBlockColorStyle = function (e, r) {
+            }
+            t.getButtonBlockColorStyle = function (e, r) {
                 if ("default" === e) return {color: "inherit", fill: "inherit"};
                 const n = t.blockColorToAccentColor[e];
                 if (!n) return {color: "inherit", fill: "inherit"};
@@ -7746,7 +7978,8 @@
                     hoveredBackground: "dark" === r.mode ? s.darkHovered : s.lightHovered,
                     pressedBackground: "dark" === r.mode ? s.darkPressed : s.lightPressed
                 }
-            }, t.getCalloutBlockColorStyle = function (e, r) {
+            }
+            t.getCalloutBlockColorStyle = function (e, r) {
                 if ("default" === e) return {color: r.regularTextColor};
                 const n = t.blockColorToAccentColor[e];
                 if (!n) return {color: r.regularTextColor};
@@ -7756,11 +7989,14 @@
                     color: "dark" === r.mode ? i.dark : i.light,
                     fill: "dark" === r.mode ? i.dark : i.light
                 }
-            }, t.getHighlightColorStyle = function (e, t) {
+            }
+            t.getHighlightColorStyle = function (e, t) {
                 return "default" === e ? {color: t.regularTextColor} : O(e, t)
-            }, t.getTemporaryHighlightColorStyle = function (e, t) {
+            }
+            t.getTemporaryHighlightColorStyle = function (e, t) {
                 return {color: e[t.mode], fill: e[t.mode]}
-            }, t.default = t.colors
+            }
+            t.default = t.colors
         },
         78862: (e, t) => {
             "use strict";
@@ -8045,6 +8281,8 @@
                 return [...t.VALID_PREFERRED_LOCALES, ...t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT, ...t.VALID_PREFERRED_LOCALES_IN_BETA].includes(r) ? r : t.defaultLocale
             }
         },
+
+        // lodash
         6600: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -8966,6 +9204,8 @@
                 return !0
             }
         },
+
+        // shared/logglyHelpers
         21248: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.stringifyMiscData = t.convertErrorToLog = t.safelyConvertAnyToString = t.shouldLog = void 0;
@@ -9051,6 +9291,8 @@
                 return e.url.startsWith(e.protocol) ? i({schemeUrl: e.url, baseUrl: e.domainBaseUrl}) : e.url
             }
         },
+
+        // themeShadows
         73720: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.themeShadows = void 0;
@@ -9335,6 +9577,8 @@
                 for (const r of t) e.push(r)
             }
         },
+
+        // 辅助函数
         60411: function (e, t, r) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
@@ -9657,6 +9901,8 @@
                 })), {})
             }
         },
+
+        // events
         45437: (e, t) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.default = class {
@@ -9892,6 +10138,8 @@
             "use strict";
             e.exports = r(63853)
         },
+
+        // @sentry/electron
         66130: (e, t, r) => {
             "use strict";
             r.r(t), r.d(t, {
@@ -26820,6 +27068,8 @@
                 }
             })
         },
+
+        // semver
         44993: (e, t) => {
             var r;
             t = e.exports = b, r = "object" == typeof process && process.env && process.env.NODE_DEBUG && /\bsemver\b/i.test(process.env.NODE_DEBUG) ? function () {
@@ -27333,117 +27583,9 @@
                 return t.default = e, t
             }(r(16928))
         },
-        49619: (e, t, r) => {
-            "use strict";
 
-            function n() {
-                const e = r(79529);
-                return n = function () {
-                    return e
-                }, e
-            }
 
-            function o() {
-                const e = r(35317);
-                return o = function () {
-                    return e
-                }, e
-            }
-
-            function a() {
-                const e = r(80115);
-                return a = function () {
-                    return e
-                }, e
-            }
-
-            t.g = void 0;
-            var i = r(79896), s = function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
-                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
-                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
-                }
-                return t.default = e, t
-            }(r(16928));
-
-            function l() {
-                const e = r(86216);
-                return l = function () {
-                    return e
-                }, e
-            }
-
-            function c() {
-                const e = r(37846);
-                return c = function () {
-                    return e
-                }, e
-            }
-
-            function u() {
-                const e = r(45414);
-                return u = function () {
-                    return e
-                }, e
-            }
-
-            class d extends l().BaseUpdater {
-                constructor(e, t) {
-                    super(e, t)
-                }
-
-                isUpdaterActive() {
-                    return null == process.env.APPIMAGE ? (null == process.env.SNAP ? this._logger.warn("APPIMAGE env is not defined, current application is not an AppImage") : this._logger.info("SNAP env is defined, updater is disabled"), !1) : super.isUpdaterActive()
-                }
-
-                doDownloadUpdate(e) {
-                    const t = e.updateInfoAndProvider.provider,
-                        r = (0, u().findFile)(t.resolveFiles(e.updateInfoAndProvider.info), "AppImage");
-                    return this.executeDownload({
-                        fileExtension: "AppImage",
-                        fileInfo: r,
-                        downloadUpdateOptions: e,
-                        task: async (o, i) => {
-                            const s = process.env.APPIMAGE;
-                            if (null == s) throw (0, n().newError)("APPIMAGE env is not defined", "ERR_UPDATER_OLD_FILE_NOT_FOUND");
-                            let l = !1;
-                            try {
-                                await new (c().FileWithEmbeddedBlockMapDifferentialDownloader)(r.info, this.httpExecutor, {
-                                    newUrl: r.url,
-                                    oldFile: s,
-                                    logger: this._logger,
-                                    newFile: o,
-                                    isUseMultipleRangeRequest: t.isUseMultipleRangeRequest,
-                                    requestHeaders: e.requestHeaders
-                                }).download()
-                            } catch (e) {
-                                this._logger.error(`Cannot download differentially, fallback to full download: ${e.stack || e}`), l = "linux" === process.platform
-                            }
-                            l && await this.httpExecutor.download(r.url, o, i), await (0, a().chmod)(o, 493)
-                        }
-                    })
-                }
-
-                doInstall(e) {
-                    const t = process.env.APPIMAGE;
-                    if (null == t) throw (0, n().newError)("APPIMAGE env is not defined", "ERR_UPDATER_OLD_FILE_NOT_FOUND");
-                    let r;
-                    (0, i.unlinkSync)(t);
-                    const a = s.basename(t);
-                    r = s.basename(e.installerPath) !== a && /\d+\.\d+\.\d+/.test(a) ? s.join(s.dirname(t), s.basename(e.installerPath)) : t, (0, o().execFileSync)("mv", ["-f", e.installerPath, r]);
-                    const l = Object.assign({}, process.env, {APPIMAGE_SILENT_INSTALL: "true"});
-                    return e.isForceRunAfter ? (0, o().spawn)(r, [], {
-                        detached: !0,
-                        stdio: "ignore",
-                        env: l
-                    }).unref() : (l.APPIMAGE_EXIT_AFTER_INSTALL = "true", (0, o().execFileSync)(r, [], {env: l})), !0
-                }
-            }
-
-            t.g = d
-        },
+        // electron-updater/AppUpdater
         96064: (e, t, r) => {
             "use strict";
 
@@ -27838,6 +27980,7 @@
 
             t.NoOpLogger = y
         },
+        // electron-updater/BaseUpdater
         86216: (e, t, r) => {
             "use strict";
 
@@ -27896,6 +28039,7 @@
 
             t.BaseUpdater = o
         },
+        // electron-updater/DownloadedUpdateHelper
         17660: (e, t, r) => {
             "use strict";
 
@@ -28017,6 +28161,7 @@
                 }
             }
         },
+        // electron-updater/ElectronAppAdapter
         33200: (e, t, r) => {
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.ElectronAppAdapter = void 0;
@@ -28079,6 +28224,8 @@
                 }
             }
         },
+
+        // electron-updater/MacUpdater
         95136: (e, t, r) => {
             "use strict";
 
@@ -28203,6 +28350,7 @@
 
             t.t = c
         },
+        // electron-updater/NsisUpdater
         35778: (e, t, r) => {
             "use strict";
 
@@ -28414,6 +28562,119 @@
 
             t.p = m
         },
+        // electron-updater/AppImageUpdater
+        49619: (e, t, r) => {
+            "use strict";
+
+            function n() {
+                const e = r(79529);
+                return n = function () {
+                    return e
+                }, e
+            }
+
+            function o() {
+                const e = r(35317);
+                return o = function () {
+                    return e
+                }, e
+            }
+
+            function a() {
+                const e = r(80115);
+                return a = function () {
+                    return e
+                }, e
+            }
+
+            t.g = void 0;
+            var i = r(79896), s = function (e) {
+                if (e && e.__esModule) return e;
+                var t = {};
+                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
+                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
+                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
+                }
+                return t.default = e, t
+            }(r(16928));
+
+            function l() {
+                const e = r(86216);
+                return l = function () {
+                    return e
+                }, e
+            }
+
+            function c() {
+                const e = r(37846);
+                return c = function () {
+                    return e
+                }, e
+            }
+
+            function u() {
+                const e = r(45414);
+                return u = function () {
+                    return e
+                }, e
+            }
+
+            class d extends l().BaseUpdater {
+                constructor(e, t) {
+                    super(e, t)
+                }
+
+                isUpdaterActive() {
+                    return null == process.env.APPIMAGE ? (null == process.env.SNAP ? this._logger.warn("APPIMAGE env is not defined, current application is not an AppImage") : this._logger.info("SNAP env is defined, updater is disabled"), !1) : super.isUpdaterActive()
+                }
+
+                doDownloadUpdate(e) {
+                    const t = e.updateInfoAndProvider.provider,
+                        r = (0, u().findFile)(t.resolveFiles(e.updateInfoAndProvider.info), "AppImage");
+                    return this.executeDownload({
+                        fileExtension: "AppImage",
+                        fileInfo: r,
+                        downloadUpdateOptions: e,
+                        task: async (o, i) => {
+                            const s = process.env.APPIMAGE;
+                            if (null == s) throw (0, n().newError)("APPIMAGE env is not defined", "ERR_UPDATER_OLD_FILE_NOT_FOUND");
+                            let l = !1;
+                            try {
+                                await new (c().FileWithEmbeddedBlockMapDifferentialDownloader)(r.info, this.httpExecutor, {
+                                    newUrl: r.url,
+                                    oldFile: s,
+                                    logger: this._logger,
+                                    newFile: o,
+                                    isUseMultipleRangeRequest: t.isUseMultipleRangeRequest,
+                                    requestHeaders: e.requestHeaders
+                                }).download()
+                            } catch (e) {
+                                this._logger.error(`Cannot download differentially, fallback to full download: ${e.stack || e}`), l = "linux" === process.platform
+                            }
+                            l && await this.httpExecutor.download(r.url, o, i), await (0, a().chmod)(o, 493)
+                        }
+                    })
+                }
+
+                doInstall(e) {
+                    const t = process.env.APPIMAGE;
+                    if (null == t) throw (0, n().newError)("APPIMAGE env is not defined", "ERR_UPDATER_OLD_FILE_NOT_FOUND");
+                    let r;
+                    (0, i.unlinkSync)(t);
+                    const a = s.basename(t);
+                    r = s.basename(e.installerPath) !== a && /\d+\.\d+\.\d+/.test(a) ? s.join(s.dirname(t), s.basename(e.installerPath)) : t, (0, o().execFileSync)("mv", ["-f", e.installerPath, r]);
+                    const l = Object.assign({}, process.env, {APPIMAGE_SILENT_INSTALL: "true"});
+                    return e.isForceRunAfter ? (0, o().spawn)(r, [], {
+                        detached: !0,
+                        stdio: "ignore",
+                        env: l
+                    }).unref() : (l.APPIMAGE_EXIT_AFTER_INSTALL = "true", (0, o().execFileSync)(r, [], {env: l})), !0
+                }
+            }
+
+            t.g = d
+        },
+
         4558: (e, t, r) => {
             "use strict";
 
@@ -28710,6 +28971,8 @@
                 }
             }
         },
+
+        // electron-updater/differentialDownloader/FileWithEmbeddedBlockMapDifferentialDownloader
         37846: (e, t, r) => {
             "use strict";
 
@@ -28911,6 +29174,8 @@
                 return c
             }, t.checkIsRangesSupported = i
         },
+
+        // electron-updater/electronHttpExecutor
         5931: (e, t, r) => {
             "use strict";
 
@@ -28972,6 +29237,8 @@
 
             t.ElectronHttpExecutor = s
         },
+
+        // electron-updater/main.js 入口
         94625: (e, t, r) => {
             "use strict";
 
@@ -29064,6 +29331,8 @@
                 })) : e.on(t, r)
             }
         },
+
+        // electron-updater/providerFactory
         54679: (e, t, r) => {
             "use strict";
 
@@ -35882,11 +36151,20 @@
             }));
             e.exports = a
         },
-        56319: (e, t, r) => {
+        56319: (module, exports, __webpack_require) => {
             "use strict";
-            const n = r(76625), o = Symbol("max"), a = Symbol("length"), i = Symbol("lengthCalculator"),
-                s = Symbol("allowStale"), l = Symbol("maxAge"), c = Symbol("dispose"), u = Symbol("noDisposeOnSet"),
-                d = Symbol("lruList"), p = Symbol("cache"), h = Symbol("updateAgeOnGet"), f = () => 1,
+            const n = __webpack_require(76625),
+                o = Symbol("max"),
+                a = Symbol("length"),
+                i = Symbol("lengthCalculator"),
+                s = Symbol("allowStale"),
+                l = Symbol("maxAge"),
+                c = Symbol("dispose"),
+                u = Symbol("noDisposeOnSet"),
+                d = Symbol("lruList"),
+                p = Symbol("cache"),
+                h = Symbol("updateAgeOnGet"),
+                f = () => 1,
                 m = (e, t, r) => {
                     const n = e[p].get(t);
                     if (n) {
@@ -35896,16 +36174,19 @@
                         } else r && (e[h] && (n.value.now = Date.now()), e[d].unshiftNode(n));
                         return t.value
                     }
-                }, g = (e, t) => {
+                },
+                g = (e, t) => {
                     if (!t || !t.maxAge && !e[l]) return !1;
                     const r = Date.now() - t.now;
                     return t.maxAge ? r > t.maxAge : e[l] && r > e[l]
-                }, b = e => {
+                },
+                b = e => {
                     if (e[a] > e[o]) for (let t = e[d].tail; e[a] > e[o] && null !== t;) {
                         const r = t.prev;
                         v(e, t), t = r
                     }
-                }, v = (e, t) => {
+                },
+                v = (e, t) => {
                     if (t) {
                         const r = t.value;
                         e[c] && e[c](r.key, r.value), e[a] -= r.length, e[p].delete(r.key), e[d].removeNode(t)
@@ -35913,22 +36194,42 @@
                 };
 
             class y {
-                constructor(e, t, r, n, o) {
-                    this.key = e, this.value = t, this.length = r, this.now = n, this.maxAge = o || 0
+                constructor(key, value, length, now, maxAge) {
+                    this.key = key
+                    this.value = value
+                    this.length = length
+                    this.now = now
+                    this.maxAge = maxAge || 0
                 }
             }
 
             const w = (e, t, r, n) => {
                 let o = r.value;
-                g(e, o) && (v(e, r), e[s] || (o = void 0)), o && t.call(n, o.value, o.key, e)
+                g(e, o) && (v(e, r), e[s] || (o = void 0))
+                o && t.call(n, o.value, o.key, e)
             };
-            e.exports = class {
+
+            module.exports = class {
                 constructor(e) {
-                    if ("number" == typeof e && (e = {max: e}), e || (e = {}), e.max && ("number" != typeof e.max || e.max < 0)) throw new TypeError("max must be a non-negative number");
+                    "number" == typeof e && (e = {max: e})
+                    if (!e) {
+                        e = {}
+                    }
+                    if (e.max && ("number" != typeof e.max || e.max < 0)) {
+                        throw new TypeError("max must be a non-negative number");
+                    }
                     this[o] = e.max || 1 / 0;
                     const t = e.length || f;
-                    if (this[i] = "function" != typeof t ? f : t, this[s] = e.stale || !1, e.maxAge && "number" != typeof e.maxAge) throw new TypeError("maxAge must be a number");
-                    this[l] = e.maxAge || 0, this[c] = e.dispose, this[u] = e.noDisposeOnSet || !1, this[h] = e.updateAgeOnGet || !1, this.reset()
+                    this[i] = "function" != typeof t ? f : t
+                    this[s] = e.stale || false
+                    if (e.maxAge && "number" != typeof e.maxAge) {
+                        throw new TypeError("maxAge must be a number");
+                    }
+                    this[l] = e.maxAge || 0
+                    this[c] = e.dispose
+                    this[u] = e.noDisposeOnSet || false
+                    this[h] = e.updateAgeOnGet || false
+                    this.reset()
                 }
 
                 set max(e) {
@@ -41847,88 +42148,142 @@
                 }
             }
         },
-        76625: (e, t, r) => {
+        // LinkedList
+        76625: (module, exports, __webpack_require) => {
             "use strict";
 
-            function n(e) {
-                var t = this;
-                if (t instanceof n || (t = new n), t.tail = null, t.head = null, t.length = 0, e && "function" == typeof e.forEach) e.forEach((function (e) {
-                    t.push(e)
-                })); else if (arguments.length > 0) for (var r = 0, o = arguments.length; r < o; r++) t.push(arguments[r]);
-                return t
+            function LinkedList(e) {
+                let _this = this
+                if (!(_this instanceof LinkedList)) {
+                    _this = new LinkedList()
+                }
+                _this.tail = null
+                _this.head = null
+                _this.length = 0
+                if (e && "function" == typeof e.forEach) {
+                    e.forEach(function (node) {
+                        _this.push(node)
+                    })
+                } else if (arguments.length > 0) {
+                    for (let i = 0, len = arguments.length; i < len; i++) {
+                        _this.push(arguments[i])
+                    }
+                }
+                return _this
             }
 
             function o(e, t, r) {
-                var n = t === e.head ? new s(r, null, t, e) : new s(r, t, t.next, e);
+                var n = t === e.head ? new Node(r, null, t, e) : new Node(r, t, t.next, e);
                 return null === n.next && (e.tail = n), null === n.prev && (e.head = n), e.length++, n
             }
 
             function a(e, t) {
-                e.tail = new s(t, e.tail, null, e), e.head || (e.head = e.tail), e.length++
+                e.tail = new Node(t, e.tail, null, e), e.head || (e.head = e.tail), e.length++
             }
 
             function i(e, t) {
-                e.head = new s(t, null, e.head, e), e.tail || (e.tail = e.head), e.length++
+                e.head = new Node(t, null, e.head, e), e.tail || (e.tail = e.head), e.length++
             }
 
-            function s(e, t, r, n) {
-                if (!(this instanceof s)) return new s(e, t, r, n);
-                this.list = n, this.value = e, t ? (t.next = this, this.prev = t) : this.prev = null, r ? (r.prev = this, this.next = r) : this.next = null
+            function Node(value, prev, next, list) {
+                if (!(this instanceof Node)) {
+                    return new Node(value, prev, next, list);
+                }
+                this.list = list
+                this.value = value
+                if (prev) {
+                    prev.next = this
+                    this.prev = prev
+                } else {
+                    this.prev = null
+                }
+                if (next) {
+                    next.prev = this
+                    this.next = next
+                } else {
+                    this.next = null
+                }
             }
 
-            e.exports = n, n.Node = s, n.create = n, n.prototype.removeNode = function (e) {
-                if (e.list !== this) throw new Error("removing node which does not belong to this list");
-                var t = e.next, r = e.prev;
-                return t && (t.prev = r), r && (r.next = t), e === this.head && (this.head = t), e === this.tail && (this.tail = r), e.list.length--, e.next = null, e.prev = null, e.list = null, t
-            }, n.prototype.unshiftNode = function (e) {
+            module.exports = LinkedList
+            LinkedList.Node = Node
+            LinkedList.create = LinkedList
+            LinkedList.prototype.removeNode = function (node) {
+                if (node.list !== this) {
+                    throw new Error("removing node which does not belong to this list");
+                }
+                var t = node.next, r = node.prev;
+                t && (t.prev = r)
+                r && (r.next = t)
+                node === this.head && (this.head = t)
+                node === this.tail && (this.tail = r)
+                node.list.length--
+                node.next = null
+                node.prev = null
+                node.list = null
+                return t
+            }
+            LinkedList.prototype.unshiftNode = function (e) {
                 if (e !== this.head) {
                     e.list && e.list.removeNode(e);
                     var t = this.head;
                     e.list = this, e.next = t, t && (t.prev = e), this.head = e, this.tail || (this.tail = e), this.length++
                 }
-            }, n.prototype.pushNode = function (e) {
+            }
+            LinkedList.prototype.pushNode = function (e) {
                 if (e !== this.tail) {
                     e.list && e.list.removeNode(e);
                     var t = this.tail;
                     e.list = this, e.prev = t, t && (t.next = e), this.tail = e, this.head || (this.head = e), this.length++
                 }
-            }, n.prototype.push = function () {
+            }
+            LinkedList.prototype.push = function () {
                 for (var e = 0, t = arguments.length; e < t; e++) a(this, arguments[e]);
                 return this.length
-            }, n.prototype.unshift = function () {
+            }
+            LinkedList.prototype.unshift = function () {
                 for (var e = 0, t = arguments.length; e < t; e++) i(this, arguments[e]);
                 return this.length
-            }, n.prototype.pop = function () {
+            }
+            LinkedList.prototype.pop = function () {
                 if (this.tail) {
                     var e = this.tail.value;
                     return this.tail = this.tail.prev, this.tail ? this.tail.next = null : this.head = null, this.length--, e
                 }
-            }, n.prototype.shift = function () {
+            }
+            LinkedList.prototype.shift = function () {
                 if (this.head) {
                     var e = this.head.value;
                     return this.head = this.head.next, this.head ? this.head.prev = null : this.tail = null, this.length--, e
                 }
-            }, n.prototype.forEach = function (e, t) {
+            }
+            LinkedList.prototype.forEach = function (e, t) {
                 t = t || this;
                 for (var r = this.head, n = 0; null !== r; n++) e.call(t, r.value, n, this), r = r.next
-            }, n.prototype.forEachReverse = function (e, t) {
+            }
+            LinkedList.prototype.forEachReverse = function (e, t) {
                 t = t || this;
                 for (var r = this.tail, n = this.length - 1; null !== r; n--) e.call(t, r.value, n, this), r = r.prev
-            }, n.prototype.get = function (e) {
+            }
+            LinkedList.prototype.get = function (e) {
                 for (var t = 0, r = this.head; null !== r && t < e; t++) r = r.next;
                 if (t === e && null !== r) return r.value
-            }, n.prototype.getReverse = function (e) {
+            }
+            LinkedList.prototype.getReverse = function (e) {
                 for (var t = 0, r = this.tail; null !== r && t < e; t++) r = r.prev;
                 if (t === e && null !== r) return r.value
-            }, n.prototype.map = function (e, t) {
+            }
+            LinkedList.prototype.map = function (e, t) {
                 t = t || this;
-                for (var r = new n, o = this.head; null !== o;) r.push(e.call(t, o.value, this)), o = o.next;
+                for (var r = new LinkedList, o = this.head; null !== o;) r.push(e.call(t, o.value, this)), o = o.next;
                 return r
-            }, n.prototype.mapReverse = function (e, t) {
+            }
+            LinkedList.prototype.mapReverse = function (e, t) {
                 t = t || this;
-                for (var r = new n, o = this.tail; null !== o;) r.push(e.call(t, o.value, this)), o = o.prev;
+                for (var r = new LinkedList, o = this.tail; null !== o;) r.push(e.call(t, o.value, this)), o = o.prev;
                 return r
-            }, n.prototype.reduce = function (e, t) {
+            }
+            LinkedList.prototype.reduce = function (e, t) {
                 var r, n = this.head;
                 if (arguments.length > 1) r = t; else {
                     if (!this.head) throw new TypeError("Reduce of empty list with no initial value");
@@ -41936,7 +42291,8 @@
                 }
                 for (var o = 0; null !== n; o++) r = e(r, n.value, o), n = n.next;
                 return r
-            }, n.prototype.reduceReverse = function (e, t) {
+            }
+            LinkedList.prototype.reduceReverse = function (e, t) {
                 var r, n = this.tail;
                 if (arguments.length > 1) r = t; else {
                     if (!this.tail) throw new TypeError("Reduce of empty list with no initial value");
@@ -41944,135 +42300,166 @@
                 }
                 for (var o = this.length - 1; null !== n; o--) r = e(r, n.value, o), n = n.prev;
                 return r
-            }, n.prototype.toArray = function () {
+            }
+            LinkedList.prototype.toArray = function () {
                 for (var e = new Array(this.length), t = 0, r = this.head; null !== r; t++) e[t] = r.value, r = r.next;
                 return e
-            }, n.prototype.toArrayReverse = function () {
+            }
+            LinkedList.prototype.toArrayReverse = function () {
                 for (var e = new Array(this.length), t = 0, r = this.tail; null !== r; t++) e[t] = r.value, r = r.prev;
                 return e
-            }, n.prototype.slice = function (e, t) {
+            }
+            LinkedList.prototype.slice = function (e, t) {
                 (t = t || this.length) < 0 && (t += this.length), (e = e || 0) < 0 && (e += this.length);
-                var r = new n;
+                var r = new LinkedList;
                 if (t < e || t < 0) return r;
                 e < 0 && (e = 0), t > this.length && (t = this.length);
                 for (var o = 0, a = this.head; null !== a && o < e; o++) a = a.next;
                 for (; null !== a && o < t; o++, a = a.next) r.push(a.value);
                 return r
-            }, n.prototype.sliceReverse = function (e, t) {
+            }
+            LinkedList.prototype.sliceReverse = function (e, t) {
                 (t = t || this.length) < 0 && (t += this.length), (e = e || 0) < 0 && (e += this.length);
-                var r = new n;
+                var r = new LinkedList;
                 if (t < e || t < 0) return r;
                 e < 0 && (e = 0), t > this.length && (t = this.length);
                 for (var o = this.length, a = this.tail; null !== a && o > t; o--) a = a.prev;
                 for (; null !== a && o > e; o--, a = a.prev) r.push(a.value);
                 return r
-            }, n.prototype.splice = function (e, t, ...r) {
+            }
+            LinkedList.prototype.splice = function (e, t, ...r) {
                 e > this.length && (e = this.length - 1), e < 0 && (e = this.length + e);
                 for (var n = 0, a = this.head; null !== a && n < e; n++) a = a.next;
                 var i = [];
                 for (n = 0; a && n < t; n++) i.push(a.value), a = this.removeNode(a);
                 for (null === a && (a = this.tail), a !== this.head && a !== this.tail && (a = a.prev), n = 0; n < r.length; n++) a = o(this, a, r[n]);
                 return i
-            }, n.prototype.reverse = function () {
+            }
+            LinkedList.prototype.reverse = function () {
                 for (var e = this.head, t = this.tail, r = e; null !== r; r = r.prev) {
                     var n = r.prev;
                     r.prev = r.next, r.next = n
                 }
                 return this.head = t, this.tail = e, this
             };
+
             try {
-                r(99209)(n)
+                __webpack_require(99209)(LinkedList)
             } catch (e) {
             }
         },
-        4482: e => {
+        // electron
+        4482: module => {
             "use strict";
-            e.exports = require("electron")
+            module.exports = require("electron")
         },
-        34681: e => {
+        // node-mac-window
+        34681: module => {
             "use strict";
-            e.exports = require("node-mac-window")
+            module.exports = require("node-mac-window")
         },
-        16857: e => {
+        // url
+        16857: module => {
             "use strict";
-            e.exports = require("url")
+            module.exports = require("url")
         },
-        42613: e => {
+        // assert
+        42613: module => {
             "use strict";
-            e.exports = require("assert")
+            module.exports = require("assert")
         },
-        35317: e => {
+        // child_process
+        35317: module => {
             "use strict";
-            e.exports = require("child_process")
+            module.exports = require("child_process")
         },
-        49140: e => {
+        // constants
+        49140: module => {
             "use strict";
-            e.exports = require("constants")
+            module.exports = require("constants")
         },
-        76982: e => {
+        // crypto
+        76982: module => {
             "use strict";
-            e.exports = require("crypto")
+            module.exports = require("crypto")
         },
-        24434: e => {
+        // events
+        24434: module => {
             "use strict";
-            e.exports = require("events")
+            module.exports = require("events")
         },
-        79896: e => {
+        // fs
+        79896: module => {
             "use strict";
-            e.exports = require("fs")
+            module.exports = require("fs")
         },
-        58611: e => {
+        // http
+        58611: module => {
             "use strict";
-            e.exports = require("http")
+            module.exports = require("http")
         },
-        65692: e => {
+        // https
+        65692: module => {
             "use strict";
-            e.exports = require("https")
+            module.exports = require("https")
         },
-        69278: e => {
+        // net
+        69278: module => {
             "use strict";
-            e.exports = require("net")
+            module.exports = require("net")
         },
-        57075: e => {
+        // node:stream
+        57075: module => {
             "use strict";
-            e.exports = require("node:stream")
+            module.exports = require("node:stream")
         },
-        70857: e => {
+        // os
+        70857: module => {
             "use strict";
-            e.exports = require("os")
+            module.exports = require("os")
         },
-        16928: e => {
+        // path
+        16928: module => {
             "use strict";
-            e.exports = require("path")
+            module.exports = require("path")
         },
-        83480: e => {
+        // querystring
+        83480: module => {
             "use strict";
-            e.exports = require("querystring")
+            module.exports = require("querystring")
         },
-        2203: e => {
+        // stream
+        2203: module => {
             "use strict";
-            e.exports = require("stream")
+            module.exports = require("stream")
         },
-        13193: e => {
+        // string_decoder
+        13193: module => {
             "use strict";
-            e.exports = require("string_decoder")
+            module.exports = require("string_decoder")
         },
-        64756: e => {
+        // tls
+        64756: module => {
             "use strict";
-            e.exports = require("tls")
+            module.exports = require("tls")
         },
-        52018: e => {
+        // tty
+        52018: module => {
             "use strict";
-            e.exports = require("tty")
+            module.exports = require("tty")
         },
-        39023: e => {
+        // util
+        39023: module => {
             "use strict";
-            e.exports = require("util")
+            module.exports = require("util")
         },
-        28167: e => {
+        // worker_threads
+        28167: module => {
             "use strict";
-            e.exports = require("worker_threads")
+            module.exports = require("worker_threads")
         },
+
+
         63853: (e, t, r) => {
             "use strict";
             var n, o = Object.defineProperty, a = Object.getOwnPropertyDescriptor, i = Object.getOwnPropertyNames,
@@ -44306,25 +44693,47 @@
                 return r
             }
         },
-        29069: e => {
+        29069: module => {
             "use strict";
-            var t, r = Object.defineProperty, n = Object.getOwnPropertyDescriptor, o = Object.getOwnPropertyNames,
-                a = Object.prototype.hasOwnProperty, i = {};
+            var t,
+                __defineProperty = Object.defineProperty,
+                __getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
+                __getOwnPropertyNames = Object.getOwnPropertyNames,
+                __hasOwnProperty = Object.prototype.hasOwnProperty,
+                i = {};
 
             function s(e) {
                 return ({dispatch: t, getState: r}) => n => o => "function" == typeof o ? o(t, r, e) : n(o)
             }
 
-            ((e, t) => {
-                for (var n in t) r(e, n, {get: t[n], enumerable: !0})
-            })(i, {thunk: () => l, withExtraArgument: () => c}), e.exports = (t = i, ((e, t, i, s) => {
-                if (t && "object" == typeof t || "function" == typeof t) for (let i of o(t)) a.call(e, i) || undefined === i || r(e, i, {
-                    get: () => t[i],
-                    enumerable: !(s = n(t, i)) || s.enumerable
-                });
-                return e
-            })(r({}, "__esModule", {value: !0}), t));
-            var l = s(), c = s
+            var _thunk = s(), _withExtraArgument = s;
+
+            ((target, source) => {
+                for (let key in source) {
+                    __defineProperty(target, key, {
+                        get: source[key],
+                        enumerable: true
+                    })
+                }
+            })(i, {
+                thunk: () => _thunk,
+                withExtraArgument: () => _withExtraArgument
+            })
+
+            t = i
+            module.exports = ((mod, t, i, s) => {
+                if (t && "object" == typeof t || "function" == typeof t) {
+                    for (let key of __getOwnPropertyNames(t)) {
+                        if (!__hasOwnProperty.call(mod, key) && undefined !== key) {
+                            __defineProperty(mod, key, {
+                                get: () => t[key],
+                                enumerable: !(s = __getOwnPropertyDescriptor(t, key)) || s.enumerable
+                            })
+                        }
+                    }
+                }
+                return mod
+            })(__defineProperty({}, "__esModule", {value: true}), t)
         },
         28895: e => {
             "use strict";
@@ -45068,81 +45477,2332 @@
 
             Object.create, Object.create, "function" == typeof SuppressedError && SuppressedError
         },
-        68272: e => {
+
+        // config
+        68272: module => {
             "use strict";
-            e.exports = JSON.parse('{"env":"production","isLocalhost":false,"domainName":"www.notion.so","domainBaseUrl":"https://www.notion.so","protocol":"notion","desktopAppId":"notion.id","offline":true,"desktopS3Url":"https://desktop-release.notion-static.com","splunkConfig":{"host":"http-inputs-notion.splunkcloud.com","path":"services/collector/raw","token":"EA76605A-F565-4B17-A496-34435622A1EB","maxBatchCount":0,"port":443}}')
+            module.exports = {
+                "env": "production",
+                "isLocalhost": false,
+                "domainName": "www.notion.so",
+                "domainBaseUrl": "https://www.notion.so",
+                "protocol": "notion",
+                "desktopAppId": "notion.id",
+                "offline": true,
+                "desktopS3Url": "https://desktop-release.notion-static.com",
+                "splunkConfig": {
+                    "host": "http-inputs-notion.splunkcloud.com",
+                    "path": "services/collector/raw",
+                    "token": "EA76605A-F565-4B17-A496-34435622A1EB",
+                    "maxBatchCount": 0,
+                    "port": 443
+                }
+            }
         },
-        16813: e => {
+
+        // da_DK
+        16813: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Kommandosøgning","desktop.tabBar.backButtonLabel":"Tilbage","desktop.tabBar.closeSidebarLabel":"Luk sidemenu","desktop.tabBar.closeTabLabel":"Luk fanen {tabTitle}","desktop.tabBar.forwardButtonLabel":"Fremad","desktop.tabBar.loadingPlaceholder":"Indlæser …","desktop.tabBar.newTabButtonLabel":"Ny fane","desktop.tabBar.openSidebarLabel":"Åbn sidemenu","desktopInstaller.failedToMove.detail":"Vi kunne ikke flytte appen til din applikationsmappe. Flyt den manuelt.","desktopInstaller.failedToMove.title":"Kunne ikke flytte app","desktopInstaller.invalidInstallDialog.cancelButton.label":"Annullér","desktopInstaller.invalidInstallDialog.confirmMove":"Din Notion-applikation er ikke installeret korrekt. Må vi flytte din Notion-app til din applikationsmappe?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ugyldig installation","desktopSearch.doneButton.label":"Færdig","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} match} andre {{matchCount} matches}}","desktopSearch.noResults.message":"Ikke fundet","desktopTopbar.appMenu.about":"Om Notion","desktopTopbar.appMenu.checkForUpdate":"Tjek for opdateringer...","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du bruger den nyeste version af Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Tjek for opdateringer","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"En ny version af Notion er tilgængelig og downloades i øjeblikket i baggrunden. Tak, fordi du holder dig opdateret!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion kunne ikke oprette forbindelse til opdateringsserveren, enten på grund af et problem med din internetforbindelse eller selve opdateringsserveren. Prøv igen senere.","desktopTopbar.appMenu.downloadingUpdate":"Downloader opdatering ({percentage} %)","desktopTopbar.appMenu.hide":"Skjul Notion","desktopTopbar.appMenu.hideOthers":"Skjul andre","desktopTopbar.appMenu.preferences":"Indstillinger...","desktopTopbar.appMenu.quit":"Afslut","desktopTopbar.appMenu.quitWithoutSavingTabs":"Afslut uden at gemme faner","desktopTopbar.appMenu.restartToApplyUpdate":"Genstart for at anvende opdateringen","desktopTopbar.appMenu.services":"Tjenester","desktopTopbar.appMenu.unhide":"Vis alle","desktopTopbar.editMenu.copy":"Kopiér","desktopTopbar.editMenu.cut":"Klip","desktopTopbar.editMenu.paste":"Indsæt","desktopTopbar.editMenu.pasteAndMatchStyle":"Indsæt og match stil","desktopTopbar.editMenu.redo":"Annullér fortryd","desktopTopbar.editMenu.selectAll":"Vælg alle","desktopTopbar.editMenu.speech":"Tale","desktopTopbar.editMenu.speech.startSpeaking":"Begynd at tale","desktopTopbar.editMenu.speech.stopSpeaking":"Stop med at tale","desktopTopbar.editMenu.title":"Rediger","desktopTopbar.editMenu.undo":"Fortryd","desktopTopbar.fileMenu.close":"Luk vindue","desktopTopbar.fileMenu.closeTab":"Luk fane","desktopTopbar.fileMenu.newTab":"Ny fane","desktopTopbar.fileMenu.newWindow":"Nyt vindue","desktopTopbar.fileMenu.print":"Udskriv ...","desktopTopbar.fileMenu.quit":"Afslut","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Afslut uden at gemme faner","desktopTopbar.fileMenu.reopenClosedTab":"Åbn den senest lukkede fane igen","desktopTopbar.fileMenu.title":"Fil","desktopTopbar.helpMenu.disableDebugLogging":"Deaktiver avanceret logning og genstart","desktopTopbar.helpMenu.disableHardwareAcceleration":"Deaktiver hardwareacceleration og genstart","desktopTopbar.helpMenu.enableDebugLogging":"Aktiver avanceret logning og genstart","desktopTopbar.helpMenu.enableHardwareAcceleration":"Aktivér hardwareacceleration og genstart","desktopTopbar.helpMenu.openConsole":"Åbn konsol...","desktopTopbar.helpMenu.openHelpAndSupport":"Åbn hjælp og dokumentation","desktopTopbar.helpMenu.recordPerformanceTrace":"Optag præstationssporing...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Ønsker du at optage en præstationssporing for de næste 30 sekunder? Når det er gjort, placeres den i din mappe Downloads.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Annullér","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Registrer præstationssporing","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Optage en præstationssporing?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Nulstil og slet alle lokale data","desktopTopbar.helpMenu.showLogsInExplorer":"Vis logfiler i Stifinder","desktopTopbar.helpMenu.showLogsInFinder":"Vis logfiler i Finder","desktopTopbar.helpMenu.title":"Hjælp","desktopTopbar.historyMenu.historyBack":"Tilbage","desktopTopbar.historyMenu.historyForward":"Fremad","desktopTopbar.historyMenu.title":"Historik","desktopTopbar.toggleDevTools":"Slå udviklerværktøjer til/fra","desktopTopbar.toggleWindowDevTools":"Slå vinduesudviklerværktøjer til/fra","desktopTopbar.troubleshootingMenu.title":"Fejlfinding","desktopTopbar.viewMenu.actualSize":"Faktisk størrelse","desktopTopbar.viewMenu.forceReload":"Tving genindlæsning","desktopTopbar.viewMenu.reload":"Genindlæs","desktopTopbar.viewMenu.showHideSidebar":"Vis/skjul sidemenu","desktopTopbar.viewMenu.title":"Visning","desktopTopbar.viewMenu.togglefullscreen":"Slå fuld skærm til/fra","desktopTopbar.viewMenu.zoomIn":"Zoom ind","desktopTopbar.viewMenu.zoomOut":"Zoom ud","desktopTopbar.whatsNewMac.title":"Åbn Nyheder i Notion til macOS","desktopTopbar.whatsNewWindows.title":"Åbn Nyheder i Notion til Windows","desktopTopbar.windowMenu.close":"Luk","desktopTopbar.windowMenu.front":"Front","desktopTopbar.windowMenu.maximize":"Maksimer","desktopTopbar.windowMenu.minimize":"Minimer","desktopTopbar.windowMenu.showNextTab":"Vis næste fane","desktopTopbar.windowMenu.showPreviousTab":"Vis forrige fane","desktopTopbar.windowMenu.title":"Vindue","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Explorer:","desktopTroubleshooting.showLogs.error.title":"Visning af logfilerne mislykkedes","menuBarIcon.menu.enableQuickSearch":"Aktiver Hurtig søgning","menuBarIcon.menu.keepInBackground":"Hold i baggrunden","menuBarIcon.menu.launchPreferences":"Åbn Indstillinger","menuBarIcon.menu.openOnLogin":"Åbn Notion ved Login","menuBarIcon.menu.quitNotion":"Afslut Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Skift genvej til Kommandosøgning","menuBarIcon.menu.showImmediately":"Vis øjeblikkeligt","menuBarIcon.menu.showNotionInMenuBar":"Vis Notion i menulinjen","menuBarIcon.menu.toggleCommandSearch":"Slå Kommandosøgning til/fra","openAtLogin.dialog.detail":"{operatingSystem} forhindrede Notion i at konfigurere indstillingen \'Åbn ved login\'. Dette sker normalt, når Notions opstart er blevet konfigureret i systemindstillingerne, eller hvis du ikke har tilstrækkelig tilladelse. Du kan stadig konfigurere denne indstilling manuelt i systemindstillingerne.","openAtLogin.dialog.title":"Åbn ved Login","updatePrompt.detail":"Vil du gerne installere det nu? Vi åbner dine vinduer og faner igen for dig.","updatePrompt.installAndRelaunch":"Installer og genstart","updatePrompt.message":"Ny version af Notion er tilgængelig!","updatePrompt.remindMeLater":"Påmind mig senere","window.loadingError.message":"Fejl ved indlæsning af Notion, opret forbindelse til internettet for at komme i gang.","window.loadingError.reload":"Genindlæs","window.tabLoadingError.cancel":"Annullér","window.tabMenu.closeOtherTabs":"Luk andre faner","window.tabMenu.closeTab":"Luk fane","window.tabMenu.closeTabsToLeft":"Luk faner til venstre","window.tabMenu.closeTabsToRight":"Luk faner til højre","window.tabMenu.copyLink":"Kopiér link","window.tabMenu.duplicateTab":"Dupliker fane","window.tabMenu.moveToNewWindow":"Flyt fanen til nyt vindue","window.tabMenu.refresh":"Opdater fane"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion - Kommandosøgning",
+                "desktop.tabBar.backButtonLabel": "Tilbage",
+                "desktop.tabBar.closeSidebarLabel": "Luk sidemenu",
+                "desktop.tabBar.closeTabLabel": "Luk fanen {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Fremad",
+                "desktop.tabBar.loadingPlaceholder": "Indlæser …",
+                "desktop.tabBar.newTabButtonLabel": "Ny fane",
+                "desktop.tabBar.openSidebarLabel": "Åbn sidemenu",
+                "desktopInstaller.failedToMove.detail": "Vi kunne ikke flytte appen til din applikationsmappe. Flyt den manuelt.",
+                "desktopInstaller.failedToMove.title": "Kunne ikke flytte app",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Annullér",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Din Notion-applikation er ikke installeret korrekt. Må vi flytte din Notion-app til din applikationsmappe?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Ugyldig installation",
+                "desktopSearch.doneButton.label": "Færdig",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} match} andre {{matchCount} matches}}",
+                "desktopSearch.noResults.message": "Ikke fundet",
+                "desktopTopbar.appMenu.about": "Om Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Tjek for opdateringer...",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Du bruger den nyeste version af Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Tjek for opdateringer",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "En ny version af Notion er tilgængelig og downloades i øjeblikket i baggrunden. Tak, fordi du holder dig opdateret!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion kunne ikke oprette forbindelse til opdateringsserveren, enten på grund af et problem med din internetforbindelse eller selve opdateringsserveren. Prøv igen senere.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Downloader opdatering ({percentage} %)",
+                "desktopTopbar.appMenu.hide": "Skjul Notion",
+                "desktopTopbar.appMenu.hideOthers": "Skjul andre",
+                "desktopTopbar.appMenu.preferences": "Indstillinger...",
+                "desktopTopbar.appMenu.quit": "Afslut",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Afslut uden at gemme faner",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Genstart for at anvende opdateringen",
+                "desktopTopbar.appMenu.services": "Tjenester",
+                "desktopTopbar.appMenu.unhide": "Vis alle",
+                "desktopTopbar.editMenu.copy": "Kopiér",
+                "desktopTopbar.editMenu.cut": "Klip",
+                "desktopTopbar.editMenu.paste": "Indsæt",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Indsæt og match stil",
+                "desktopTopbar.editMenu.redo": "Annullér fortryd",
+                "desktopTopbar.editMenu.selectAll": "Vælg alle",
+                "desktopTopbar.editMenu.speech": "Tale",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Begynd at tale",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Stop med at tale",
+                "desktopTopbar.editMenu.title": "Rediger",
+                "desktopTopbar.editMenu.undo": "Fortryd",
+                "desktopTopbar.fileMenu.close": "Luk vindue",
+                "desktopTopbar.fileMenu.closeTab": "Luk fane",
+                "desktopTopbar.fileMenu.newTab": "Ny fane",
+                "desktopTopbar.fileMenu.newWindow": "Nyt vindue",
+                "desktopTopbar.fileMenu.print": "Udskriv ...",
+                "desktopTopbar.fileMenu.quit": "Afslut",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Afslut uden at gemme faner",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Åbn den senest lukkede fane igen",
+                "desktopTopbar.fileMenu.title": "Fil",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Deaktiver avanceret logning og genstart",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Deaktiver hardwareacceleration og genstart",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Aktiver avanceret logning og genstart",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Aktivér hardwareacceleration og genstart",
+                "desktopTopbar.helpMenu.openConsole": "Åbn konsol...",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Åbn hjælp og dokumentation",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Optag præstationssporing...",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Ønsker du at optage en præstationssporing for de næste 30 sekunder? Når det er gjort, placeres den i din mappe Downloads.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Annullér",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Registrer præstationssporing",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Optage en præstationssporing?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Nulstil og slet alle lokale data",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Vis logfiler i Stifinder",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Vis logfiler i Finder",
+                "desktopTopbar.helpMenu.title": "Hjælp",
+                "desktopTopbar.historyMenu.historyBack": "Tilbage",
+                "desktopTopbar.historyMenu.historyForward": "Fremad",
+                "desktopTopbar.historyMenu.title": "Historik",
+                "desktopTopbar.toggleDevTools": "Slå udviklerværktøjer til/fra",
+                "desktopTopbar.toggleWindowDevTools": "Slå vinduesudviklerværktøjer til/fra",
+                "desktopTopbar.troubleshootingMenu.title": "Fejlfinding",
+                "desktopTopbar.viewMenu.actualSize": "Faktisk størrelse",
+                "desktopTopbar.viewMenu.forceReload": "Tving genindlæsning",
+                "desktopTopbar.viewMenu.reload": "Genindlæs",
+                "desktopTopbar.viewMenu.showHideSidebar": "Vis/skjul sidemenu",
+                "desktopTopbar.viewMenu.title": "Visning",
+                "desktopTopbar.viewMenu.togglefullscreen": "Slå fuld skærm til/fra",
+                "desktopTopbar.viewMenu.zoomIn": "Zoom ind",
+                "desktopTopbar.viewMenu.zoomOut": "Zoom ud",
+                "desktopTopbar.whatsNewMac.title": "Åbn Nyheder i Notion til macOS",
+                "desktopTopbar.whatsNewWindows.title": "Åbn Nyheder i Notion til Windows",
+                "desktopTopbar.windowMenu.close": "Luk",
+                "desktopTopbar.windowMenu.front": "Front",
+                "desktopTopbar.windowMenu.maximize": "Maksimer",
+                "desktopTopbar.windowMenu.minimize": "Minimer",
+                "desktopTopbar.windowMenu.showNextTab": "Vis næste fane",
+                "desktopTopbar.windowMenu.showPreviousTab": "Vis forrige fane",
+                "desktopTopbar.windowMenu.title": "Vindue",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion stødte på en fejl, mens programmet forsøgte at vise logfilerne i Explorer:",
+                "desktopTroubleshooting.showLogs.error.title": "Visning af logfilerne mislykkedes",
+                "menuBarIcon.menu.enableQuickSearch": "Aktiver Hurtig søgning",
+                "menuBarIcon.menu.keepInBackground": "Hold i baggrunden",
+                "menuBarIcon.menu.launchPreferences": "Åbn Indstillinger",
+                "menuBarIcon.menu.openOnLogin": "Åbn Notion ved Login",
+                "menuBarIcon.menu.quitNotion": "Afslut Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Skift genvej til Kommandosøgning",
+                "menuBarIcon.menu.showImmediately": "Vis øjeblikkeligt",
+                "menuBarIcon.menu.showNotionInMenuBar": "Vis Notion i menulinjen",
+                "menuBarIcon.menu.toggleCommandSearch": "Slå Kommandosøgning til/fra",
+                "openAtLogin.dialog.detail": "{operatingSystem} forhindrede Notion i at konfigurere indstillingen 'Åbn ved login'. Dette sker normalt, når Notions opstart er blevet konfigureret i systemindstillingerne, eller hvis du ikke har tilstrækkelig tilladelse. Du kan stadig konfigurere denne indstilling manuelt i systemindstillingerne.",
+                "openAtLogin.dialog.title": "Åbn ved Login",
+                "updatePrompt.detail": "Vil du gerne installere det nu? Vi åbner dine vinduer og faner igen for dig.",
+                "updatePrompt.installAndRelaunch": "Installer og genstart",
+                "updatePrompt.message": "Ny version af Notion er tilgængelig!",
+                "updatePrompt.remindMeLater": "Påmind mig senere",
+                "window.loadingError.message": "Fejl ved indlæsning af Notion, opret forbindelse til internettet for at komme i gang.",
+                "window.loadingError.reload": "Genindlæs",
+                "window.tabLoadingError.cancel": "Annullér",
+                "window.tabMenu.closeOtherTabs": "Luk andre faner",
+                "window.tabMenu.closeTab": "Luk fane",
+                "window.tabMenu.closeTabsToLeft": "Luk faner til venstre",
+                "window.tabMenu.closeTabsToRight": "Luk faner til højre",
+                "window.tabMenu.copyLink": "Kopiér link",
+                "window.tabMenu.duplicateTab": "Dupliker fane",
+                "window.tabMenu.moveToNewWindow": "Flyt fanen til nyt vindue",
+                "window.tabMenu.refresh": "Opdater fane"
+            }
         },
-        39687: e => {
+        // de_DE
+        39687: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion – Direktsuche","desktop.tabBar.backButtonLabel":"Zurück","desktop.tabBar.closeSidebarLabel":"Seitenleiste schließen","desktop.tabBar.closeTabLabel":"Tab schließen, {tabTitle}","desktop.tabBar.forwardButtonLabel":"Weiter","desktop.tabBar.loadingPlaceholder":"Wird geladen …","desktop.tabBar.newTabButtonLabel":"Neuer Tab","desktop.tabBar.openSidebarLabel":"Seitenleiste öffnen","desktopInstaller.failedToMove.detail":"Wir konnten die App nicht in deinen Anwendungsordner verschieben. Verschiebe sie bitte manuell.","desktopInstaller.failedToMove.title":"App konnte nicht verschoben werden","desktopInstaller.invalidInstallDialog.cancelButton.label":"Abbrechen","desktopInstaller.invalidInstallDialog.confirmMove":"Deine Notion-Anwendung ist nicht richtig installiert. Dürfen wir die Notion-App in deinen Anwendungsordner verschieben?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ungültige Installation","desktopSearch.doneButton.label":"Fertig","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} Treffer} other {{matchCount} Treffer}}","desktopSearch.noResults.message":"Nicht gefunden","desktopTopbar.appMenu.about":"Über Notion","desktopTopbar.appMenu.checkForUpdate":"Suche nach Updates…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du verwendest die neueste Version von Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Suche nach Updates","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Eine neue Version von Notion ist verfügbar und wird derzeit im Hintergrund heruntergeladen. Danke, dass du auf dem Laufenden bleibst!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion konnte keine Verbindung mit dem Update-Server herstellen. Dies kann an einem Problem mit deiner Internetverbindung oder dem Update-Server liegen. Bitte versuche es später erneut.","desktopTopbar.appMenu.downloadingUpdate":"Update wird heruntergeladen ({percentage}%)","desktopTopbar.appMenu.hide":"Notion verbergen","desktopTopbar.appMenu.hideOthers":"Andere verbergen","desktopTopbar.appMenu.preferences":"Einstellungen …","desktopTopbar.appMenu.quit":"Beenden","desktopTopbar.appMenu.quitWithoutSavingTabs":"Ohne Speichern von Tabs abbrechen","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Alle lokalen Daten zurücksetzen und löschen","desktopTopbar.appMenu.resetAndUpdateApp":"App zurücksetzen und aktualisieren","desktopTopbar.appMenu.restartToApplyUpdate":"Neu starten, um das Update auszuführen","desktopTopbar.appMenu.services":"Dienste","desktopTopbar.appMenu.unhide":"Alle anzeigen","desktopTopbar.editMenu.copy":"Kopieren","desktopTopbar.editMenu.cut":"Ausschneiden","desktopTopbar.editMenu.paste":"Einfügen","desktopTopbar.editMenu.pasteAndMatchStyle":"Einfügen und Stil anpassen","desktopTopbar.editMenu.redo":"Wiederholen","desktopTopbar.editMenu.selectAll":"Alles auswählen","desktopTopbar.editMenu.speech":"Sprachausgabe","desktopTopbar.editMenu.speech.startSpeaking":"Sprechen beginnen","desktopTopbar.editMenu.speech.stopSpeaking":"Sprechen beenden","desktopTopbar.editMenu.title":"Bearbeiten","desktopTopbar.editMenu.undo":"Rückgängig machen","desktopTopbar.fileMenu.close":"Fenster schließen","desktopTopbar.fileMenu.closeTab":"Tab schließen","desktopTopbar.fileMenu.newTab":"Neuer Tab","desktopTopbar.fileMenu.newWindow":"Neues Fenster","desktopTopbar.fileMenu.print":"Drucken…","desktopTopbar.fileMenu.quit":"Beenden","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Ohne Speichern von Tabs beenden","desktopTopbar.fileMenu.reopenClosedTab":"Zuletzt geschlossenen Tab erneut öffnen","desktopTopbar.fileMenu.title":"Datei","desktopTopbar.helpMenu.disableDebugLogging":"Erweitertes Anmelden deaktivieren und neu starten","desktopTopbar.helpMenu.disableHardwareAcceleration":"Hardwarebeschleunigung deaktivieren und neu starten","desktopTopbar.helpMenu.enableDebugLogging":"Erweitertes Anmelden aktivieren und neu starten","desktopTopbar.helpMenu.enableHardwareAcceleration":"Hardwarebeschleunigung aktivieren und neu starten","desktopTopbar.helpMenu.openConsole":"Konsole wird geöffnet…","desktopTopbar.helpMenu.openHelpAndSupport":"Hilfe und Dokumentation öffnen","desktopTopbar.helpMenu.recordPerformanceTrace":"Performance Trace aufzeichnen…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Möchtest du einen Leistungsnachweis für die nächsten 30 Sekunden aufzeichnen? Nach der Aufzeichnung wird dieser im Ordner „Downloads“ gespeichert.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Abbrechen","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Leistungsnachweis aufzeichnen","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Leistungsnachweis aufzeichnen?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Alle lokalen Daten zurücksetzen und löschen","desktopTopbar.helpMenu.showLogsInExplorer":"Protokolle im Explorer anzeigen","desktopTopbar.helpMenu.showLogsInFinder":"Protokolle im Finder anzeigen","desktopTopbar.helpMenu.title":"Hilfe","desktopTopbar.historyMenu.historyBack":"Zurück","desktopTopbar.historyMenu.historyForward":"Weiter","desktopTopbar.historyMenu.title":"Verlauf","desktopTopbar.toggleDevTools":"Entwicklerwerkzeuge aufklappen","desktopTopbar.toggleWindowDevTools":"Fenster-Entwicklerwerkzeuge aufklappen","desktopTopbar.troubleshootingMenu.title":"Fehlerbehebung","desktopTopbar.viewMenu.actualSize":"Tatsächliche Größe","desktopTopbar.viewMenu.forceReload":"Neuladen erzwingen","desktopTopbar.viewMenu.reload":"Neu laden","desktopTopbar.viewMenu.reloadAllTabs":"Alle Tabs neu laden","desktopTopbar.viewMenu.showHideSidebar":"Seitenleiste ein-/ausblenden","desktopTopbar.viewMenu.title":"Ansicht","desktopTopbar.viewMenu.togglefullscreen":"Vollbild umschalten","desktopTopbar.viewMenu.zoomIn":"Vergrößern","desktopTopbar.viewMenu.zoomOut":"Verkleinern","desktopTopbar.whatsNewMac.title":"Neue Funktionen in Notion für macOS ansehen","desktopTopbar.whatsNewWindows.title":"Neue Funktionen in Notion für Windows ansehen","desktopTopbar.windowMenu.close":"Schließen","desktopTopbar.windowMenu.front":"Vordergrund","desktopTopbar.windowMenu.maximize":"Maximieren","desktopTopbar.windowMenu.minimize":"Minimieren","desktopTopbar.windowMenu.showNextTab":"Nächsten Tab anzeigen","desktopTopbar.windowMenu.showPreviousTab":"Vorherigen Tab anzeigen","desktopTopbar.windowMenu.title":"Fenster","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion hat beim Versuch, die Protokolle im Finder anzuzeigen, einen Fehler festgestellt:","desktopTroubleshooting.showLogs.error.message.windows":"Notion hat beim Versuch, die Protokolle im Explorer anzuzeigen, einen Fehler festgestellt:","desktopTroubleshooting.showLogs.error.title":"Fehler beim Anzeigen der Protokolle","menuBarIcon.menu.enableQuickSearch":"Quick Search aktivieren","menuBarIcon.menu.keepInBackground":"Im Hintergrund halten","menuBarIcon.menu.launchPreferences":"Start-Einstellungen","menuBarIcon.menu.openCloseQuickSearch":"Quick Search öffnen/schließen","menuBarIcon.menu.openOnLogin":"Notion bei Anmeldung öffnen","menuBarIcon.menu.quitNotion":"Notion beenden","menuBarIcon.menu.selectCommandSearchShortcut":"Tastaturkürzel für Direktsuche ändern","menuBarIcon.menu.showImmediately":"Sofort anzeigen","menuBarIcon.menu.showNotionInMenuBar":"Notion in der Menüleiste anzeigen","menuBarIcon.menu.toggleCommandSearch":"Direktsuche umschalten","openAtLogin.dialog.detail":"{operatingSystem} hat Notion daran gehindert, die Einstellung „Bei Anmeldung öffnen“ zu konfigurieren. Dies kommt meist vor, wenn der Notion-Startvorgang in den Systemeinstellungen konfiguriert wurde oder wenn du über unzureichende Zugriffsrechte verfügst. Du kannst diese Einstellung aber manuell in den Systemeinstellungen konfigurieren.","openAtLogin.dialog.title":"Bei Anmeldung öffnen","updatePrompt.detail":"Möchtest du die Installation jetzt vornehmen? Wir öffnen dann deine Fenster und Tabs für dich erneut.","updatePrompt.installAndRelaunch":"Installieren und neu starten","updatePrompt.message":"Eine neue Version von Notion ist verfügbar!","updatePrompt.remindMeLater":"Später erinnern","window.loadingError.message":"Fehler beim Laden von Notion. Stelle eine Internet-Verbindung her, um loszulegen.","window.loadingError.reload":"Neu laden","window.tabLoadingError.cancel":"Abbrechen","window.tabMenu.closeOtherTabs":"Andere Tabs schließen","window.tabMenu.closeTab":"Tab schließen","window.tabMenu.closeTabsToLeft":"Tabs links schließen","window.tabMenu.closeTabsToRight":"Tabs rechts schließen","window.tabMenu.copyLink":"Link kopieren","window.tabMenu.duplicateTab":"Tab duplizieren","window.tabMenu.moveToNewWindow":"Tab in neues Fenster verschieben","window.tabMenu.refresh":"Tab aktualisieren"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion – Direktsuche",
+                "desktop.tabBar.backButtonLabel": "Zurück",
+                "desktop.tabBar.closeSidebarLabel": "Seitenleiste schließen",
+                "desktop.tabBar.closeTabLabel": "Tab schließen, {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Weiter",
+                "desktop.tabBar.loadingPlaceholder": "Wird geladen …",
+                "desktop.tabBar.newTabButtonLabel": "Neuer Tab",
+                "desktop.tabBar.openSidebarLabel": "Seitenleiste öffnen",
+                "desktopInstaller.failedToMove.detail": "Wir konnten die App nicht in deinen Anwendungsordner verschieben. Verschiebe sie bitte manuell.",
+                "desktopInstaller.failedToMove.title": "App konnte nicht verschoben werden",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Abbrechen",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Deine Notion-Anwendung ist nicht richtig installiert. Dürfen wir die Notion-App in deinen Anwendungsordner verschieben?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Ungültige Installation",
+                "desktopSearch.doneButton.label": "Fertig",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} Treffer} other {{matchCount} Treffer}}",
+                "desktopSearch.noResults.message": "Nicht gefunden",
+                "desktopTopbar.appMenu.about": "Über Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Suche nach Updates…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Du verwendest die neueste Version von Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Suche nach Updates",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Eine neue Version von Notion ist verfügbar und wird derzeit im Hintergrund heruntergeladen. Danke, dass du auf dem Laufenden bleibst!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion konnte keine Verbindung mit dem Update-Server herstellen. Dies kann an einem Problem mit deiner Internetverbindung oder dem Update-Server liegen. Bitte versuche es später erneut.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Update wird heruntergeladen ({percentage}%)",
+                "desktopTopbar.appMenu.hide": "Notion verbergen",
+                "desktopTopbar.appMenu.hideOthers": "Andere verbergen",
+                "desktopTopbar.appMenu.preferences": "Einstellungen …",
+                "desktopTopbar.appMenu.quit": "Beenden",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Ohne Speichern von Tabs abbrechen",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "Alle lokalen Daten zurücksetzen und löschen",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "App zurücksetzen und aktualisieren",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Neu starten, um das Update auszuführen",
+                "desktopTopbar.appMenu.services": "Dienste",
+                "desktopTopbar.appMenu.unhide": "Alle anzeigen",
+                "desktopTopbar.editMenu.copy": "Kopieren",
+                "desktopTopbar.editMenu.cut": "Ausschneiden",
+                "desktopTopbar.editMenu.paste": "Einfügen",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Einfügen und Stil anpassen",
+                "desktopTopbar.editMenu.redo": "Wiederholen",
+                "desktopTopbar.editMenu.selectAll": "Alles auswählen",
+                "desktopTopbar.editMenu.speech": "Sprachausgabe",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Sprechen beginnen",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Sprechen beenden",
+                "desktopTopbar.editMenu.title": "Bearbeiten",
+                "desktopTopbar.editMenu.undo": "Rückgängig machen",
+                "desktopTopbar.fileMenu.close": "Fenster schließen",
+                "desktopTopbar.fileMenu.closeTab": "Tab schließen",
+                "desktopTopbar.fileMenu.newTab": "Neuer Tab",
+                "desktopTopbar.fileMenu.newWindow": "Neues Fenster",
+                "desktopTopbar.fileMenu.print": "Drucken…",
+                "desktopTopbar.fileMenu.quit": "Beenden",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Ohne Speichern von Tabs beenden",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Zuletzt geschlossenen Tab erneut öffnen",
+                "desktopTopbar.fileMenu.title": "Datei",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Erweitertes Anmelden deaktivieren und neu starten",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Hardwarebeschleunigung deaktivieren und neu starten",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Erweitertes Anmelden aktivieren und neu starten",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Hardwarebeschleunigung aktivieren und neu starten",
+                "desktopTopbar.helpMenu.openConsole": "Konsole wird geöffnet…",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Hilfe und Dokumentation öffnen",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Performance Trace aufzeichnen…",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Möchtest du einen Leistungsnachweis für die nächsten 30 Sekunden aufzeichnen? Nach der Aufzeichnung wird dieser im Ordner „Downloads“ gespeichert.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Abbrechen",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Leistungsnachweis aufzeichnen",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Leistungsnachweis aufzeichnen?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Alle lokalen Daten zurücksetzen und löschen",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Protokolle im Explorer anzeigen",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Protokolle im Finder anzeigen",
+                "desktopTopbar.helpMenu.title": "Hilfe",
+                "desktopTopbar.historyMenu.historyBack": "Zurück",
+                "desktopTopbar.historyMenu.historyForward": "Weiter",
+                "desktopTopbar.historyMenu.title": "Verlauf",
+                "desktopTopbar.toggleDevTools": "Entwicklerwerkzeuge aufklappen",
+                "desktopTopbar.toggleWindowDevTools": "Fenster-Entwicklerwerkzeuge aufklappen",
+                "desktopTopbar.troubleshootingMenu.title": "Fehlerbehebung",
+                "desktopTopbar.viewMenu.actualSize": "Tatsächliche Größe",
+                "desktopTopbar.viewMenu.forceReload": "Neuladen erzwingen",
+                "desktopTopbar.viewMenu.reload": "Neu laden",
+                "desktopTopbar.viewMenu.reloadAllTabs": "Alle Tabs neu laden",
+                "desktopTopbar.viewMenu.showHideSidebar": "Seitenleiste ein-/ausblenden",
+                "desktopTopbar.viewMenu.title": "Ansicht",
+                "desktopTopbar.viewMenu.togglefullscreen": "Vollbild umschalten",
+                "desktopTopbar.viewMenu.zoomIn": "Vergrößern",
+                "desktopTopbar.viewMenu.zoomOut": "Verkleinern",
+                "desktopTopbar.whatsNewMac.title": "Neue Funktionen in Notion für macOS ansehen",
+                "desktopTopbar.whatsNewWindows.title": "Neue Funktionen in Notion für Windows ansehen",
+                "desktopTopbar.windowMenu.close": "Schließen",
+                "desktopTopbar.windowMenu.front": "Vordergrund",
+                "desktopTopbar.windowMenu.maximize": "Maximieren",
+                "desktopTopbar.windowMenu.minimize": "Minimieren",
+                "desktopTopbar.windowMenu.showNextTab": "Nächsten Tab anzeigen",
+                "desktopTopbar.windowMenu.showPreviousTab": "Vorherigen Tab anzeigen",
+                "desktopTopbar.windowMenu.title": "Fenster",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion hat beim Versuch, die Protokolle im Finder anzuzeigen, einen Fehler festgestellt:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion hat beim Versuch, die Protokolle im Explorer anzuzeigen, einen Fehler festgestellt:",
+                "desktopTroubleshooting.showLogs.error.title": "Fehler beim Anzeigen der Protokolle",
+                "menuBarIcon.menu.enableQuickSearch": "Quick Search aktivieren",
+                "menuBarIcon.menu.keepInBackground": "Im Hintergrund halten",
+                "menuBarIcon.menu.launchPreferences": "Start-Einstellungen",
+                "menuBarIcon.menu.openCloseQuickSearch": "Quick Search öffnen/schließen",
+                "menuBarIcon.menu.openOnLogin": "Notion bei Anmeldung öffnen",
+                "menuBarIcon.menu.quitNotion": "Notion beenden",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Tastaturkürzel für Direktsuche ändern",
+                "menuBarIcon.menu.showImmediately": "Sofort anzeigen",
+                "menuBarIcon.menu.showNotionInMenuBar": "Notion in der Menüleiste anzeigen",
+                "menuBarIcon.menu.toggleCommandSearch": "Direktsuche umschalten",
+                "openAtLogin.dialog.detail": "{operatingSystem} hat Notion daran gehindert, die Einstellung „Bei Anmeldung öffnen“ zu konfigurieren. Dies kommt meist vor, wenn der Notion-Startvorgang in den Systemeinstellungen konfiguriert wurde oder wenn du über unzureichende Zugriffsrechte verfügst. Du kannst diese Einstellung aber manuell in den Systemeinstellungen konfigurieren.",
+                "openAtLogin.dialog.title": "Bei Anmeldung öffnen",
+                "updatePrompt.detail": "Möchtest du die Installation jetzt vornehmen? Wir öffnen dann deine Fenster und Tabs für dich erneut.",
+                "updatePrompt.installAndRelaunch": "Installieren und neu starten",
+                "updatePrompt.message": "Eine neue Version von Notion ist verfügbar!",
+                "updatePrompt.remindMeLater": "Später erinnern",
+                "window.loadingError.message": "Fehler beim Laden von Notion. Stelle eine Internet-Verbindung her, um loszulegen.",
+                "window.loadingError.reload": "Neu laden",
+                "window.tabLoadingError.cancel": "Abbrechen",
+                "window.tabMenu.closeOtherTabs": "Andere Tabs schließen",
+                "window.tabMenu.closeTab": "Tab schließen",
+                "window.tabMenu.closeTabsToLeft": "Tabs links schließen",
+                "window.tabMenu.closeTabsToRight": "Tabs rechts schließen",
+                "window.tabMenu.copyLink": "Link kopieren",
+                "window.tabMenu.duplicateTab": "Tab duplizieren",
+                "window.tabMenu.moveToNewWindow": "Tab in neues Fenster verschieben",
+                "window.tabMenu.refresh": "Tab aktualisieren"
+            }
         },
-        29499: e => {
+        // es_LA
+        29499: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Atajo de búsqueda","desktop.tabBar.backButtonLabel":"Atrás","desktop.tabBar.closeSidebarLabel":"Cerrar barra lateral","desktop.tabBar.closeTabLabel":"Cerrar la pestaña {tabTitle}","desktop.tabBar.forwardButtonLabel":"Adelante","desktop.tabBar.loadingPlaceholder":"Cargando…","desktop.tabBar.newTabButtonLabel":"Nueva pestaña","desktop.tabBar.openSidebarLabel":"Abrir la barra lateral","desktopInstaller.failedToMove.detail":"No pudimos mover la app a la carpeta Aplicaciones. Deberás hacerlo de forma manual.","desktopInstaller.failedToMove.title":"No se pudo mover la app","desktopInstaller.invalidInstallDialog.cancelButton.label":"Cancelar","desktopInstaller.invalidInstallDialog.confirmMove":"La aplicación de Notion no se instaló correctamente. ¿Nos das permiso para mover la app de Notion a la carpeta Aplicaciones?","desktopInstaller.invalidInstallDialog.okButton.label":"Aceptar","desktopInstaller.invalidInstallDialog.title":"Instalación no válida","desktopSearch.doneButton.label":"Listo","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} coincidencia} other {{matchCount} coincidencias}}","desktopSearch.noResults.message":"Sin resultados","desktopTopbar.appMenu.about":"Acerca de Notion","desktopTopbar.appMenu.checkForUpdate":"Buscar actualizaciones…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"¡Ya cuentas con la versión más reciente de Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Buscar actualizaciones","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Hay una nueva versión de Notion disponible y se está descargando en segundo plano. ¡Gracias por estar al día!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion no pudo conectarse con el servidor de actualización debido a un problema de la conexión a Internet o del propio servidor. Inténtalo de nuevo más tarde.","desktopTopbar.appMenu.downloadingUpdate":"Descargando actualización ({percentage} %)","desktopTopbar.appMenu.hide":"Ocultar Notion","desktopTopbar.appMenu.hideOthers":"Ocultar otros","desktopTopbar.appMenu.preferences":"Preferencias…","desktopTopbar.appMenu.quit":"Salir","desktopTopbar.appMenu.quitWithoutSavingTabs":"Cerrar sin guardar las pestañas","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Restablecer y borrar todos los datos locales","desktopTopbar.appMenu.resetAndUpdateApp":"Restablecer y actualizar la aplicación","desktopTopbar.appMenu.restartToApplyUpdate":"Reinicia para aplicar la actualización","desktopTopbar.appMenu.services":"Servicios","desktopTopbar.appMenu.unhide":"Mostrar todo","desktopTopbar.editMenu.copy":"Copiar","desktopTopbar.editMenu.cut":"Cortar","desktopTopbar.editMenu.paste":"Pegar","desktopTopbar.editMenu.pasteAndMatchStyle":"Pegar y combinar formato","desktopTopbar.editMenu.redo":"Rehacer","desktopTopbar.editMenu.selectAll":"Seleccionar todo","desktopTopbar.editMenu.speech":"Voz","desktopTopbar.editMenu.speech.startSpeaking":"Empezar locución","desktopTopbar.editMenu.speech.stopSpeaking":"Detener locución","desktopTopbar.editMenu.title":"Editar","desktopTopbar.editMenu.undo":"Deshacer","desktopTopbar.fileMenu.close":"Cerrar ventana","desktopTopbar.fileMenu.closeTab":"Cerrar pestaña","desktopTopbar.fileMenu.newTab":"Nueva pestaña","desktopTopbar.fileMenu.newWindow":"Nueva ventana","desktopTopbar.fileMenu.print":"Imprimir...","desktopTopbar.fileMenu.quit":"Salir","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Salir sin guardar las pestañas","desktopTopbar.fileMenu.reopenClosedTab":"Volver a abrir la última pestaña cerrada","desktopTopbar.fileMenu.title":"Archivo","desktopTopbar.helpMenu.disableDebugLogging":"Desactivar el inicio de sesión acelerado y reiniciar","desktopTopbar.helpMenu.disableHardwareAcceleration":"Desactivar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.enableDebugLogging":"Activar el inicio de sesión acelerado y reiniciar","desktopTopbar.helpMenu.enableHardwareAcceleration":"Activar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.openConsole":"Abrir consola…","desktopTopbar.helpMenu.openHelpAndSupport":"Abrir Ayuda y documentación","desktopTopbar.helpMenu.recordPerformanceTrace":"Grabar registro de rendimiento…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"¿Quieres grabar un registro del rendimiento de los próximos 30 segundos? Una vez que esté listo, se guardará en tu carpeta de Descargas.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Cancelar","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Grabar registro de rendimiento","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"¿Quieres grabar un registro de rendimiento?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Restablecer y borrar todos los datos locales","desktopTopbar.helpMenu.showLogsInExplorer":"Mostrar registros en Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Mostrar registros en Finder","desktopTopbar.helpMenu.title":"Ayuda","desktopTopbar.historyMenu.historyBack":"Atrás","desktopTopbar.historyMenu.historyForward":"Adelante","desktopTopbar.historyMenu.title":"Historial","desktopTopbar.toggleDevTools":"Activar/desactivar herramientas de desarrollo","desktopTopbar.toggleWindowDevTools":"Mostrar/Ocultar herramientas de desarrollo de Windows","desktopTopbar.troubleshootingMenu.title":"Solución de problemas","desktopTopbar.viewMenu.actualSize":"Tamaño original","desktopTopbar.viewMenu.forceReload":"Forzar recarga","desktopTopbar.viewMenu.reload":"Recargar","desktopTopbar.viewMenu.reloadAllTabs":"Recargar todas las pestañas","desktopTopbar.viewMenu.showHideSidebar":"Mostrar/Ocultar la barra lateral","desktopTopbar.viewMenu.title":"Ver","desktopTopbar.viewMenu.togglefullscreen":"Mostrar/ocultar pantalla completa","desktopTopbar.viewMenu.zoomIn":"Acercar","desktopTopbar.viewMenu.zoomOut":"Alejar","desktopTopbar.whatsNewMac.title":"Abrir las Novedades en Notion para macOS","desktopTopbar.whatsNewWindows.title":"Abrir las Novedades en Notion para Windows","desktopTopbar.windowMenu.close":"Cerrar","desktopTopbar.windowMenu.front":"Primer plano","desktopTopbar.windowMenu.maximize":"Maximizar","desktopTopbar.windowMenu.minimize":"Minimizar","desktopTopbar.windowMenu.showNextTab":"Mostrar pestaña siguiente","desktopTopbar.windowMenu.showPreviousTab":"Mostrar pestaña anterior","desktopTopbar.windowMenu.title":"Ventana","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion encontró un error al intentar mostrar los registros en Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion encontró un error al intentar mostrar los registros en Explorer:","desktopTroubleshooting.showLogs.error.title":"Se produjo un error al intentar mostrar los registros","menuBarIcon.menu.enableQuickSearch":"Activar búsqueda rápida","menuBarIcon.menu.keepInBackground":"Dejar en segundo plano","menuBarIcon.menu.launchPreferences":"Preferencias de inicio","menuBarIcon.menu.openCloseQuickSearch":"Abrir/cerrar búsqueda rápida","menuBarIcon.menu.openOnLogin":"Abrir Notion al iniciar sesión","menuBarIcon.menu.quitNotion":"Salir de Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Cambiar atajo del Atajo de búsqueda","menuBarIcon.menu.showImmediately":"Mostrar de inmediato","menuBarIcon.menu.showNotionInMenuBar":"Mostrar Notion en la barra de menú","menuBarIcon.menu.toggleCommandSearch":"Activar/desactivar atajo de búsqueda","openAtLogin.dialog.detail":"{operatingSystem} impidió que Notion configure la opción “Abrir al iniciar sesión”. Esto normalmente ocurre cuando el inicio de Notion se configuró desde los ajustes del sistema o no tienes permisos suficientes para hacerlo. Puedes configurar esta opción de forma manual en los ajustes del sistema.","openAtLogin.dialog.title":"Abrir al iniciar sesión","updatePrompt.detail":"¿Quieres instalarla ahora? Tus ventanas y pestañas se reabrirán de forma automática.","updatePrompt.installAndRelaunch":"Instalar y reabrir","updatePrompt.message":"¡Hay una nueva versión de Notion disponible!","updatePrompt.remindMeLater":"Recordármelo más tarde","window.loadingError.message":"Error al cargar Notion; conéctate a Internet para empezar.","window.loadingError.reload":"Recargar","window.tabLoadingError.cancel":"Cancelar","window.tabMenu.closeOtherTabs":"Cerrar las demás pestañas","window.tabMenu.closeTab":"Cerrar pestaña","window.tabMenu.closeTabsToLeft":"Cerrar pestañas a la izquierda","window.tabMenu.closeTabsToRight":"Cerrar pestañas a la derecha","window.tabMenu.copyLink":"Copiar enlace","window.tabMenu.duplicateTab":"Duplicar pestaña","window.tabMenu.moveToNewWindow":"Mover la pestaña a una nueva ventana","window.tabMenu.refresh":"Actualizar pestaña"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion - Atajo de búsqueda",
+                "desktop.tabBar.backButtonLabel": "Atrás",
+                "desktop.tabBar.closeSidebarLabel": "Cerrar barra lateral",
+                "desktop.tabBar.closeTabLabel": "Cerrar la pestaña {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Adelante",
+                "desktop.tabBar.loadingPlaceholder": "Cargando…",
+                "desktop.tabBar.newTabButtonLabel": "Nueva pestaña",
+                "desktop.tabBar.openSidebarLabel": "Abrir la barra lateral",
+                "desktopInstaller.failedToMove.detail": "No pudimos mover la app a la carpeta Aplicaciones. Deberás hacerlo de forma manual.",
+                "desktopInstaller.failedToMove.title": "No se pudo mover la app",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Cancelar",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "La aplicación de Notion no se instaló correctamente. ¿Nos das permiso para mover la app de Notion a la carpeta Aplicaciones?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "Aceptar",
+                "desktopInstaller.invalidInstallDialog.title": "Instalación no válida",
+                "desktopSearch.doneButton.label": "Listo",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} coincidencia} other {{matchCount} coincidencias}}",
+                "desktopSearch.noResults.message": "Sin resultados",
+                "desktopTopbar.appMenu.about": "Acerca de Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Buscar actualizaciones…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "¡Ya cuentas con la versión más reciente de Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Buscar actualizaciones",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Hay una nueva versión de Notion disponible y se está descargando en segundo plano. ¡Gracias por estar al día!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion no pudo conectarse con el servidor de actualización debido a un problema de la conexión a Internet o del propio servidor. Inténtalo de nuevo más tarde.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Descargando actualización ({percentage} %)",
+                "desktopTopbar.appMenu.hide": "Ocultar Notion",
+                "desktopTopbar.appMenu.hideOthers": "Ocultar otros",
+                "desktopTopbar.appMenu.preferences": "Preferencias…",
+                "desktopTopbar.appMenu.quit": "Salir",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Cerrar sin guardar las pestañas",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "Restablecer y borrar todos los datos locales",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "Restablecer y actualizar la aplicación",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Reinicia para aplicar la actualización",
+                "desktopTopbar.appMenu.services": "Servicios",
+                "desktopTopbar.appMenu.unhide": "Mostrar todo",
+                "desktopTopbar.editMenu.copy": "Copiar",
+                "desktopTopbar.editMenu.cut": "Cortar",
+                "desktopTopbar.editMenu.paste": "Pegar",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Pegar y combinar formato",
+                "desktopTopbar.editMenu.redo": "Rehacer",
+                "desktopTopbar.editMenu.selectAll": "Seleccionar todo",
+                "desktopTopbar.editMenu.speech": "Voz",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Empezar locución",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Detener locución",
+                "desktopTopbar.editMenu.title": "Editar",
+                "desktopTopbar.editMenu.undo": "Deshacer",
+                "desktopTopbar.fileMenu.close": "Cerrar ventana",
+                "desktopTopbar.fileMenu.closeTab": "Cerrar pestaña",
+                "desktopTopbar.fileMenu.newTab": "Nueva pestaña",
+                "desktopTopbar.fileMenu.newWindow": "Nueva ventana",
+                "desktopTopbar.fileMenu.print": "Imprimir...",
+                "desktopTopbar.fileMenu.quit": "Salir",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Salir sin guardar las pestañas",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Volver a abrir la última pestaña cerrada",
+                "desktopTopbar.fileMenu.title": "Archivo",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Desactivar el inicio de sesión acelerado y reiniciar",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Desactivar aceleración por hardware y reiniciar",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Activar el inicio de sesión acelerado y reiniciar",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Activar aceleración por hardware y reiniciar",
+                "desktopTopbar.helpMenu.openConsole": "Abrir consola…",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Abrir Ayuda y documentación",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Grabar registro de rendimiento…",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "¿Quieres grabar un registro del rendimiento de los próximos 30 segundos? Una vez que esté listo, se guardará en tu carpeta de Descargas.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Cancelar",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Grabar registro de rendimiento",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "¿Quieres grabar un registro de rendimiento?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Restablecer y borrar todos los datos locales",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Mostrar registros en Explorer",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Mostrar registros en Finder",
+                "desktopTopbar.helpMenu.title": "Ayuda",
+                "desktopTopbar.historyMenu.historyBack": "Atrás",
+                "desktopTopbar.historyMenu.historyForward": "Adelante",
+                "desktopTopbar.historyMenu.title": "Historial",
+                "desktopTopbar.toggleDevTools": "Activar/desactivar herramientas de desarrollo",
+                "desktopTopbar.toggleWindowDevTools": "Mostrar/Ocultar herramientas de desarrollo de Windows",
+                "desktopTopbar.troubleshootingMenu.title": "Solución de problemas",
+                "desktopTopbar.viewMenu.actualSize": "Tamaño original",
+                "desktopTopbar.viewMenu.forceReload": "Forzar recarga",
+                "desktopTopbar.viewMenu.reload": "Recargar",
+                "desktopTopbar.viewMenu.reloadAllTabs": "Recargar todas las pestañas",
+                "desktopTopbar.viewMenu.showHideSidebar": "Mostrar/Ocultar la barra lateral",
+                "desktopTopbar.viewMenu.title": "Ver",
+                "desktopTopbar.viewMenu.togglefullscreen": "Mostrar/ocultar pantalla completa",
+                "desktopTopbar.viewMenu.zoomIn": "Acercar",
+                "desktopTopbar.viewMenu.zoomOut": "Alejar",
+                "desktopTopbar.whatsNewMac.title": "Abrir las Novedades en Notion para macOS",
+                "desktopTopbar.whatsNewWindows.title": "Abrir las Novedades en Notion para Windows",
+                "desktopTopbar.windowMenu.close": "Cerrar",
+                "desktopTopbar.windowMenu.front": "Primer plano",
+                "desktopTopbar.windowMenu.maximize": "Maximizar",
+                "desktopTopbar.windowMenu.minimize": "Minimizar",
+                "desktopTopbar.windowMenu.showNextTab": "Mostrar pestaña siguiente",
+                "desktopTopbar.windowMenu.showPreviousTab": "Mostrar pestaña anterior",
+                "desktopTopbar.windowMenu.title": "Ventana",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion encontró un error al intentar mostrar los registros en Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion encontró un error al intentar mostrar los registros en Explorer:",
+                "desktopTroubleshooting.showLogs.error.title": "Se produjo un error al intentar mostrar los registros",
+                "menuBarIcon.menu.enableQuickSearch": "Activar búsqueda rápida",
+                "menuBarIcon.menu.keepInBackground": "Dejar en segundo plano",
+                "menuBarIcon.menu.launchPreferences": "Preferencias de inicio",
+                "menuBarIcon.menu.openCloseQuickSearch": "Abrir/cerrar búsqueda rápida",
+                "menuBarIcon.menu.openOnLogin": "Abrir Notion al iniciar sesión",
+                "menuBarIcon.menu.quitNotion": "Salir de Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Cambiar atajo del Atajo de búsqueda",
+                "menuBarIcon.menu.showImmediately": "Mostrar de inmediato",
+                "menuBarIcon.menu.showNotionInMenuBar": "Mostrar Notion en la barra de menú",
+                "menuBarIcon.menu.toggleCommandSearch": "Activar/desactivar atajo de búsqueda",
+                "openAtLogin.dialog.detail": "{operatingSystem} impidió que Notion configure la opción “Abrir al iniciar sesión”. Esto normalmente ocurre cuando el inicio de Notion se configuró desde los ajustes del sistema o no tienes permisos suficientes para hacerlo. Puedes configurar esta opción de forma manual en los ajustes del sistema.",
+                "openAtLogin.dialog.title": "Abrir al iniciar sesión",
+                "updatePrompt.detail": "¿Quieres instalarla ahora? Tus ventanas y pestañas se reabrirán de forma automática.",
+                "updatePrompt.installAndRelaunch": "Instalar y reabrir",
+                "updatePrompt.message": "¡Hay una nueva versión de Notion disponible!",
+                "updatePrompt.remindMeLater": "Recordármelo más tarde",
+                "window.loadingError.message": "Error al cargar Notion; conéctate a Internet para empezar.",
+                "window.loadingError.reload": "Recargar",
+                "window.tabLoadingError.cancel": "Cancelar",
+                "window.tabMenu.closeOtherTabs": "Cerrar las demás pestañas",
+                "window.tabMenu.closeTab": "Cerrar pestaña",
+                "window.tabMenu.closeTabsToLeft": "Cerrar pestañas a la izquierda",
+                "window.tabMenu.closeTabsToRight": "Cerrar pestañas a la derecha",
+                "window.tabMenu.copyLink": "Copiar enlace",
+                "window.tabMenu.duplicateTab": "Duplicar pestaña",
+                "window.tabMenu.moveToNewWindow": "Mover la pestaña a una nueva ventana",
+                "window.tabMenu.refresh": "Actualizar pestaña"
+            }
         },
-        58545: e => {
+        // es_ES
+        58545: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Atajo de búsqueda","desktop.tabBar.backButtonLabel":"Atrás","desktop.tabBar.closeSidebarLabel":"Cerrar la barra lateral","desktop.tabBar.closeTabLabel":"Cerrar pestaña {tabTitle}","desktop.tabBar.forwardButtonLabel":"Adelante","desktop.tabBar.loadingPlaceholder":"Cargando…","desktop.tabBar.newTabButtonLabel":"Nueva pestaña","desktop.tabBar.openSidebarLabel":"Abrir la barra lateral","desktopInstaller.failedToMove.detail":"No hemos podido mover la aplicación a la carpeta Aplicaciones. Intenta moverla de forma manual.","desktopInstaller.failedToMove.title":"Error al mover la aplicación","desktopInstaller.invalidInstallDialog.cancelButton.label":"Cancelar","desktopInstaller.invalidInstallDialog.confirmMove":"La aplicación de Notion no se ha instalado correctamente. ¿Quieres que movamos la aplicación de Notion a la carpeta Aplicaciones?","desktopInstaller.invalidInstallDialog.okButton.label":"Aceptar","desktopInstaller.invalidInstallDialog.title":"Instalación no válida","desktopSearch.doneButton.label":"Listo","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} coincidencia} other {{matchCount} coincidencias}}","desktopSearch.noResults.message":"Sin resultados","desktopTopbar.appMenu.about":"Acerca de Notion","desktopTopbar.appMenu.checkForUpdate":"Buscar actualizaciones...","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"¡Tienes la última versión de Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Buscar actualizaciones","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Hay una nueva versión de Notion disponible y se está descargando en segundo plano. ¡Gracias por mantenerte al día!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion no ha podido establecer una conexión con el servidor de actualizaciones debido a un problema de la conexión a Internet o del propio servidor. Inténtalo de nuevo más tarde.","desktopTopbar.appMenu.downloadingUpdate":"Descargando la actualización ({percentage} %)","desktopTopbar.appMenu.hide":"Ocultar Notion","desktopTopbar.appMenu.hideOthers":"Ocultar otros","desktopTopbar.appMenu.preferences":"Preferencias…","desktopTopbar.appMenu.quit":"Salir","desktopTopbar.appMenu.quitWithoutSavingTabs":"Cerrar sin guardar pestañas","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Reiniciar y borrar los datos locales","desktopTopbar.appMenu.resetAndUpdateApp":"Reiniciar y actualizar la aplicación","desktopTopbar.appMenu.restartToApplyUpdate":"Reiniciar para aplicar la actualización","desktopTopbar.appMenu.services":"Servicios","desktopTopbar.appMenu.unhide":"Mostrar todo","desktopTopbar.editMenu.copy":"Copiar","desktopTopbar.editMenu.cut":"Cortar","desktopTopbar.editMenu.paste":"Pegar","desktopTopbar.editMenu.pasteAndMatchStyle":"Pegar y combinar formato","desktopTopbar.editMenu.redo":"Rehacer","desktopTopbar.editMenu.selectAll":"Seleccionar todo","desktopTopbar.editMenu.speech":"Voz","desktopTopbar.editMenu.speech.startSpeaking":"Empezar locución","desktopTopbar.editMenu.speech.stopSpeaking":"Detener locución","desktopTopbar.editMenu.title":"Editar","desktopTopbar.editMenu.undo":"Deshacer","desktopTopbar.fileMenu.close":"Cerrar ventana","desktopTopbar.fileMenu.closeTab":"Cerrar pestaña","desktopTopbar.fileMenu.newTab":"Nueva pestaña","desktopTopbar.fileMenu.newWindow":"Nueva ventana","desktopTopbar.fileMenu.print":"Imprimir…","desktopTopbar.fileMenu.quit":"Salir","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Salir sin guardar pestañas","desktopTopbar.fileMenu.reopenClosedTab":"Abrir la última pestaña cerrada","desktopTopbar.fileMenu.title":"Archivo","desktopTopbar.helpMenu.disableDebugLogging":"Desactivar el registro avanzado y reiniciar","desktopTopbar.helpMenu.disableHardwareAcceleration":"Desactivar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.enableDebugLogging":"Activar el registro avanzado y reiniciar","desktopTopbar.helpMenu.enableHardwareAcceleration":"Activar aceleración por hardware y reiniciar","desktopTopbar.helpMenu.openConsole":"Abrir consola…","desktopTopbar.helpMenu.openHelpAndSupport":"Abrir Ayuda y documentación","desktopTopbar.helpMenu.recordPerformanceTrace":"Grabar registro de rendimiento...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"¿Quieres grabar un registro de rendimiento para los próximos 30 segundos? Una vez esté listo, se guardará en tu carpeta de Descargas.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Cancelar","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Grabar registro de rendimiento","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"¿Quieres grabar un registro de rendimiento?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Reiniciar y borrar los datos locales","desktopTopbar.helpMenu.showLogsInExplorer":"Mostrar registros en Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Mostrar registros en Finder","desktopTopbar.helpMenu.title":"Ayuda","desktopTopbar.historyMenu.historyBack":"Atrás","desktopTopbar.historyMenu.historyForward":"Adelante","desktopTopbar.historyMenu.title":"Historial","desktopTopbar.toggleDevTools":"Mostrar herramientas de desarrollo","desktopTopbar.toggleWindowDevTools":"Mostrar herramientas de desarrollo","desktopTopbar.troubleshootingMenu.title":"Solución de problemas","desktopTopbar.viewMenu.actualSize":"Tamaño real","desktopTopbar.viewMenu.forceReload":"Forzar recarga","desktopTopbar.viewMenu.reload":"Actualizar","desktopTopbar.viewMenu.reloadAllTabs":"Actualizar todas las pestañas","desktopTopbar.viewMenu.showHideSidebar":"Mostrar/ocultar barra lateral","desktopTopbar.viewMenu.title":"Ver","desktopTopbar.viewMenu.togglefullscreen":"Cambiar a pantalla completa","desktopTopbar.viewMenu.zoomIn":"Acercar","desktopTopbar.viewMenu.zoomOut":"Alejar","desktopTopbar.whatsNewMac.title":"Conoce las Novedades de Notion para macOS","desktopTopbar.whatsNewWindows.title":"Conoce las novedades de Notion para Windows","desktopTopbar.windowMenu.close":"Cerrar","desktopTopbar.windowMenu.front":"Primer plano","desktopTopbar.windowMenu.maximize":"Maximizar","desktopTopbar.windowMenu.minimize":"Minimizar","desktopTopbar.windowMenu.showNextTab":"Mostrar pestaña siguiente","desktopTopbar.windowMenu.showPreviousTab":"Mostrar pestaña anterior","desktopTopbar.windowMenu.title":"Ventana","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion ha encontrado un error al intentar mostrar los registros en Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion ha encontrado un error al intentar mostrar los registros en Explorer:","desktopTroubleshooting.showLogs.error.title":"Se ha producido un error al mostrar los registros","menuBarIcon.menu.enableQuickSearch":"Activar búsqueda rápida","menuBarIcon.menu.keepInBackground":"Mantener en segundo plano","menuBarIcon.menu.launchPreferences":"Preferencias de inicio","menuBarIcon.menu.openCloseQuickSearch":"Abrir/Cerrar búsqueda rápida","menuBarIcon.menu.openOnLogin":"Abrir Notion al iniciar sesión","menuBarIcon.menu.quitNotion":"Salir de Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Cambiar acceso directo del atajo de búsqueda","menuBarIcon.menu.showImmediately":"Mostrar inmediatamente","menuBarIcon.menu.showNotionInMenuBar":"Mostrar Notion en la barra de menús","menuBarIcon.menu.toggleCommandSearch":"Activar/desactivar atajo de búsqueda","openAtLogin.dialog.detail":"{operatingSystem} ha impedido que Notion configure la opción «Abrir al iniciar sesión». Esto suele ocurrir si has configurado el inicio de Notion mediante los ajustes del sistema o si careces de los permisos necesarios. Puedes configurar esta opción de forma manual en la configuración del sistema.","openAtLogin.dialog.title":"Abrir al iniciar sesión","updatePrompt.detail":"¿Te gustaría instalarlo ahora? Volveremos a abrir tus ventanas y pestañas.","updatePrompt.installAndRelaunch":"Instalar y reiniciar","updatePrompt.message":"Hay una nueva versión de Notion disponible.","updatePrompt.remindMeLater":"Recordármelo más tarde","window.loadingError.message":"Error al cargar Notion. Conéctate a Internet para comenzar.","window.loadingError.reload":"Actualizar","window.tabLoadingError.cancel":"Cancelar","window.tabMenu.closeOtherTabs":"Cerrar otras pestañas","window.tabMenu.closeTab":"Cerrar pestaña","window.tabMenu.closeTabsToLeft":"Cerrar pestañas a la izquierda","window.tabMenu.closeTabsToRight":"Cerrar pestañas a la derecha","window.tabMenu.copyLink":"Copiar enlace","window.tabMenu.duplicateTab":"Duplicar pestaña","window.tabMenu.moveToNewWindow":"Mover pestaña a nueva ventana","window.tabMenu.refresh":"Actualizar pestaña"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion - Atajo de búsqueda",
+                "desktop.tabBar.backButtonLabel": "Atrás",
+                "desktop.tabBar.closeSidebarLabel": "Cerrar la barra lateral",
+                "desktop.tabBar.closeTabLabel": "Cerrar pestaña {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Adelante",
+                "desktop.tabBar.loadingPlaceholder": "Cargando…",
+                "desktop.tabBar.newTabButtonLabel": "Nueva pestaña",
+                "desktop.tabBar.openSidebarLabel": "Abrir la barra lateral",
+                "desktopInstaller.failedToMove.detail": "No hemos podido mover la aplicación a la carpeta Aplicaciones. Intenta moverla de forma manual.",
+                "desktopInstaller.failedToMove.title": "Error al mover la aplicación",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Cancelar",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "La aplicación de Notion no se ha instalado correctamente. ¿Quieres que movamos la aplicación de Notion a la carpeta Aplicaciones?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "Aceptar",
+                "desktopInstaller.invalidInstallDialog.title": "Instalación no válida",
+                "desktopSearch.doneButton.label": "Listo",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} coincidencia} other {{matchCount} coincidencias}}",
+                "desktopSearch.noResults.message": "Sin resultados",
+                "desktopTopbar.appMenu.about": "Acerca de Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Buscar actualizaciones...",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "¡Tienes la última versión de Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Buscar actualizaciones",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Hay una nueva versión de Notion disponible y se está descargando en segundo plano. ¡Gracias por mantenerte al día!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion no ha podido establecer una conexión con el servidor de actualizaciones debido a un problema de la conexión a Internet o del propio servidor. Inténtalo de nuevo más tarde.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Descargando la actualización ({percentage} %)",
+                "desktopTopbar.appMenu.hide": "Ocultar Notion",
+                "desktopTopbar.appMenu.hideOthers": "Ocultar otros",
+                "desktopTopbar.appMenu.preferences": "Preferencias…",
+                "desktopTopbar.appMenu.quit": "Salir",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Cerrar sin guardar pestañas",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "Reiniciar y borrar los datos locales",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "Reiniciar y actualizar la aplicación",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Reiniciar para aplicar la actualización",
+                "desktopTopbar.appMenu.services": "Servicios",
+                "desktopTopbar.appMenu.unhide": "Mostrar todo",
+                "desktopTopbar.editMenu.copy": "Copiar",
+                "desktopTopbar.editMenu.cut": "Cortar",
+                "desktopTopbar.editMenu.paste": "Pegar",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Pegar y combinar formato",
+                "desktopTopbar.editMenu.redo": "Rehacer",
+                "desktopTopbar.editMenu.selectAll": "Seleccionar todo",
+                "desktopTopbar.editMenu.speech": "Voz",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Empezar locución",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Detener locución",
+                "desktopTopbar.editMenu.title": "Editar",
+                "desktopTopbar.editMenu.undo": "Deshacer",
+                "desktopTopbar.fileMenu.close": "Cerrar ventana",
+                "desktopTopbar.fileMenu.closeTab": "Cerrar pestaña",
+                "desktopTopbar.fileMenu.newTab": "Nueva pestaña",
+                "desktopTopbar.fileMenu.newWindow": "Nueva ventana",
+                "desktopTopbar.fileMenu.print": "Imprimir…",
+                "desktopTopbar.fileMenu.quit": "Salir",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Salir sin guardar pestañas",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Abrir la última pestaña cerrada",
+                "desktopTopbar.fileMenu.title": "Archivo",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Desactivar el registro avanzado y reiniciar",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Desactivar aceleración por hardware y reiniciar",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Activar el registro avanzado y reiniciar",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Activar aceleración por hardware y reiniciar",
+                "desktopTopbar.helpMenu.openConsole": "Abrir consola…",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Abrir Ayuda y documentación",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Grabar registro de rendimiento...",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "¿Quieres grabar un registro de rendimiento para los próximos 30 segundos? Una vez esté listo, se guardará en tu carpeta de Descargas.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Cancelar",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Grabar registro de rendimiento",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "¿Quieres grabar un registro de rendimiento?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Reiniciar y borrar los datos locales",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Mostrar registros en Explorer",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Mostrar registros en Finder",
+                "desktopTopbar.helpMenu.title": "Ayuda",
+                "desktopTopbar.historyMenu.historyBack": "Atrás",
+                "desktopTopbar.historyMenu.historyForward": "Adelante",
+                "desktopTopbar.historyMenu.title": "Historial",
+                "desktopTopbar.toggleDevTools": "Mostrar herramientas de desarrollo",
+                "desktopTopbar.toggleWindowDevTools": "Mostrar herramientas de desarrollo",
+                "desktopTopbar.troubleshootingMenu.title": "Solución de problemas",
+                "desktopTopbar.viewMenu.actualSize": "Tamaño real",
+                "desktopTopbar.viewMenu.forceReload": "Forzar recarga",
+                "desktopTopbar.viewMenu.reload": "Actualizar",
+                "desktopTopbar.viewMenu.reloadAllTabs": "Actualizar todas las pestañas",
+                "desktopTopbar.viewMenu.showHideSidebar": "Mostrar/ocultar barra lateral",
+                "desktopTopbar.viewMenu.title": "Ver",
+                "desktopTopbar.viewMenu.togglefullscreen": "Cambiar a pantalla completa",
+                "desktopTopbar.viewMenu.zoomIn": "Acercar",
+                "desktopTopbar.viewMenu.zoomOut": "Alejar",
+                "desktopTopbar.whatsNewMac.title": "Conoce las Novedades de Notion para macOS",
+                "desktopTopbar.whatsNewWindows.title": "Conoce las novedades de Notion para Windows",
+                "desktopTopbar.windowMenu.close": "Cerrar",
+                "desktopTopbar.windowMenu.front": "Primer plano",
+                "desktopTopbar.windowMenu.maximize": "Maximizar",
+                "desktopTopbar.windowMenu.minimize": "Minimizar",
+                "desktopTopbar.windowMenu.showNextTab": "Mostrar pestaña siguiente",
+                "desktopTopbar.windowMenu.showPreviousTab": "Mostrar pestaña anterior",
+                "desktopTopbar.windowMenu.title": "Ventana",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion ha encontrado un error al intentar mostrar los registros en Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion ha encontrado un error al intentar mostrar los registros en Explorer:",
+                "desktopTroubleshooting.showLogs.error.title": "Se ha producido un error al mostrar los registros",
+                "menuBarIcon.menu.enableQuickSearch": "Activar búsqueda rápida",
+                "menuBarIcon.menu.keepInBackground": "Mantener en segundo plano",
+                "menuBarIcon.menu.launchPreferences": "Preferencias de inicio",
+                "menuBarIcon.menu.openCloseQuickSearch": "Abrir/Cerrar búsqueda rápida",
+                "menuBarIcon.menu.openOnLogin": "Abrir Notion al iniciar sesión",
+                "menuBarIcon.menu.quitNotion": "Salir de Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Cambiar acceso directo del atajo de búsqueda",
+                "menuBarIcon.menu.showImmediately": "Mostrar inmediatamente",
+                "menuBarIcon.menu.showNotionInMenuBar": "Mostrar Notion en la barra de menús",
+                "menuBarIcon.menu.toggleCommandSearch": "Activar/desactivar atajo de búsqueda",
+                "openAtLogin.dialog.detail": "{operatingSystem} ha impedido que Notion configure la opción «Abrir al iniciar sesión». Esto suele ocurrir si has configurado el inicio de Notion mediante los ajustes del sistema o si careces de los permisos necesarios. Puedes configurar esta opción de forma manual en la configuración del sistema.",
+                "openAtLogin.dialog.title": "Abrir al iniciar sesión",
+                "updatePrompt.detail": "¿Te gustaría instalarlo ahora? Volveremos a abrir tus ventanas y pestañas.",
+                "updatePrompt.installAndRelaunch": "Instalar y reiniciar",
+                "updatePrompt.message": "Hay una nueva versión de Notion disponible.",
+                "updatePrompt.remindMeLater": "Recordármelo más tarde",
+                "window.loadingError.message": "Error al cargar Notion. Conéctate a Internet para comenzar.",
+                "window.loadingError.reload": "Actualizar",
+                "window.tabLoadingError.cancel": "Cancelar",
+                "window.tabMenu.closeOtherTabs": "Cerrar otras pestañas",
+                "window.tabMenu.closeTab": "Cerrar pestaña",
+                "window.tabMenu.closeTabsToLeft": "Cerrar pestañas a la izquierda",
+                "window.tabMenu.closeTabsToRight": "Cerrar pestañas a la derecha",
+                "window.tabMenu.copyLink": "Copiar enlace",
+                "window.tabMenu.duplicateTab": "Duplicar pestaña",
+                "window.tabMenu.moveToNewWindow": "Mover pestaña a nueva ventana",
+                "window.tabMenu.refresh": "Actualizar pestaña"
+            }
         },
-        85395: e => {
+        // fi_FI
+        85395: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion – komentohaku","desktop.tabBar.backButtonLabel":"Takaisin","desktop.tabBar.closeSidebarLabel":"Sulje sivuvalikko","desktop.tabBar.closeTabLabel":"Sulje välilehti, {tabTitle}","desktop.tabBar.forwardButtonLabel":"Eteenpäin","desktop.tabBar.loadingPlaceholder":"Ladataan…","desktop.tabBar.newTabButtonLabel":"Uusi välilehti","desktop.tabBar.openSidebarLabel":"Avaa sivuvalikko","desktopInstaller.failedToMove.detail":"Sovelluksen siirtäminen Sovellukset-kansioon epäonnistui. Siirrä se itse.","desktopInstaller.failedToMove.title":"Sovelluksen siirtäminen epäonnistui","desktopInstaller.invalidInstallDialog.cancelButton.label":"Peruuta","desktopInstaller.invalidInstallDialog.confirmMove":"Notion-sovellustasi ei ole asennettu oikein. Voimmeko siirtää Notion-sovelluksesi Sovellukset-kansioon?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Virheellinen asennus","desktopSearch.doneButton.label":"Valmis","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} vastaavuus} other {{matchCount} vastaavuutta}}","desktopSearch.noResults.message":"Ei löytynyt","desktopTopbar.appMenu.about":"Tietoja Notionista","desktopTopbar.appMenu.checkForUpdate":"Tarkistetaan päivityksiä…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Sinulla on Notionin uusin versio käytössä!","desktopTopbar.appMenu.checkForUpdate.title":"Tarkistetaan päivityksiä","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Notionin uusi versio on saatavilla ja sitä ladataan taustalla. Kiitos, että olet ajan tasalla!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion ei onnistunut muodostamaan yhteyttä päivityspalvelimen kanssa joko Internet-yhteytesi tai itse päivityspalvelimen ongelman vuoksi. Yritä uudelleen myöhemmin.","desktopTopbar.appMenu.downloadingUpdate":"Ladataan päivitystä ({percentage} %)","desktopTopbar.appMenu.hide":"Piilota Notion","desktopTopbar.appMenu.hideOthers":"Piilota muut","desktopTopbar.appMenu.preferences":"Asetukset…","desktopTopbar.appMenu.quit":"Lopeta","desktopTopbar.appMenu.quitWithoutSavingTabs":"Sulje tallentamatta välilehtiä","desktopTopbar.appMenu.restartToApplyUpdate":"Käynnistä uudelleen päivityksen käyttöön ottamiseksi","desktopTopbar.appMenu.services":"Palvelut","desktopTopbar.appMenu.unhide":"Näytä kaikki","desktopTopbar.editMenu.copy":"Kopioi","desktopTopbar.editMenu.cut":"Leikkaa","desktopTopbar.editMenu.paste":"Liitä","desktopTopbar.editMenu.pasteAndMatchStyle":"Liitä ja muuta tyyli vastaavaksi","desktopTopbar.editMenu.redo":"Toteuta uudelleen","desktopTopbar.editMenu.selectAll":"Valitse kaikki","desktopTopbar.editMenu.speech":"Puhe","desktopTopbar.editMenu.speech.startSpeaking":"Aloita puhuminen","desktopTopbar.editMenu.speech.stopSpeaking":"Lopeta puhuminen","desktopTopbar.editMenu.title":"Muokkaa","desktopTopbar.editMenu.undo":"Kumoa","desktopTopbar.fileMenu.close":"Sulje ikkuna","desktopTopbar.fileMenu.closeTab":"Sulje välilehti","desktopTopbar.fileMenu.newTab":"Uusi välilehti","desktopTopbar.fileMenu.newWindow":"Uusi ikkuna","desktopTopbar.fileMenu.print":"Tulosta…","desktopTopbar.fileMenu.quit":"Poistu","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Poistu tallentamatta välilehtiä","desktopTopbar.fileMenu.reopenClosedTab":"Avaa viimeksi suljettu välilehti uudelleen","desktopTopbar.fileMenu.title":"Tiedosto","desktopTopbar.helpMenu.disableDebugLogging":"Poista edistynyt kirjaus käytöstä ja käynnistä uudelleen","desktopTopbar.helpMenu.disableHardwareAcceleration":"Poista laitteistokiihdytys käytöstä ja käynnistä uudelleen","desktopTopbar.helpMenu.enableDebugLogging":"Ota edistynyt kirjaus käyttöön ja käynnistä uudelleen","desktopTopbar.helpMenu.enableHardwareAcceleration":"Ota laitteistokiihdytys käyttöön ja käynnistä uudelleen","desktopTopbar.helpMenu.openConsole":"Avaa konsoli...","desktopTopbar.helpMenu.openHelpAndSupport":"Avaa ohje ja dokumentaatio","desktopTopbar.helpMenu.recordPerformanceTrace":"Tallenna suorituskyvyn seuranta...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Haluatko tallentaa suorituskyvyn seurannan seuraaville 30 sekunnille? Kun valmis, se sijoitetaan Lataukset-kansioon.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Peruuta","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Tallenna suorituskyvyn seuranta","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Tallennetaanko suorituskyvyn seuranta?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Nollaa ja poista kaikki paikalliset tiedot","desktopTopbar.helpMenu.showLogsInExplorer":"Näytä lokit resurssienhallinnassa","desktopTopbar.helpMenu.showLogsInFinder":"Näytä lokit Finderissa","desktopTopbar.helpMenu.title":"Ohje","desktopTopbar.historyMenu.historyBack":"Takaisin","desktopTopbar.historyMenu.historyForward":"Eteenpäin","desktopTopbar.historyMenu.title":"Historia","desktopTopbar.toggleDevTools":"Vaihda kehittäjän työkalujen tilaa","desktopTopbar.toggleWindowDevTools":"Vaihda ikkunoiden kehittäjän työkalujen tilaa","desktopTopbar.troubleshootingMenu.title":"Vianetsintä","desktopTopbar.viewMenu.actualSize":"Todellinen koko","desktopTopbar.viewMenu.forceReload":"Pakota uudelleenlataus","desktopTopbar.viewMenu.reload":"Lataa uudelleen","desktopTopbar.viewMenu.showHideSidebar":"Näytä/piilota sivuvalikko","desktopTopbar.viewMenu.title":"Näkymä","desktopTopbar.viewMenu.togglefullscreen":"Vaihda koko näytön tilaa","desktopTopbar.viewMenu.zoomIn":"Suurenna","desktopTopbar.viewMenu.zoomOut":"Pienennä","desktopTopbar.whatsNewMac.title":"Avaa Mitä uutta Notion macOS:lle tuo tullessaan","desktopTopbar.whatsNewWindows.title":"Avaa Mitä uutta Notion Windowsille tuo tullessaan","desktopTopbar.windowMenu.close":"Sulje","desktopTopbar.windowMenu.front":"Etuosa","desktopTopbar.windowMenu.maximize":"Suurenna","desktopTopbar.windowMenu.minimize":"Pienennä","desktopTopbar.windowMenu.showNextTab":"Näytä seuraava välilehti","desktopTopbar.windowMenu.showPreviousTab":"Näytä edellinen välilehti","desktopTopbar.windowMenu.title":"Ikkuna","desktopTopbar.windowMenu.zoom":"Zoomaa","desktopTroubleshooting.showLogs.error.message.mac":"Notion havaitsi virheen yrittäessään näyttää lokit Finderissa:","desktopTroubleshooting.showLogs.error.message.windows":"Notion havaitsi virheen yrittäessään näyttää lokit Explorerissa:","desktopTroubleshooting.showLogs.error.title":"Lokien näyttäminen epäonnistui","menuBarIcon.menu.enableQuickSearch":"Ota pikahaku käyttöön","menuBarIcon.menu.keepInBackground":"Säilytä taustalla","menuBarIcon.menu.launchPreferences":"Avaa asetukset","menuBarIcon.menu.openOnLogin":"Avaa Notion sisäänkirjautuessa","menuBarIcon.menu.quitNotion":"Lopeta Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Vaihda komentohaun pikanäppäin","menuBarIcon.menu.showImmediately":"Näytä heti","menuBarIcon.menu.showNotionInMenuBar":"Näytä Notion valikkopalkissa","menuBarIcon.menu.toggleCommandSearch":"Avaa tai sulje komentohaku","openAtLogin.dialog.detail":"{operatingSystem} esti Notionia määrittämästä ”Avaa sisäänkirjautuessa” -asetusta. Tämä tapahtuu yleensä silloin, kun Notionin käynnistys on määritetty järjestelmäasetuksissa tai jos käyttöoikeudet eivät ole riittävät. Voit silti määrittää tämän asetuksen manuaalisesti järjestelmäasetuksissa.","openAtLogin.dialog.title":"Avaa sisäänkirjautuessa","updatePrompt.detail":"Haluatko asentaa sen nyt? Avaamme ikkunat ja välilehdet uudelleen puolestasi.","updatePrompt.installAndRelaunch":"Asenna ja käynnistä uudelleen","updatePrompt.message":"Uusi Notion-versio on saatavilla!","updatePrompt.remindMeLater":"Muistuta myöhemmin","window.loadingError.message":"Virhe Notionin latauksen aikana, aloita muodostamalla yhteys Internetiin.","window.loadingError.reload":"Lataa uudelleen","window.tabLoadingError.cancel":"Peruuta","window.tabMenu.closeOtherTabs":"Sulje muut välilehdet","window.tabMenu.closeTab":"Sulje välilehti","window.tabMenu.closeTabsToLeft":"Sulje vasemmalla olevat välilehdet","window.tabMenu.closeTabsToRight":"Sulje oikealla olevat välilehdet","window.tabMenu.copyLink":"Kopioi linkki","window.tabMenu.duplicateTab":"Kopioi välilehti","window.tabMenu.moveToNewWindow":"Siirrä välilehti uuteen ikkunaan","window.tabMenu.refresh":"Päivitä välilehti"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion – komentohaku",
+                "desktop.tabBar.backButtonLabel": "Takaisin",
+                "desktop.tabBar.closeSidebarLabel": "Sulje sivuvalikko",
+                "desktop.tabBar.closeTabLabel": "Sulje välilehti, {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Eteenpäin",
+                "desktop.tabBar.loadingPlaceholder": "Ladataan…",
+                "desktop.tabBar.newTabButtonLabel": "Uusi välilehti",
+                "desktop.tabBar.openSidebarLabel": "Avaa sivuvalikko",
+                "desktopInstaller.failedToMove.detail": "Sovelluksen siirtäminen Sovellukset-kansioon epäonnistui. Siirrä se itse.",
+                "desktopInstaller.failedToMove.title": "Sovelluksen siirtäminen epäonnistui",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Peruuta",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Notion-sovellustasi ei ole asennettu oikein. Voimmeko siirtää Notion-sovelluksesi Sovellukset-kansioon?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Virheellinen asennus",
+                "desktopSearch.doneButton.label": "Valmis",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} vastaavuus} other {{matchCount} vastaavuutta}}",
+                "desktopSearch.noResults.message": "Ei löytynyt",
+                "desktopTopbar.appMenu.about": "Tietoja Notionista",
+                "desktopTopbar.appMenu.checkForUpdate": "Tarkistetaan päivityksiä…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Sinulla on Notionin uusin versio käytössä!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Tarkistetaan päivityksiä",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Notionin uusi versio on saatavilla ja sitä ladataan taustalla. Kiitos, että olet ajan tasalla!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion ei onnistunut muodostamaan yhteyttä päivityspalvelimen kanssa joko Internet-yhteytesi tai itse päivityspalvelimen ongelman vuoksi. Yritä uudelleen myöhemmin.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Ladataan päivitystä ({percentage} %)",
+                "desktopTopbar.appMenu.hide": "Piilota Notion",
+                "desktopTopbar.appMenu.hideOthers": "Piilota muut",
+                "desktopTopbar.appMenu.preferences": "Asetukset…",
+                "desktopTopbar.appMenu.quit": "Lopeta",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Sulje tallentamatta välilehtiä",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Käynnistä uudelleen päivityksen käyttöön ottamiseksi",
+                "desktopTopbar.appMenu.services": "Palvelut",
+                "desktopTopbar.appMenu.unhide": "Näytä kaikki",
+                "desktopTopbar.editMenu.copy": "Kopioi",
+                "desktopTopbar.editMenu.cut": "Leikkaa",
+                "desktopTopbar.editMenu.paste": "Liitä",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Liitä ja muuta tyyli vastaavaksi",
+                "desktopTopbar.editMenu.redo": "Toteuta uudelleen",
+                "desktopTopbar.editMenu.selectAll": "Valitse kaikki",
+                "desktopTopbar.editMenu.speech": "Puhe",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Aloita puhuminen",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Lopeta puhuminen",
+                "desktopTopbar.editMenu.title": "Muokkaa",
+                "desktopTopbar.editMenu.undo": "Kumoa",
+                "desktopTopbar.fileMenu.close": "Sulje ikkuna",
+                "desktopTopbar.fileMenu.closeTab": "Sulje välilehti",
+                "desktopTopbar.fileMenu.newTab": "Uusi välilehti",
+                "desktopTopbar.fileMenu.newWindow": "Uusi ikkuna",
+                "desktopTopbar.fileMenu.print": "Tulosta…",
+                "desktopTopbar.fileMenu.quit": "Poistu",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Poistu tallentamatta välilehtiä",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Avaa viimeksi suljettu välilehti uudelleen",
+                "desktopTopbar.fileMenu.title": "Tiedosto",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Poista edistynyt kirjaus käytöstä ja käynnistä uudelleen",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Poista laitteistokiihdytys käytöstä ja käynnistä uudelleen",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Ota edistynyt kirjaus käyttöön ja käynnistä uudelleen",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Ota laitteistokiihdytys käyttöön ja käynnistä uudelleen",
+                "desktopTopbar.helpMenu.openConsole": "Avaa konsoli...",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Avaa ohje ja dokumentaatio",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Tallenna suorituskyvyn seuranta...",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Haluatko tallentaa suorituskyvyn seurannan seuraaville 30 sekunnille? Kun valmis, se sijoitetaan Lataukset-kansioon.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Peruuta",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Tallenna suorituskyvyn seuranta",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Tallennetaanko suorituskyvyn seuranta?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Nollaa ja poista kaikki paikalliset tiedot",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Näytä lokit resurssienhallinnassa",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Näytä lokit Finderissa",
+                "desktopTopbar.helpMenu.title": "Ohje",
+                "desktopTopbar.historyMenu.historyBack": "Takaisin",
+                "desktopTopbar.historyMenu.historyForward": "Eteenpäin",
+                "desktopTopbar.historyMenu.title": "Historia",
+                "desktopTopbar.toggleDevTools": "Vaihda kehittäjän työkalujen tilaa",
+                "desktopTopbar.toggleWindowDevTools": "Vaihda ikkunoiden kehittäjän työkalujen tilaa",
+                "desktopTopbar.troubleshootingMenu.title": "Vianetsintä",
+                "desktopTopbar.viewMenu.actualSize": "Todellinen koko",
+                "desktopTopbar.viewMenu.forceReload": "Pakota uudelleenlataus",
+                "desktopTopbar.viewMenu.reload": "Lataa uudelleen",
+                "desktopTopbar.viewMenu.showHideSidebar": "Näytä/piilota sivuvalikko",
+                "desktopTopbar.viewMenu.title": "Näkymä",
+                "desktopTopbar.viewMenu.togglefullscreen": "Vaihda koko näytön tilaa",
+                "desktopTopbar.viewMenu.zoomIn": "Suurenna",
+                "desktopTopbar.viewMenu.zoomOut": "Pienennä",
+                "desktopTopbar.whatsNewMac.title": "Avaa Mitä uutta Notion macOS:lle tuo tullessaan",
+                "desktopTopbar.whatsNewWindows.title": "Avaa Mitä uutta Notion Windowsille tuo tullessaan",
+                "desktopTopbar.windowMenu.close": "Sulje",
+                "desktopTopbar.windowMenu.front": "Etuosa",
+                "desktopTopbar.windowMenu.maximize": "Suurenna",
+                "desktopTopbar.windowMenu.minimize": "Pienennä",
+                "desktopTopbar.windowMenu.showNextTab": "Näytä seuraava välilehti",
+                "desktopTopbar.windowMenu.showPreviousTab": "Näytä edellinen välilehti",
+                "desktopTopbar.windowMenu.title": "Ikkuna",
+                "desktopTopbar.windowMenu.zoom": "Zoomaa",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion havaitsi virheen yrittäessään näyttää lokit Finderissa:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion havaitsi virheen yrittäessään näyttää lokit Explorerissa:",
+                "desktopTroubleshooting.showLogs.error.title": "Lokien näyttäminen epäonnistui",
+                "menuBarIcon.menu.enableQuickSearch": "Ota pikahaku käyttöön",
+                "menuBarIcon.menu.keepInBackground": "Säilytä taustalla",
+                "menuBarIcon.menu.launchPreferences": "Avaa asetukset",
+                "menuBarIcon.menu.openOnLogin": "Avaa Notion sisäänkirjautuessa",
+                "menuBarIcon.menu.quitNotion": "Lopeta Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Vaihda komentohaun pikanäppäin",
+                "menuBarIcon.menu.showImmediately": "Näytä heti",
+                "menuBarIcon.menu.showNotionInMenuBar": "Näytä Notion valikkopalkissa",
+                "menuBarIcon.menu.toggleCommandSearch": "Avaa tai sulje komentohaku",
+                "openAtLogin.dialog.detail": "{operatingSystem} esti Notionia määrittämästä ”Avaa sisäänkirjautuessa” -asetusta. Tämä tapahtuu yleensä silloin, kun Notionin käynnistys on määritetty järjestelmäasetuksissa tai jos käyttöoikeudet eivät ole riittävät. Voit silti määrittää tämän asetuksen manuaalisesti järjestelmäasetuksissa.",
+                "openAtLogin.dialog.title": "Avaa sisäänkirjautuessa",
+                "updatePrompt.detail": "Haluatko asentaa sen nyt? Avaamme ikkunat ja välilehdet uudelleen puolestasi.",
+                "updatePrompt.installAndRelaunch": "Asenna ja käynnistä uudelleen",
+                "updatePrompt.message": "Uusi Notion-versio on saatavilla!",
+                "updatePrompt.remindMeLater": "Muistuta myöhemmin",
+                "window.loadingError.message": "Virhe Notionin latauksen aikana, aloita muodostamalla yhteys Internetiin.",
+                "window.loadingError.reload": "Lataa uudelleen",
+                "window.tabLoadingError.cancel": "Peruuta",
+                "window.tabMenu.closeOtherTabs": "Sulje muut välilehdet",
+                "window.tabMenu.closeTab": "Sulje välilehti",
+                "window.tabMenu.closeTabsToLeft": "Sulje vasemmalla olevat välilehdet",
+                "window.tabMenu.closeTabsToRight": "Sulje oikealla olevat välilehdet",
+                "window.tabMenu.copyLink": "Kopioi linkki",
+                "window.tabMenu.duplicateTab": "Kopioi välilehti",
+                "window.tabMenu.moveToNewWindow": "Siirrä välilehti uuteen ikkunaan",
+                "window.tabMenu.refresh": "Päivitä välilehti"
+            }
         },
-        61993: e => {
+        // fr_FR
+        61993: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Recherche rapide","desktop.tabBar.backButtonLabel":"Précédent","desktop.tabBar.closeSidebarLabel":"Fermer la barre latérale","desktop.tabBar.closeTabLabel":"Fermer l’onglet {tabTitle}","desktop.tabBar.forwardButtonLabel":"Suivant","desktop.tabBar.loadingPlaceholder":"Chargement…","desktop.tabBar.newTabButtonLabel":"Nouvel onglet","desktop.tabBar.openSidebarLabel":"Ouvrir la barre latérale","desktopInstaller.failedToMove.detail":"Nous n’avons pas pu déplacer l’appli vers votre dossier « Applications ». Déplacez-la manuellement.","desktopInstaller.failedToMove.title":"Le déplacement de l’appli a échoué","desktopInstaller.invalidInstallDialog.cancelButton.label":"Annuler","desktopInstaller.invalidInstallDialog.confirmMove":"Votre application Notion n’est pas installée correctement. Pouvons-nous la déplacer vers votre dossier « Applications » ?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Installation non valide","desktopSearch.doneButton.label":"Terminé","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} correspondance} other {{matchCount} correspondances}}","desktopSearch.noResults.message":"Aucun résultat","desktopTopbar.appMenu.about":"À propos de Notion","desktopTopbar.appMenu.checkForUpdate":"Recherche de mise à jour…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Vous disposez déjà de la dernière version de Notion.","desktopTopbar.appMenu.checkForUpdate.title":"Recherche de mise à jour","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Une nouvelle version de Notion est disponible et en cours de téléchargement en arrière-plan. Merci de rester à jour !","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion n’a pas pu établir de connexion avec le serveur de mise à jour, en raison d’un problème lié à votre connexion Internet ou au serveur de mise à jour. Réessayez plus tard.","desktopTopbar.appMenu.downloadingUpdate":"Téléchargement de la mise à jour ({percentage} %)","desktopTopbar.appMenu.hide":"Masquer Notion","desktopTopbar.appMenu.hideOthers":"Masquer les autres","desktopTopbar.appMenu.preferences":"Préférences…","desktopTopbar.appMenu.quit":"Quitter","desktopTopbar.appMenu.quitWithoutSavingTabs":"Quitter sans enregistrer les onglets","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Réinitialiser et effacer toutes les données locales","desktopTopbar.appMenu.resetAndUpdateApp":"Réinitialiser et mettre à jour l’application","desktopTopbar.appMenu.restartToApplyUpdate":"Redémarrer pour appliquer la mise à jour","desktopTopbar.appMenu.services":"Services","desktopTopbar.appMenu.unhide":"Tout afficher","desktopTopbar.editMenu.copy":"Copier","desktopTopbar.editMenu.cut":"Couper","desktopTopbar.editMenu.paste":"Coller","desktopTopbar.editMenu.pasteAndMatchStyle":"Coller et harmoniser le style","desktopTopbar.editMenu.redo":"Rétablir","desktopTopbar.editMenu.selectAll":"Tout sélectionner","desktopTopbar.editMenu.speech":"Voix","desktopTopbar.editMenu.speech.startSpeaking":"Commencer à parler","desktopTopbar.editMenu.speech.stopSpeaking":"Arrêter de parler","desktopTopbar.editMenu.title":"Modifier","desktopTopbar.editMenu.undo":"Annuler","desktopTopbar.fileMenu.close":"Fermer la fenêtre","desktopTopbar.fileMenu.closeTab":"Fermer l’onglet","desktopTopbar.fileMenu.newTab":"Nouvel onglet","desktopTopbar.fileMenu.newWindow":"Nouvelle fenêtre","desktopTopbar.fileMenu.print":"Imprimer…","desktopTopbar.fileMenu.quit":"Quitter","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Quitter sans enregistrer les onglets","desktopTopbar.fileMenu.reopenClosedTab":"Rouvrir le dernier onglet fermé","desktopTopbar.fileMenu.title":"Fichier","desktopTopbar.helpMenu.disableDebugLogging":"Désactiver la journalisation avancée et redémarrer","desktopTopbar.helpMenu.disableHardwareAcceleration":"Désactiver l’accélération matérielle et redémarrer","desktopTopbar.helpMenu.enableDebugLogging":"Activer la journalisation avancée et redémarrer","desktopTopbar.helpMenu.enableHardwareAcceleration":"Activer l’accélération matérielle et redémarrer","desktopTopbar.helpMenu.openConsole":"Ouvrir la console…","desktopTopbar.helpMenu.openHelpAndSupport":"Ouvrir le site d’aide et la documentation","desktopTopbar.helpMenu.recordPerformanceTrace":"Enregistrer une trace de performance…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Voulez-vous enregistrer une trace de performance pour les 30 prochaines secondes ? Une fois l’enregistrement terminé, il sera placé dans votre dossier Téléchargements.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Annuler","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Enregistrer une trace de performance","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Enregistrer une trace de performance ?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Réinitialiser et effacer toutes les données locales","desktopTopbar.helpMenu.showLogsInExplorer":"Afficher les entrées du registre dans l’explorateur","desktopTopbar.helpMenu.showLogsInFinder":"Afficher les entrées du registre dans le Finder","desktopTopbar.helpMenu.title":"Aide","desktopTopbar.historyMenu.historyBack":"Précédent","desktopTopbar.historyMenu.historyForward":"Suivant","desktopTopbar.historyMenu.title":"Historique","desktopTopbar.toggleDevTools":"Afficher les outils de développement","desktopTopbar.toggleWindowDevTools":"Afficher la fenêtre des outils de développement","desktopTopbar.troubleshootingMenu.title":"Résolution de problèmes","desktopTopbar.viewMenu.actualSize":"Taille réelle","desktopTopbar.viewMenu.forceReload":"Forcer l’actualisation","desktopTopbar.viewMenu.reload":"Recharger","desktopTopbar.viewMenu.reloadAllTabs":"Recharger tous les onglets","desktopTopbar.viewMenu.showHideSidebar":"Afficher/masquer la barre latérale","desktopTopbar.viewMenu.title":"Afficher","desktopTopbar.viewMenu.togglefullscreen":"Basculer en plein écran","desktopTopbar.viewMenu.zoomIn":"Zoomer","desktopTopbar.viewMenu.zoomOut":"Dézoomer","desktopTopbar.whatsNewMac.title":"Ouvrir les nouveautés de Notion pour macOS","desktopTopbar.whatsNewWindows.title":"Ouvrir les nouveautés de Notion pour Windows","desktopTopbar.windowMenu.close":"Fermer","desktopTopbar.windowMenu.front":"Premier plan","desktopTopbar.windowMenu.maximize":"Agrandir","desktopTopbar.windowMenu.minimize":"Réduire","desktopTopbar.windowMenu.showNextTab":"Afficher l’onglet suivant","desktopTopbar.windowMenu.showPreviousTab":"Afficher l’onglet précédent","desktopTopbar.windowMenu.title":"Fenêtre","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion a rencontré une erreur lors de l’affichage du registre dans le Finder :","desktopTroubleshooting.showLogs.error.message.windows":"Notion a rencontré une erreur lors de l’affichage du registre dans l’explorateur :","desktopTroubleshooting.showLogs.error.title":"Impossible d’afficher les entrées du registre","menuBarIcon.menu.enableQuickSearch":"Activer la recherche rapide","menuBarIcon.menu.keepInBackground":"Garder en arrière-plan","menuBarIcon.menu.launchPreferences":"Lancer les préférences","menuBarIcon.menu.openCloseQuickSearch":"Ouvrir/fermer la recherche rapide","menuBarIcon.menu.openOnLogin":"Ouvrir Notion à l’ouverture de la session","menuBarIcon.menu.quitNotion":"Quitter Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Modifier le raccourci de la recherche rapide","menuBarIcon.menu.showImmediately":"Afficher immédiatement","menuBarIcon.menu.showNotionInMenuBar":"Afficher Notion dans la barre de menu","menuBarIcon.menu.toggleCommandSearch":"Afficher/masquer la recherche rapide","openAtLogin.dialog.detail":"{operatingSystem} a empêché Notion de configurer le paramètre « Ouvrir à l’ouverture de la session ». Cela peut se produire lorsque le démarrage de Notion est configuré dans les paramètres système ou si vous ne disposez pas des autorisations d’accès requises. Vous pouvez cependant configurer cette option manuellement dans les paramètres système.","openAtLogin.dialog.title":"Ouvrir à l’ouverture de la session","updatePrompt.detail":"Voulez-vous l’installer maintenant ? Nous nous chargerons de rouvrir vos fenêtres et onglets.","updatePrompt.installAndRelaunch":"Installer et relancer","updatePrompt.message":"Une nouvelle version de Notion est disponible !","updatePrompt.remindMeLater":"Me le rappeler plus tard","window.loadingError.message":"Erreur lors du chargement de Notion, connectez-vous à Internet pour démarrer.","window.loadingError.reload":"Recharger","window.tabLoadingError.cancel":"Annuler","window.tabMenu.closeOtherTabs":"Fermer les autres onglets","window.tabMenu.closeTab":"Fermer l’onglet","window.tabMenu.closeTabsToLeft":"Fermer les onglets à gauche","window.tabMenu.closeTabsToRight":"Fermer les onglets à droite","window.tabMenu.copyLink":"Copier le lien","window.tabMenu.duplicateTab":"Dupliquer l’onglet","window.tabMenu.moveToNewWindow":"Déplacer l’onglet vers une nouvelle fenêtre","window.tabMenu.refresh":"Actualiser l’onglet"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion - Recherche rapide",
+                "desktop.tabBar.backButtonLabel": "Précédent",
+                "desktop.tabBar.closeSidebarLabel": "Fermer la barre latérale",
+                "desktop.tabBar.closeTabLabel": "Fermer l’onglet {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Suivant",
+                "desktop.tabBar.loadingPlaceholder": "Chargement…",
+                "desktop.tabBar.newTabButtonLabel": "Nouvel onglet",
+                "desktop.tabBar.openSidebarLabel": "Ouvrir la barre latérale",
+                "desktopInstaller.failedToMove.detail": "Nous n’avons pas pu déplacer l’appli vers votre dossier « Applications ». Déplacez-la manuellement.",
+                "desktopInstaller.failedToMove.title": "Le déplacement de l’appli a échoué",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Annuler",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Votre application Notion n’est pas installée correctement. Pouvons-nous la déplacer vers votre dossier « Applications » ?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Installation non valide",
+                "desktopSearch.doneButton.label": "Terminé",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} correspondance} other {{matchCount} correspondances}}",
+                "desktopSearch.noResults.message": "Aucun résultat",
+                "desktopTopbar.appMenu.about": "À propos de Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Recherche de mise à jour…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Vous disposez déjà de la dernière version de Notion.",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Recherche de mise à jour",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Une nouvelle version de Notion est disponible et en cours de téléchargement en arrière-plan. Merci de rester à jour !",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion n’a pas pu établir de connexion avec le serveur de mise à jour, en raison d’un problème lié à votre connexion Internet ou au serveur de mise à jour. Réessayez plus tard.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Téléchargement de la mise à jour ({percentage} %)",
+                "desktopTopbar.appMenu.hide": "Masquer Notion",
+                "desktopTopbar.appMenu.hideOthers": "Masquer les autres",
+                "desktopTopbar.appMenu.preferences": "Préférences…",
+                "desktopTopbar.appMenu.quit": "Quitter",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Quitter sans enregistrer les onglets",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "Réinitialiser et effacer toutes les données locales",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "Réinitialiser et mettre à jour l’application",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Redémarrer pour appliquer la mise à jour",
+                "desktopTopbar.appMenu.services": "Services",
+                "desktopTopbar.appMenu.unhide": "Tout afficher",
+                "desktopTopbar.editMenu.copy": "Copier",
+                "desktopTopbar.editMenu.cut": "Couper",
+                "desktopTopbar.editMenu.paste": "Coller",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Coller et harmoniser le style",
+                "desktopTopbar.editMenu.redo": "Rétablir",
+                "desktopTopbar.editMenu.selectAll": "Tout sélectionner",
+                "desktopTopbar.editMenu.speech": "Voix",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Commencer à parler",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Arrêter de parler",
+                "desktopTopbar.editMenu.title": "Modifier",
+                "desktopTopbar.editMenu.undo": "Annuler",
+                "desktopTopbar.fileMenu.close": "Fermer la fenêtre",
+                "desktopTopbar.fileMenu.closeTab": "Fermer l’onglet",
+                "desktopTopbar.fileMenu.newTab": "Nouvel onglet",
+                "desktopTopbar.fileMenu.newWindow": "Nouvelle fenêtre",
+                "desktopTopbar.fileMenu.print": "Imprimer…",
+                "desktopTopbar.fileMenu.quit": "Quitter",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Quitter sans enregistrer les onglets",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Rouvrir le dernier onglet fermé",
+                "desktopTopbar.fileMenu.title": "Fichier",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Désactiver la journalisation avancée et redémarrer",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Désactiver l’accélération matérielle et redémarrer",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Activer la journalisation avancée et redémarrer",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Activer l’accélération matérielle et redémarrer",
+                "desktopTopbar.helpMenu.openConsole": "Ouvrir la console…",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Ouvrir le site d’aide et la documentation",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Enregistrer une trace de performance…",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Voulez-vous enregistrer une trace de performance pour les 30 prochaines secondes ? Une fois l’enregistrement terminé, il sera placé dans votre dossier Téléchargements.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Annuler",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Enregistrer une trace de performance",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Enregistrer une trace de performance ?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Réinitialiser et effacer toutes les données locales",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Afficher les entrées du registre dans l’explorateur",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Afficher les entrées du registre dans le Finder",
+                "desktopTopbar.helpMenu.title": "Aide",
+                "desktopTopbar.historyMenu.historyBack": "Précédent",
+                "desktopTopbar.historyMenu.historyForward": "Suivant",
+                "desktopTopbar.historyMenu.title": "Historique",
+                "desktopTopbar.toggleDevTools": "Afficher les outils de développement",
+                "desktopTopbar.toggleWindowDevTools": "Afficher la fenêtre des outils de développement",
+                "desktopTopbar.troubleshootingMenu.title": "Résolution de problèmes",
+                "desktopTopbar.viewMenu.actualSize": "Taille réelle",
+                "desktopTopbar.viewMenu.forceReload": "Forcer l’actualisation",
+                "desktopTopbar.viewMenu.reload": "Recharger",
+                "desktopTopbar.viewMenu.reloadAllTabs": "Recharger tous les onglets",
+                "desktopTopbar.viewMenu.showHideSidebar": "Afficher/masquer la barre latérale",
+                "desktopTopbar.viewMenu.title": "Afficher",
+                "desktopTopbar.viewMenu.togglefullscreen": "Basculer en plein écran",
+                "desktopTopbar.viewMenu.zoomIn": "Zoomer",
+                "desktopTopbar.viewMenu.zoomOut": "Dézoomer",
+                "desktopTopbar.whatsNewMac.title": "Ouvrir les nouveautés de Notion pour macOS",
+                "desktopTopbar.whatsNewWindows.title": "Ouvrir les nouveautés de Notion pour Windows",
+                "desktopTopbar.windowMenu.close": "Fermer",
+                "desktopTopbar.windowMenu.front": "Premier plan",
+                "desktopTopbar.windowMenu.maximize": "Agrandir",
+                "desktopTopbar.windowMenu.minimize": "Réduire",
+                "desktopTopbar.windowMenu.showNextTab": "Afficher l’onglet suivant",
+                "desktopTopbar.windowMenu.showPreviousTab": "Afficher l’onglet précédent",
+                "desktopTopbar.windowMenu.title": "Fenêtre",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion a rencontré une erreur lors de l’affichage du registre dans le Finder :",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion a rencontré une erreur lors de l’affichage du registre dans l’explorateur :",
+                "desktopTroubleshooting.showLogs.error.title": "Impossible d’afficher les entrées du registre",
+                "menuBarIcon.menu.enableQuickSearch": "Activer la recherche rapide",
+                "menuBarIcon.menu.keepInBackground": "Garder en arrière-plan",
+                "menuBarIcon.menu.launchPreferences": "Lancer les préférences",
+                "menuBarIcon.menu.openCloseQuickSearch": "Ouvrir/fermer la recherche rapide",
+                "menuBarIcon.menu.openOnLogin": "Ouvrir Notion à l’ouverture de la session",
+                "menuBarIcon.menu.quitNotion": "Quitter Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Modifier le raccourci de la recherche rapide",
+                "menuBarIcon.menu.showImmediately": "Afficher immédiatement",
+                "menuBarIcon.menu.showNotionInMenuBar": "Afficher Notion dans la barre de menu",
+                "menuBarIcon.menu.toggleCommandSearch": "Afficher/masquer la recherche rapide",
+                "openAtLogin.dialog.detail": "{operatingSystem} a empêché Notion de configurer le paramètre « Ouvrir à l’ouverture de la session ». Cela peut se produire lorsque le démarrage de Notion est configuré dans les paramètres système ou si vous ne disposez pas des autorisations d’accès requises. Vous pouvez cependant configurer cette option manuellement dans les paramètres système.",
+                "openAtLogin.dialog.title": "Ouvrir à l’ouverture de la session",
+                "updatePrompt.detail": "Voulez-vous l’installer maintenant ? Nous nous chargerons de rouvrir vos fenêtres et onglets.",
+                "updatePrompt.installAndRelaunch": "Installer et relancer",
+                "updatePrompt.message": "Une nouvelle version de Notion est disponible !",
+                "updatePrompt.remindMeLater": "Me le rappeler plus tard",
+                "window.loadingError.message": "Erreur lors du chargement de Notion, connectez-vous à Internet pour démarrer.",
+                "window.loadingError.reload": "Recharger",
+                "window.tabLoadingError.cancel": "Annuler",
+                "window.tabMenu.closeOtherTabs": "Fermer les autres onglets",
+                "window.tabMenu.closeTab": "Fermer l’onglet",
+                "window.tabMenu.closeTabsToLeft": "Fermer les onglets à gauche",
+                "window.tabMenu.closeTabsToRight": "Fermer les onglets à droite",
+                "window.tabMenu.copyLink": "Copier le lien",
+                "window.tabMenu.duplicateTab": "Dupliquer l’onglet",
+                "window.tabMenu.moveToNewWindow": "Déplacer l’onglet vers une nouvelle fenêtre",
+                "window.tabMenu.refresh": "Actualiser l’onglet"
+            }
         },
-        27290: e => {
+        // ja_JP
+        27290: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion コマンド検索","desktop.tabBar.backButtonLabel":"戻る","desktop.tabBar.closeSidebarLabel":"サイドバーを閉じる","desktop.tabBar.closeTabLabel":"{tabTitle}のタブを閉じる","desktop.tabBar.forwardButtonLabel":"進む","desktop.tabBar.loadingPlaceholder":"読み込み中...","desktop.tabBar.newTabButtonLabel":"新規タブ","desktop.tabBar.openSidebarLabel":"サイドバーを開く","desktopInstaller.failedToMove.detail":"アプリをアプリケーションフォルダーに移動できませんでした。手動で移動してください。","desktopInstaller.failedToMove.title":"アプリの移動に失敗しました","desktopInstaller.invalidInstallDialog.cancelButton.label":"キャンセル","desktopInstaller.invalidInstallDialog.confirmMove":"Notionアプリが正しくインストールされていません。Notionアプリをアプリケーションフォルダーに移動してもよろしいですか？","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"インストールが無効です","desktopSearch.doneButton.label":"完了","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount}件の一致} other {{matchCount}件の一致}}","desktopSearch.noResults.message":"結果なし","desktopTopbar.appMenu.about":"Notionについて","desktopTopbar.appMenu.checkForUpdate":"アップデートを確認…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"お使いのNotionは最新バージョンです！","desktopTopbar.appMenu.checkForUpdate.title":"アップデートを確認","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Notionの新しいバージョンが利用可能なため、現在バックグラウンドでダウンロード中です。最新バージョンにアップデートしていただきありがとうございます。","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"インターネット接続の問題か、アップデートサーバー自体の問題により、アップデートサーバーに接続できませんでした。時間をおいてもう一度お試しください。","desktopTopbar.appMenu.downloadingUpdate":"アップデートをダウンロード中（{percentage}%）","desktopTopbar.appMenu.hide":"Notionを非表示","desktopTopbar.appMenu.hideOthers":"ほかを非表示","desktopTopbar.appMenu.preferences":"環境設定…","desktopTopbar.appMenu.quit":"終了","desktopTopbar.appMenu.quitWithoutSavingTabs":"タブを保存せずに終了する","desktopTopbar.appMenu.resetAndEraseAllLocalData":"すべてのローカルデータのリセットと消去","desktopTopbar.appMenu.resetAndUpdateApp":"アプリのリセットと更新","desktopTopbar.appMenu.restartToApplyUpdate":"再起動してアップデートを適用","desktopTopbar.appMenu.services":"サービス","desktopTopbar.appMenu.unhide":"すべて表示する","desktopTopbar.editMenu.copy":"コピー","desktopTopbar.editMenu.cut":"切り取り","desktopTopbar.editMenu.paste":"貼り付け","desktopTopbar.editMenu.pasteAndMatchStyle":"貼り付けてスタイルを合わせる","desktopTopbar.editMenu.redo":"やり直し","desktopTopbar.editMenu.selectAll":"すべて選択","desktopTopbar.editMenu.speech":"音声読み上げ","desktopTopbar.editMenu.speech.startSpeaking":"音声読み上げを開始","desktopTopbar.editMenu.speech.stopSpeaking":"音声読み上げを停止","desktopTopbar.editMenu.title":"編集","desktopTopbar.editMenu.undo":"元に戻す","desktopTopbar.fileMenu.close":"ウィンドウを閉じる","desktopTopbar.fileMenu.closeTab":"タブを閉じる","desktopTopbar.fileMenu.newTab":"新規タブ","desktopTopbar.fileMenu.newWindow":"新しいウィンドウ","desktopTopbar.fileMenu.print":"印刷…","desktopTopbar.fileMenu.quit":"終了","desktopTopbar.fileMenu.quitWithoutSavingTabs":"タブを保存せずに終了する","desktopTopbar.fileMenu.reopenClosedTab":"最後に閉じたタブを再び開く","desktopTopbar.fileMenu.title":"ファイル","desktopTopbar.helpMenu.disableDebugLogging":"詳細ログを無効にして再起動する","desktopTopbar.helpMenu.disableHardwareAcceleration":"ハードウェアアクセラレーションを無効化して再起動","desktopTopbar.helpMenu.enableDebugLogging":"詳細ログを有効にして再起動する","desktopTopbar.helpMenu.enableHardwareAcceleration":"ハードウェアアクセラレーションを有効化して再起動","desktopTopbar.helpMenu.openConsole":"コンソールを開く…","desktopTopbar.helpMenu.openHelpAndSupport":"ヘルプと解説を開く","desktopTopbar.helpMenu.recordPerformanceTrace":"パフォーマンストレースを記録…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"今から30秒間のパフォーマンストレースを記録しますか？完了すると、ダウンロードフォルダに保存されます。","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"キャンセル","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"パフォーマンストレースを記録","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"パフォーマンストレースを記録しますか？","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"すべてのローカルデータのリセットと消去","desktopTopbar.helpMenu.showLogsInExplorer":"エクスプローラーでログを表示","desktopTopbar.helpMenu.showLogsInFinder":"Finderでログを表示","desktopTopbar.helpMenu.title":"ヘルプ","desktopTopbar.historyMenu.historyBack":"戻る","desktopTopbar.historyMenu.historyForward":"進む","desktopTopbar.historyMenu.title":"履歴","desktopTopbar.toggleDevTools":"開発者ツールの切り替え","desktopTopbar.toggleWindowDevTools":"ウィンドウ開発者ツールの切り替え","desktopTopbar.troubleshootingMenu.title":"トラブルシューティング","desktopTopbar.viewMenu.actualSize":"100%表示","desktopTopbar.viewMenu.forceReload":"強制的に再読み込み","desktopTopbar.viewMenu.reload":"再読み込み","desktopTopbar.viewMenu.reloadAllTabs":"すべてのタブを再読み込み","desktopTopbar.viewMenu.showHideSidebar":"サイドバーの表示/非表示","desktopTopbar.viewMenu.title":"表示","desktopTopbar.viewMenu.togglefullscreen":"全画面表示のオン・オフ","desktopTopbar.viewMenu.zoomIn":"拡大","desktopTopbar.viewMenu.zoomOut":"縮小","desktopTopbar.whatsNewMac.title":"Mac版Notionの最新情報を開く","desktopTopbar.whatsNewWindows.title":"Windows版Notionの最新情報を開く","desktopTopbar.windowMenu.close":"閉じる","desktopTopbar.windowMenu.front":"前面","desktopTopbar.windowMenu.maximize":"最大化","desktopTopbar.windowMenu.minimize":"最小化","desktopTopbar.windowMenu.showNextTab":"次のタブを表示","desktopTopbar.windowMenu.showPreviousTab":"前のタブを表示","desktopTopbar.windowMenu.title":"ウィンドウ","desktopTopbar.windowMenu.zoom":"ズーム","desktopTroubleshooting.showLogs.error.message.mac":"NotionがFinderでログを表示しようとした際に次のエラーが発生しました：","desktopTroubleshooting.showLogs.error.message.windows":"Notionがエクスプローラーでログを表示しようとした際に次のエラーが発生しました：","desktopTroubleshooting.showLogs.error.title":"ログの表示に失敗しました","menuBarIcon.menu.enableQuickSearch":"クイック検索を有効化","menuBarIcon.menu.keepInBackground":"バックグラウンドで保持","menuBarIcon.menu.launchPreferences":"起動設定","menuBarIcon.menu.openCloseQuickSearch":"クイック検索を開く/閉じる","menuBarIcon.menu.openOnLogin":"ログイン時にNotionを開く","menuBarIcon.menu.quitNotion":"Notionを終了する","menuBarIcon.menu.selectCommandSearchShortcut":"コマンド検索ショートカットの変更","menuBarIcon.menu.showImmediately":"すぐに表示","menuBarIcon.menu.showNotionInMenuBar":"メニューバーにNotionを表示する","menuBarIcon.menu.toggleCommandSearch":"コマンド検索の表示/非表示","openAtLogin.dialog.detail":"{operatingSystem}により、Notionの「ログイン時に開く」を設定できませんでした。これは通常、Notionの起動がシステム設定で構成されているか、権限が不十分な場合に発生します。この設定は、システム設定で手動で行うこともできます。","openAtLogin.dialog.title":"ログイン時に開く","updatePrompt.detail":"今すぐインストールしますか？ウィンドウとタブは復元されます。","updatePrompt.installAndRelaunch":"インストールして再起動","updatePrompt.message":"Notionの新バージョンがリリースされました！","updatePrompt.remindMeLater":"あとでリマインド","window.loadingError.message":"Notionの読み込みに失敗しました。インターネットに接続してください。","window.loadingError.reload":"再読み込み","window.tabLoadingError.cancel":"キャンセル","window.tabMenu.closeOtherTabs":"他のタブを閉じる","window.tabMenu.closeTab":"タブを閉じる","window.tabMenu.closeTabsToLeft":"左のタブを閉じる","window.tabMenu.closeTabsToRight":"右のタブを閉じる","window.tabMenu.copyLink":"リンクをコピー","window.tabMenu.duplicateTab":"タブを複製","window.tabMenu.moveToNewWindow":"タブを新しいウィンドウに移動","window.tabMenu.refresh":"タブを再読み込み"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion コマンド検索",
+                "desktop.tabBar.backButtonLabel": "戻る",
+                "desktop.tabBar.closeSidebarLabel": "サイドバーを閉じる",
+                "desktop.tabBar.closeTabLabel": "{tabTitle}のタブを閉じる",
+                "desktop.tabBar.forwardButtonLabel": "進む",
+                "desktop.tabBar.loadingPlaceholder": "読み込み中...",
+                "desktop.tabBar.newTabButtonLabel": "新規タブ",
+                "desktop.tabBar.openSidebarLabel": "サイドバーを開く",
+                "desktopInstaller.failedToMove.detail": "アプリをアプリケーションフォルダーに移動できませんでした。手動で移動してください。",
+                "desktopInstaller.failedToMove.title": "アプリの移動に失敗しました",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "キャンセル",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Notionアプリが正しくインストールされていません。Notionアプリをアプリケーションフォルダーに移動してもよろしいですか？",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "インストールが無効です",
+                "desktopSearch.doneButton.label": "完了",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount}件の一致} other {{matchCount}件の一致}}",
+                "desktopSearch.noResults.message": "結果なし",
+                "desktopTopbar.appMenu.about": "Notionについて",
+                "desktopTopbar.appMenu.checkForUpdate": "アップデートを確認…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "お使いのNotionは最新バージョンです！",
+                "desktopTopbar.appMenu.checkForUpdate.title": "アップデートを確認",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Notionの新しいバージョンが利用可能なため、現在バックグラウンドでダウンロード中です。最新バージョンにアップデートしていただきありがとうございます。",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "インターネット接続の問題か、アップデートサーバー自体の問題により、アップデートサーバーに接続できませんでした。時間をおいてもう一度お試しください。",
+                "desktopTopbar.appMenu.downloadingUpdate": "アップデートをダウンロード中（{percentage}%）",
+                "desktopTopbar.appMenu.hide": "Notionを非表示",
+                "desktopTopbar.appMenu.hideOthers": "ほかを非表示",
+                "desktopTopbar.appMenu.preferences": "環境設定…",
+                "desktopTopbar.appMenu.quit": "終了",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "タブを保存せずに終了する",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "すべてのローカルデータのリセットと消去",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "アプリのリセットと更新",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "再起動してアップデートを適用",
+                "desktopTopbar.appMenu.services": "サービス",
+                "desktopTopbar.appMenu.unhide": "すべて表示する",
+                "desktopTopbar.editMenu.copy": "コピー",
+                "desktopTopbar.editMenu.cut": "切り取り",
+                "desktopTopbar.editMenu.paste": "貼り付け",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "貼り付けてスタイルを合わせる",
+                "desktopTopbar.editMenu.redo": "やり直し",
+                "desktopTopbar.editMenu.selectAll": "すべて選択",
+                "desktopTopbar.editMenu.speech": "音声読み上げ",
+                "desktopTopbar.editMenu.speech.startSpeaking": "音声読み上げを開始",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "音声読み上げを停止",
+                "desktopTopbar.editMenu.title": "編集",
+                "desktopTopbar.editMenu.undo": "元に戻す",
+                "desktopTopbar.fileMenu.close": "ウィンドウを閉じる",
+                "desktopTopbar.fileMenu.closeTab": "タブを閉じる",
+                "desktopTopbar.fileMenu.newTab": "新規タブ",
+                "desktopTopbar.fileMenu.newWindow": "新しいウィンドウ",
+                "desktopTopbar.fileMenu.print": "印刷…",
+                "desktopTopbar.fileMenu.quit": "終了",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "タブを保存せずに終了する",
+                "desktopTopbar.fileMenu.reopenClosedTab": "最後に閉じたタブを再び開く",
+                "desktopTopbar.fileMenu.title": "ファイル",
+                "desktopTopbar.helpMenu.disableDebugLogging": "詳細ログを無効にして再起動する",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "ハードウェアアクセラレーションを無効化して再起動",
+                "desktopTopbar.helpMenu.enableDebugLogging": "詳細ログを有効にして再起動する",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "ハードウェアアクセラレーションを有効化して再起動",
+                "desktopTopbar.helpMenu.openConsole": "コンソールを開く…",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "ヘルプと解説を開く",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "パフォーマンストレースを記録…",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "今から30秒間のパフォーマンストレースを記録しますか？完了すると、ダウンロードフォルダに保存されます。",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "キャンセル",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "パフォーマンストレースを記録",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "パフォーマンストレースを記録しますか？",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "すべてのローカルデータのリセットと消去",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "エクスプローラーでログを表示",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Finderでログを表示",
+                "desktopTopbar.helpMenu.title": "ヘルプ",
+                "desktopTopbar.historyMenu.historyBack": "戻る",
+                "desktopTopbar.historyMenu.historyForward": "進む",
+                "desktopTopbar.historyMenu.title": "履歴",
+                "desktopTopbar.toggleDevTools": "開発者ツールの切り替え",
+                "desktopTopbar.toggleWindowDevTools": "ウィンドウ開発者ツールの切り替え",
+                "desktopTopbar.troubleshootingMenu.title": "トラブルシューティング",
+                "desktopTopbar.viewMenu.actualSize": "100%表示",
+                "desktopTopbar.viewMenu.forceReload": "強制的に再読み込み",
+                "desktopTopbar.viewMenu.reload": "再読み込み",
+                "desktopTopbar.viewMenu.reloadAllTabs": "すべてのタブを再読み込み",
+                "desktopTopbar.viewMenu.showHideSidebar": "サイドバーの表示/非表示",
+                "desktopTopbar.viewMenu.title": "表示",
+                "desktopTopbar.viewMenu.togglefullscreen": "全画面表示のオン・オフ",
+                "desktopTopbar.viewMenu.zoomIn": "拡大",
+                "desktopTopbar.viewMenu.zoomOut": "縮小",
+                "desktopTopbar.whatsNewMac.title": "Mac版Notionの最新情報を開く",
+                "desktopTopbar.whatsNewWindows.title": "Windows版Notionの最新情報を開く",
+                "desktopTopbar.windowMenu.close": "閉じる",
+                "desktopTopbar.windowMenu.front": "前面",
+                "desktopTopbar.windowMenu.maximize": "最大化",
+                "desktopTopbar.windowMenu.minimize": "最小化",
+                "desktopTopbar.windowMenu.showNextTab": "次のタブを表示",
+                "desktopTopbar.windowMenu.showPreviousTab": "前のタブを表示",
+                "desktopTopbar.windowMenu.title": "ウィンドウ",
+                "desktopTopbar.windowMenu.zoom": "ズーム",
+                "desktopTroubleshooting.showLogs.error.message.mac": "NotionがFinderでログを表示しようとした際に次のエラーが発生しました：",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notionがエクスプローラーでログを表示しようとした際に次のエラーが発生しました：",
+                "desktopTroubleshooting.showLogs.error.title": "ログの表示に失敗しました",
+                "menuBarIcon.menu.enableQuickSearch": "クイック検索を有効化",
+                "menuBarIcon.menu.keepInBackground": "バックグラウンドで保持",
+                "menuBarIcon.menu.launchPreferences": "起動設定",
+                "menuBarIcon.menu.openCloseQuickSearch": "クイック検索を開く/閉じる",
+                "menuBarIcon.menu.openOnLogin": "ログイン時にNotionを開く",
+                "menuBarIcon.menu.quitNotion": "Notionを終了する",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "コマンド検索ショートカットの変更",
+                "menuBarIcon.menu.showImmediately": "すぐに表示",
+                "menuBarIcon.menu.showNotionInMenuBar": "メニューバーにNotionを表示する",
+                "menuBarIcon.menu.toggleCommandSearch": "コマンド検索の表示/非表示",
+                "openAtLogin.dialog.detail": "{operatingSystem}により、Notionの「ログイン時に開く」を設定できませんでした。これは通常、Notionの起動がシステム設定で構成されているか、権限が不十分な場合に発生します。この設定は、システム設定で手動で行うこともできます。",
+                "openAtLogin.dialog.title": "ログイン時に開く",
+                "updatePrompt.detail": "今すぐインストールしますか？ウィンドウとタブは復元されます。",
+                "updatePrompt.installAndRelaunch": "インストールして再起動",
+                "updatePrompt.message": "Notionの新バージョンがリリースされました！",
+                "updatePrompt.remindMeLater": "あとでリマインド",
+                "window.loadingError.message": "Notionの読み込みに失敗しました。インターネットに接続してください。",
+                "window.loadingError.reload": "再読み込み",
+                "window.tabLoadingError.cancel": "キャンセル",
+                "window.tabMenu.closeOtherTabs": "他のタブを閉じる",
+                "window.tabMenu.closeTab": "タブを閉じる",
+                "window.tabMenu.closeTabsToLeft": "左のタブを閉じる",
+                "window.tabMenu.closeTabsToRight": "右のタブを閉じる",
+                "window.tabMenu.copyLink": "リンクをコピー",
+                "window.tabMenu.duplicateTab": "タブを複製",
+                "window.tabMenu.moveToNewWindow": "タブを新しいウィンドウに移動",
+                "window.tabMenu.refresh": "タブを再読み込み"
+            }
         },
-        8332: e => {
+        // ko_KR
+        8332: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - 명령어 검색","desktop.tabBar.backButtonLabel":"뒤로가기","desktop.tabBar.closeSidebarLabel":"사이드바 닫기","desktop.tabBar.closeTabLabel":"{tabTitle} 탭 닫기","desktop.tabBar.forwardButtonLabel":"앞으로 가기","desktop.tabBar.loadingPlaceholder":"로딩 중...","desktop.tabBar.newTabButtonLabel":"새 탭","desktop.tabBar.openSidebarLabel":"사이드바 열기","desktopInstaller.failedToMove.detail":"앱을 Applications 폴더로 이동시키지 못했습니다. 수동으로 이동시켜 주세요.","desktopInstaller.failedToMove.title":"앱 이동 실패","desktopInstaller.invalidInstallDialog.cancelButton.label":"취소","desktopInstaller.invalidInstallDialog.confirmMove":"Notion 애플리케이션이 정상적으로 설치되지 않았습니다. Notion 앱을 Applications 폴더로 이동시켜도 될까요?","desktopInstaller.invalidInstallDialog.okButton.label":"확인","desktopInstaller.invalidInstallDialog.title":"잘못된 설치","desktopSearch.doneButton.label":"완료","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} 일치} other {{matchCount} 일치}}","desktopSearch.noResults.message":"찾을 수 없음","desktopTopbar.appMenu.about":"Notion 소개","desktopTopbar.appMenu.checkForUpdate":"업데이트 확인","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"최신 버전의 Notion을 사용 중입니다!","desktopTopbar.appMenu.checkForUpdate.title":"업데이트 확인","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"새 버전의 Notion을 사용할 수 있으며 현재 백그라운드에서 다운로드 중입니다. 최신 상태를 유지해 주셔서 감사합니다!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"인터넷 연결 또는 업데이트 서버 자체에 문제가 있어 업데이트 서버에 연결하지 못했습니다. 나중에 다시 시도하세요.","desktopTopbar.appMenu.downloadingUpdate":"업데이트 다운로드 중({percentage}%)","desktopTopbar.appMenu.hide":"Notion 숨기기","desktopTopbar.appMenu.hideOthers":"다른 항목 숨기기","desktopTopbar.appMenu.preferences":"환경설정…","desktopTopbar.appMenu.quit":"끝내기","desktopTopbar.appMenu.quitWithoutSavingTabs":"탭 저장 없이 종료","desktopTopbar.appMenu.resetAndEraseAllLocalData":"앱 초기화 및 로컬 데이터 삭제","desktopTopbar.appMenu.resetAndUpdateApp":"앱 초기화 및 업데이트","desktopTopbar.appMenu.restartToApplyUpdate":"업데이트 적용을 위해 다시 시작","desktopTopbar.appMenu.services":"서비스","desktopTopbar.appMenu.unhide":"모두 표시하기","desktopTopbar.editMenu.copy":"복사","desktopTopbar.editMenu.cut":"잘라내기","desktopTopbar.editMenu.paste":"붙여넣기","desktopTopbar.editMenu.pasteAndMatchStyle":"서식 유지 붙여넣기","desktopTopbar.editMenu.redo":"다시 실행","desktopTopbar.editMenu.selectAll":"모두 선택","desktopTopbar.editMenu.speech":"말하기","desktopTopbar.editMenu.speech.startSpeaking":"말하기 시작","desktopTopbar.editMenu.speech.stopSpeaking":"말하기 중지","desktopTopbar.editMenu.title":"편집","desktopTopbar.editMenu.undo":"실행 취소","desktopTopbar.fileMenu.close":"창 닫기","desktopTopbar.fileMenu.closeTab":"탭 닫기","desktopTopbar.fileMenu.newTab":"새로운 탭","desktopTopbar.fileMenu.newWindow":"새 창","desktopTopbar.fileMenu.print":"인쇄","desktopTopbar.fileMenu.quit":"나가기","desktopTopbar.fileMenu.quitWithoutSavingTabs":"탭 저장 없이 종료","desktopTopbar.fileMenu.reopenClosedTab":"마지막으로 닫은 탭 다시 열기","desktopTopbar.fileMenu.title":"파일","desktopTopbar.helpMenu.disableDebugLogging":"고급 로깅 비활성화 후 다시 시작","desktopTopbar.helpMenu.disableHardwareAcceleration":"하드웨어 가속 비활성화 후 다시 시작","desktopTopbar.helpMenu.enableDebugLogging":"고급 로깅 활성화 후 다시 시작","desktopTopbar.helpMenu.enableHardwareAcceleration":"하드웨어 가속 활성화 후 다시 시작","desktopTopbar.helpMenu.openConsole":"콘솔 열기...","desktopTopbar.helpMenu.openHelpAndSupport":"도움말과 설명서 열기","desktopTopbar.helpMenu.recordPerformanceTrace":"성능 트레이스 기록","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"다음 30초 동안 성능 트레이스를 기록하시겠습니까? 완료되면 다운로드 폴더에 저장됩니다.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"취소","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"성능 트레이스 기록","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"성능 트레이스를 기록하시겠습니까?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"앱을 초기화하고 로컬 데이터 모두 삭제하기","desktopTopbar.helpMenu.showLogsInExplorer":"탐색기에서 로그 표시","desktopTopbar.helpMenu.showLogsInFinder":"Finder에서 로그 표시","desktopTopbar.helpMenu.title":"도움말","desktopTopbar.historyMenu.historyBack":"뒤로","desktopTopbar.historyMenu.historyForward":"앞으로","desktopTopbar.historyMenu.title":"기록","desktopTopbar.toggleDevTools":"개발자 도구 토글","desktopTopbar.toggleWindowDevTools":"Windows 개발자 도구 토글","desktopTopbar.troubleshootingMenu.title":"트러블슈팅","desktopTopbar.viewMenu.actualSize":"실제 크기","desktopTopbar.viewMenu.forceReload":"강제 새로고침","desktopTopbar.viewMenu.reload":"다시 불러오기","desktopTopbar.viewMenu.reloadAllTabs":"모든 탭 다시 불러오기","desktopTopbar.viewMenu.showHideSidebar":"사이드바 표시/숨기기","desktopTopbar.viewMenu.title":"보기","desktopTopbar.viewMenu.togglefullscreen":"전체 화면 토글","desktopTopbar.viewMenu.zoomIn":"확대","desktopTopbar.viewMenu.zoomOut":"축소","desktopTopbar.whatsNewMac.title":"MacOS용 Notion의 업데이트 내용 보기","desktopTopbar.whatsNewWindows.title":"Windows용 Notion의 업데이트 내용 보기","desktopTopbar.windowMenu.close":"닫기","desktopTopbar.windowMenu.front":"앞면","desktopTopbar.windowMenu.maximize":"최대화","desktopTopbar.windowMenu.minimize":"최소화","desktopTopbar.windowMenu.showNextTab":"다음 탭 표시","desktopTopbar.windowMenu.showPreviousTab":"이전 탭 표시","desktopTopbar.windowMenu.title":"창","desktopTopbar.windowMenu.zoom":"확대/축소","desktopTroubleshooting.showLogs.error.message.mac":"Finder에서 로그를 표시하는 동안 Notion에서 오류가 발생했습니다.","desktopTroubleshooting.showLogs.error.message.windows":"Explorer에서 로그를 표시하는 동안 Notion에서 오류가 발생했습니다.","desktopTroubleshooting.showLogs.error.title":"로그 표시에 실패했습니다.","menuBarIcon.menu.enableQuickSearch":"빠른 검색 활성화","menuBarIcon.menu.keepInBackground":"백그라운드에서 계속 실행","menuBarIcon.menu.launchPreferences":"시작 설정","menuBarIcon.menu.openCloseQuickSearch":"빠른 검색 열기/닫기","menuBarIcon.menu.openOnLogin":"로그인 시 Notion 열기","menuBarIcon.menu.quitNotion":"Notion 종료","menuBarIcon.menu.selectCommandSearchShortcut":"명령어 검색 단축키 변경","menuBarIcon.menu.showImmediately":"즉시 표시","menuBarIcon.menu.showNotionInMenuBar":"메뉴 모음에 Notion 표시","menuBarIcon.menu.toggleCommandSearch":"명령어 검색 토글","openAtLogin.dialog.detail":"{operatingSystem}에서 Notion이 \'로그인 시 열기\' 설정을 구성하지 못했습니다. 일반적으로 시스템 설정에서 Notion 시작을 구성했거나 권한이 충분하지 않은 경우 이 문제가 발생합니다. 시스템 설정에서 이 설정을 수동으로 구성할 수 있습니다.","openAtLogin.dialog.title":"로그인 시 열기","updatePrompt.detail":"지금 설치하시겠어요? 창과 탭이 다시 열립니다.","updatePrompt.installAndRelaunch":"설치 후 다시 시작","updatePrompt.message":"Notion의 새로운 버전이 출시되었습니다!","updatePrompt.remindMeLater":"나중에 다시 알림","window.loadingError.message":"Notion을 로드하는 동안 오류가 발생했습니다. 시작하려면 인터넷에 연결하세요.","window.loadingError.reload":"다시 불러오기","window.tabLoadingError.cancel":"취소","window.tabMenu.closeOtherTabs":"다른 탭 닫기","window.tabMenu.closeTab":"탭 닫기","window.tabMenu.closeTabsToLeft":"왼쪽 탭 닫기","window.tabMenu.closeTabsToRight":"오른쪽 탭 닫기","window.tabMenu.copyLink":"링크 복사","window.tabMenu.duplicateTab":"탭 복제","window.tabMenu.moveToNewWindow":"탭을 새 창에서 열기","window.tabMenu.refresh":"탭 새로고침"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion - 명령어 검색",
+                "desktop.tabBar.backButtonLabel": "뒤로가기",
+                "desktop.tabBar.closeSidebarLabel": "사이드바 닫기",
+                "desktop.tabBar.closeTabLabel": "{tabTitle} 탭 닫기",
+                "desktop.tabBar.forwardButtonLabel": "앞으로 가기",
+                "desktop.tabBar.loadingPlaceholder": "로딩 중...",
+                "desktop.tabBar.newTabButtonLabel": "새 탭",
+                "desktop.tabBar.openSidebarLabel": "사이드바 열기",
+                "desktopInstaller.failedToMove.detail": "앱을 Applications 폴더로 이동시키지 못했습니다. 수동으로 이동시켜 주세요.",
+                "desktopInstaller.failedToMove.title": "앱 이동 실패",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "취소",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Notion 애플리케이션이 정상적으로 설치되지 않았습니다. Notion 앱을 Applications 폴더로 이동시켜도 될까요?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "확인",
+                "desktopInstaller.invalidInstallDialog.title": "잘못된 설치",
+                "desktopSearch.doneButton.label": "완료",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} 일치} other {{matchCount} 일치}}",
+                "desktopSearch.noResults.message": "찾을 수 없음",
+                "desktopTopbar.appMenu.about": "Notion 소개",
+                "desktopTopbar.appMenu.checkForUpdate": "업데이트 확인",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "최신 버전의 Notion을 사용 중입니다!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "업데이트 확인",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "새 버전의 Notion을 사용할 수 있으며 현재 백그라운드에서 다운로드 중입니다. 최신 상태를 유지해 주셔서 감사합니다!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "인터넷 연결 또는 업데이트 서버 자체에 문제가 있어 업데이트 서버에 연결하지 못했습니다. 나중에 다시 시도하세요.",
+                "desktopTopbar.appMenu.downloadingUpdate": "업데이트 다운로드 중({percentage}%)",
+                "desktopTopbar.appMenu.hide": "Notion 숨기기",
+                "desktopTopbar.appMenu.hideOthers": "다른 항목 숨기기",
+                "desktopTopbar.appMenu.preferences": "환경설정…",
+                "desktopTopbar.appMenu.quit": "끝내기",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "탭 저장 없이 종료",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "앱 초기화 및 로컬 데이터 삭제",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "앱 초기화 및 업데이트",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "업데이트 적용을 위해 다시 시작",
+                "desktopTopbar.appMenu.services": "서비스",
+                "desktopTopbar.appMenu.unhide": "모두 표시하기",
+                "desktopTopbar.editMenu.copy": "복사",
+                "desktopTopbar.editMenu.cut": "잘라내기",
+                "desktopTopbar.editMenu.paste": "붙여넣기",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "서식 유지 붙여넣기",
+                "desktopTopbar.editMenu.redo": "다시 실행",
+                "desktopTopbar.editMenu.selectAll": "모두 선택",
+                "desktopTopbar.editMenu.speech": "말하기",
+                "desktopTopbar.editMenu.speech.startSpeaking": "말하기 시작",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "말하기 중지",
+                "desktopTopbar.editMenu.title": "편집",
+                "desktopTopbar.editMenu.undo": "실행 취소",
+                "desktopTopbar.fileMenu.close": "창 닫기",
+                "desktopTopbar.fileMenu.closeTab": "탭 닫기",
+                "desktopTopbar.fileMenu.newTab": "새로운 탭",
+                "desktopTopbar.fileMenu.newWindow": "새 창",
+                "desktopTopbar.fileMenu.print": "인쇄",
+                "desktopTopbar.fileMenu.quit": "나가기",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "탭 저장 없이 종료",
+                "desktopTopbar.fileMenu.reopenClosedTab": "마지막으로 닫은 탭 다시 열기",
+                "desktopTopbar.fileMenu.title": "파일",
+                "desktopTopbar.helpMenu.disableDebugLogging": "고급 로깅 비활성화 후 다시 시작",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "하드웨어 가속 비활성화 후 다시 시작",
+                "desktopTopbar.helpMenu.enableDebugLogging": "고급 로깅 활성화 후 다시 시작",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "하드웨어 가속 활성화 후 다시 시작",
+                "desktopTopbar.helpMenu.openConsole": "콘솔 열기...",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "도움말과 설명서 열기",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "성능 트레이스 기록",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "다음 30초 동안 성능 트레이스를 기록하시겠습니까? 완료되면 다운로드 폴더에 저장됩니다.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "취소",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "성능 트레이스 기록",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "성능 트레이스를 기록하시겠습니까?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "앱을 초기화하고 로컬 데이터 모두 삭제하기",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "탐색기에서 로그 표시",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Finder에서 로그 표시",
+                "desktopTopbar.helpMenu.title": "도움말",
+                "desktopTopbar.historyMenu.historyBack": "뒤로",
+                "desktopTopbar.historyMenu.historyForward": "앞으로",
+                "desktopTopbar.historyMenu.title": "기록",
+                "desktopTopbar.toggleDevTools": "개발자 도구 토글",
+                "desktopTopbar.toggleWindowDevTools": "Windows 개발자 도구 토글",
+                "desktopTopbar.troubleshootingMenu.title": "트러블슈팅",
+                "desktopTopbar.viewMenu.actualSize": "실제 크기",
+                "desktopTopbar.viewMenu.forceReload": "강제 새로고침",
+                "desktopTopbar.viewMenu.reload": "다시 불러오기",
+                "desktopTopbar.viewMenu.reloadAllTabs": "모든 탭 다시 불러오기",
+                "desktopTopbar.viewMenu.showHideSidebar": "사이드바 표시/숨기기",
+                "desktopTopbar.viewMenu.title": "보기",
+                "desktopTopbar.viewMenu.togglefullscreen": "전체 화면 토글",
+                "desktopTopbar.viewMenu.zoomIn": "확대",
+                "desktopTopbar.viewMenu.zoomOut": "축소",
+                "desktopTopbar.whatsNewMac.title": "MacOS용 Notion의 업데이트 내용 보기",
+                "desktopTopbar.whatsNewWindows.title": "Windows용 Notion의 업데이트 내용 보기",
+                "desktopTopbar.windowMenu.close": "닫기",
+                "desktopTopbar.windowMenu.front": "앞면",
+                "desktopTopbar.windowMenu.maximize": "최대화",
+                "desktopTopbar.windowMenu.minimize": "최소화",
+                "desktopTopbar.windowMenu.showNextTab": "다음 탭 표시",
+                "desktopTopbar.windowMenu.showPreviousTab": "이전 탭 표시",
+                "desktopTopbar.windowMenu.title": "창",
+                "desktopTopbar.windowMenu.zoom": "확대/축소",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Finder에서 로그를 표시하는 동안 Notion에서 오류가 발생했습니다.",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Explorer에서 로그를 표시하는 동안 Notion에서 오류가 발생했습니다.",
+                "desktopTroubleshooting.showLogs.error.title": "로그 표시에 실패했습니다.",
+                "menuBarIcon.menu.enableQuickSearch": "빠른 검색 활성화",
+                "menuBarIcon.menu.keepInBackground": "백그라운드에서 계속 실행",
+                "menuBarIcon.menu.launchPreferences": "시작 설정",
+                "menuBarIcon.menu.openCloseQuickSearch": "빠른 검색 열기/닫기",
+                "menuBarIcon.menu.openOnLogin": "로그인 시 Notion 열기",
+                "menuBarIcon.menu.quitNotion": "Notion 종료",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "명령어 검색 단축키 변경",
+                "menuBarIcon.menu.showImmediately": "즉시 표시",
+                "menuBarIcon.menu.showNotionInMenuBar": "메뉴 모음에 Notion 표시",
+                "menuBarIcon.menu.toggleCommandSearch": "명령어 검색 토글",
+                "openAtLogin.dialog.detail": "{operatingSystem}에서 Notion이 '로그인 시 열기' 설정을 구성하지 못했습니다. 일반적으로 시스템 설정에서 Notion 시작을 구성했거나 권한이 충분하지 않은 경우 이 문제가 발생합니다. 시스템 설정에서 이 설정을 수동으로 구성할 수 있습니다.",
+                "openAtLogin.dialog.title": "로그인 시 열기",
+                "updatePrompt.detail": "지금 설치하시겠어요? 창과 탭이 다시 열립니다.",
+                "updatePrompt.installAndRelaunch": "설치 후 다시 시작",
+                "updatePrompt.message": "Notion의 새로운 버전이 출시되었습니다!",
+                "updatePrompt.remindMeLater": "나중에 다시 알림",
+                "window.loadingError.message": "Notion을 로드하는 동안 오류가 발생했습니다. 시작하려면 인터넷에 연결하세요.",
+                "window.loadingError.reload": "다시 불러오기",
+                "window.tabLoadingError.cancel": "취소",
+                "window.tabMenu.closeOtherTabs": "다른 탭 닫기",
+                "window.tabMenu.closeTab": "탭 닫기",
+                "window.tabMenu.closeTabsToLeft": "왼쪽 탭 닫기",
+                "window.tabMenu.closeTabsToRight": "오른쪽 탭 닫기",
+                "window.tabMenu.copyLink": "링크 복사",
+                "window.tabMenu.duplicateTab": "탭 복제",
+                "window.tabMenu.moveToNewWindow": "탭을 새 창에서 열기",
+                "window.tabMenu.refresh": "탭 새로고침"
+            }
         },
-        16996: e => {
+        // nb_NO
+        16996: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Kommandosøk","desktop.tabBar.backButtonLabel":"Tilbake","desktop.tabBar.closeSidebarLabel":"Lukk sidestolpe","desktop.tabBar.closeTabLabel":"Lukk fanen {tabTitle}","desktop.tabBar.forwardButtonLabel":"Framover","desktop.tabBar.loadingPlaceholder":"Laster inn …","desktop.tabBar.newTabButtonLabel":"Ny fane","desktop.tabBar.openSidebarLabel":"Åpne sidestolpen","desktopInstaller.failedToMove.detail":"Vi kan ikke flytte appen til Apper-mappen. Flytt den manuelt.","desktopInstaller.failedToMove.title":"Kan ikke flytte app","desktopInstaller.invalidInstallDialog.cancelButton.label":"Avbryt","desktopInstaller.invalidInstallDialog.confirmMove":"Notion-appen din er ikke riktig installert. Kan vi flytte Notion-appen til Apper-mappen?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ugyldig installasjon","desktopSearch.doneButton.label":"Ferdig","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} match} andre {{matchCount} matcher}}","desktopSearch.noResults.message":"Ikke funnet","desktopTopbar.appMenu.about":"Om Notion","desktopTopbar.appMenu.checkForUpdate":"Se etter oppdateringer …","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du bruker den nyeste versjonen av Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Se etter oppdateringer","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"En ny versjon av Notion er tilgjengelig og lastes for øyeblikket ned i bakgrunnen. Takk for at du holder deg oppdatert!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion klarte ikke å koble til oppdateringsserveren, enten på grunn av et problem med internett-tilkoblingen eller selve oppdateringsserveren. Prøv igjen senere.","desktopTopbar.appMenu.downloadingUpdate":"Laster ned oppdatering ({percentage} %)","desktopTopbar.appMenu.hide":"Skjul Notion","desktopTopbar.appMenu.hideOthers":"Skjul andre","desktopTopbar.appMenu.preferences":"Instillinger …","desktopTopbar.appMenu.quit":"Avslutt","desktopTopbar.appMenu.quitWithoutSavingTabs":"Avslutt uten å lagre faner","desktopTopbar.appMenu.restartToApplyUpdate":"Start på nytt for å bruke oppdateringen","desktopTopbar.appMenu.services":"Tjenester","desktopTopbar.appMenu.unhide":"Vis alt","desktopTopbar.editMenu.copy":"Kopier","desktopTopbar.editMenu.cut":"Klipp ut","desktopTopbar.editMenu.paste":"Lim inn","desktopTopbar.editMenu.pasteAndMatchStyle":"Lim inn og match stil","desktopTopbar.editMenu.redo":"Gjør om","desktopTopbar.editMenu.selectAll":"Velg alle","desktopTopbar.editMenu.speech":"Tale","desktopTopbar.editMenu.speech.startSpeaking":"Begynn å snakke","desktopTopbar.editMenu.speech.stopSpeaking":"Slutt å snakke","desktopTopbar.editMenu.title":"Rediger","desktopTopbar.editMenu.undo":"Angre","desktopTopbar.fileMenu.close":"Lukk vindu","desktopTopbar.fileMenu.closeTab":"Lukk fanen","desktopTopbar.fileMenu.newTab":"Ny fane","desktopTopbar.fileMenu.newWindow":"Nytt vindu","desktopTopbar.fileMenu.print":"Skriv ut …","desktopTopbar.fileMenu.quit":"Avslutt","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Avslutt uten å lagre faner","desktopTopbar.fileMenu.reopenClosedTab":"Åpne sist lukkede fane på nytt","desktopTopbar.fileMenu.title":"Fil","desktopTopbar.helpMenu.disableDebugLogging":"Deaktiver avansert logging og start på nytt","desktopTopbar.helpMenu.disableHardwareAcceleration":"Deaktiver maskinvareakselerasjon og start på nytt","desktopTopbar.helpMenu.enableDebugLogging":"Aktiver avansert logging og start på nytt","desktopTopbar.helpMenu.enableHardwareAcceleration":"Aktiver maskinvareakselerasjon og start på nytt","desktopTopbar.helpMenu.openConsole":"Åpne konsollen …","desktopTopbar.helpMenu.openHelpAndSupport":"Åpne hjelp og dokumentasjon","desktopTopbar.helpMenu.recordPerformanceTrace":"Registrer ytelsessporing ...","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Vil du registrere et ytelsesspor for de neste 30 sekundene? Når det er gjort, vil det bli plassert i nedlastingsmappen.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Avbryt","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Registrer ytelsesspor","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Registrer et ytelsesspor?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Tilbakestill og slett alle lokale data","desktopTopbar.helpMenu.showLogsInExplorer":"Vis logger i Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Vis logger i Finder","desktopTopbar.helpMenu.title":"Hjelp","desktopTopbar.historyMenu.historyBack":"Tilbake","desktopTopbar.historyMenu.historyForward":"Framover","desktopTopbar.historyMenu.title":"Historikk","desktopTopbar.toggleDevTools":"Slå av/på utviklerverktøy","desktopTopbar.toggleWindowDevTools":"Slå av/på Windows Utviklerverktøy","desktopTopbar.troubleshootingMenu.title":"Feilsøking","desktopTopbar.viewMenu.actualSize":"Faktisk størrelse","desktopTopbar.viewMenu.forceReload":"Tving ny innlasting","desktopTopbar.viewMenu.reload":"Last inn på nytt","desktopTopbar.viewMenu.showHideSidebar":"Vis/skjul sidestolpe","desktopTopbar.viewMenu.title":"Vis","desktopTopbar.viewMenu.togglefullscreen":"Veksle fullskjerm","desktopTopbar.viewMenu.zoomIn":"Zoom inn","desktopTopbar.viewMenu.zoomOut":"Zoom ut","desktopTopbar.whatsNewMac.title":"Åpne Hva er nytt i Notion for macOS","desktopTopbar.whatsNewWindows.title":"Åpne Hva er nytt i Notion for Windows","desktopTopbar.windowMenu.close":"Lukk","desktopTopbar.windowMenu.front":"Front","desktopTopbar.windowMenu.maximize":"Maksimer","desktopTopbar.windowMenu.minimize":"Minimer","desktopTopbar.windowMenu.showNextTab":"Vis neste fane","desktopTopbar.windowMenu.showPreviousTab":"Vis forrige fane","desktopTopbar.windowMenu.title":"Vindu","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion oppdaget en feil under forsøk på å vise loggene i Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion oppdaget en feil under forsøk på å vise loggene i Explorer:","desktopTroubleshooting.showLogs.error.title":"Visning av loggene mislyktes","menuBarIcon.menu.enableQuickSearch":"Aktiver hurtigsøk","menuBarIcon.menu.keepInBackground":"Ha i bakgrunnen","menuBarIcon.menu.launchPreferences":"Startinnstillinger","menuBarIcon.menu.openOnLogin":"Åpne Notion ved pålogging","menuBarIcon.menu.quitNotion":"Avslutt Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Endre hurtigtast for kommandosøk","menuBarIcon.menu.showImmediately":"Vis umiddelbart","menuBarIcon.menu.showNotionInMenuBar":"Vis Notion i statusfeltet","menuBarIcon.menu.toggleCommandSearch":"Vis/skjul kommandosøk","openAtLogin.dialog.detail":"{operatingSystem} hindret Notion fra å konfigurere «Åpne ved pålogging»-innstillingen. Dette skjer vanligvis når oppstarten til Notion er konfigurert i systeminnstillingene, eller hvis du mangler tilstrekkelige tillatelser. Du kan fortsatt konfigurere denne innstillingen manuelt i systeminnstillingene.","openAtLogin.dialog.title":"Åpne ved pålogging","updatePrompt.detail":"Vil du installere den nå? Vi åpner vinduene og fanene på nytt for deg.","updatePrompt.installAndRelaunch":"Installer og start på nytt","updatePrompt.message":"En ny versjon av Notion er tilgjengelig!","updatePrompt.remindMeLater":"Minn meg på det senere","window.loadingError.message":"Feil ved innlasting av Notion. Koble til Internett for å komme i gang.","window.loadingError.reload":"Last inn på nytt","window.tabLoadingError.cancel":"Avbryt","window.tabMenu.closeOtherTabs":"Lukk andre faner","window.tabMenu.closeTab":"Lukk fanen","window.tabMenu.closeTabsToLeft":"Lukk faner til venstre","window.tabMenu.closeTabsToRight":"Lukk faner til høyre","window.tabMenu.copyLink":"Kopier lenke","window.tabMenu.duplicateTab":"Dupliser fane","window.tabMenu.moveToNewWindow":"Flytt fane til nytt vindu","window.tabMenu.refresh":"Oppdater fane"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion - Kommandosøk",
+                "desktop.tabBar.backButtonLabel": "Tilbake",
+                "desktop.tabBar.closeSidebarLabel": "Lukk sidestolpe",
+                "desktop.tabBar.closeTabLabel": "Lukk fanen {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Framover",
+                "desktop.tabBar.loadingPlaceholder": "Laster inn …",
+                "desktop.tabBar.newTabButtonLabel": "Ny fane",
+                "desktop.tabBar.openSidebarLabel": "Åpne sidestolpen",
+                "desktopInstaller.failedToMove.detail": "Vi kan ikke flytte appen til Apper-mappen. Flytt den manuelt.",
+                "desktopInstaller.failedToMove.title": "Kan ikke flytte app",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Avbryt",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Notion-appen din er ikke riktig installert. Kan vi flytte Notion-appen til Apper-mappen?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Ugyldig installasjon",
+                "desktopSearch.doneButton.label": "Ferdig",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} match} andre {{matchCount} matcher}}",
+                "desktopSearch.noResults.message": "Ikke funnet",
+                "desktopTopbar.appMenu.about": "Om Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Se etter oppdateringer …",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Du bruker den nyeste versjonen av Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Se etter oppdateringer",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "En ny versjon av Notion er tilgjengelig og lastes for øyeblikket ned i bakgrunnen. Takk for at du holder deg oppdatert!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion klarte ikke å koble til oppdateringsserveren, enten på grunn av et problem med internett-tilkoblingen eller selve oppdateringsserveren. Prøv igjen senere.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Laster ned oppdatering ({percentage} %)",
+                "desktopTopbar.appMenu.hide": "Skjul Notion",
+                "desktopTopbar.appMenu.hideOthers": "Skjul andre",
+                "desktopTopbar.appMenu.preferences": "Instillinger …",
+                "desktopTopbar.appMenu.quit": "Avslutt",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Avslutt uten å lagre faner",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Start på nytt for å bruke oppdateringen",
+                "desktopTopbar.appMenu.services": "Tjenester",
+                "desktopTopbar.appMenu.unhide": "Vis alt",
+                "desktopTopbar.editMenu.copy": "Kopier",
+                "desktopTopbar.editMenu.cut": "Klipp ut",
+                "desktopTopbar.editMenu.paste": "Lim inn",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Lim inn og match stil",
+                "desktopTopbar.editMenu.redo": "Gjør om",
+                "desktopTopbar.editMenu.selectAll": "Velg alle",
+                "desktopTopbar.editMenu.speech": "Tale",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Begynn å snakke",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Slutt å snakke",
+                "desktopTopbar.editMenu.title": "Rediger",
+                "desktopTopbar.editMenu.undo": "Angre",
+                "desktopTopbar.fileMenu.close": "Lukk vindu",
+                "desktopTopbar.fileMenu.closeTab": "Lukk fanen",
+                "desktopTopbar.fileMenu.newTab": "Ny fane",
+                "desktopTopbar.fileMenu.newWindow": "Nytt vindu",
+                "desktopTopbar.fileMenu.print": "Skriv ut …",
+                "desktopTopbar.fileMenu.quit": "Avslutt",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Avslutt uten å lagre faner",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Åpne sist lukkede fane på nytt",
+                "desktopTopbar.fileMenu.title": "Fil",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Deaktiver avansert logging og start på nytt",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Deaktiver maskinvareakselerasjon og start på nytt",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Aktiver avansert logging og start på nytt",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Aktiver maskinvareakselerasjon og start på nytt",
+                "desktopTopbar.helpMenu.openConsole": "Åpne konsollen …",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Åpne hjelp og dokumentasjon",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Registrer ytelsessporing ...",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Vil du registrere et ytelsesspor for de neste 30 sekundene? Når det er gjort, vil det bli plassert i nedlastingsmappen.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Avbryt",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Registrer ytelsesspor",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Registrer et ytelsesspor?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Tilbakestill og slett alle lokale data",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Vis logger i Explorer",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Vis logger i Finder",
+                "desktopTopbar.helpMenu.title": "Hjelp",
+                "desktopTopbar.historyMenu.historyBack": "Tilbake",
+                "desktopTopbar.historyMenu.historyForward": "Framover",
+                "desktopTopbar.historyMenu.title": "Historikk",
+                "desktopTopbar.toggleDevTools": "Slå av/på utviklerverktøy",
+                "desktopTopbar.toggleWindowDevTools": "Slå av/på Windows Utviklerverktøy",
+                "desktopTopbar.troubleshootingMenu.title": "Feilsøking",
+                "desktopTopbar.viewMenu.actualSize": "Faktisk størrelse",
+                "desktopTopbar.viewMenu.forceReload": "Tving ny innlasting",
+                "desktopTopbar.viewMenu.reload": "Last inn på nytt",
+                "desktopTopbar.viewMenu.showHideSidebar": "Vis/skjul sidestolpe",
+                "desktopTopbar.viewMenu.title": "Vis",
+                "desktopTopbar.viewMenu.togglefullscreen": "Veksle fullskjerm",
+                "desktopTopbar.viewMenu.zoomIn": "Zoom inn",
+                "desktopTopbar.viewMenu.zoomOut": "Zoom ut",
+                "desktopTopbar.whatsNewMac.title": "Åpne Hva er nytt i Notion for macOS",
+                "desktopTopbar.whatsNewWindows.title": "Åpne Hva er nytt i Notion for Windows",
+                "desktopTopbar.windowMenu.close": "Lukk",
+                "desktopTopbar.windowMenu.front": "Front",
+                "desktopTopbar.windowMenu.maximize": "Maksimer",
+                "desktopTopbar.windowMenu.minimize": "Minimer",
+                "desktopTopbar.windowMenu.showNextTab": "Vis neste fane",
+                "desktopTopbar.windowMenu.showPreviousTab": "Vis forrige fane",
+                "desktopTopbar.windowMenu.title": "Vindu",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion oppdaget en feil under forsøk på å vise loggene i Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion oppdaget en feil under forsøk på å vise loggene i Explorer:",
+                "desktopTroubleshooting.showLogs.error.title": "Visning av loggene mislyktes",
+                "menuBarIcon.menu.enableQuickSearch": "Aktiver hurtigsøk",
+                "menuBarIcon.menu.keepInBackground": "Ha i bakgrunnen",
+                "menuBarIcon.menu.launchPreferences": "Startinnstillinger",
+                "menuBarIcon.menu.openOnLogin": "Åpne Notion ved pålogging",
+                "menuBarIcon.menu.quitNotion": "Avslutt Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Endre hurtigtast for kommandosøk",
+                "menuBarIcon.menu.showImmediately": "Vis umiddelbart",
+                "menuBarIcon.menu.showNotionInMenuBar": "Vis Notion i statusfeltet",
+                "menuBarIcon.menu.toggleCommandSearch": "Vis/skjul kommandosøk",
+                "openAtLogin.dialog.detail": "{operatingSystem} hindret Notion fra å konfigurere «Åpne ved pålogging»-innstillingen. Dette skjer vanligvis når oppstarten til Notion er konfigurert i systeminnstillingene, eller hvis du mangler tilstrekkelige tillatelser. Du kan fortsatt konfigurere denne innstillingen manuelt i systeminnstillingene.",
+                "openAtLogin.dialog.title": "Åpne ved pålogging",
+                "updatePrompt.detail": "Vil du installere den nå? Vi åpner vinduene og fanene på nytt for deg.",
+                "updatePrompt.installAndRelaunch": "Installer og start på nytt",
+                "updatePrompt.message": "En ny versjon av Notion er tilgjengelig!",
+                "updatePrompt.remindMeLater": "Minn meg på det senere",
+                "window.loadingError.message": "Feil ved innlasting av Notion. Koble til Internett for å komme i gang.",
+                "window.loadingError.reload": "Last inn på nytt",
+                "window.tabLoadingError.cancel": "Avbryt",
+                "window.tabMenu.closeOtherTabs": "Lukk andre faner",
+                "window.tabMenu.closeTab": "Lukk fanen",
+                "window.tabMenu.closeTabsToLeft": "Lukk faner til venstre",
+                "window.tabMenu.closeTabsToRight": "Lukk faner til høyre",
+                "window.tabMenu.copyLink": "Kopier lenke",
+                "window.tabMenu.duplicateTab": "Dupliser fane",
+                "window.tabMenu.moveToNewWindow": "Flytt fane til nytt vindu",
+                "window.tabMenu.refresh": "Oppdater fane"
+            }
         },
-        63969: e => {
+        // nl_NL
+        63969: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion - Zoekopdrachten","desktop.tabBar.backButtonLabel":"Terug","desktop.tabBar.closeSidebarLabel":"Zijbalk vergrendelen","desktop.tabBar.closeTabLabel":"Tabblad {tabTitle} sluiten","desktop.tabBar.forwardButtonLabel":"Volgende","desktop.tabBar.loadingPlaceholder":"Aan het laden...","desktop.tabBar.newTabButtonLabel":"Nieuw tabblad","desktop.tabBar.openSidebarLabel":"Zijbalk openen","desktopInstaller.failedToMove.detail":"We zijn er niet in geslaagd de app naar je map Applicaties te verplaatsen. Verplaats deze handmatig.","desktopInstaller.failedToMove.title":"Kan app niet verplaatsen","desktopInstaller.invalidInstallDialog.cancelButton.label":"Annuleren","desktopInstaller.invalidInstallDialog.confirmMove":"Je Notion-applicatie is niet correct geïnstalleerd. Wil je de Notion-app verplaatsen naar je map Applicaties?","desktopInstaller.invalidInstallDialog.okButton.label":"Ok","desktopInstaller.invalidInstallDialog.title":"Ongeldige installatie","desktopSearch.doneButton.label":"Klaar","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} match} other {{matchCount} matches}}","desktopSearch.noResults.message":"Niet gevonden","desktopTopbar.appMenu.about":"Over Notion","desktopTopbar.appMenu.checkForUpdate":"Controleren op updates...","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Je gebruikt de nieuwste versie van Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Controleren op updates...","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Er is een nieuwe versie van Notion beschikbaar die momenteel op de achtergrond wordt gedownload. Bedankt voor het installeren van de update!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion kan geen verbinding maken met de updateserver vanwege een probleem met je internetverbinding of met de updateserver zelf. Probeer het later opnieuw.","desktopTopbar.appMenu.downloadingUpdate":"Update wordt gedownload ({percentage}%)","desktopTopbar.appMenu.hide":"Verberg Notion","desktopTopbar.appMenu.hideOthers":"Verberg anderen","desktopTopbar.appMenu.preferences":"Voorkeuren…","desktopTopbar.appMenu.quit":"Stoppen","desktopTopbar.appMenu.quitWithoutSavingTabs":"Afsluiten zonder tabbladen op te slaan","desktopTopbar.appMenu.restartToApplyUpdate":"Start opnieuw op om de update toe te passen","desktopTopbar.appMenu.services":"Diensten","desktopTopbar.appMenu.unhide":"Toon alle","desktopTopbar.editMenu.copy":"Kopiëren","desktopTopbar.editMenu.cut":"Knippen","desktopTopbar.editMenu.paste":"Plakken","desktopTopbar.editMenu.pasteAndMatchStyle":"Stijl plakken en matchen","desktopTopbar.editMenu.redo":"Opnieuw","desktopTopbar.editMenu.selectAll":"Alles selecteren","desktopTopbar.editMenu.speech":"Spraak","desktopTopbar.editMenu.speech.startSpeaking":"Begin met spreken","desktopTopbar.editMenu.speech.stopSpeaking":"Stop met spreken","desktopTopbar.editMenu.title":"Bewerken","desktopTopbar.editMenu.undo":"Ongedaan maken","desktopTopbar.fileMenu.close":"Venster sluiten","desktopTopbar.fileMenu.closeTab":"Tabblad sluiten","desktopTopbar.fileMenu.newTab":"Nieuw tabblad","desktopTopbar.fileMenu.newWindow":"Nieuw venster","desktopTopbar.fileMenu.print":"Afdrukken…","desktopTopbar.fileMenu.quit":"Afsluiten","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Afsluiten zonder tabbladen op te slaan","desktopTopbar.fileMenu.reopenClosedTab":"Laatst gesloten tabblad opnieuw openen","desktopTopbar.fileMenu.title":"Bestand","desktopTopbar.helpMenu.disableDebugLogging":"Geavanceerde logboekregistratie uitschakelen en opnieuw opstarten","desktopTopbar.helpMenu.disableHardwareAcceleration":"Hardwareversnelling uitschakelen en opnieuw opstarten","desktopTopbar.helpMenu.enableDebugLogging":"Geavanceerde logboekregistratie inschakelen en opnieuw opstarten","desktopTopbar.helpMenu.enableHardwareAcceleration":"Hardwareversnelling inschakelen en opnieuw opstarten","desktopTopbar.helpMenu.openConsole":"Console openen…","desktopTopbar.helpMenu.openHelpAndSupport":"Hulp en documentatie openen","desktopTopbar.helpMenu.recordPerformanceTrace":"Prestatietracering opnemen…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Wilt u een prestatietracering opnemen voor de komende 30 seconden? Als u klaar bent, wordt het in uw map Downloads geplaatst.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Annuleren","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Prestatietracering opnemen","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Een prestatietracering opnemen?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Alle lokale gegevens resetten en wissen","desktopTopbar.helpMenu.showLogsInExplorer":"Logboeken weergeven in Verkenner","desktopTopbar.helpMenu.showLogsInFinder":"Logboeken weergeven in Finder","desktopTopbar.helpMenu.title":"Help","desktopTopbar.historyMenu.historyBack":"Terug","desktopTopbar.historyMenu.historyForward":"Volgende","desktopTopbar.historyMenu.title":"Geschiedenis","desktopTopbar.toggleDevTools":"Schakelen naar ontwikkelaarstools","desktopTopbar.toggleWindowDevTools":"Schakelen naar venster ontwikkelaarstools","desktopTopbar.troubleshootingMenu.title":"Probleemoplossen","desktopTopbar.viewMenu.actualSize":"Werkelijke grootte","desktopTopbar.viewMenu.forceReload":"Opnieuw laden forceren","desktopTopbar.viewMenu.reload":"Opnieuw laden","desktopTopbar.viewMenu.showHideSidebar":"Zijbalk weergeven/verbergen","desktopTopbar.viewMenu.title":"Weergeven","desktopTopbar.viewMenu.togglefullscreen":"Schakelen naar volledige pagina","desktopTopbar.viewMenu.zoomIn":"Inzoomen","desktopTopbar.viewMenu.zoomOut":"Uitzoomen","desktopTopbar.whatsNewMac.title":"Wat is er nieuw in Notion voor macOS openen","desktopTopbar.whatsNewWindows.title":"Wat is er nieuw in Notion voor Windows openen","desktopTopbar.windowMenu.close":"Sluiten","desktopTopbar.windowMenu.front":"Voor","desktopTopbar.windowMenu.maximize":"Maximaliseren","desktopTopbar.windowMenu.minimize":"Minimaliseren","desktopTopbar.windowMenu.showNextTab":"Volgend tabblad weergeven","desktopTopbar.windowMenu.showPreviousTab":"Vorig tabblad weergeven","desktopTopbar.windowMenu.title":"Venster","desktopTopbar.windowMenu.zoom":"Zoom-vergadering","desktopTroubleshooting.showLogs.error.message.mac":"Notion heeft een fout ontdekt bij het weergeven van de logboeken in Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion heeft een fout ontdekt bij het weergeven van de logboeken in Verkenner:","desktopTroubleshooting.showLogs.error.title":"Het weergeven van de logboeken is mislukt","menuBarIcon.menu.enableQuickSearch":"Snel zoeken inschakelen","menuBarIcon.menu.keepInBackground":"Op de achtergrond houden","menuBarIcon.menu.launchPreferences":"Voorkeuren openen","menuBarIcon.menu.openOnLogin":"Notion openen bij aanmelden","menuBarIcon.menu.quitNotion":"Notion afsluiten","menuBarIcon.menu.selectCommandSearchShortcut":"Snelkoppeling voor Zoekopdrachten wijzigen","menuBarIcon.menu.showImmediately":"Onmiddellijk tonen","menuBarIcon.menu.showNotionInMenuBar":"Toon Notion in de menubalk","menuBarIcon.menu.toggleCommandSearch":"Toggle zoekopdracht","openAtLogin.dialog.detail":"{operatingSystem} hield tegen dat Notion de instelling \'Openen bij inloggen\' kon configureren. Dit gebeurt meestal wanneer het opstarten van Notion is geconfigureerd in de systeeminstellingen of wanneer je onvoldoende machtigingen hebt. Je kunt deze instelling nog steeds handmatig configureren in de systeeminstellingen.","openAtLogin.dialog.title":"Openen bij aanmelden","updatePrompt.detail":"Wil je deze nu installeren? We zullen je vensters en tabbladen weer voor je openen.","updatePrompt.installAndRelaunch":"Installeren en opnieuw opstarten","updatePrompt.message":"Er is een nieuwe versie van Notion beschikbaar!","updatePrompt.remindMeLater":"Herinner mij hier later aan","window.loadingError.message":"Fout bij het laden van Notion. Maak verbinding met het internet om aan de slag te gaan.","window.loadingError.reload":"Opnieuw laden","window.tabLoadingError.cancel":"Annuleren","window.tabMenu.closeOtherTabs":"Andere tabbladen sluiten","window.tabMenu.closeTab":"Tabblad sluiten","window.tabMenu.closeTabsToLeft":"Tabbladen links sluiten","window.tabMenu.closeTabsToRight":"Tabbladen rechts sluiten","window.tabMenu.copyLink":"Koppeling kopiëren","window.tabMenu.duplicateTab":"Tabblad dupliceren","window.tabMenu.moveToNewWindow":"Tabblad naar nieuw venster verplaatsen","window.tabMenu.refresh":"Tabblad vernieuwen"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion - Zoekopdrachten",
+                "desktop.tabBar.backButtonLabel": "Terug",
+                "desktop.tabBar.closeSidebarLabel": "Zijbalk vergrendelen",
+                "desktop.tabBar.closeTabLabel": "Tabblad {tabTitle} sluiten",
+                "desktop.tabBar.forwardButtonLabel": "Volgende",
+                "desktop.tabBar.loadingPlaceholder": "Aan het laden...",
+                "desktop.tabBar.newTabButtonLabel": "Nieuw tabblad",
+                "desktop.tabBar.openSidebarLabel": "Zijbalk openen",
+                "desktopInstaller.failedToMove.detail": "We zijn er niet in geslaagd de app naar je map Applicaties te verplaatsen. Verplaats deze handmatig.",
+                "desktopInstaller.failedToMove.title": "Kan app niet verplaatsen",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Annuleren",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Je Notion-applicatie is niet correct geïnstalleerd. Wil je de Notion-app verplaatsen naar je map Applicaties?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "Ok",
+                "desktopInstaller.invalidInstallDialog.title": "Ongeldige installatie",
+                "desktopSearch.doneButton.label": "Klaar",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} match} other {{matchCount} matches}}",
+                "desktopSearch.noResults.message": "Niet gevonden",
+                "desktopTopbar.appMenu.about": "Over Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Controleren op updates...",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Je gebruikt de nieuwste versie van Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Controleren op updates...",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Er is een nieuwe versie van Notion beschikbaar die momenteel op de achtergrond wordt gedownload. Bedankt voor het installeren van de update!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion kan geen verbinding maken met de updateserver vanwege een probleem met je internetverbinding of met de updateserver zelf. Probeer het later opnieuw.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Update wordt gedownload ({percentage}%)",
+                "desktopTopbar.appMenu.hide": "Verberg Notion",
+                "desktopTopbar.appMenu.hideOthers": "Verberg anderen",
+                "desktopTopbar.appMenu.preferences": "Voorkeuren…",
+                "desktopTopbar.appMenu.quit": "Stoppen",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Afsluiten zonder tabbladen op te slaan",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Start opnieuw op om de update toe te passen",
+                "desktopTopbar.appMenu.services": "Diensten",
+                "desktopTopbar.appMenu.unhide": "Toon alle",
+                "desktopTopbar.editMenu.copy": "Kopiëren",
+                "desktopTopbar.editMenu.cut": "Knippen",
+                "desktopTopbar.editMenu.paste": "Plakken",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Stijl plakken en matchen",
+                "desktopTopbar.editMenu.redo": "Opnieuw",
+                "desktopTopbar.editMenu.selectAll": "Alles selecteren",
+                "desktopTopbar.editMenu.speech": "Spraak",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Begin met spreken",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Stop met spreken",
+                "desktopTopbar.editMenu.title": "Bewerken",
+                "desktopTopbar.editMenu.undo": "Ongedaan maken",
+                "desktopTopbar.fileMenu.close": "Venster sluiten",
+                "desktopTopbar.fileMenu.closeTab": "Tabblad sluiten",
+                "desktopTopbar.fileMenu.newTab": "Nieuw tabblad",
+                "desktopTopbar.fileMenu.newWindow": "Nieuw venster",
+                "desktopTopbar.fileMenu.print": "Afdrukken…",
+                "desktopTopbar.fileMenu.quit": "Afsluiten",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Afsluiten zonder tabbladen op te slaan",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Laatst gesloten tabblad opnieuw openen",
+                "desktopTopbar.fileMenu.title": "Bestand",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Geavanceerde logboekregistratie uitschakelen en opnieuw opstarten",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Hardwareversnelling uitschakelen en opnieuw opstarten",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Geavanceerde logboekregistratie inschakelen en opnieuw opstarten",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Hardwareversnelling inschakelen en opnieuw opstarten",
+                "desktopTopbar.helpMenu.openConsole": "Console openen…",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Hulp en documentatie openen",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Prestatietracering opnemen…",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Wilt u een prestatietracering opnemen voor de komende 30 seconden? Als u klaar bent, wordt het in uw map Downloads geplaatst.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Annuleren",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Prestatietracering opnemen",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Een prestatietracering opnemen?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Alle lokale gegevens resetten en wissen",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Logboeken weergeven in Verkenner",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Logboeken weergeven in Finder",
+                "desktopTopbar.helpMenu.title": "Help",
+                "desktopTopbar.historyMenu.historyBack": "Terug",
+                "desktopTopbar.historyMenu.historyForward": "Volgende",
+                "desktopTopbar.historyMenu.title": "Geschiedenis",
+                "desktopTopbar.toggleDevTools": "Schakelen naar ontwikkelaarstools",
+                "desktopTopbar.toggleWindowDevTools": "Schakelen naar venster ontwikkelaarstools",
+                "desktopTopbar.troubleshootingMenu.title": "Probleemoplossen",
+                "desktopTopbar.viewMenu.actualSize": "Werkelijke grootte",
+                "desktopTopbar.viewMenu.forceReload": "Opnieuw laden forceren",
+                "desktopTopbar.viewMenu.reload": "Opnieuw laden",
+                "desktopTopbar.viewMenu.showHideSidebar": "Zijbalk weergeven/verbergen",
+                "desktopTopbar.viewMenu.title": "Weergeven",
+                "desktopTopbar.viewMenu.togglefullscreen": "Schakelen naar volledige pagina",
+                "desktopTopbar.viewMenu.zoomIn": "Inzoomen",
+                "desktopTopbar.viewMenu.zoomOut": "Uitzoomen",
+                "desktopTopbar.whatsNewMac.title": "Wat is er nieuw in Notion voor macOS openen",
+                "desktopTopbar.whatsNewWindows.title": "Wat is er nieuw in Notion voor Windows openen",
+                "desktopTopbar.windowMenu.close": "Sluiten",
+                "desktopTopbar.windowMenu.front": "Voor",
+                "desktopTopbar.windowMenu.maximize": "Maximaliseren",
+                "desktopTopbar.windowMenu.minimize": "Minimaliseren",
+                "desktopTopbar.windowMenu.showNextTab": "Volgend tabblad weergeven",
+                "desktopTopbar.windowMenu.showPreviousTab": "Vorig tabblad weergeven",
+                "desktopTopbar.windowMenu.title": "Venster",
+                "desktopTopbar.windowMenu.zoom": "Zoom-vergadering",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion heeft een fout ontdekt bij het weergeven van de logboeken in Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion heeft een fout ontdekt bij het weergeven van de logboeken in Verkenner:",
+                "desktopTroubleshooting.showLogs.error.title": "Het weergeven van de logboeken is mislukt",
+                "menuBarIcon.menu.enableQuickSearch": "Snel zoeken inschakelen",
+                "menuBarIcon.menu.keepInBackground": "Op de achtergrond houden",
+                "menuBarIcon.menu.launchPreferences": "Voorkeuren openen",
+                "menuBarIcon.menu.openOnLogin": "Notion openen bij aanmelden",
+                "menuBarIcon.menu.quitNotion": "Notion afsluiten",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Snelkoppeling voor Zoekopdrachten wijzigen",
+                "menuBarIcon.menu.showImmediately": "Onmiddellijk tonen",
+                "menuBarIcon.menu.showNotionInMenuBar": "Toon Notion in de menubalk",
+                "menuBarIcon.menu.toggleCommandSearch": "Toggle zoekopdracht",
+                "openAtLogin.dialog.detail": "{operatingSystem} hield tegen dat Notion de instelling 'Openen bij inloggen' kon configureren. Dit gebeurt meestal wanneer het opstarten van Notion is geconfigureerd in de systeeminstellingen of wanneer je onvoldoende machtigingen hebt. Je kunt deze instelling nog steeds handmatig configureren in de systeeminstellingen.",
+                "openAtLogin.dialog.title": "Openen bij aanmelden",
+                "updatePrompt.detail": "Wil je deze nu installeren? We zullen je vensters en tabbladen weer voor je openen.",
+                "updatePrompt.installAndRelaunch": "Installeren en opnieuw opstarten",
+                "updatePrompt.message": "Er is een nieuwe versie van Notion beschikbaar!",
+                "updatePrompt.remindMeLater": "Herinner mij hier later aan",
+                "window.loadingError.message": "Fout bij het laden van Notion. Maak verbinding met het internet om aan de slag te gaan.",
+                "window.loadingError.reload": "Opnieuw laden",
+                "window.tabLoadingError.cancel": "Annuleren",
+                "window.tabMenu.closeOtherTabs": "Andere tabbladen sluiten",
+                "window.tabMenu.closeTab": "Tabblad sluiten",
+                "window.tabMenu.closeTabsToLeft": "Tabbladen links sluiten",
+                "window.tabMenu.closeTabsToRight": "Tabbladen rechts sluiten",
+                "window.tabMenu.copyLink": "Koppeling kopiëren",
+                "window.tabMenu.duplicateTab": "Tabblad dupliceren",
+                "window.tabMenu.moveToNewWindow": "Tabblad naar nieuw venster verplaatsen",
+                "window.tabMenu.refresh": "Tabblad vernieuwen"
+            }
         },
-        39301: e => {
+        // pt_BR
+        39301: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion – Pesquisa por Atalho","desktop.tabBar.backButtonLabel":"Voltar","desktop.tabBar.closeSidebarLabel":"Fechar a barra lateral","desktop.tabBar.closeTabLabel":"Fechar a aba {tabTitle}","desktop.tabBar.forwardButtonLabel":"Avançar","desktop.tabBar.loadingPlaceholder":"Carregando...","desktop.tabBar.newTabButtonLabel":"Nova guia","desktop.tabBar.openSidebarLabel":"Abrir barra lateral","desktopInstaller.failedToMove.detail":"Falha ao mover o aplicativo para a pasta Aplicativos. Você precisa movê-lo manualmente.","desktopInstaller.failedToMove.title":"Falha ao mover o aplicativo","desktopInstaller.invalidInstallDialog.cancelButton.label":"Cancelar","desktopInstaller.invalidInstallDialog.confirmMove":"Seu aplicativo Notion não está instalado corretamente. Podemos movê-lo para a pasta Aplicativos?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Instalação inválida","desktopSearch.doneButton.label":"Concluído","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} correspondência} other {{matchCount} correspondências}}","desktopSearch.noResults.message":"Não encontrado","desktopTopbar.appMenu.about":"Sobre o Notion","desktopTopbar.appMenu.checkForUpdate":"Verifique se há atualizações…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Você está usando a versão mais recente do Notion!","desktopTopbar.appMenu.checkForUpdate.title":"Verifique se há atualizações","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"Uma nova versão disponível do Notion está sendo baixada em segundo plano. Obrigado por se manter atualizado!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"O Notion não conseguiu estabelecer uma conexão com o servidor de atualização devido a um problema em sua conexão com a internet ou no próprio servidor. Tente novamente mais tarde.","desktopTopbar.appMenu.downloadingUpdate":"Baixando atualização ({percentage}%)","desktopTopbar.appMenu.hide":"Ocultar o Notion","desktopTopbar.appMenu.hideOthers":"Ocultar outros","desktopTopbar.appMenu.preferences":"Preferências…","desktopTopbar.appMenu.quit":"Sair","desktopTopbar.appMenu.quitWithoutSavingTabs":"Sair sem salvar guias","desktopTopbar.appMenu.resetAndEraseAllLocalData":"Redefinir e apagar todos os dados locais","desktopTopbar.appMenu.resetAndUpdateApp":"Redefinir e atualizar o aplicativo","desktopTopbar.appMenu.restartToApplyUpdate":"Reiniciar para aplicar a atualização","desktopTopbar.appMenu.services":"Serviços","desktopTopbar.appMenu.unhide":"Mostrar tudo","desktopTopbar.editMenu.copy":"Copiar","desktopTopbar.editMenu.cut":"Recortar","desktopTopbar.editMenu.paste":"Colar","desktopTopbar.editMenu.pasteAndMatchStyle":"Colar e usar mesmo estilo","desktopTopbar.editMenu.redo":"Refazer","desktopTopbar.editMenu.selectAll":"Selecionar tudo","desktopTopbar.editMenu.speech":"Fala","desktopTopbar.editMenu.speech.startSpeaking":"Começar a falar","desktopTopbar.editMenu.speech.stopSpeaking":"Parar de falar","desktopTopbar.editMenu.title":"Editar","desktopTopbar.editMenu.undo":"Desfazer","desktopTopbar.fileMenu.close":"Fechar janela","desktopTopbar.fileMenu.closeTab":"Fechar guia","desktopTopbar.fileMenu.newTab":"Nova guia","desktopTopbar.fileMenu.newWindow":"Nova janela","desktopTopbar.fileMenu.print":"Imprimir...","desktopTopbar.fileMenu.quit":"Sair","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Sair sem salvar guias","desktopTopbar.fileMenu.reopenClosedTab":"Reabrir a última guia fechada","desktopTopbar.fileMenu.title":"Arquivo","desktopTopbar.helpMenu.disableDebugLogging":"Desabilitar o registro avançado e reiniciar","desktopTopbar.helpMenu.disableHardwareAcceleration":"Desabilitar aceleração de hardware e reiniciar","desktopTopbar.helpMenu.enableDebugLogging":"Habilitar o registro avançado e reiniciar","desktopTopbar.helpMenu.enableHardwareAcceleration":"Habilitar aceleração de hardware e reiniciar","desktopTopbar.helpMenu.openConsole":"Abrir console…","desktopTopbar.helpMenu.openHelpAndSupport":"Abrir Ajuda e documentação","desktopTopbar.helpMenu.recordPerformanceTrace":"Gravar registro de desempenho…","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Deseja gravar um registro de desempenho pelos próximos 30 segundos? Depois de concluído, ele será colocado na pasta Downloads.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Cancelar","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Gravar registro de desempenho","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Quer gravar um registro de desempenho?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Redefinir e apagar todos os dados locais","desktopTopbar.helpMenu.showLogsInExplorer":"Mostrar registros no Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Mostrar registros no Finder","desktopTopbar.helpMenu.title":"Ajuda","desktopTopbar.historyMenu.historyBack":"Voltar","desktopTopbar.historyMenu.historyForward":"Avançar","desktopTopbar.historyMenu.title":"Histórico","desktopTopbar.toggleDevTools":"Alternar Ferramentas do Desenvolvedor","desktopTopbar.toggleWindowDevTools":"Alternar janela de Ferramentas do Desenvolvedor","desktopTopbar.troubleshootingMenu.title":"Solução de problemas","desktopTopbar.viewMenu.actualSize":"Tamanho real","desktopTopbar.viewMenu.forceReload":"Forçar recarregar","desktopTopbar.viewMenu.reload":"Recarregar","desktopTopbar.viewMenu.reloadAllTabs":"Recarregar todas as guias","desktopTopbar.viewMenu.showHideSidebar":"Mostrar/ocultar barra lateral","desktopTopbar.viewMenu.title":"Visualizar","desktopTopbar.viewMenu.togglefullscreen":"Alternar tela cheia","desktopTopbar.viewMenu.zoomIn":"Mais zoom","desktopTopbar.viewMenu.zoomOut":"Menos zoom","desktopTopbar.whatsNewMac.title":"Abra as Novidades do Notion para macOS","desktopTopbar.whatsNewWindows.title":"Abra as Novidades do Notion para Windows","desktopTopbar.windowMenu.close":"Fechar","desktopTopbar.windowMenu.front":"Frente","desktopTopbar.windowMenu.maximize":"Maximizar","desktopTopbar.windowMenu.minimize":"Minimizar","desktopTopbar.windowMenu.showNextTab":"Mostrar próxima guia","desktopTopbar.windowMenu.showPreviousTab":"Mostrar guia anterior","desktopTopbar.windowMenu.title":"Janela","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"O Notion encontrou um erro ao tentar mostrar os registros no Finder:","desktopTroubleshooting.showLogs.error.message.windows":"O Notion encontrou um erro ao tentar mostrar os registros no Explorer:","desktopTroubleshooting.showLogs.error.title":"Falha ao mostrar os registros","menuBarIcon.menu.enableQuickSearch":"Ativar pesquisa rápida","menuBarIcon.menu.keepInBackground":"Manter em segundo plano","menuBarIcon.menu.launchPreferences":"Preferências de inicialização","menuBarIcon.menu.openCloseQuickSearch":"Abrir/fechar pesquisa rápida","menuBarIcon.menu.openOnLogin":"Abrir o Notion no login","menuBarIcon.menu.quitNotion":"Sair do Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Alterar atalho da Pesquisa por Atalho","menuBarIcon.menu.showImmediately":"Mostrar imediatamente","menuBarIcon.menu.showNotionInMenuBar":"Mostrar o Notion na barra de menu","menuBarIcon.menu.toggleCommandSearch":"Alternar Pesquisa por Atalho","openAtLogin.dialog.detail":"{operatingSystem} impediu que o Notion definisse a configuração \\"Abrir no login\\". Isso geralmente acontece quando a inicialização do Notion é definida nas configurações do sistema ou quando você não tem autorizações suficientes. Você ainda pode definir essa configuração manualmente nas configurações do sistema.","openAtLogin.dialog.title":"Abrir no login","updatePrompt.detail":"Gostaria de instalar agora? Reabriremos suas janelas e guias logo após.","updatePrompt.installAndRelaunch":"Instalar e reabrir","updatePrompt.message":"Está disponível uma nova versão do Notion!","updatePrompt.remindMeLater":"Lembrar mais tarde","window.loadingError.message":"Erro ao carregar o Notion. Conecte-se à internet para começar.","window.loadingError.reload":"Recarregar","window.tabLoadingError.cancel":"Cancelar","window.tabMenu.closeOtherTabs":"Fechar outras guias","window.tabMenu.closeTab":"Fechar guia","window.tabMenu.closeTabsToLeft":"Fechar guias à esquerda","window.tabMenu.closeTabsToRight":"Fechar guias à direita","window.tabMenu.copyLink":"Copiar link","window.tabMenu.duplicateTab":"Duplicar guia","window.tabMenu.moveToNewWindow":"Mover guia para nova janela","window.tabMenu.refresh":"Atualizar guia"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion – Pesquisa por Atalho",
+                "desktop.tabBar.backButtonLabel": "Voltar",
+                "desktop.tabBar.closeSidebarLabel": "Fechar a barra lateral",
+                "desktop.tabBar.closeTabLabel": "Fechar a aba {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Avançar",
+                "desktop.tabBar.loadingPlaceholder": "Carregando...",
+                "desktop.tabBar.newTabButtonLabel": "Nova guia",
+                "desktop.tabBar.openSidebarLabel": "Abrir barra lateral",
+                "desktopInstaller.failedToMove.detail": "Falha ao mover o aplicativo para a pasta Aplicativos. Você precisa movê-lo manualmente.",
+                "desktopInstaller.failedToMove.title": "Falha ao mover o aplicativo",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Cancelar",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Seu aplicativo Notion não está instalado corretamente. Podemos movê-lo para a pasta Aplicativos?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Instalação inválida",
+                "desktopSearch.doneButton.label": "Concluído",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} correspondência} other {{matchCount} correspondências}}",
+                "desktopSearch.noResults.message": "Não encontrado",
+                "desktopTopbar.appMenu.about": "Sobre o Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Verifique se há atualizações…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Você está usando a versão mais recente do Notion!",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Verifique se há atualizações",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "Uma nova versão disponível do Notion está sendo baixada em segundo plano. Obrigado por se manter atualizado!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "O Notion não conseguiu estabelecer uma conexão com o servidor de atualização devido a um problema em sua conexão com a internet ou no próprio servidor. Tente novamente mais tarde.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Baixando atualização ({percentage}%)",
+                "desktopTopbar.appMenu.hide": "Ocultar o Notion",
+                "desktopTopbar.appMenu.hideOthers": "Ocultar outros",
+                "desktopTopbar.appMenu.preferences": "Preferências…",
+                "desktopTopbar.appMenu.quit": "Sair",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Sair sem salvar guias",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "Redefinir e apagar todos os dados locais",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "Redefinir e atualizar o aplicativo",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Reiniciar para aplicar a atualização",
+                "desktopTopbar.appMenu.services": "Serviços",
+                "desktopTopbar.appMenu.unhide": "Mostrar tudo",
+                "desktopTopbar.editMenu.copy": "Copiar",
+                "desktopTopbar.editMenu.cut": "Recortar",
+                "desktopTopbar.editMenu.paste": "Colar",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Colar e usar mesmo estilo",
+                "desktopTopbar.editMenu.redo": "Refazer",
+                "desktopTopbar.editMenu.selectAll": "Selecionar tudo",
+                "desktopTopbar.editMenu.speech": "Fala",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Começar a falar",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Parar de falar",
+                "desktopTopbar.editMenu.title": "Editar",
+                "desktopTopbar.editMenu.undo": "Desfazer",
+                "desktopTopbar.fileMenu.close": "Fechar janela",
+                "desktopTopbar.fileMenu.closeTab": "Fechar guia",
+                "desktopTopbar.fileMenu.newTab": "Nova guia",
+                "desktopTopbar.fileMenu.newWindow": "Nova janela",
+                "desktopTopbar.fileMenu.print": "Imprimir...",
+                "desktopTopbar.fileMenu.quit": "Sair",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Sair sem salvar guias",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Reabrir a última guia fechada",
+                "desktopTopbar.fileMenu.title": "Arquivo",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Desabilitar o registro avançado e reiniciar",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Desabilitar aceleração de hardware e reiniciar",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Habilitar o registro avançado e reiniciar",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Habilitar aceleração de hardware e reiniciar",
+                "desktopTopbar.helpMenu.openConsole": "Abrir console…",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Abrir Ajuda e documentação",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Gravar registro de desempenho…",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Deseja gravar um registro de desempenho pelos próximos 30 segundos? Depois de concluído, ele será colocado na pasta Downloads.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Cancelar",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Gravar registro de desempenho",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Quer gravar um registro de desempenho?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Redefinir e apagar todos os dados locais",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Mostrar registros no Explorer",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Mostrar registros no Finder",
+                "desktopTopbar.helpMenu.title": "Ajuda",
+                "desktopTopbar.historyMenu.historyBack": "Voltar",
+                "desktopTopbar.historyMenu.historyForward": "Avançar",
+                "desktopTopbar.historyMenu.title": "Histórico",
+                "desktopTopbar.toggleDevTools": "Alternar Ferramentas do Desenvolvedor",
+                "desktopTopbar.toggleWindowDevTools": "Alternar janela de Ferramentas do Desenvolvedor",
+                "desktopTopbar.troubleshootingMenu.title": "Solução de problemas",
+                "desktopTopbar.viewMenu.actualSize": "Tamanho real",
+                "desktopTopbar.viewMenu.forceReload": "Forçar recarregar",
+                "desktopTopbar.viewMenu.reload": "Recarregar",
+                "desktopTopbar.viewMenu.reloadAllTabs": "Recarregar todas as guias",
+                "desktopTopbar.viewMenu.showHideSidebar": "Mostrar/ocultar barra lateral",
+                "desktopTopbar.viewMenu.title": "Visualizar",
+                "desktopTopbar.viewMenu.togglefullscreen": "Alternar tela cheia",
+                "desktopTopbar.viewMenu.zoomIn": "Mais zoom",
+                "desktopTopbar.viewMenu.zoomOut": "Menos zoom",
+                "desktopTopbar.whatsNewMac.title": "Abra as Novidades do Notion para macOS",
+                "desktopTopbar.whatsNewWindows.title": "Abra as Novidades do Notion para Windows",
+                "desktopTopbar.windowMenu.close": "Fechar",
+                "desktopTopbar.windowMenu.front": "Frente",
+                "desktopTopbar.windowMenu.maximize": "Maximizar",
+                "desktopTopbar.windowMenu.minimize": "Minimizar",
+                "desktopTopbar.windowMenu.showNextTab": "Mostrar próxima guia",
+                "desktopTopbar.windowMenu.showPreviousTab": "Mostrar guia anterior",
+                "desktopTopbar.windowMenu.title": "Janela",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "O Notion encontrou um erro ao tentar mostrar os registros no Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "O Notion encontrou um erro ao tentar mostrar os registros no Explorer:",
+                "desktopTroubleshooting.showLogs.error.title": "Falha ao mostrar os registros",
+                "menuBarIcon.menu.enableQuickSearch": "Ativar pesquisa rápida",
+                "menuBarIcon.menu.keepInBackground": "Manter em segundo plano",
+                "menuBarIcon.menu.launchPreferences": "Preferências de inicialização",
+                "menuBarIcon.menu.openCloseQuickSearch": "Abrir/fechar pesquisa rápida",
+                "menuBarIcon.menu.openOnLogin": "Abrir o Notion no login",
+                "menuBarIcon.menu.quitNotion": "Sair do Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Alterar atalho da Pesquisa por Atalho",
+                "menuBarIcon.menu.showImmediately": "Mostrar imediatamente",
+                "menuBarIcon.menu.showNotionInMenuBar": "Mostrar o Notion na barra de menu",
+                "menuBarIcon.menu.toggleCommandSearch": "Alternar Pesquisa por Atalho",
+                "openAtLogin.dialog.detail": "{operatingSystem} impediu que o Notion definisse a configuração \"Abrir no login\". Isso geralmente acontece quando a inicialização do Notion é definida nas configurações do sistema ou quando você não tem autorizações suficientes. Você ainda pode definir essa configuração manualmente nas configurações do sistema.",
+                "openAtLogin.dialog.title": "Abrir no login",
+                "updatePrompt.detail": "Gostaria de instalar agora? Reabriremos suas janelas e guias logo após.",
+                "updatePrompt.installAndRelaunch": "Instalar e reabrir",
+                "updatePrompt.message": "Está disponível uma nova versão do Notion!",
+                "updatePrompt.remindMeLater": "Lembrar mais tarde",
+                "window.loadingError.message": "Erro ao carregar o Notion. Conecte-se à internet para começar.",
+                "window.loadingError.reload": "Recarregar",
+                "window.tabLoadingError.cancel": "Cancelar",
+                "window.tabMenu.closeOtherTabs": "Fechar outras guias",
+                "window.tabMenu.closeTab": "Fechar guia",
+                "window.tabMenu.closeTabsToLeft": "Fechar guias à esquerda",
+                "window.tabMenu.closeTabsToRight": "Fechar guias à direita",
+                "window.tabMenu.copyLink": "Copiar link",
+                "window.tabMenu.duplicateTab": "Duplicar guia",
+                "window.tabMenu.moveToNewWindow": "Mover guia para nova janela",
+                "window.tabMenu.refresh": "Atualizar guia"
+            }
         },
-        86144: e => {
+        // sv_SE
+        86144: module => {
             "use strict";
-            e.exports = JSON.parse('{"commandSearch.window.title":"Notion – Kommandosökning","desktop.tabBar.backButtonLabel":"Tillbaka","desktop.tabBar.closeSidebarLabel":"Stäng sidofältet","desktop.tabBar.closeTabLabel":"Stäng flik, {tabTitle}","desktop.tabBar.forwardButtonLabel":"Nästa","desktop.tabBar.loadingPlaceholder":"Laddar …","desktop.tabBar.newTabButtonLabel":"Ny flik","desktop.tabBar.openSidebarLabel":"Öppna sidofält","desktopInstaller.failedToMove.detail":"Det gick inte att flytta appen till din Applikations-mapp. Flytta den manuellt.","desktopInstaller.failedToMove.title":"Det gick inte att flytta appen","desktopInstaller.invalidInstallDialog.cancelButton.label":"Avbryt","desktopInstaller.invalidInstallDialog.confirmMove":"Din Notion-applikation är inte korrekt installerad. Kan vi flytta din Notion-app till din Applikations-mapp?","desktopInstaller.invalidInstallDialog.okButton.label":"OK","desktopInstaller.invalidInstallDialog.title":"Ogiltig installation","desktopSearch.doneButton.label":"Klart","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} träff} other {{matchCount} träffar}}","desktopSearch.noResults.message":"Hittades inte","desktopTopbar.appMenu.about":"Om Notion","desktopTopbar.appMenu.checkForUpdate":"Sök efter uppdateringar …","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"Du har den senaste versionen av Notion.","desktopTopbar.appMenu.checkForUpdate.title":"Sök efter uppdateringar","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"En ny version av Notion är tillgänglig och laddas för närvarande ner i bakgrunden. Tack för att du håller dig uppdaterad!","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion lyckades inte upprätta en anslutning till uppdateringsservern, antingen på grund av problem med din Internetanslutning eller uppdateringsservern. Försök igen senare.","desktopTopbar.appMenu.downloadingUpdate":"Ladda ned uppdatering ({percentage}%)","desktopTopbar.appMenu.hide":"Dölj Notion","desktopTopbar.appMenu.hideOthers":"Dölj andra","desktopTopbar.appMenu.preferences":"Inställningar …","desktopTopbar.appMenu.quit":"Avsluta","desktopTopbar.appMenu.quitWithoutSavingTabs":"Stäng utan att spara flikarna","desktopTopbar.appMenu.restartToApplyUpdate":"Starta om för att tillämpa uppdatering","desktopTopbar.appMenu.services":"Tjänster","desktopTopbar.appMenu.unhide":"Visa alla","desktopTopbar.editMenu.copy":"Kopiera","desktopTopbar.editMenu.cut":"Klipp","desktopTopbar.editMenu.paste":"Klistra in","desktopTopbar.editMenu.pasteAndMatchStyle":"Klistra in och matcha stil","desktopTopbar.editMenu.redo":"Gör om","desktopTopbar.editMenu.selectAll":"Välj alla","desktopTopbar.editMenu.speech":"Tal","desktopTopbar.editMenu.speech.startSpeaking":"Börja tala","desktopTopbar.editMenu.speech.stopSpeaking":"Sluta tala","desktopTopbar.editMenu.title":"Redigera","desktopTopbar.editMenu.undo":"Ångra","desktopTopbar.fileMenu.close":"Stäng fönster","desktopTopbar.fileMenu.closeTab":"Stäng flik","desktopTopbar.fileMenu.newTab":"Ny flik","desktopTopbar.fileMenu.newWindow":"Nytt fönster","desktopTopbar.fileMenu.print":"Skriv ut ...","desktopTopbar.fileMenu.quit":"Avsluta","desktopTopbar.fileMenu.quitWithoutSavingTabs":"Avsluta utan att spara flikarna","desktopTopbar.fileMenu.reopenClosedTab":"Öppna senast stängda flik igen","desktopTopbar.fileMenu.title":"Fil","desktopTopbar.helpMenu.disableDebugLogging":"Avaktivera avancerad loggning och omstart","desktopTopbar.helpMenu.disableHardwareAcceleration":"Inaktivera hårdvaruacceleration och omstart","desktopTopbar.helpMenu.enableDebugLogging":"Aktivera avancerad loggning och omstart","desktopTopbar.helpMenu.enableHardwareAcceleration":"Aktivera hårdvaruacceleration och omstart","desktopTopbar.helpMenu.openConsole":"Öppna konsol …","desktopTopbar.helpMenu.openHelpAndSupport":"Öppna hjälpen och dokumentationen","desktopTopbar.helpMenu.recordPerformanceTrace":"Spela in prestandaspårning …","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"Vill du spela in ett prestandaspår under de kommande 30 sekunderna? När du är klar kommer den att placeras i mappen Nedladdningar.","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"Avbryt","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"Spela in prestandaspårning","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"Spela in ett prestandaspår?","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"Återställ och radera alla lokala data","desktopTopbar.helpMenu.showLogsInExplorer":"Visa loggar i Explorer","desktopTopbar.helpMenu.showLogsInFinder":"Visa loggar i Finder","desktopTopbar.helpMenu.title":"Hjälp","desktopTopbar.historyMenu.historyBack":"Tillbaka","desktopTopbar.historyMenu.historyForward":"Nästa","desktopTopbar.historyMenu.title":"Historik","desktopTopbar.toggleDevTools":"Växla utvecklarverktyg","desktopTopbar.toggleWindowDevTools":"Växla Window Developer Tools","desktopTopbar.troubleshootingMenu.title":"Felsökning","desktopTopbar.viewMenu.actualSize":"Faktisk storlek","desktopTopbar.viewMenu.forceReload":"Tvinga omladdning","desktopTopbar.viewMenu.reload":"Läs in igen","desktopTopbar.viewMenu.showHideSidebar":"Visa/dölj sidofält","desktopTopbar.viewMenu.title":"Visa","desktopTopbar.viewMenu.togglefullscreen":"Växla helskärm","desktopTopbar.viewMenu.zoomIn":"Zooma in","desktopTopbar.viewMenu.zoomOut":"Zooma ut","desktopTopbar.whatsNewMac.title":"Öppna Nyheter i Notion för macOS","desktopTopbar.whatsNewWindows.title":"Öppna Nyheter i Notion för Windows","desktopTopbar.windowMenu.close":"Stäng","desktopTopbar.windowMenu.front":"Framsida","desktopTopbar.windowMenu.maximize":"Maximera","desktopTopbar.windowMenu.minimize":"Minimera","desktopTopbar.windowMenu.showNextTab":"Visa nästa flik","desktopTopbar.windowMenu.showPreviousTab":"Visa föregående flik","desktopTopbar.windowMenu.title":"Fönster","desktopTopbar.windowMenu.zoom":"Zoom","desktopTroubleshooting.showLogs.error.message.mac":"Notion stötte på ett fel när du försökte visa loggarna i Finder:","desktopTroubleshooting.showLogs.error.message.windows":"Notion stötte på ett fel när du försökte visa loggarna i Explorer:","desktopTroubleshooting.showLogs.error.title":"Det gick inte att visa loggarna","menuBarIcon.menu.enableQuickSearch":"Aktivera snabbsökning","menuBarIcon.menu.keepInBackground":"Behåll i bakgrunden","menuBarIcon.menu.launchPreferences":"Startinställningar","menuBarIcon.menu.openOnLogin":"Öppna Notion vid inloggning","menuBarIcon.menu.quitNotion":"Avsluta Notion","menuBarIcon.menu.selectCommandSearchShortcut":"Ändra snabbkommandon för kommandosökning","menuBarIcon.menu.showImmediately":"Visa omedelbart","menuBarIcon.menu.showNotionInMenuBar":"Visa Notion i menyfältet","menuBarIcon.menu.toggleCommandSearch":"Växla kommandosökning","openAtLogin.dialog.detail":"{operatingSystem} förhindrade att Notion konfigurerade inställningen Öppna vid inloggning.Det här inträffar vanligtvis när Notions uppstart har konfigurerats i systeminställningarna eller om du inte har tillräcklig behörighet.Du kan fortfarande konfigurera inställningen manuellt i systeminställningarna.","openAtLogin.dialog.title":"Öppna vid inloggning","updatePrompt.detail":"Vill du installera den nu? Vi öppnar dina fönster och flikar igen.","updatePrompt.installAndRelaunch":"Installera och starta om","updatePrompt.message":"En ny version av Notion finns tillgänglig.","updatePrompt.remindMeLater":"Påminn mig senare","window.loadingError.message":"Notion kunde inte laddas. Anslut till internet för att komma igång.","window.loadingError.reload":"Läs in igen","window.tabLoadingError.cancel":"Avbryt","window.tabMenu.closeOtherTabs":"Stäng andra flikar","window.tabMenu.closeTab":"Stäng flik","window.tabMenu.closeTabsToLeft":"Stäng flikar till vänster","window.tabMenu.closeTabsToRight":"Stäng flikar till höger","window.tabMenu.copyLink":"Kopiera länk","window.tabMenu.duplicateTab":"Duplicera fliken","window.tabMenu.moveToNewWindow":"Flytta fliken till ett nytt fönster","window.tabMenu.refresh":"Uppdatera fliken"}')
+            module.exports = {
+                "commandSearch.window.title": "Notion – Kommandosökning",
+                "desktop.tabBar.backButtonLabel": "Tillbaka",
+                "desktop.tabBar.closeSidebarLabel": "Stäng sidofältet",
+                "desktop.tabBar.closeTabLabel": "Stäng flik, {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "Nästa",
+                "desktop.tabBar.loadingPlaceholder": "Laddar …",
+                "desktop.tabBar.newTabButtonLabel": "Ny flik",
+                "desktop.tabBar.openSidebarLabel": "Öppna sidofält",
+                "desktopInstaller.failedToMove.detail": "Det gick inte att flytta appen till din Applikations-mapp. Flytta den manuellt.",
+                "desktopInstaller.failedToMove.title": "Det gick inte att flytta appen",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "Avbryt",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Din Notion-applikation är inte korrekt installerad. Kan vi flytta din Notion-app till din Applikations-mapp?",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "OK",
+                "desktopInstaller.invalidInstallDialog.title": "Ogiltig installation",
+                "desktopSearch.doneButton.label": "Klart",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} träff} other {{matchCount} träffar}}",
+                "desktopSearch.noResults.message": "Hittades inte",
+                "desktopTopbar.appMenu.about": "Om Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "Sök efter uppdateringar …",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "Du har den senaste versionen av Notion.",
+                "desktopTopbar.appMenu.checkForUpdate.title": "Sök efter uppdateringar",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "En ny version av Notion är tillgänglig och laddas för närvarande ner i bakgrunden. Tack för att du håller dig uppdaterad!",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion lyckades inte upprätta en anslutning till uppdateringsservern, antingen på grund av problem med din Internetanslutning eller uppdateringsservern. Försök igen senare.",
+                "desktopTopbar.appMenu.downloadingUpdate": "Ladda ned uppdatering ({percentage}%)",
+                "desktopTopbar.appMenu.hide": "Dölj Notion",
+                "desktopTopbar.appMenu.hideOthers": "Dölj andra",
+                "desktopTopbar.appMenu.preferences": "Inställningar …",
+                "desktopTopbar.appMenu.quit": "Avsluta",
+                "desktopTopbar.appMenu.quitWithoutSavingTabs": "Stäng utan att spara flikarna",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "Starta om för att tillämpa uppdatering",
+                "desktopTopbar.appMenu.services": "Tjänster",
+                "desktopTopbar.appMenu.unhide": "Visa alla",
+                "desktopTopbar.editMenu.copy": "Kopiera",
+                "desktopTopbar.editMenu.cut": "Klipp",
+                "desktopTopbar.editMenu.paste": "Klistra in",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "Klistra in och matcha stil",
+                "desktopTopbar.editMenu.redo": "Gör om",
+                "desktopTopbar.editMenu.selectAll": "Välj alla",
+                "desktopTopbar.editMenu.speech": "Tal",
+                "desktopTopbar.editMenu.speech.startSpeaking": "Börja tala",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "Sluta tala",
+                "desktopTopbar.editMenu.title": "Redigera",
+                "desktopTopbar.editMenu.undo": "Ångra",
+                "desktopTopbar.fileMenu.close": "Stäng fönster",
+                "desktopTopbar.fileMenu.closeTab": "Stäng flik",
+                "desktopTopbar.fileMenu.newTab": "Ny flik",
+                "desktopTopbar.fileMenu.newWindow": "Nytt fönster",
+                "desktopTopbar.fileMenu.print": "Skriv ut ...",
+                "desktopTopbar.fileMenu.quit": "Avsluta",
+                "desktopTopbar.fileMenu.quitWithoutSavingTabs": "Avsluta utan att spara flikarna",
+                "desktopTopbar.fileMenu.reopenClosedTab": "Öppna senast stängda flik igen",
+                "desktopTopbar.fileMenu.title": "Fil",
+                "desktopTopbar.helpMenu.disableDebugLogging": "Avaktivera avancerad loggning och omstart",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "Inaktivera hårdvaruacceleration och omstart",
+                "desktopTopbar.helpMenu.enableDebugLogging": "Aktivera avancerad loggning och omstart",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "Aktivera hårdvaruacceleration och omstart",
+                "desktopTopbar.helpMenu.openConsole": "Öppna konsol …",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "Öppna hjälpen och dokumentationen",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "Spela in prestandaspårning …",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "Vill du spela in ett prestandaspår under de kommande 30 sekunderna? När du är klar kommer den att placeras i mappen Nedladdningar.",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "Avbryt",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "Spela in prestandaspårning",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "Spela in ett prestandaspår?",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "Återställ och radera alla lokala data",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "Visa loggar i Explorer",
+                "desktopTopbar.helpMenu.showLogsInFinder": "Visa loggar i Finder",
+                "desktopTopbar.helpMenu.title": "Hjälp",
+                "desktopTopbar.historyMenu.historyBack": "Tillbaka",
+                "desktopTopbar.historyMenu.historyForward": "Nästa",
+                "desktopTopbar.historyMenu.title": "Historik",
+                "desktopTopbar.toggleDevTools": "Växla utvecklarverktyg",
+                "desktopTopbar.toggleWindowDevTools": "Växla Window Developer Tools",
+                "desktopTopbar.troubleshootingMenu.title": "Felsökning",
+                "desktopTopbar.viewMenu.actualSize": "Faktisk storlek",
+                "desktopTopbar.viewMenu.forceReload": "Tvinga omladdning",
+                "desktopTopbar.viewMenu.reload": "Läs in igen",
+                "desktopTopbar.viewMenu.showHideSidebar": "Visa/dölj sidofält",
+                "desktopTopbar.viewMenu.title": "Visa",
+                "desktopTopbar.viewMenu.togglefullscreen": "Växla helskärm",
+                "desktopTopbar.viewMenu.zoomIn": "Zooma in",
+                "desktopTopbar.viewMenu.zoomOut": "Zooma ut",
+                "desktopTopbar.whatsNewMac.title": "Öppna Nyheter i Notion för macOS",
+                "desktopTopbar.whatsNewWindows.title": "Öppna Nyheter i Notion för Windows",
+                "desktopTopbar.windowMenu.close": "Stäng",
+                "desktopTopbar.windowMenu.front": "Framsida",
+                "desktopTopbar.windowMenu.maximize": "Maximera",
+                "desktopTopbar.windowMenu.minimize": "Minimera",
+                "desktopTopbar.windowMenu.showNextTab": "Visa nästa flik",
+                "desktopTopbar.windowMenu.showPreviousTab": "Visa föregående flik",
+                "desktopTopbar.windowMenu.title": "Fönster",
+                "desktopTopbar.windowMenu.zoom": "Zoom",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion stötte på ett fel när du försökte visa loggarna i Finder:",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion stötte på ett fel när du försökte visa loggarna i Explorer:",
+                "desktopTroubleshooting.showLogs.error.title": "Det gick inte att visa loggarna",
+                "menuBarIcon.menu.enableQuickSearch": "Aktivera snabbsökning",
+                "menuBarIcon.menu.keepInBackground": "Behåll i bakgrunden",
+                "menuBarIcon.menu.launchPreferences": "Startinställningar",
+                "menuBarIcon.menu.openOnLogin": "Öppna Notion vid inloggning",
+                "menuBarIcon.menu.quitNotion": "Avsluta Notion",
+                "menuBarIcon.menu.selectCommandSearchShortcut": "Ändra snabbkommandon för kommandosökning",
+                "menuBarIcon.menu.showImmediately": "Visa omedelbart",
+                "menuBarIcon.menu.showNotionInMenuBar": "Visa Notion i menyfältet",
+                "menuBarIcon.menu.toggleCommandSearch": "Växla kommandosökning",
+                "openAtLogin.dialog.detail": "{operatingSystem} förhindrade att Notion konfigurerade inställningen Öppna vid inloggning.Det här inträffar vanligtvis när Notions uppstart har konfigurerats i systeminställningarna eller om du inte har tillräcklig behörighet.Du kan fortfarande konfigurera inställningen manuellt i systeminställningarna.",
+                "openAtLogin.dialog.title": "Öppna vid inloggning",
+                "updatePrompt.detail": "Vill du installera den nu? Vi öppnar dina fönster och flikar igen.",
+                "updatePrompt.installAndRelaunch": "Installera och starta om",
+                "updatePrompt.message": "En ny version av Notion finns tillgänglig.",
+                "updatePrompt.remindMeLater": "Påminn mig senare",
+                "window.loadingError.message": "Notion kunde inte laddas. Anslut till internet för att komma igång.",
+                "window.loadingError.reload": "Läs in igen",
+                "window.tabLoadingError.cancel": "Avbryt",
+                "window.tabMenu.closeOtherTabs": "Stäng andra flikar",
+                "window.tabMenu.closeTab": "Stäng flik",
+                "window.tabMenu.closeTabsToLeft": "Stäng flikar till vänster",
+                "window.tabMenu.closeTabsToRight": "Stäng flikar till höger",
+                "window.tabMenu.copyLink": "Kopiera länk",
+                "window.tabMenu.duplicateTab": "Duplicera fliken",
+                "window.tabMenu.moveToNewWindow": "Flytta fliken till ett nytt fönster",
+                "window.tabMenu.refresh": "Uppdatera fliken"
+            }
         },
-        49596: e => {
+        // zh_CN
+        49596: module => {
             "use strict";
-            e.exports = JSON.parse('{"desktop.tabBar.backButtonLabel":"返回","desktop.tabBar.closeSidebarLabel":"关闭侧边栏","desktop.tabBar.closeTabLabel":"关闭标签页 {tabTitle}","desktop.tabBar.forwardButtonLabel":"前进","desktop.tabBar.loadingPlaceholder":"载入中…","desktop.tabBar.newTabButtonLabel":"新标签页","desktop.tabBar.openSidebarLabel":"打开侧边栏","desktopInstaller.failedToMove.detail":"我们未能将应用程序移动到“应用程序”文件夹。请手动移动。","desktopInstaller.failedToMove.title":"移动应用程序失败","desktopInstaller.invalidInstallDialog.cancelButton.label":"取消","desktopInstaller.invalidInstallDialog.confirmMove":"你的 Notion 应用程序未正确安装。我们能否将 Notion 应用程序移到“应用程序”文件夹中？","desktopInstaller.invalidInstallDialog.okButton.label":"好的","desktopInstaller.invalidInstallDialog.title":"安装无效","desktopSearch.doneButton.label":"完成","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} 个匹配项} other {{matchCount} 个匹配项}}","desktopSearch.noResults.message":"未找到","desktopTopbar.appMenu.about":"关于 Notion","desktopTopbar.appMenu.checkForUpdate":"检查更新…","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"你使用的是最新版本的 Notion！","desktopTopbar.appMenu.checkForUpdate.title":"检查更新","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"新版 Notion 已经发布，目前正在后台下载。感谢你及时更新！","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion 无法与更新服务器建立连接，可能是由于你的互联网连接或更新服务器本身存在问题。请稍后再试。","desktopTopbar.appMenu.downloadingUpdate":"正在下载更新","desktopTopbar.appMenu.hide":"隐藏 Notion","desktopTopbar.appMenu.hideOthers":"隐藏其他","desktopTopbar.appMenu.preferences":"首选项...","desktopTopbar.appMenu.quit":"退出","desktopTopbar.appMenu.resetAndEraseAllLocalData":"重置和擦除所有本地数据","desktopTopbar.appMenu.resetAndUpdateApp":"重置并更新应用","desktopTopbar.appMenu.restartToApplyUpdate":"重新启动以应用更新","desktopTopbar.appMenu.services":"服务","desktopTopbar.appMenu.unhide":"显示所有","desktopTopbar.editMenu.copy":"复制","desktopTopbar.editMenu.cut":"剪切","desktopTopbar.editMenu.paste":"粘贴","desktopTopbar.editMenu.pasteAndMatchStyle":"粘贴和匹配样式","desktopTopbar.editMenu.redo":"重做","desktopTopbar.editMenu.selectAll":"全选","desktopTopbar.editMenu.speech":"语音","desktopTopbar.editMenu.speech.startSpeaking":"开始说话","desktopTopbar.editMenu.speech.stopSpeaking":"停止说话","desktopTopbar.editMenu.title":"编辑","desktopTopbar.editMenu.undo":"撤消","desktopTopbar.fileMenu.close":"关闭窗口","desktopTopbar.fileMenu.closeTab":"关闭标签页","desktopTopbar.fileMenu.newTab":"新标签页","desktopTopbar.fileMenu.newWindow":"新窗口","desktopTopbar.fileMenu.quit":"退出","desktopTopbar.fileMenu.reopenClosedTab":"重新打开上次关闭的标签页","desktopTopbar.fileMenu.title":"文件","desktopTopbar.helpMenu.disableDebugLogging":"禁用高级日志记录并重新启动","desktopTopbar.helpMenu.disableHardwareAcceleration":"禁用硬件加速并重新启动","desktopTopbar.helpMenu.enableDebugLogging":"启用高级日志记录并重新启动","desktopTopbar.helpMenu.enableHardwareAcceleration":"启用硬件加速并重新启动","desktopTopbar.helpMenu.openConsole":"打开控制台...","desktopTopbar.helpMenu.openHelpAndSupport":"打开帮助和文档","desktopTopbar.helpMenu.recordPerformanceTrace":"记录性能跟踪","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"您想记录未来 30 秒的性能跟踪吗？完成后，它将被放置在您的“下载”文件夹中。","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"取消","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"记录性能跟踪","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"记录性能跟踪？","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"重置并擦除所有本地数据","desktopTopbar.helpMenu.showLogsInExplorer":"在资源管理器中显示日志","desktopTopbar.helpMenu.showLogsInFinder":"在 Finder 中显示日志","desktopTopbar.helpMenu.title":"帮助","desktopTopbar.historyMenu.historyBack":"后退","desktopTopbar.historyMenu.historyForward":"前进","desktopTopbar.historyMenu.title":"历史","desktopTopbar.toggleDevTools":"切换开发工具","desktopTopbar.toggleWindowDevTools":"切换Windows开发人员工具","desktopTopbar.troubleshootingMenu.title":"故障排除","desktopTopbar.viewMenu.actualSize":"实际大小","desktopTopbar.viewMenu.forceReload":"强制重新加载","desktopTopbar.viewMenu.reload":"重新加载","desktopTopbar.viewMenu.reloadAllTabs":"重新加载所有标签页","desktopTopbar.viewMenu.showHideSidebar":"显示/隐藏侧边栏","desktopTopbar.viewMenu.title":"视图","desktopTopbar.viewMenu.togglefullscreen":"切换全屏","desktopTopbar.viewMenu.zoomIn":"放大","desktopTopbar.viewMenu.zoomOut":"缩小","desktopTopbar.windowMenu.close":"关闭","desktopTopbar.windowMenu.front":"前面","desktopTopbar.windowMenu.maximize":"最大化","desktopTopbar.windowMenu.minimize":"最小化","desktopTopbar.windowMenu.showNextTab":"显示下一个选项卡","desktopTopbar.windowMenu.showPreviousTab":"显示上一个选项卡","desktopTopbar.windowMenu.title":"窗口","desktopTopbar.windowMenu.zoom":"缩放","desktopTroubleshooting.showLogs.error.message.mac":"Notion 尝试在 Finder 中显示日志时遇到错误：","desktopTroubleshooting.showLogs.error.message.windows":"Notion 尝试在资源管理器中显示日志时遇到错误：","desktopTroubleshooting.showLogs.error.title":"显示日志失败","menuBarIcon.menu.enableQuickSearch":"启用快速搜索","menuBarIcon.menu.openCloseQuickSearch":"打开/关闭快速搜索","menuBarIcon.menu.quitNotion":"退出 Notion","menuBarIcon.menu.showNotionInMenuBar":"在菜单栏中显示 Notion","window.loadingError.message":"加载 Notion 时出错，请连接到 Internet 开始使用。","window.loadingError.reload":"重新加载","window.tabLoadingError.cancel":"取消","window.tabMenu.closeOtherTabs":"关闭其他标签页","window.tabMenu.closeTab":"关闭标签页","window.tabMenu.closeTabsToLeft":"关闭左侧的标签页","window.tabMenu.closeTabsToRight":"关闭右侧的标签页","window.tabMenu.copyLink":"复制链接","window.tabMenu.duplicateTab":"复制标签页","window.tabMenu.moveToNewWindow":"将标签页移动到新窗口","window.tabMenu.refresh":"刷新标签页"}')
+            module.exports = {
+                "desktop.tabBar.backButtonLabel": "返回",
+                "desktop.tabBar.closeSidebarLabel": "关闭侧边栏",
+                "desktop.tabBar.closeTabLabel": "关闭标签页 {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "前进",
+                "desktop.tabBar.loadingPlaceholder": "载入中…",
+                "desktop.tabBar.newTabButtonLabel": "新标签页",
+                "desktop.tabBar.openSidebarLabel": "打开侧边栏",
+                "desktopInstaller.failedToMove.detail": "我们未能将应用程序移动到“应用程序”文件夹。请手动移动。",
+                "desktopInstaller.failedToMove.title": "移动应用程序失败",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "取消",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "你的 Notion 应用程序未正确安装。我们能否将 Notion 应用程序移到“应用程序”文件夹中？",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "好的",
+                "desktopInstaller.invalidInstallDialog.title": "安装无效",
+                "desktopSearch.doneButton.label": "完成",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} 个匹配项} other {{matchCount} 个匹配项}}",
+                "desktopSearch.noResults.message": "未找到",
+                "desktopTopbar.appMenu.about": "关于 Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "检查更新…",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "你使用的是最新版本的 Notion！",
+                "desktopTopbar.appMenu.checkForUpdate.title": "检查更新",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "新版 Notion 已经发布，目前正在后台下载。感谢你及时更新！",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion 无法与更新服务器建立连接，可能是由于你的互联网连接或更新服务器本身存在问题。请稍后再试。",
+                "desktopTopbar.appMenu.downloadingUpdate": "正在下载更新",
+                "desktopTopbar.appMenu.hide": "隐藏 Notion",
+                "desktopTopbar.appMenu.hideOthers": "隐藏其他",
+                "desktopTopbar.appMenu.preferences": "首选项...",
+                "desktopTopbar.appMenu.quit": "退出",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "重置和擦除所有本地数据",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "重置并更新应用",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "重新启动以应用更新",
+                "desktopTopbar.appMenu.services": "服务",
+                "desktopTopbar.appMenu.unhide": "显示所有",
+                "desktopTopbar.editMenu.copy": "复制",
+                "desktopTopbar.editMenu.cut": "剪切",
+                "desktopTopbar.editMenu.paste": "粘贴",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "粘贴和匹配样式",
+                "desktopTopbar.editMenu.redo": "重做",
+                "desktopTopbar.editMenu.selectAll": "全选",
+                "desktopTopbar.editMenu.speech": "语音",
+                "desktopTopbar.editMenu.speech.startSpeaking": "开始说话",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "停止说话",
+                "desktopTopbar.editMenu.title": "编辑",
+                "desktopTopbar.editMenu.undo": "撤消",
+                "desktopTopbar.fileMenu.close": "关闭窗口",
+                "desktopTopbar.fileMenu.closeTab": "关闭标签页",
+                "desktopTopbar.fileMenu.newTab": "新标签页",
+                "desktopTopbar.fileMenu.newWindow": "新窗口",
+                "desktopTopbar.fileMenu.quit": "退出",
+                "desktopTopbar.fileMenu.reopenClosedTab": "重新打开上次关闭的标签页",
+                "desktopTopbar.fileMenu.title": "文件",
+                "desktopTopbar.helpMenu.disableDebugLogging": "禁用高级日志记录并重新启动",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "禁用硬件加速并重新启动",
+                "desktopTopbar.helpMenu.enableDebugLogging": "启用高级日志记录并重新启动",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "启用硬件加速并重新启动",
+                "desktopTopbar.helpMenu.openConsole": "打开控制台...",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "打开帮助和文档",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "记录性能跟踪",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "您想记录未来 30 秒的性能跟踪吗？完成后，它将被放置在您的“下载”文件夹中。",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "取消",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "记录性能跟踪",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "记录性能跟踪？",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "重置并擦除所有本地数据",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "在资源管理器中显示日志",
+                "desktopTopbar.helpMenu.showLogsInFinder": "在 Finder 中显示日志",
+                "desktopTopbar.helpMenu.title": "帮助",
+                "desktopTopbar.historyMenu.historyBack": "后退",
+                "desktopTopbar.historyMenu.historyForward": "前进",
+                "desktopTopbar.historyMenu.title": "历史",
+                "desktopTopbar.toggleDevTools": "切换开发工具",
+                "desktopTopbar.toggleWindowDevTools": "切换Windows开发人员工具",
+                "desktopTopbar.troubleshootingMenu.title": "故障排除",
+                "desktopTopbar.viewMenu.actualSize": "实际大小",
+                "desktopTopbar.viewMenu.forceReload": "强制重新加载",
+                "desktopTopbar.viewMenu.reload": "重新加载",
+                "desktopTopbar.viewMenu.reloadAllTabs": "重新加载所有标签页",
+                "desktopTopbar.viewMenu.showHideSidebar": "显示/隐藏侧边栏",
+                "desktopTopbar.viewMenu.title": "视图",
+                "desktopTopbar.viewMenu.togglefullscreen": "切换全屏",
+                "desktopTopbar.viewMenu.zoomIn": "放大",
+                "desktopTopbar.viewMenu.zoomOut": "缩小",
+                "desktopTopbar.windowMenu.close": "关闭",
+                "desktopTopbar.windowMenu.front": "前面",
+                "desktopTopbar.windowMenu.maximize": "最大化",
+                "desktopTopbar.windowMenu.minimize": "最小化",
+                "desktopTopbar.windowMenu.showNextTab": "显示下一个选项卡",
+                "desktopTopbar.windowMenu.showPreviousTab": "显示上一个选项卡",
+                "desktopTopbar.windowMenu.title": "窗口",
+                "desktopTopbar.windowMenu.zoom": "缩放",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion 尝试在 Finder 中显示日志时遇到错误：",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion 尝试在资源管理器中显示日志时遇到错误：",
+                "desktopTroubleshooting.showLogs.error.title": "显示日志失败",
+                "menuBarIcon.menu.enableQuickSearch": "启用快速搜索",
+                "menuBarIcon.menu.openCloseQuickSearch": "打开/关闭快速搜索",
+                "menuBarIcon.menu.quitNotion": "退出 Notion",
+                "menuBarIcon.menu.showNotionInMenuBar": "在菜单栏中显示 Notion",
+                "window.loadingError.message": "加载 Notion 时出错，请连接到 Internet 开始使用。",
+                "window.loadingError.reload": "重新加载",
+                "window.tabLoadingError.cancel": "取消",
+                "window.tabMenu.closeOtherTabs": "关闭其他标签页",
+                "window.tabMenu.closeTab": "关闭标签页",
+                "window.tabMenu.closeTabsToLeft": "关闭左侧的标签页",
+                "window.tabMenu.closeTabsToRight": "关闭右侧的标签页",
+                "window.tabMenu.copyLink": "复制链接",
+                "window.tabMenu.duplicateTab": "复制标签页",
+                "window.tabMenu.moveToNewWindow": "将标签页移动到新窗口",
+                "window.tabMenu.refresh": "刷新标签页"
+            }
         },
-        36044: e => {
+        // zh_TW
+        36044: module => {
             "use strict";
-            e.exports = JSON.parse('{"desktop.tabBar.backButtonLabel":"返回","desktop.tabBar.closeSidebarLabel":"關閉側邊欄","desktop.tabBar.closeTabLabel":"關閉分頁 {tabTitle}","desktop.tabBar.forwardButtonLabel":"前進","desktop.tabBar.loadingPlaceholder":"載入中...","desktop.tabBar.newTabButtonLabel":"新分頁","desktop.tabBar.openSidebarLabel":"開啟側邊欄","desktopInstaller.failedToMove.detail":"我們不能將 APP 移至你的應用程式資料夾。請手動將其移動。","desktopInstaller.failedToMove.title":"無法移動 APP","desktopInstaller.invalidInstallDialog.cancelButton.label":"取消","desktopInstaller.invalidInstallDialog.confirmMove":"Notion APP 並未正確安裝。我們可以將你的 Notion APP 移入應用程式資料夾內嗎？","desktopInstaller.invalidInstallDialog.okButton.label":"好","desktopInstaller.invalidInstallDialog.title":"安裝無效","desktopSearch.doneButton.label":"完成","desktopSearch.foundMatches.message":"{matchCount, plural, one {{matchCount} 個相符項目} other {{matchCount} 個相符項目}}","desktopSearch.noResults.message":"未找到","desktopTopbar.appMenu.about":"關於 Notion","desktopTopbar.appMenu.checkForUpdate":"檢查更新……","desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable":"你正在使用最新版本的 Notion！","desktopTopbar.appMenu.checkForUpdate.title":"檢查更新","desktopTopbar.appMenu.checkForUpdate.updateAvailable":"新版 Notion 現已推出，目前正在後台下載。感謝你隨時掌握最新資訊！","desktopTopbar.appMenu.checkForUpdate.updateCheckFailed":"Notion 無法與更新的伺服器連線，原因在於你的網際網路連線，或者更新的伺服器本身出現問題。請稍後再試一次。","desktopTopbar.appMenu.downloadingUpdate":"正在下載更新","desktopTopbar.appMenu.hide":"隱藏 Notion","desktopTopbar.appMenu.hideOthers":"隱藏其他","desktopTopbar.appMenu.preferences":"偏好設定","desktopTopbar.appMenu.quit":"離開","desktopTopbar.appMenu.resetAndEraseAllLocalData":"重置並清除所有本機資料","desktopTopbar.appMenu.resetAndUpdateApp":"重置並更新應用程式","desktopTopbar.appMenu.restartToApplyUpdate":"重新啟動以套用更新","desktopTopbar.appMenu.services":"服務","desktopTopbar.appMenu.unhide":"全部顯示","desktopTopbar.editMenu.copy":"複製","desktopTopbar.editMenu.cut":"剪下","desktopTopbar.editMenu.paste":"貼上","desktopTopbar.editMenu.pasteAndMatchStyle":"貼上並匹配風格","desktopTopbar.editMenu.redo":"重做","desktopTopbar.editMenu.selectAll":"全選","desktopTopbar.editMenu.speech":"語音","desktopTopbar.editMenu.speech.startSpeaking":"開始說話","desktopTopbar.editMenu.speech.stopSpeaking":"停止說話","desktopTopbar.editMenu.title":"編輯","desktopTopbar.editMenu.undo":"還原","desktopTopbar.fileMenu.close":"關閉視窗","desktopTopbar.fileMenu.closeTab":"關閉分頁","desktopTopbar.fileMenu.newTab":"新分頁","desktopTopbar.fileMenu.newWindow":"新視窗","desktopTopbar.fileMenu.quit":"離開","desktopTopbar.fileMenu.reopenClosedTab":"重新開啟最後關閉的分頁","desktopTopbar.fileMenu.title":"檔案","desktopTopbar.helpMenu.disableDebugLogging":"停用進階登錄並重新啟動","desktopTopbar.helpMenu.disableHardwareAcceleration":"停用硬體加速並重新啟動","desktopTopbar.helpMenu.enableDebugLogging":"啟用進階登錄並重新啟動","desktopTopbar.helpMenu.enableHardwareAcceleration":"啟用硬體加速並重新啟動","desktopTopbar.helpMenu.openConsole":"開啟控制台……","desktopTopbar.helpMenu.openHelpAndSupport":"開啟說明與文件","desktopTopbar.helpMenu.recordPerformanceTrace":"記錄性能追蹤","desktopTopbar.helpMenu.recordPerformanceTraceConfirm":"是否要記錄接下來 30 秒的性能追蹤？完成後，該記錄即會留存在你的「下載」資料夾。","desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel":"取消","desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk":"記錄性能追蹤","desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle":"是否記錄性能追蹤？","desktopTopbar.helpMenu.resetAndEraseAllLocalData":"重設並清除所有本機資料","desktopTopbar.helpMenu.showLogsInExplorer":"在 Explorer 中顯示日誌檔","desktopTopbar.helpMenu.showLogsInFinder":"在 Finder 中顯示日誌檔","desktopTopbar.helpMenu.title":"說明","desktopTopbar.historyMenu.historyBack":"返回","desktopTopbar.historyMenu.historyForward":"前進","desktopTopbar.historyMenu.title":"歷史","desktopTopbar.toggleDevTools":"切換開發者工具","desktopTopbar.toggleWindowDevTools":"切換Windows開發人員工具","desktopTopbar.troubleshootingMenu.title":"疑難排解","desktopTopbar.viewMenu.actualSize":"實際大小","desktopTopbar.viewMenu.forceReload":"強制重新載入","desktopTopbar.viewMenu.reload":"重新載入","desktopTopbar.viewMenu.reloadAllTabs":"重新載入所有分頁","desktopTopbar.viewMenu.showHideSidebar":"顯示/隱藏側邊欄","desktopTopbar.viewMenu.title":"視圖","desktopTopbar.viewMenu.togglefullscreen":"切換全熒幕","desktopTopbar.viewMenu.zoomIn":"縮小","desktopTopbar.viewMenu.zoomOut":"放大","desktopTopbar.windowMenu.close":"關閉","desktopTopbar.windowMenu.front":"前面","desktopTopbar.windowMenu.maximize":"最大化","desktopTopbar.windowMenu.minimize":"最小化","desktopTopbar.windowMenu.showNextTab":"顯示下一個分頁","desktopTopbar.windowMenu.showPreviousTab":"顯示上一個分頁","desktopTopbar.windowMenu.title":"視窗","desktopTopbar.windowMenu.zoom":"縮放","desktopTroubleshooting.showLogs.error.message.mac":"Notion 嘗試在 Finder 中顯示日誌檔時發生錯誤：","desktopTroubleshooting.showLogs.error.message.windows":"Notion 嘗試在 Explorer 中顯示日誌檔時發生錯誤：","desktopTroubleshooting.showLogs.error.title":"顯示日誌檔失敗","menuBarIcon.menu.enableQuickSearch":"啟用快速搜尋","menuBarIcon.menu.openCloseQuickSearch":"開啟/關閉快速搜尋","menuBarIcon.menu.quitNotion":"退出 Notion","menuBarIcon.menu.showNotionInMenuBar":"在選單列中顯示 Notion","window.loadingError.message":"載入 Notion 時出錯，連線到網際網路即可使用。","window.loadingError.reload":"重新載入","window.tabLoadingError.cancel":"取消","window.tabMenu.closeOtherTabs":"關閉其他分頁","window.tabMenu.closeTab":"關閉分頁","window.tabMenu.closeTabsToLeft":"關閉左側分頁","window.tabMenu.closeTabsToRight":"關閉右側分頁","window.tabMenu.copyLink":"複製連結","window.tabMenu.duplicateTab":"複製分頁","window.tabMenu.moveToNewWindow":"將分頁移至新視窗","window.tabMenu.refresh":"重新整理分頁"}')
+            module.exports = {
+                "desktop.tabBar.backButtonLabel": "返回",
+                "desktop.tabBar.closeSidebarLabel": "關閉側邊欄",
+                "desktop.tabBar.closeTabLabel": "關閉分頁 {tabTitle}",
+                "desktop.tabBar.forwardButtonLabel": "前進",
+                "desktop.tabBar.loadingPlaceholder": "載入中...",
+                "desktop.tabBar.newTabButtonLabel": "新分頁",
+                "desktop.tabBar.openSidebarLabel": "開啟側邊欄",
+                "desktopInstaller.failedToMove.detail": "我們不能將 APP 移至你的應用程式資料夾。請手動將其移動。",
+                "desktopInstaller.failedToMove.title": "無法移動 APP",
+                "desktopInstaller.invalidInstallDialog.cancelButton.label": "取消",
+                "desktopInstaller.invalidInstallDialog.confirmMove": "Notion APP 並未正確安裝。我們可以將你的 Notion APP 移入應用程式資料夾內嗎？",
+                "desktopInstaller.invalidInstallDialog.okButton.label": "好",
+                "desktopInstaller.invalidInstallDialog.title": "安裝無效",
+                "desktopSearch.doneButton.label": "完成",
+                "desktopSearch.foundMatches.message": "{matchCount, plural, one {{matchCount} 個相符項目} other {{matchCount} 個相符項目}}",
+                "desktopSearch.noResults.message": "未找到",
+                "desktopTopbar.appMenu.about": "關於 Notion",
+                "desktopTopbar.appMenu.checkForUpdate": "檢查更新……",
+                "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable": "你正在使用最新版本的 Notion！",
+                "desktopTopbar.appMenu.checkForUpdate.title": "檢查更新",
+                "desktopTopbar.appMenu.checkForUpdate.updateAvailable": "新版 Notion 現已推出，目前正在後台下載。感謝你隨時掌握最新資訊！",
+                "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed": "Notion 無法與更新的伺服器連線，原因在於你的網際網路連線，或者更新的伺服器本身出現問題。請稍後再試一次。",
+                "desktopTopbar.appMenu.downloadingUpdate": "正在下載更新",
+                "desktopTopbar.appMenu.hide": "隱藏 Notion",
+                "desktopTopbar.appMenu.hideOthers": "隱藏其他",
+                "desktopTopbar.appMenu.preferences": "偏好設定",
+                "desktopTopbar.appMenu.quit": "離開",
+                "desktopTopbar.appMenu.resetAndEraseAllLocalData": "重置並清除所有本機資料",
+                "desktopTopbar.appMenu.resetAndUpdateApp": "重置並更新應用程式",
+                "desktopTopbar.appMenu.restartToApplyUpdate": "重新啟動以套用更新",
+                "desktopTopbar.appMenu.services": "服務",
+                "desktopTopbar.appMenu.unhide": "全部顯示",
+                "desktopTopbar.editMenu.copy": "複製",
+                "desktopTopbar.editMenu.cut": "剪下",
+                "desktopTopbar.editMenu.paste": "貼上",
+                "desktopTopbar.editMenu.pasteAndMatchStyle": "貼上並匹配風格",
+                "desktopTopbar.editMenu.redo": "重做",
+                "desktopTopbar.editMenu.selectAll": "全選",
+                "desktopTopbar.editMenu.speech": "語音",
+                "desktopTopbar.editMenu.speech.startSpeaking": "開始說話",
+                "desktopTopbar.editMenu.speech.stopSpeaking": "停止說話",
+                "desktopTopbar.editMenu.title": "編輯",
+                "desktopTopbar.editMenu.undo": "還原",
+                "desktopTopbar.fileMenu.close": "關閉視窗",
+                "desktopTopbar.fileMenu.closeTab": "關閉分頁",
+                "desktopTopbar.fileMenu.newTab": "新分頁",
+                "desktopTopbar.fileMenu.newWindow": "新視窗",
+                "desktopTopbar.fileMenu.quit": "離開",
+                "desktopTopbar.fileMenu.reopenClosedTab": "重新開啟最後關閉的分頁",
+                "desktopTopbar.fileMenu.title": "檔案",
+                "desktopTopbar.helpMenu.disableDebugLogging": "停用進階登錄並重新啟動",
+                "desktopTopbar.helpMenu.disableHardwareAcceleration": "停用硬體加速並重新啟動",
+                "desktopTopbar.helpMenu.enableDebugLogging": "啟用進階登錄並重新啟動",
+                "desktopTopbar.helpMenu.enableHardwareAcceleration": "啟用硬體加速並重新啟動",
+                "desktopTopbar.helpMenu.openConsole": "開啟控制台……",
+                "desktopTopbar.helpMenu.openHelpAndSupport": "開啟說明與文件",
+                "desktopTopbar.helpMenu.recordPerformanceTrace": "記錄性能追蹤",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirm": "是否要記錄接下來 30 秒的性能追蹤？完成後，該記錄即會留存在你的「下載」資料夾。",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel": "取消",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk": "記錄性能追蹤",
+                "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle": "是否記錄性能追蹤？",
+                "desktopTopbar.helpMenu.resetAndEraseAllLocalData": "重設並清除所有本機資料",
+                "desktopTopbar.helpMenu.showLogsInExplorer": "在 Explorer 中顯示日誌檔",
+                "desktopTopbar.helpMenu.showLogsInFinder": "在 Finder 中顯示日誌檔",
+                "desktopTopbar.helpMenu.title": "說明",
+                "desktopTopbar.historyMenu.historyBack": "返回",
+                "desktopTopbar.historyMenu.historyForward": "前進",
+                "desktopTopbar.historyMenu.title": "歷史",
+                "desktopTopbar.toggleDevTools": "切換開發者工具",
+                "desktopTopbar.toggleWindowDevTools": "切換Windows開發人員工具",
+                "desktopTopbar.troubleshootingMenu.title": "疑難排解",
+                "desktopTopbar.viewMenu.actualSize": "實際大小",
+                "desktopTopbar.viewMenu.forceReload": "強制重新載入",
+                "desktopTopbar.viewMenu.reload": "重新載入",
+                "desktopTopbar.viewMenu.reloadAllTabs": "重新載入所有分頁",
+                "desktopTopbar.viewMenu.showHideSidebar": "顯示/隱藏側邊欄",
+                "desktopTopbar.viewMenu.title": "視圖",
+                "desktopTopbar.viewMenu.togglefullscreen": "切換全熒幕",
+                "desktopTopbar.viewMenu.zoomIn": "縮小",
+                "desktopTopbar.viewMenu.zoomOut": "放大",
+                "desktopTopbar.windowMenu.close": "關閉",
+                "desktopTopbar.windowMenu.front": "前面",
+                "desktopTopbar.windowMenu.maximize": "最大化",
+                "desktopTopbar.windowMenu.minimize": "最小化",
+                "desktopTopbar.windowMenu.showNextTab": "顯示下一個分頁",
+                "desktopTopbar.windowMenu.showPreviousTab": "顯示上一個分頁",
+                "desktopTopbar.windowMenu.title": "視窗",
+                "desktopTopbar.windowMenu.zoom": "縮放",
+                "desktopTroubleshooting.showLogs.error.message.mac": "Notion 嘗試在 Finder 中顯示日誌檔時發生錯誤：",
+                "desktopTroubleshooting.showLogs.error.message.windows": "Notion 嘗試在 Explorer 中顯示日誌檔時發生錯誤：",
+                "desktopTroubleshooting.showLogs.error.title": "顯示日誌檔失敗",
+                "menuBarIcon.menu.enableQuickSearch": "啟用快速搜尋",
+                "menuBarIcon.menu.openCloseQuickSearch": "開啟/關閉快速搜尋",
+                "menuBarIcon.menu.quitNotion": "退出 Notion",
+                "menuBarIcon.menu.showNotionInMenuBar": "在選單列中顯示 Notion",
+                "window.loadingError.message": "載入 Notion 時出錯，連線到網際網路即可使用。",
+                "window.loadingError.reload": "重新載入",
+                "window.tabLoadingError.cancel": "取消",
+                "window.tabMenu.closeOtherTabs": "關閉其他分頁",
+                "window.tabMenu.closeTab": "關閉分頁",
+                "window.tabMenu.closeTabsToLeft": "關閉左側分頁",
+                "window.tabMenu.closeTabsToRight": "關閉右側分頁",
+                "window.tabMenu.copyLink": "複製連結",
+                "window.tabMenu.duplicateTab": "複製分頁",
+                "window.tabMenu.moveToNewWindow": "將分頁移至新視窗",
+                "window.tabMenu.refresh": "重新整理分頁"
+            }
         },
-        37301: e => {
+
+        // json schema
+        37301: module => {
             "use strict";
-            e.exports = JSON.parse('{"$id":"https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#","description":"Meta-schema for $data reference (JSON AnySchema extension proposal)","type":"object","required":["$data"],"properties":{"$data":{"type":"string","anyOf":[{"format":"relative-json-pointer"},{"format":"json-pointer"}]}},"additionalProperties":false}')
+            module.exports = {
+                "$id": "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+                "description": "Meta-schema for $data reference (JSON AnySchema extension proposal)",
+                "type": "object",
+                "required": [
+                    "$data"
+                ],
+                "properties": {
+                    "$data": {
+                        "type": "string",
+                        "anyOf": [
+                            {
+                                "format": "relative-json-pointer"
+                            },
+                            {
+                                "format": "json-pointer"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false
+            }
         },
-        92455: e => {
+        92455: module => {
             "use strict";
-            e.exports = JSON.parse('{"$schema":"http://json-schema.org/draft-07/schema#","$id":"http://json-schema.org/draft-07/schema#","title":"Core schema meta-schema","definitions":{"schemaArray":{"type":"array","minItems":1,"items":{"$ref":"#"}},"nonNegativeInteger":{"type":"integer","minimum":0},"nonNegativeIntegerDefault0":{"allOf":[{"$ref":"#/definitions/nonNegativeInteger"},{"default":0}]},"simpleTypes":{"enum":["array","boolean","integer","null","number","object","string"]},"stringArray":{"type":"array","items":{"type":"string"},"uniqueItems":true,"default":[]}},"type":["object","boolean"],"properties":{"$id":{"type":"string","format":"uri-reference"},"$schema":{"type":"string","format":"uri"},"$ref":{"type":"string","format":"uri-reference"},"$comment":{"type":"string"},"title":{"type":"string"},"description":{"type":"string"},"default":true,"readOnly":{"type":"boolean","default":false},"examples":{"type":"array","items":true},"multipleOf":{"type":"number","exclusiveMinimum":0},"maximum":{"type":"number"},"exclusiveMaximum":{"type":"number"},"minimum":{"type":"number"},"exclusiveMinimum":{"type":"number"},"maxLength":{"$ref":"#/definitions/nonNegativeInteger"},"minLength":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"pattern":{"type":"string","format":"regex"},"additionalItems":{"$ref":"#"},"items":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/schemaArray"}],"default":true},"maxItems":{"$ref":"#/definitions/nonNegativeInteger"},"minItems":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"uniqueItems":{"type":"boolean","default":false},"contains":{"$ref":"#"},"maxProperties":{"$ref":"#/definitions/nonNegativeInteger"},"minProperties":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"required":{"$ref":"#/definitions/stringArray"},"additionalProperties":{"$ref":"#"},"definitions":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"properties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"patternProperties":{"type":"object","additionalProperties":{"$ref":"#"},"propertyNames":{"format":"regex"},"default":{}},"dependencies":{"type":"object","additionalProperties":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/stringArray"}]}},"propertyNames":{"$ref":"#"},"const":true,"enum":{"type":"array","items":true,"minItems":1,"uniqueItems":true},"type":{"anyOf":[{"$ref":"#/definitions/simpleTypes"},{"type":"array","items":{"$ref":"#/definitions/simpleTypes"},"minItems":1,"uniqueItems":true}]},"format":{"type":"string"},"contentMediaType":{"type":"string"},"contentEncoding":{"type":"string"},"if":{"$ref":"#"},"then":{"$ref":"#"},"else":{"$ref":"#"},"allOf":{"$ref":"#/definitions/schemaArray"},"anyOf":{"$ref":"#/definitions/schemaArray"},"oneOf":{"$ref":"#/definitions/schemaArray"},"not":{"$ref":"#"}},"default":true}')
+            module.exports = {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "$id": "http://json-schema.org/draft-07/schema#",
+                "title": "Core schema meta-schema",
+                "definitions": {
+                    "schemaArray": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "$ref": "#"
+                        }
+                    },
+                    "nonNegativeInteger": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "nonNegativeIntegerDefault0": {
+                        "allOf": [
+                            {
+                                "$ref": "#/definitions/nonNegativeInteger"
+                            },
+                            {
+                                "default": 0
+                            }
+                        ]
+                    },
+                    "simpleTypes": {
+                        "enum": [
+                            "array",
+                            "boolean",
+                            "integer",
+                            "null",
+                            "number",
+                            "object",
+                            "string"
+                        ]
+                    },
+                    "stringArray": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true,
+                        "default": []
+                    }
+                },
+                "type": [
+                    "object",
+                    "boolean"
+                ],
+                "properties": {
+                    "$id": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$schema": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "$ref": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$comment": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "default": true,
+                    "readOnly": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "examples": {
+                        "type": "array",
+                        "items": true
+                    },
+                    "multipleOf": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                    },
+                    "maximum": {
+                        "type": "number"
+                    },
+                    "exclusiveMaximum": {
+                        "type": "number"
+                    },
+                    "minimum": {
+                        "type": "number"
+                    },
+                    "exclusiveMinimum": {
+                        "type": "number"
+                    },
+                    "maxLength": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minLength": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "pattern": {
+                        "type": "string",
+                        "format": "regex"
+                    },
+                    "additionalItems": {
+                        "$ref": "#"
+                    },
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#"
+                            },
+                            {
+                                "$ref": "#/definitions/schemaArray"
+                            }
+                        ],
+                        "default": true
+                    },
+                    "maxItems": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minItems": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "uniqueItems": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "contains": {
+                        "$ref": "#"
+                    },
+                    "maxProperties": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minProperties": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "required": {
+                        "$ref": "#/definitions/stringArray"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#"
+                    },
+                    "definitions": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "patternProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "propertyNames": {
+                            "format": "regex"
+                        },
+                        "default": {}
+                    },
+                    "dependencies": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#"
+                                },
+                                {
+                                    "$ref": "#/definitions/stringArray"
+                                }
+                            ]
+                        }
+                    },
+                    "propertyNames": {
+                        "$ref": "#"
+                    },
+                    "const": true,
+                    "enum": {
+                        "type": "array",
+                        "items": true,
+                        "minItems": 1,
+                        "uniqueItems": true
+                    },
+                    "type": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/simpleTypes"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/simpleTypes"
+                                },
+                                "minItems": 1,
+                                "uniqueItems": true
+                            }
+                        ]
+                    },
+                    "format": {
+                        "type": "string"
+                    },
+                    "contentMediaType": {
+                        "type": "string"
+                    },
+                    "contentEncoding": {
+                        "type": "string"
+                    },
+                    "if": {
+                        "$ref": "#"
+                    },
+                    "then": {
+                        "$ref": "#"
+                    },
+                    "else": {
+                        "$ref": "#"
+                    },
+                    "allOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "anyOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "oneOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "not": {
+                        "$ref": "#"
+                    }
+                },
+                "default": true
+            }
         },
-        74483: e => {
+        74483: module => {
             "use strict";
-            e.exports = JSON.parse('{"$id":"https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#","description":"Meta-schema for $data reference (JSON AnySchema extension proposal)","type":"object","required":["$data"],"properties":{"$data":{"type":"string","anyOf":[{"format":"relative-json-pointer"},{"format":"json-pointer"}]}},"additionalProperties":false}')
+            module.exports = {
+                "$id": "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
+                "description": "Meta-schema for $data reference (JSON AnySchema extension proposal)",
+                "type": "object",
+                "required": [
+                    "$data"
+                ],
+                "properties": {
+                    "$data": {
+                        "type": "string",
+                        "anyOf": [
+                            {
+                                "format": "relative-json-pointer"
+                            },
+                            {
+                                "format": "json-pointer"
+                            }
+                        ]
+                    }
+                },
+                "additionalProperties": false
+            }
         },
-        89049: e => {
+        89049: module => {
             "use strict";
-            e.exports = JSON.parse('{"$schema":"http://json-schema.org/draft-07/schema#","$id":"http://json-schema.org/draft-07/schema#","title":"Core schema meta-schema","definitions":{"schemaArray":{"type":"array","minItems":1,"items":{"$ref":"#"}},"nonNegativeInteger":{"type":"integer","minimum":0},"nonNegativeIntegerDefault0":{"allOf":[{"$ref":"#/definitions/nonNegativeInteger"},{"default":0}]},"simpleTypes":{"enum":["array","boolean","integer","null","number","object","string"]},"stringArray":{"type":"array","items":{"type":"string"},"uniqueItems":true,"default":[]}},"type":["object","boolean"],"properties":{"$id":{"type":"string","format":"uri-reference"},"$schema":{"type":"string","format":"uri"},"$ref":{"type":"string","format":"uri-reference"},"$comment":{"type":"string"},"title":{"type":"string"},"description":{"type":"string"},"default":true,"readOnly":{"type":"boolean","default":false},"examples":{"type":"array","items":true},"multipleOf":{"type":"number","exclusiveMinimum":0},"maximum":{"type":"number"},"exclusiveMaximum":{"type":"number"},"minimum":{"type":"number"},"exclusiveMinimum":{"type":"number"},"maxLength":{"$ref":"#/definitions/nonNegativeInteger"},"minLength":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"pattern":{"type":"string","format":"regex"},"additionalItems":{"$ref":"#"},"items":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/schemaArray"}],"default":true},"maxItems":{"$ref":"#/definitions/nonNegativeInteger"},"minItems":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"uniqueItems":{"type":"boolean","default":false},"contains":{"$ref":"#"},"maxProperties":{"$ref":"#/definitions/nonNegativeInteger"},"minProperties":{"$ref":"#/definitions/nonNegativeIntegerDefault0"},"required":{"$ref":"#/definitions/stringArray"},"additionalProperties":{"$ref":"#"},"definitions":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"properties":{"type":"object","additionalProperties":{"$ref":"#"},"default":{}},"patternProperties":{"type":"object","additionalProperties":{"$ref":"#"},"propertyNames":{"format":"regex"},"default":{}},"dependencies":{"type":"object","additionalProperties":{"anyOf":[{"$ref":"#"},{"$ref":"#/definitions/stringArray"}]}},"propertyNames":{"$ref":"#"},"const":true,"enum":{"type":"array","items":true,"minItems":1,"uniqueItems":true},"type":{"anyOf":[{"$ref":"#/definitions/simpleTypes"},{"type":"array","items":{"$ref":"#/definitions/simpleTypes"},"minItems":1,"uniqueItems":true}]},"format":{"type":"string"},"contentMediaType":{"type":"string"},"contentEncoding":{"type":"string"},"if":{"$ref":"#"},"then":{"$ref":"#"},"else":{"$ref":"#"},"allOf":{"$ref":"#/definitions/schemaArray"},"anyOf":{"$ref":"#/definitions/schemaArray"},"oneOf":{"$ref":"#/definitions/schemaArray"},"not":{"$ref":"#"}},"default":true}')
+            module.exports = {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "$id": "http://json-schema.org/draft-07/schema#",
+                "title": "Core schema meta-schema",
+                "definitions": {
+                    "schemaArray": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "$ref": "#"
+                        }
+                    },
+                    "nonNegativeInteger": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "nonNegativeIntegerDefault0": {
+                        "allOf": [
+                            {
+                                "$ref": "#/definitions/nonNegativeInteger"
+                            },
+                            {
+                                "default": 0
+                            }
+                        ]
+                    },
+                    "simpleTypes": {
+                        "enum": [
+                            "array",
+                            "boolean",
+                            "integer",
+                            "null",
+                            "number",
+                            "object",
+                            "string"
+                        ]
+                    },
+                    "stringArray": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "uniqueItems": true,
+                        "default": []
+                    }
+                },
+                "type": [
+                    "object",
+                    "boolean"
+                ],
+                "properties": {
+                    "$id": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$schema": {
+                        "type": "string",
+                        "format": "uri"
+                    },
+                    "$ref": {
+                        "type": "string",
+                        "format": "uri-reference"
+                    },
+                    "$comment": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "default": true,
+                    "readOnly": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "examples": {
+                        "type": "array",
+                        "items": true
+                    },
+                    "multipleOf": {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                    },
+                    "maximum": {
+                        "type": "number"
+                    },
+                    "exclusiveMaximum": {
+                        "type": "number"
+                    },
+                    "minimum": {
+                        "type": "number"
+                    },
+                    "exclusiveMinimum": {
+                        "type": "number"
+                    },
+                    "maxLength": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minLength": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "pattern": {
+                        "type": "string",
+                        "format": "regex"
+                    },
+                    "additionalItems": {
+                        "$ref": "#"
+                    },
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#"
+                            },
+                            {
+                                "$ref": "#/definitions/schemaArray"
+                            }
+                        ],
+                        "default": true
+                    },
+                    "maxItems": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minItems": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "uniqueItems": {
+                        "type": "boolean",
+                        "default": false
+                    },
+                    "contains": {
+                        "$ref": "#"
+                    },
+                    "maxProperties": {
+                        "$ref": "#/definitions/nonNegativeInteger"
+                    },
+                    "minProperties": {
+                        "$ref": "#/definitions/nonNegativeIntegerDefault0"
+                    },
+                    "required": {
+                        "$ref": "#/definitions/stringArray"
+                    },
+                    "additionalProperties": {
+                        "$ref": "#"
+                    },
+                    "definitions": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "properties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "default": {}
+                    },
+                    "patternProperties": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "$ref": "#"
+                        },
+                        "propertyNames": {
+                            "format": "regex"
+                        },
+                        "default": {}
+                    },
+                    "dependencies": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "anyOf": [
+                                {
+                                    "$ref": "#"
+                                },
+                                {
+                                    "$ref": "#/definitions/stringArray"
+                                }
+                            ]
+                        }
+                    },
+                    "propertyNames": {
+                        "$ref": "#"
+                    },
+                    "const": true,
+                    "enum": {
+                        "type": "array",
+                        "items": true,
+                        "minItems": 1,
+                        "uniqueItems": true
+                    },
+                    "type": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/simpleTypes"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/simpleTypes"
+                                },
+                                "minItems": 1,
+                                "uniqueItems": true
+                            }
+                        ]
+                    },
+                    "format": {
+                        "type": "string"
+                    },
+                    "contentMediaType": {
+                        "type": "string"
+                    },
+                    "contentEncoding": {
+                        "type": "string"
+                    },
+                    "if": {
+                        "$ref": "#"
+                    },
+                    "then": {
+                        "$ref": "#"
+                    },
+                    "else": {
+                        "$ref": "#"
+                    },
+                    "allOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "anyOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "oneOf": {
+                        "$ref": "#/definitions/schemaArray"
+                    },
+                    "not": {
+                        "$ref": "#"
+                    }
+                },
+                "default": true
+            }
         }
     }
     const __caches = {}

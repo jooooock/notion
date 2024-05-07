@@ -82,11 +82,22 @@
 54679: createClient
 
 
-// nodejs模块
-70857: os
+// 外部依赖
+4482: electron
+34681: node-mac-window
+16857: url
+42613: assert
+35317: child_process
+49140: constants
+76982: crypto
+24434: events
+79896: fs
+58611: http
+65692: https
+69278: net
 57075: node:stream
+70857: os
 16928: path
-80115: fse
 83480: querystring
 2203: stream
 13193: string_decoder
@@ -94,20 +105,10 @@
 52018: tty
 39023: util
 28167: worker_threads
-34681: node-mac-window
-16857: url
-42613: assert
-35317: child_process
-49140: constants ?
-76982: crypto
-24434: events
-79896: fs
-58611: http
-65692: https
-69278: net
 
+80115: fse
 6354: redux toolkit
-4482: electron
+
 47419: electron-log
 99163: debug for browser
 81047: debug for nodejs
