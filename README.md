@@ -58,6 +58,9 @@
 26605: open at login
 77514: handleNotionProtocol
 
+83789: getDebugMenu
+27683: TabColors
+
 69340: redux store
 73553: app slice
 28192: history slice

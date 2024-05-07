@@ -369,66 +369,119 @@
 
 
         // AppController
-        21852: function (e, t, r) {
+        21852: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.AppController_TEST_ONLY = t.appController = void 0;
-            const s = r(4482), l = i(r(47419)), c = r(43277), u = r(83704), d = r(28902), p = a(r(6600)),
-                h = a(r(60411)), f = i(r(11239)), m = r(55870), g = a(r(68115)), b = r(26605), v = r(88493),
-                y = r(29902), w = r(26760), _ = r(73553), k = r(30506), T = r(28192), S = r(69340), E = r(54417),
-                C = r(772), O = r(84087), M = r(1147), I = l.default.scope("AppController");
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
 
-            class A {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                c = __webpack_require(43277),
+                u = __webpack_require(83704),
+                d = __webpack_require(28902),
+                lodash = a(__webpack_require(6600)),
+                h = a(__webpack_require(60411)),
+                __config = i(__webpack_require(11239)),
+                m = __webpack_require(55870),
+                g = a(__webpack_require(68115)),
+                b = __webpack_require(26605),
+                v = __webpack_require(88493),
+                y = __webpack_require(29902),
+                __QuickSearchController = __webpack_require(26760),
+                __appSlice = __webpack_require(73553),
+                __appStatePersister = __webpack_require(30506),
+                __historySlice = __webpack_require(28192),
+                __store = __webpack_require(69340),
+                __tabSlice = __webpack_require(54417),
+                __windowSlice = __webpack_require(772),
+                __TrayController = __webpack_require(84087),
+                __WindowController = __webpack_require(1147)
+
+            const logger = electron_log.default.scope("AppController")
+
+            class AppController {
                 constructor() {
-                    this.windowControllers = new Array, this.isQuitting = !1, this.previousRestorationState = S.Store.getState().history.appRestorationState, this.appStateUnsubscribe = (0, S.subscribeToSelector)(S.selectAppState, ((e, t) => this.handleAppStateChange(e, t))), this.historyStateUnsubscribe = (0, S.subscribeToSelector)((e => (0, S.selectHistory)(e)), (e => {
-                        k.appStatePersister.set("history", e)
-                    })), this.focusedWindowStateUnsubscribe = (0, S.subscribeToSelector)((e => (0, S.selectFocusedWindowDisplayState)(e)), (e => {
-                        e && S.Store.dispatch((0, T.updateLastFocusedWindowDisplayState)(e))
-                    }), {wait: 3e4}), this.appRestorationStateUnsubscribe = (0, S.subscribeToSelector)((e => ({
-                        tabs: e.tabs,
-                        windows: e.windows
-                    })), (e => {
-                        this.handleAppRestorationStateChange(e)
-                    }), {wait: 3e4})
+                    this.windowControllers = []
+                    this.isQuitting = false
+                    this.previousRestorationState = __store.Store.getState().history.appRestorationState
+                    this.appStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectAppState,
+                        (value, oldValue) => this.handleAppStateChange(value, oldValue)
+                    )
+                    this.historyStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => __store.selectHistory(rootState),
+                        value => {
+                            __appStatePersister.appStatePersister.set("history", value)
+                        }
+                    )
+                    this.focusedWindowStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => __store.selectFocusedWindowDisplayState(rootState),
+                        value => {
+                            value && __store.Store.dispatch(__historySlice.updateLastFocusedWindowDisplayState(value))
+                        },
+                        {wait: 30_000}
+                    )
+                    this.appRestorationStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => ({
+                            tabs: rootState.tabs,
+                            windows: rootState.windows
+                        }),
+                        value => {
+                            this.handleAppRestorationStateChange(value)
+                        },
+                        {wait: 30_000}
+                    )
                 }
 
                 async onAppReady() {
-                    await s.app.whenReady(), this.initializeQuickSearchController(), this.trayController = new O.TrayController
+                    await electron.app.whenReady()
+                    this.initializeQuickSearchController()
+                    this.trayController = new __TrayController.TrayController()
                 }
 
                 get intl() {
-                    if (!s.app.isReady()) {
-                        if ("production" === f.default.env) return (0, m.createIntlShape)("en-US");
+                    if (!electron.app.isReady()) {
+                        if ("production" === __config.default.env) {
+                            return m.createIntlShape("en-US");
+                        }
                         throw new Error("Cannot request intl before app is ready because locale isn't available")
                     }
                     if (!this._intl) {
-                        const e = s.app.getLocale(), t = "es-419" === e ? "es-LA" : e;
-                        this._notionLocale = (0, d.externalLocaleToNotionLocale)(t, "production" === f.default.env);
-                        const r = (0, m.createIntlShape)(this._notionLocale);
-                        if (!s.app.isReady()) return r;
-                        this._intl = r
+                        const _locale = electron.app.getLocale()
+                        const locale = "es-419" === _locale ? "es-LA" : _locale;
+                        this._notionLocale = d.externalLocaleToNotionLocale(locale, "production" === __config.default.env);
+                        const intlShape = m.createIntlShape(this._notionLocale);
+                        if (!electron.app.isReady()) {
+                            return intlShape;
+                        }
+                        this._intl = intlShape
                     }
                     return this._intl
                 }
@@ -439,7 +492,7 @@
 
                 rehydrateSingleTabInBackground(e) {
                     if (!this.previousRestorationState || e) return !1;
-                    const t = p.maxBy(this.previousRestorationState, "focusOrder");
+                    const t = lodash.maxBy(this.previousRestorationState, "focusOrder");
                     if (!t) return !1;
                     const r = t.tabs.find((e => e.isActive));
                     return !!r && (this.newWindow({
@@ -455,7 +508,7 @@
                 rehydrateEntireAppInForeground(e) {
                     if (!this.previousRestorationState) return !1;
                     const t = this.previousRestorationState;
-                    return p.orderBy(t, ["focusOrder"], ["asc"]).forEach(((r, n) => {
+                    return lodash.orderBy(t, ["focusOrder"], ["asc"]).forEach(((r, n) => {
                         const o = this.getWindowControllerForId(r.windowId) || this.newWindow({
                             windowId: r.windowId,
                             displayState: r.displayState,
@@ -478,9 +531,9 @@
 
                 newWindow(e) {
                     this.trackAnalyticsEvent("electron_new_window");
-                    const t = M.WindowController.newInstanceWithUrl({
+                    const t = __WindowController.WindowController.newInstanceWithUrl({
                         intl: this.intl,
-                        windowId: e.windowId || (0, C.createWindowId)(),
+                        windowId: e.windowId || (0, __windowSlice.createWindowId)(),
                         initialTabUrl: (0, y.normalizeUrlProtocolWithDefault)(e.initialUrl),
                         displayState: e.displayState,
                         initialTabId: e.initialTabId,
@@ -493,8 +546,8 @@
                 }
 
                 createWindowForTabController(e) {
-                    const t = M.WindowController.newInstanceWithController({
-                        windowId: (0, C.createWindowId)(),
+                    const t = __WindowController.WindowController.newInstanceWithController({
+                        windowId: (0, __windowSlice.createWindowId)(),
                         intl: this.intl,
                         initialTabController: e
                     });
@@ -506,9 +559,9 @@
                 }
 
                 reopenLastClosedPages() {
-                    const e = S.Store.getState().history.closeEvents?.[0];
+                    const e = __store.Store.getState().history.closeEvents?.[0];
                     if (!e) return;
-                    S.Store.dispatch((0, T.popCloseEvent)());
+                    __store.Store.dispatch((0, __historySlice.popCloseEvent)());
                     const t = this.getWindowControllerForId(e.windowId);
                     if (t) if ("single-tab" === e.type) t.newTabAtIndex({
                         url: this.getRestoredUrl(e.url),
@@ -545,12 +598,12 @@
                 }
 
                 initializeQuickSearchController() {
-                    _.QUICK_SEARCH_ENABLED && (this.quickSearchController || (this.quickSearchController = new w.QuickSearchController))
+                    __appSlice.QUICK_SEARCH_ENABLED && (this.quickSearchController || (this.quickSearchController = new __QuickSearchController.QuickSearchController))
                 }
 
                 openURLOptionallySurfacingExistingTab(e) {
                     const t = this.getWindowAndTabControllerWithEquivalentURL(h.parse(e));
-                    t ? this.openUrlInTab(e, t) : this.openUrlInNewTabOrWindow(e), s.app.focus({steal: !0})
+                    t ? this.openUrlInTab(e, t) : this.openUrlInNewTabOrWindow(e), electron.app.focus({steal: !0})
                 }
 
                 openUserSettings() {
@@ -571,26 +624,26 @@
                         this.openURLOptionallySurfacingExistingTab(o)
                     } else this.navigateFocusedWindowToUrl(e);
                     g.closeLastBrowserTab({urlContaining: n}).catch((e => {
-                        I.error("Error closing last browser tab", e)
+                        logger.error("Error closing last browser tab", e)
                     }))
                 }
 
                 getFocusedWindowController() {
-                    return this.getWindowControllerForWebContents(s.BrowserWindow.getFocusedWindow()?.webContents)
+                    return this.getWindowControllerForWebContents(electron.BrowserWindow.getFocusedWindow()?.webContents)
                 }
 
                 async waitForFocusedWindowController() {
                     return this.getFocusedWindowController() || new Promise((e => {
                         const t = () => {
                             const r = this.getFocusedWindowController();
-                            r && (e(r), s.app.removeListener("browser-window-focus", t))
+                            r && (e(r), electron.app.removeListener("browser-window-focus", t))
                         };
-                        s.app.on("browser-window-focus", t)
+                        electron.app.on("browser-window-focus", t)
                     }))
                 }
 
                 getMostRecentlyFocusedWindowController() {
-                    const e = p.maxBy(Object.values(S.Store.getState().windows), (e => e.focusOrder));
+                    const e = lodash.maxBy(Object.values(__store.Store.getState().windows), (e => e.focusOrder));
                     if (e) {
                         const t = this.getWindowControllerForId(e.windowId);
                         if (t) return t
@@ -600,7 +653,7 @@
 
                 getWindowControllerForWebContents(e) {
                     if (!e) return;
-                    const t = s.BrowserWindow.fromWebContents(e);
+                    const t = electron.BrowserWindow.fromWebContents(e);
                     return t ? this.windowControllers.find((e => e.browserWindow.id === t.id)) : void 0
                 }
 
@@ -618,7 +671,7 @@
                 }
 
                 refreshAll(e) {
-                    const t = s.BrowserWindow.getFocusedWindow();
+                    const t = electron.BrowserWindow.getFocusedWindow();
                     if (e || !t) return this.windowControllers.forEach((e => e.refresh({includeActiveTab: !0}))), void this.quickSearchController?.reload();
                     this.windowControllers.forEach((e => {
                         e.refresh({includeActiveTab: e.browserWindow.id !== t.id})
@@ -636,12 +689,12 @@
                 }
 
                 zoomIn() {
-                    const e = S.Store.getState().app.zoomFactor + u.ELECTRON_ZOOM_INCREMENT;
+                    const e = __store.Store.getState().app.zoomFactor + u.ELECTRON_ZOOM_INCREMENT;
                     this.setZoom(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, e), u.ELECTRON_ZOOM_MAXIMUM))
                 }
 
                 zoomOut() {
-                    const e = S.Store.getState().app.zoomFactor - u.ELECTRON_ZOOM_INCREMENT;
+                    const e = __store.Store.getState().app.zoomFactor - u.ELECTRON_ZOOM_INCREMENT;
                     this.setZoom(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, e), u.ELECTRON_ZOOM_MAXIMUM))
                 }
 
@@ -650,11 +703,11 @@
                 }
 
                 setZoom(e) {
-                    S.Store.dispatch((0, _.updateZoomFactor)(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, e), u.ELECTRON_ZOOM_MAXIMUM)))
+                    __store.Store.dispatch((0, __appSlice.updateZoomFactor)(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, e), u.ELECTRON_ZOOM_MAXIMUM)))
                 }
 
                 handleAppStateChange(e, t) {
-                    k.appStatePersister.set("appState", e);
+                    __appStatePersister.appStatePersister.set("appState", e);
                     const r = e.preferences || {}, n = t.preferences || {};
                     "darwin" === process.platform && r.isClosingBrowserTabs && !n.isClosingBrowserTabs && g.closeLastBrowserTab({
                         urlContaining: "notion.so",
@@ -665,7 +718,7 @@
                 }
 
                 handleAppRestorationStateChange(e) {
-                    if (p.isEmpty(e.windows)) return;
+                    if (lodash.isEmpty(e.windows)) return;
                     const t = Object.values(e.windows).map((t => ({
                         windowId: t.windowId,
                         focusOrder: t.focusOrder,
@@ -681,7 +734,7 @@
                             }
                         }))
                     })));
-                    S.Store.dispatch((0, T.setAppRestorationState)(t))
+                    __store.Store.dispatch((0, __historySlice.setAppRestorationState)(t))
                 }
 
                 handleQuit() {
@@ -689,23 +742,23 @@
                 }
 
                 handleQuitWithoutSavingTabs() {
-                    S.Store.dispatch((0, E.resetTabState)()), S.Store.dispatch((0, C.resetWindowState)()), S.Store.dispatch((0, T.resetHistoryState)()), s.app.quit()
+                    __store.Store.dispatch((0, __tabSlice.resetTabState)()), __store.Store.dispatch((0, __windowSlice.resetWindowState)()), __store.Store.dispatch((0, __historySlice.resetHistoryState)()), electron.app.quit()
                 }
 
                 handleWindowClose(e, t) {
                     const r = 1 === this.windowControllers.length, n = this.isQuitting,
-                        o = S.Store.getState().app.preferences, a = !1 === o.isHideLastWindowOnCloseEnabled,
+                        o = __store.Store.getState().app.preferences, a = !1 === o.isHideLastWindowOnCloseEnabled,
                         i = !1 === o.isQuickSearchEnabled;
-                    return l.default.debug("Window close", {
+                    return electron_log.default.debug("Window close", {
                         lastWindow: r,
                         isQuitting: n,
                         isHideDisabled: a
-                    }), !(r && !n && !a || (this.windowControllers = this.windowControllers.filter((e => e.browserWindow !== t)), this.mostRecentlyFocusedWindowController?.browserWindow.id === t.id && (this.mostRecentlyFocusedWindowController = void 0), "win32" === process.platform && 0 === this.windowControllers.length && i && !n && s.app.quit(), 0))
+                    }), !(r && !n && !a || (this.windowControllers = this.windowControllers.filter((e => e.browserWindow !== t)), this.mostRecentlyFocusedWindowController?.browserWindow.id === t.id && (this.mostRecentlyFocusedWindowController = void 0), "win32" === process.platform && 0 === this.windowControllers.length && i && !n && electron.app.quit(), 0))
                 }
 
                 getWindowAndTabControllerWithEquivalentURL(e) {
                     const t = this.getMostRecentlyFocusedWindowController(),
-                        r = p.compact([t, ...this.windowControllers.filter((e => e !== t))]);
+                        r = lodash.compact([t, ...this.windowControllers.filter((e => e !== t))]);
                     for (const t of r) {
                         const r = t.getTabControllerWithEquivalentUrl(e);
                         if (r) return {windowController: t, tabController: r}
@@ -738,7 +791,7 @@
                 }
 
                 handleOpenAtLoginChange(e) {
-                    (0, b.setIsOpenAtLogin)(e), e && ((0, b.getIsOpenAtLogin)() || (l.default.warn("Tried to enable open at login, but failed."), (0, v.showOpenAtLoginErrorDialog)(), S.Store.dispatch((0, _.updatePreferences)({isOpenAtLoginEnabled: !1}))))
+                    (0, b.setIsOpenAtLogin)(e), e && ((0, b.getIsOpenAtLogin)() || (electron_log.default.warn("Tried to enable open at login, but failed."), (0, v.showOpenAtLoginErrorDialog)(), __store.Store.dispatch((0, __appSlice.updatePreferences)({isOpenAtLoginEnabled: !1}))))
                 }
 
                 getRestoredUrl(e) {
@@ -746,12 +799,16 @@
                 }
 
                 updateMediaIndicator(e, r) {
-                    const n = t.appController.getTabControllerForWebContents(e);
-                    n && S.Store.dispatch((0, E.updateTabIsMediaInputActive)({tabId: n.tabId, isMediaInputActive: r}))
+                    const n = exports.appController.getTabControllerForWebContents(e);
+                    n && __store.Store.dispatch((0, __tabSlice.updateTabIsMediaInputActive)({
+                        tabId: n.tabId,
+                        isMediaInputActive: r
+                    }))
                 }
             }
 
-            t.appController = new A, t.AppController_TEST_ONLY = A
+            exports.appController = new AppController()
+            exports.AppController_TEST_ONLY = AppController
         },
 
         // AssetCache 类
@@ -1819,9 +1876,9 @@
         },
 
         // WebUpdater
-        19628: function (e, t, r) {
+        19628: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -1832,49 +1889,95 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.WebUpdater = void 0;
-            const s = i(r(47419)), l = i(r(11239)), c = r(21852), u = a(r(10454)), d = r(29902), p = r(69340);
-            t.WebUpdater = class {
-                constructor(e, t) {
-                    this.pendingUpdate = void 0, this.backgroundInterval = void 0, this.app = e, this.assetCache = t, this.isAppVisible = !0, (0, p.subscribeToSelector)(p.selectAppVisibilityBaseOnRenderers, (e => {
-                        this.isAppVisible = e, s.default.info(`App is visible: ${e}`), this.onAppVisibilityChange(e)
-                    })), this.assetCache.events.addListener("update-finished", (() => this.updateFinished())), this.assetCache.events.addListener("update-applied", (() => this.updateApplied())), u.handleEventFromRenderer.addListener("notion:install-appjs-update", ((e, t) => {
-                        this.pendingUpdate && this.assetCache.syncVersions().then((() => {
-                            const r = (0, d.normalizeUrlProtocol)(t);
-                            r ? (c.appController.getTabControllerForWebContents(e.sender)?.loadUrl(r), c.appController.refreshAll(!1)) : c.appController.refreshAll(!0)
-                        }))
-                    }))
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron_log = i(__webpack_require(47419)),
+                __config = i(__webpack_require(11239)),
+                __AppController = __webpack_require(21852),
+                __notionIPC = a(__webpack_require(10454)),
+                d = __webpack_require(29902),
+                __store = __webpack_require(69340);
+
+            exports.WebUpdater = class {
+                constructor(app, assetCache) {
+                    this.pendingUpdate = void 0
+                    this.backgroundInterval = void 0
+                    this.app = app
+                    this.assetCache = assetCache
+                    this.isAppVisible = true
+                    __store.subscribeToSelector(__store.selectAppVisibilityBaseOnRenderers, value => {
+                        this.isAppVisible = value
+                        electron_log.default.info(`App is visible: ${value}`)
+                        this.onAppVisibilityChange(value)
+                    })
+                    this.assetCache.events.addListener("update-finished", () => this.updateFinished())
+                    this.assetCache.events.addListener("update-applied", () => this.updateApplied())
+
+                    __notionIPC.handleEventFromRenderer.addListener("notion:install-appjs-update", (evt, url) => {
+                        if (this.pendingUpdate) {
+                            this.assetCache.syncVersions().then(() => {
+                                const _url = d.normalizeUrlProtocol(url)
+                                if (_url) {
+                                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.loadUrl(_url)
+                                    __AppController.appController.refreshAll(false)
+                                } else {
+                                    __AppController.appController.refreshAll(true)
+                                }
+                            })
+                        }
+                    })
                 }
 
                 updateFinished() {
                     if (this.pendingUpdate) return;
-                    const e = Date.now(), t = "production" === l.default.env ? 864e5 * Math.random() : 0;
-                    this.pendingUpdate = {updateAvailableAt: e, applyUpdateAfter: e + t}
+
+                    const now = Date.now()
+                    const delay = "production" === __config.default.env ? 864e5 * Math.random() : 0;
+
+                    this.pendingUpdate = {
+                        updateAvailableAt: now,
+                        applyUpdateAfter: now + delay
+                    }
                 }
 
                 updateApplied() {
                     this.pendingUpdate = void 0
                 }
 
-                onAppVisibilityChange(e) {
-                    if (e) {
+                onAppVisibilityChange(visible) {
+                    if (visible) {
                         if (this.backgroundInterval) return;
-                        this.backgroundInterval = setInterval((async () => {
-                            this.pendingUpdate && (this.isAppVisible || Date.now() < this.pendingUpdate.applyUpdateAfter || (s.default.info("Sending update install notification to all windows"), await this.assetCache.syncVersions(), c.appController.refreshAll(!0)))
-                        }), 6e4)
-                    } else this.backgroundInterval && (clearInterval(this.backgroundInterval), this.backgroundInterval = void 0)
+
+                        this.backgroundInterval = setInterval(async () => {
+                            if (this.pendingUpdate) {
+                                if (!this.isAppVisible && Date.now() >= this.pendingUpdate.applyUpdateAfter) {
+                                    electron_log.default.info("Sending update install notification to all windows")
+                                    await this.assetCache.syncVersions()
+                                    __AppController.appController.refreshAll(true)
+                                }
+                            }
+                        }, 60_000)
+                    } else if (this.backgroundInterval) {
+                        clearInterval(this.backgroundInterval)
+                        this.backgroundInterval = void 0
+                    }
                 }
             }
         },
@@ -3282,38 +3385,56 @@
         },
 
         // getDebugMenu
-        83789: function (e, t, r) {
+        83789: function (module, exports, __webpack_require) {
             "use strict";
             var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.waitForWebpack = t.shouldSimulateAirplaneMode = t.getDebugMenu = t.shouldShowDebugMenu = void 0;
-            const s = i(r(79896)), l = i(r(70857)), c = i(r(16928)), u = r(4482), d = i(r(47419)), p = a(r(6600)),
-                h = i(r(11239)), f = r(27683), m = r(21852), g = r(73553), b = r(14473), v = r(69340);
-            let y = !1;
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
 
-            function w() {
-                return "production" !== h.default.env
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __fs = i(__webpack_require(79896)),
+                __os = i(__webpack_require(70857)),
+                __path = i(__webpack_require(16928)),
+                electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                lodash = a(__webpack_require(6600)),
+                __config = i(__webpack_require(11239)),
+                __tabColors = __webpack_require(27683),
+                __AppController = __webpack_require(21852),
+                __appSlice = __webpack_require(73553),
+                __quickSearchSlice = __webpack_require(14473),
+                __store = __webpack_require(69340);
+
+            let simulateAirplaneMode = false;
+
+            function shouldShowDebugMenu() {
+                return true
+                // return "production" !== __config.default.env
             }
 
             function _(e, t) {
@@ -3331,184 +3452,255 @@
             }
 
             function T(e, t = {}) {
-                const r = u.BrowserWindow.getFocusedWindow() || u.BrowserWindow.getAllWindows()[0];
-                u.dialog.showSaveDialog(r, t).then((({filePath: t}) => {
-                    t && (s.default.writeFileSync(t, JSON.stringify(e, null, 4)), u.shell.openPath(t))
+                const r = electron.BrowserWindow.getFocusedWindow() || electron.BrowserWindow.getAllWindows()[0];
+                electron.dialog.showSaveDialog(r, t).then((({filePath: t}) => {
+                    t && (__fs.default.writeFileSync(t, JSON.stringify(e, null, 4)), electron.shell.openPath(t))
                 }))
             }
 
-            t.shouldShowDebugMenu = w, t.getDebugMenu = function () {
-                if (!w()) throw new Error("Dev tools are disabled, this should never be called!");
+            exports.shouldShowDebugMenu = shouldShowDebugMenu
+            exports.getDebugMenu = function () {
+                if (!shouldShowDebugMenu()) {
+                    throw new Error("Dev tools are disabled, this should never be called!");
+                }
 
-                function e(e, t) {
+                function e(label, args) {
                     return {
-                        label: p.startCase(e.replace("is", "")),
-                        checked: !!v.Store.getState().app.preferences[e],
+                        label: lodash.startCase(label.replace("is", "")),
+                        checked: !!__store.Store.getState().app.preferences[label],
                         type: "checkbox",
                         click(t) {
-                            v.Store.dispatch((0, g.updatePreferences)({[e]: t.checked}))
-                        }, ...t
+                            __store.Store.dispatch(__appSlice.updatePreferences({[label]: t.checked}))
+                        },
+                        ...args
                     }
                 }
 
                 return {
                     label: "Debug",
-                    submenu: [{
-                        label: "Command Search", submenu: [{
-                            label: "Toggle Window Visibility", click() {
-                                v.Store.dispatch((0, b.toggleVisibilityStateIfReady)("debug-menu"))
+                    submenu: [
+                        {
+                            label: "Command Search",
+                            submenu: [
+                                {
+                                    label: "Toggle Window Visibility", click() {
+                                        __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("debug-menu"))
+                                    }
+                                },
+                                {
+                                    label: "Toggle DevTools", click() {
+                                        __AppController.appController.quickSearchController?.toggleDevTools()
+                                    }
+                                },
+                                {
+                                    label: "Reload", click() {
+                                        __AppController.appController.quickSearchController?.reload()
+                                    }
+                                }
+                            ]
+                        },
+                        {type: "separator"},
+                        e("isVibrancyEnabled"),
+                        {
+                            label: "New Tab Search Enabled",
+                            checked: __store.Store.getState().app.preferences.isNewTabSearchEnabled,
+                            type: "checkbox",
+                            click(e) {
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isNewTabSearchEnabled: e.checked}))
                             }
-                        }, {
-                            label: "Toggle DevTools", click() {
-                                m.appController.quickSearchController?.toggleDevTools()
+                        },
+                        e("isTabDragIntoWindowEnabled"),
+                        {type: "separator"},
+                        {
+                            label: "(changing will restart app) Is using https:// ",
+                            checked: __store.Store.getState().app.preferences.isUsingHttps,
+                            type: "checkbox",
+                            click(e) {
+                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isUsingHttps: e.checked})), electron.app.relaunch(), process.nextTick((() => {
+                                    electron.app.quit()
+                                }))
                             }
-                        }, {
-                            label: "Reload", click() {
-                                m.appController.quickSearchController?.reload()
-                            }
-                        }]
-                    }, {type: "separator"}, e("isVibrancyEnabled"), {
-                        label: "New Tab Search Enabled",
-                        checked: v.Store.getState().app.preferences.isNewTabSearchEnabled,
-                        type: "checkbox",
-                        click(e) {
-                            v.Store.dispatch((0, g.updatePreferences)({isNewTabSearchEnabled: e.checked}))
-                        }
-                    }, e("isTabDragIntoWindowEnabled"), {type: "separator"}, {
-                        label: "(changing will restart app) Is using https:// ",
-                        checked: v.Store.getState().app.preferences.isUsingHttps,
-                        type: "checkbox",
-                        click(e) {
-                            v.Store.dispatch((0, g.updatePreferences)({isUsingHttps: e.checked})), u.app.relaunch(), process.nextTick((() => {
-                                u.app.quit()
-                            }))
-                        }
-                    }, {type: "separator"}, {
-                        label: "Dump state",
-                        click: () => T(v.Store.getState(), {defaultPath: "state.json"})
-                    }, {
-                        label: "Dump window state", click: () => T(function () {
-                            const e = m.appController.windowControllers, t = u.BrowserWindow.getAllWindows(),
-                                r = e.map((e => e.browserWindow)), n = t.filter((e => !r.includes(e))), o = e => {
-                                    const t = [];
-                                    return e.isMinimized() && t.push("minimized"), e.isFullScreen() && t.push("fullscreen"), e.isFocused() && t.push("focused"), e.isVisible() || t.push("hidden"), e.isModal() && t.push("modal"), e.isAlwaysOnTop() && t.push("always-on-top"), e.isClosable() || t.push("not-closable"), e.isMovable() || t.push("not-movable"), t.join(", ")
-                                }, a = e => ({
-                                    id: e.id,
-                                    title: e.getTitle(),
-                                    status: o(e),
-                                    url: e.webContents.getURL(),
-                                    browserViews: e.getBrowserViews().map((e => ({
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Dump state",
+                            click: () => T(__store.Store.getState(), {defaultPath: "state.json"})
+                        },
+                        {
+                            label: "Dump window state",
+                            click: () => T(function () {
+                                const e = __AppController.appController.windowControllers,
+                                    t = electron.BrowserWindow.getAllWindows(),
+                                    r = e.map((e => e.browserWindow)), n = t.filter((e => !r.includes(e))), o = e => {
+                                        const t = [];
+                                        return e.isMinimized() && t.push("minimized"), e.isFullScreen() && t.push("fullscreen"), e.isFocused() && t.push("focused"), e.isVisible() || t.push("hidden"), e.isModal() && t.push("modal"), e.isAlwaysOnTop() && t.push("always-on-top"), e.isClosable() || t.push("not-closable"), e.isMovable() || t.push("not-movable"), t.join(", ")
+                                    }, a = e => ({
+                                        id: e.id,
+                                        title: e.getTitle(),
+                                        status: o(e),
                                         url: e.webContents.getURL(),
-                                        title: e.webContents.getTitle()
-                                    })))
-                                });
-                            return {managed: r.map(a), unmanaged: n.map(a)}
-                        }(), {defaultPath: "windows.json"})
-                    }, {type: "separator"}, {
-                        label: "Open Log Folder", click() {
-                            u.shell.openPath(c.default.dirname(d.default.transports.file.getFile().path))
-                        }
-                    }, {
-                        label: "Open Data Folder", click() {
-                            u.shell.openPath(u.app.getPath("userData"))
-                        }
-                    }, {
-                        label: "Open Updater Folder", click() {
-                            const e = l.default.homedir();
-                            if ("win32" === process.platform) {
-                                const t = process.env.LOCALAPPDATA || c.default.join(e, "AppData", "Local"),
-                                    r = u.app.getName().replace(/\s/g, "").toLowerCase();
-                                u.shell.openPath(c.default.join(t, `${r}-updater`))
-                            } else if ("darwin" === process.platform) {
-                                const t = c.default.join(e, "Library", "Caches");
-                                u.shell.openPath(c.default.join(t, `${h.default.desktopAppId}.ShipIt`))
+                                        browserViews: e.getBrowserViews().map((e => ({
+                                            url: e.webContents.getURL(),
+                                            title: e.webContents.getTitle()
+                                        })))
+                                    });
+                                return {managed: r.map(a), unmanaged: n.map(a)}
+                            }(), {defaultPath: "windows.json"})
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Open Log Folder",
+                            click() {
+                                electron.shell.openPath(__path.default.dirname(electron_log.default.transports.file.getFile().path))
+                            }
+                        },
+                        {
+                            label: "Open Data Folder",
+                            click() {
+                                electron.shell.openPath(electron.app.getPath("userData"))
+                            }
+                        },
+                        {
+                            label: "Open Updater Folder",
+                            click() {
+                                const e = __os.default.homedir();
+                                if ("win32" === process.platform) {
+                                    const t = process.env.LOCALAPPDATA || __path.default.join(e, "AppData", "Local"),
+                                        r = electron.app.getName().replace(/\s/g, "").toLowerCase();
+                                    electron.shell.openPath(__path.default.join(t, `${r}-updater`))
+                                } else if ("darwin" === process.platform) {
+                                    const t = __path.default.join(e, "Library", "Caches");
+                                    electron.shell.openPath(__path.default.join(t, `${__config.default.desktopAppId}.ShipIt`))
+                                }
+                            }
+                        },
+                        {
+                            label: "Simulate Airplane Mode",
+                            type: "checkbox",
+                            click(e) {
+                                !async function (e) {
+                                    if (!shouldShowDebugMenu()) throw new Error("Dev tools are disabled, this should never be called!");
+                                    if (simulateAirplaneMode !== e) {
+                                        simulateAirplaneMode = e;
+                                        for (const e of electron.webContents.getAllWebContents()) await k(e, simulateAirplaneMode);
+                                        simulateAirplaneMode ? electron.app.addListener("web-contents-created", _) : electron.app.removeListener("web-contents-created", _)
+                                    }
+                                }(e.checked)
+                            }
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Current Window",
+                            submenu: [
+                                {
+                                    label: "Toggle DevTools",
+                                    click(e, t) {
+                                        t?.webContents.toggleDevTools()
+                                    }
+                                },
+                                {
+                                    label: "Set Vibrancy (macOS)",
+                                    submenu: [{
+                                        label: "None", click(e, t) {
+                                            t?.setVibrancy(null)
+                                        }
+                                    }, ...["titlebar", "selection", "menu", "popover", "sidebar", "header", "sheet", "window", "hud", "fullscreen-ui", "tooltip", "content", "under-window", "under-page"].map((e => ({
+                                        label: e,
+                                        click(t, r) {
+                                            r?.setVibrancy(e)
+                                        }
+                                    })))]
+                                },
+                                {
+                                    label: "Set Material (Windows)",
+                                    submenu: ["auto", "none", "mica", "acrylic", "tabbed"].map(e => ({
+                                        label: e, click(t, r) {
+                                            r?.setBackgroundMaterial(e)
+                                        }
+                                    }))
+                                },
+                                {
+                                    label: "Set Background Color",
+                                    submenu: [
+                                        {
+                                            label: "Transparent",
+                                            click(e, t) {
+                                                t?.setBackgroundColor("#00000000")
+                                            }
+                                        },
+                                        {
+                                            label: "Notion Default",
+                                            click(e, t) {
+                                                const r = __store.Store.getState().app,
+                                                    n = __tabColors.electronColors.notionBackground[r.theme.mode];
+                                                t?.setBackgroundColor(n)
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    label: "Set All Backgrounds to Transparent",
+                                    click(e, t) {
+                                        const r = '\n\t\t\t\t\t\t\t\t// Get all elements on the page\n\t\t\t\t\t\t\t\tvar allElements = document.getElementsByTagName("*");\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t// Iterate through all elements and remove background properties\n\t\t\t\t\t\t\t\tfor (var i = 0; i < allElements.length; i++) {\n\t\t\t\t\t\t\t\t\t\tallElements[i].style.background = "transparent";\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t';
+                                        __AppController.appController.getFocusedWindowController()?.getActiveTabController().executeJavaScript(r), t?.webContents.executeJavaScript(r)
+                                    }
+                                }
+                            ]
+                        },
+                        {type: "separator"},
+                        {
+                            label: "Open Notion Console",
+                            accelerator: "CmdOrCtrl+Shift+J",
+                            click() {
+                                const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                e && e.openNotionConsole()
+                            }
+                        },
+                        {
+                            label: "Open Search Console",
+                            click() {
+                                const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                e && e.openSearchConsole()
+                            }
+                        },
+                        {
+                            label: "Open Tabs Console",
+                            accelerator: "CmdOrCtrl+Shift+I",
+                            click() {
+                                const e = __AppController.appController.getFocusedWindowController();
+                                e && e.openTabsConsole()
                             }
                         }
-                    }, {
-                        label: "Simulate Airplane Mode", type: "checkbox", click(e) {
-                            !async function (e) {
-                                if (!w()) throw new Error("Dev tools are disabled, this should never be called!");
-                                if (y !== e) {
-                                    y = e;
-                                    for (const e of u.webContents.getAllWebContents()) await k(e, y);
-                                    y ? u.app.addListener("web-contents-created", _) : u.app.removeListener("web-contents-created", _)
-                                }
-                            }(e.checked)
-                        }
-                    }, {type: "separator"}, {
-                        label: "Current Window", submenu: [{
-                            label: "Toggle DevTools", click(e, t) {
-                                t?.webContents.toggleDevTools()
-                            }
-                        }, {
-                            label: "Set Vibrancy (macOS)", submenu: [{
-                                label: "None", click(e, t) {
-                                    t?.setVibrancy(null)
-                                }
-                            }, ...["titlebar", "selection", "menu", "popover", "sidebar", "header", "sheet", "window", "hud", "fullscreen-ui", "tooltip", "content", "under-window", "under-page"].map((e => ({
-                                label: e,
-                                click(t, r) {
-                                    r?.setVibrancy(e)
-                                }
-                            })))]
-                        }, {
-                            label: "Set Material (Windows)",
-                            submenu: ["auto", "none", "mica", "acrylic", "tabbed"].map((e => ({
-                                label: e, click(t, r) {
-                                    r?.setBackgroundMaterial(e)
-                                }
-                            })))
-                        }, {
-                            label: "Set Background Color", submenu: [{
-                                label: "Transparent", click(e, t) {
-                                    t?.setBackgroundColor("#00000000")
-                                }
-                            }, {
-                                label: "Notion Default", click(e, t) {
-                                    const r = v.Store.getState().app,
-                                        n = f.electronColors.notionBackground[r.theme.mode];
-                                    t?.setBackgroundColor(n)
-                                }
-                            }]
-                        }, {
-                            label: "Set All Backgrounds to Transparent", click(e, t) {
-                                const r = '\n\t\t\t\t\t\t\t\t// Get all elements on the page\n\t\t\t\t\t\t\t\tvar allElements = document.getElementsByTagName("*");\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t// Iterate through all elements and remove background properties\n\t\t\t\t\t\t\t\tfor (var i = 0; i < allElements.length; i++) {\n\t\t\t\t\t\t\t\t\t\tallElements[i].style.background = "transparent";\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t';
-                                m.appController.getFocusedWindowController()?.getActiveTabController().executeJavaScript(r), t?.webContents.executeJavaScript(r)
-                            }
-                        }]
-                    }, {type: "separator"}, {
-                        label: "Open Notion Console", accelerator: "CmdOrCtrl+Shift+J", click() {
-                            const e = m.appController.getFocusedWindowController()?.getActiveTabController();
-                            e && e.openNotionConsole()
-                        }
-                    }, {
-                        label: "Open Search Console", click() {
-                            const e = m.appController.getFocusedWindowController()?.getActiveTabController();
-                            e && e.openSearchConsole()
-                        }
-                    }, {
-                        label: "Open Tabs Console", accelerator: "CmdOrCtrl+Shift+I", click() {
-                            const e = m.appController.getFocusedWindowController();
-                            e && e.openTabsConsole()
-                        }
-                    }]
+                    ]
                 }
-            }, t.shouldSimulateAirplaneMode = function () {
-                return y
-            }, t.waitForWebpack = async function e() {
-                if (u.app.isPackaged) return;
-                const t = [require("path").resolve(__dirname, "../renderer", "tabs", "preload.js"), require("path").resolve(__dirname, "../renderer", "search", "preload.js"), require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"), require("path").resolve(__dirname, "../renderer", "popup", "preload.js")].filter((e => !s.default.existsSync(e)));
-                if (t.length > 0) {
-                    const r = c.default.dirname(__dirname), n = t.map((e => e.replace(r, ""))).join(", ");
-                    return d.default.info(`Waiting for webpack to build: ${n}`), await new Promise((e => setTimeout(e, 1e3))), e()
+            }
+            exports.shouldSimulateAirplaneMode = function () {
+                return simulateAirplaneMode
+            }
+            exports.waitForWebpack = async function waitForWebpack() {
+                if (electron.app.isPackaged) return;
+
+                const preloadJSFileNotCompiled = [
+                    require("path").resolve(__dirname, "../renderer", "tabs", "preload.js"),
+                    require("path").resolve(__dirname, "../renderer", "search", "preload.js"),
+                    require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"),
+                    require("path").resolve(__dirname, "../renderer", "popup", "preload.js")
+                ].filter(e => !__fs.default.existsSync(e))
+
+                if (preloadJSFileNotCompiled.length > 0) {
+                    const r = __path.default.dirname(__dirname),
+                        n = preloadJSFileNotCompiled.map(path => path.replace(r, "")).join(", ");
+                    electron_log.default.info(`Waiting for webpack to build: ${n}`)
+                    await new Promise(resolve => setTimeout(resolve, 1000))
+                    return waitForWebpack()
                 }
             }
         },
 
         // setupLogging
-        5554: function (e, t, r) {
+        5554: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -3519,144 +3711,251 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.shouldLog = t.setupLocalLogging = t.setupLogging = t.LOG_LEVELS = t.LOG_LEVEL = void 0;
-            const s = i(r(16928)), l = r(4482), c = i(r(47419)), u = i(r(80115)), d = a(r(21248)), p = r(3420),
-                h = a(r(10454)), f = a(r(56116)), m = r(69340);
 
-            function g() {
-                c.default.transports.console.level = t.LOG_LEVEL, c.default.transports.file.level = t.LOG_LEVEL, c.default.transports.file.maxSize = 2097152, c.default.info(`App starting with version ${l.app.getVersion()}`, {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __path = i(__webpack_require(16928)),
+                electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                __fse = i(__webpack_require(80115)),
+                __logglyHelpers = a(__webpack_require(21248)),
+                __ServerLogger = __webpack_require(3420),
+                __notionIPC = a(__webpack_require(10454)),
+                __sentry = a(__webpack_require(56116)),
+                __store = __webpack_require(69340);
+
+            function setupLocalLogging() {
+                electron_log.default.transports.console.level = exports.LOG_LEVEL
+                electron_log.default.transports.file.level = exports.LOG_LEVEL
+                electron_log.default.transports.file.maxSize = 2097152
+                electron_log.default.info(`App starting with version ${electron.app.getVersion()}`, {
                     system: `${process.platform} ${process.arch}`,
                     electron: process.versions.electron
-                }), l.app.on("render-process-gone", ((e, t, r) => {
+                })
+
+                electron.app.on("render-process-gone", (e, t, r) => {
                     try {
-                        c.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
+                        electron_log.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
                     } catch (e) {
-                        c.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
+                        electron_log.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
                     }
-                })), l.app.on("child-process-gone", ((e, t) => {
-                    c.default.error("child-process-gone", t)
-                })), l.app.on("web-contents-created", ((e, t) => {
-                    const r = `${t.getType()}-${t.id}`, n = c.default.scope(r);
+                })
+                electron.app.on("child-process-gone", (e, t) => {
+                    electron_log.default.error("child-process-gone", t)
+                })
+                electron.app.on("web-contents-created", (e, t) => {
+                    const r = `${t.getType()}-${t.id}`, n = electron_log.default.scope(r);
                     t.on("did-fail-load", ((e, t, r, o) => {
                         n.error("did-fail-load", {errorCode: t, errorDescription: r, validatedURL: o})
                     })), t.on("did-fail-provisional-load", ((e, t, r, o) => {
                         n.error("did-fail-provisional-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), b("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
+                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), shouldLog("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
                         t > 1 && n.debug(`console-message: ${r}`, {line: o, sourceId: a})
                     })))
-                })), l.app.on("before-quit", (() => c.default.info("Quitting..."))), b("debug") && (l.app.on("browser-window-blur", (() => {
-                    l.BrowserWindow.getFocusedWindow() || c.default.debug("App blurred")
-                })), l.app.on("browser-window-focus", (() => {
-                    c.default.debug("App focused")
-                })))
+                })
+                electron.app.on("before-quit", () => electron_log.default.info("Quitting..."))
+
+                if (shouldLog("debug")) {
+                    electron.app.on("browser-window-blur", () => {
+                        electron.BrowserWindow.getFocusedWindow() || electron_log.default.debug("App blurred")
+                    })
+                    electron.app.on("browser-window-focus", () => {
+                        electron_log.default.debug("App focused")
+                    })
+                }
             }
 
-            function b(e, r = t.LOG_LEVEL) {
-                return t.LOG_LEVELS.indexOf(r) <= t.LOG_LEVELS.indexOf(e)
+            function shouldLog(e, r = exports.LOG_LEVEL) {
+                return exports.LOG_LEVELS.indexOf(r) <= exports.LOG_LEVELS.indexOf(e)
             }
 
-            t.LOG_LEVEL = function () {
-                const e = m.Store.getState();
-                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : u.default.existsSync(s.default.join(l.app.getPath("userData"), "debug")) ? "debug" : l.app.isPackaged ? "info" : "debug"
-            }(), t.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"], t.setupLogging = function () {
-                g(), f.initialize(l.app), process.on("uncaughtException", (e => {
-                    e.message.startsWith("net::ERR") ? p.serverLogger.log({
+            exports.LOG_LEVEL = function () {
+                const e = __store.Store.getState();
+                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : __fse.default.existsSync(__path.default.join(electron.app.getPath("userData"), "debug")) ? "debug" : electron.app.isPackaged ? "info" : "debug"
+            }()
+            exports.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"]
+            exports.setupLogging = function () {
+                setupLocalLogging(), __sentry.initialize(electron.app), process.on("uncaughtException", (e => {
+                    e.message.startsWith("net::ERR") ? __ServerLogger.serverLogger.log({
                         level: "info",
                         from: "main",
                         type: "networkError",
-                        error: d.convertErrorToLog(e)
-                    }) : (f.capture(e), p.serverLogger.log({
+                        error: __logglyHelpers.convertErrorToLog(e)
+                    }) : (__sentry.capture(e), __ServerLogger.serverLogger.log({
                         level: "error",
                         from: "main",
                         type: "uncaughtException",
-                        error: d.convertErrorToLog(e)
+                        error: __logglyHelpers.convertErrorToLog(e)
                     }))
                 })), process.on("unhandledRejection", (e => {
-                    e && e instanceof Error && e.message.startsWith("net::ERR") ? p.serverLogger.log({
+                    e && e instanceof Error && e.message.startsWith("net::ERR") ? __ServerLogger.serverLogger.log({
                         level: "info",
                         from: "main",
                         type: "networkError",
-                        error: d.convertErrorToLog(e)
-                    }) : (f.capture(e), p.serverLogger.log({
+                        error: __logglyHelpers.convertErrorToLog(e)
+                    }) : (__sentry.capture(e), __ServerLogger.serverLogger.log({
                         level: "error",
                         from: "main",
                         type: "unhandledRejection",
-                        error: d.convertErrorToLog(e)
+                        error: __logglyHelpers.convertErrorToLog(e)
                     }))
-                })), h.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
-                    p.serverLogger.extraLoggingContext.clientEnvironmentData = t
-                })), h.handleEventFromRenderer.addListener("notion:log-error", ((e, t) => {
-                    p.serverLogger.log(t)
+                })), __notionIPC.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
+                    __ServerLogger.serverLogger.extraLoggingContext.clientEnvironmentData = t
+                })), __notionIPC.handleEventFromRenderer.addListener("notion:log-error", ((e, t) => {
+                    __ServerLogger.serverLogger.log(t)
                 }))
-            }, t.setupLocalLogging = g, t.shouldLog = b
+            }
+            exports.setupLocalLogging = setupLocalLogging
+            exports.shouldLog = shouldLog
         },
 
         // 入口
-        64982: function (e, t, r) {
+        64982: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.handleActivate = void 0;
-            const o = r(4482);
-            r(84041);
-            const a = r(21248), i = n(r(11239)), s = r(3420), l = r(21852), c = r(94774), u = r(43579), d = r(68516),
-                p = r(83789), h = r(5554), f = r(77514), m = r(26605), g = r(29902), b = r(35219), v = r(15425),
-                y = r(13387), w = r(34516), _ = r(69340), k = r(50833), T = r(98441), S = r(19628);
-            let E, C;
 
-            function O() {
-                const e = l.appController.getMostRecentlyFocusedWindowController();
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482);
+
+            // crash reporter
+            __webpack_require(84041);
+
+            const __logglyHelpers = __webpack_require(21248),
+                __config = n(__webpack_require(11239)),
+                __ServerLogger = __webpack_require(3420),
+                __AppController = __webpack_require(21852),
+                __assetCache = __webpack_require(94774),
+                __initializeAutoUpdater = __webpack_require(43579),
+                d = __webpack_require(68516),
+                __debugMenu = __webpack_require(83789),
+                __logging = __webpack_require(5554),
+                __handleNotionProtocol = __webpack_require(77514),
+                m = __webpack_require(26605),
+                g = __webpack_require(29902),
+                __setupRendererListeners = __webpack_require(35219),
+                v = __webpack_require(15425), // isNavigationAllowed 设置页面导航规则
+                __session = __webpack_require(13387),
+                __setupSqliteServer = __webpack_require(34516),
+                __store = __webpack_require(69340),
+                __setupSystemMenu = __webpack_require(50833),
+                T = __webpack_require(98441),
+                __WebUpdater = __webpack_require(19628);
+            let initialUrl, C;
+
+            function handleActivate() {
+                const e = __AppController.appController.getMostRecentlyFocusedWindowController();
                 if (e) {
-                    const t = l.appController.rehydrateEntireAppInForeground(E);
-                    E && !t && e.loadUrlInActiveTab(E), e.browserWindow.show()
-                } else (0, m.getWasOpenedAsHidden)() ? l.appController.rehydrateSingleTabInBackground(E) || l.appController.newWindow({
-                    initialUrl: E,
-                    showWhenLoaded: !1
-                }) : l.appController.rehydrateEntireAppInForeground(E) || l.appController.newWindow({initialUrl: E}).browserWindow.show();
-                E = void 0
+                    const t = __AppController.appController.rehydrateEntireAppInForeground(initialUrl);
+                    if (initialUrl && !t) {
+                        e.loadUrlInActiveTab(initialUrl)
+                    }
+                    e.browserWindow.show()
+                } else if (m.getWasOpenedAsHidden()) {
+                    if (!__AppController.appController.rehydrateSingleTabInBackground(initialUrl)) {
+                        __AppController.appController.newWindow({
+                            initialUrl: initialUrl,
+                            showWhenLoaded: false
+                        })
+                    }
+                } else {
+                    if (!__AppController.appController.rehydrateEntireAppInForeground(initialUrl)) {
+                        __AppController.appController.newWindow({
+                            initialUrl: initialUrl
+                        }).browserWindow.show()
+                    }
+                }
+                initialUrl = void 0
             }
 
-            o.dialog.showErrorBox = function (e, t) {
-            }, t.handleActivate = O, async function () {
-                (0, h.setupLogging)(), (0, T.maybeDisableHardwareAcceleration)(), o.app.setAsDefaultProtocolClient(i.default.protocol), "darwin" === process.platform ? o.app.on("open-url", ((e, t) => {
-                    if (e.preventDefault(), o.app.isReady()) {
-                        const e = (0, g.normalizeUrlProtocol)(t);
-                        l.appController.rehydrateEntireAppInForeground(e) || l.appController.handleProtocolUrl((0, g.normalizeUrlProtocol)(t))
-                    }
-                })) : "win32" === process.platform && (o.app.requestSingleInstanceLock() ? o.app.on("second-instance", ((e, t) => {
-                    E = (0, g.findNotionProtocolUrl)(t), O()
-                })) : o.app.quit(), E = (0, g.findNotionProtocolUrl)(process.argv)), o.Menu.setApplicationMenu(null), o.app.setAppUserModelId(i.default.desktopAppId), function () {
-                    if (C = new S.WebUpdater(o.app, c.assetCache), !i.default.isLocalhost || i.default.offline) {
-                        const e = "production" === i.default.env ? 6e5 : 6e4;
-                        setInterval((async () => {
+            electron.dialog.showErrorBox = function (title, content) {
+            }
+            exports.handleActivate = handleActivate
+
+            void async function () {
+                __logging.setupLogging()
+                T.maybeDisableHardwareAcceleration()
+                electron.app.setAsDefaultProtocolClient(__config.default.protocol)
+
+                if ("darwin" === process.platform) {
+                    electron.app.on("open-url", (evt, url) => {
+                        evt.preventDefault()
+                        if (electron.app.isReady()) {
+                            const e = g.normalizeUrlProtocol(url);
+                            if (!__AppController.appController.rehydrateEntireAppInForeground(e)) {
+                                __AppController.appController.handleProtocolUrl(g.normalizeUrlProtocol(url))
+                            }
+                        }
+                    })
+                } else if ("win32" === process.platform) {
+                    electron.app.requestSingleInstanceLock()
+                        ? electron.app.on("second-instance", (evt, argv) => {
+                            initialUrl = g.findNotionProtocolUrl(argv)
+                            handleActivate()
+                        })
+                        : electron.app.quit()
+                    initialUrl = g.findNotionProtocolUrl(process.argv)
+                }
+
+                electron.Menu.setApplicationMenu(null)
+                electron.app.setAppUserModelId(__config.default.desktopAppId)
+
+                void function () {
+                    C = new __WebUpdater.WebUpdater(electron.app, __assetCache.assetCache)
+                    if (!__config.default.isLocalhost || __config.default.offline) {
+                        const interval = "production" === __config.default.env ? 600_000 : 60_000;
+                        setInterval(async () => {
                             try {
-                                await c.assetCache.checkForUpdates()
+                                await __assetCache.assetCache.checkForUpdates()
                             } catch (e) {
-                                const t = (0, a.convertErrorToLog)(e);
-                                s.serverLogger.log({
+                                const error = __logglyHelpers.convertErrorToLog(e);
+                                __ServerLogger.serverLogger.log({
                                     level: "error",
                                     from: "AssetCache",
                                     type: "topLevelAssetPollingError",
-                                    error: t
+                                    error: error
                                 })
                             }
-                        }), e)
+                        }, interval)
                     }
-                }(), await o.app.whenReady(), await (0, p.waitForWebpack)(), async function () {
-                    (0, u.initializeAutoUpdater)(), (0, k.setupSystemMenu)(), await c.assetCache.initialize(), await (0, w.setupSqliteServer)(), (0, v.setupSecurity)(), (0, y.setupSessionListeners)(), (0, b.setupRendererListeners)(), _.Store.getState().app.preferences.isUsingHttps || (0, f.handleNotionProtocol)(), O(), await (0, d.wipeTransientCsrfCookie)(), l.appController.onAppReady(), o.app.on("before-quit", (() => l.appController.handleQuit())), o.app.on("activate", O)
+                }()
+
+                await electron.app.whenReady()
+                await __debugMenu.waitForWebpack()
+
+                void async function () {
+                    __initializeAutoUpdater.initializeAutoUpdater()
+                    __setupSystemMenu.setupSystemMenu()
+                    await __assetCache.assetCache.initialize()
+                    await __setupSqliteServer.setupSqliteServer()
+                    v.setupSecurity()
+                    __session.setupSessionListeners()
+                    __setupRendererListeners.setupRendererListeners()
+                    __store.Store.getState().app.preferences.isUsingHttps || __handleNotionProtocol.handleNotionProtocol()
+                    handleActivate()
+                    await d.wipeTransientCsrfCookie()
+                    __AppController.appController.onAppReady()
+                    electron.app.on("before-quit", () => __AppController.appController.handleQuit())
+                    electron.app.on("activate", handleActivate)
                 }()
             }()
         },
@@ -4733,275 +5032,291 @@
         },
 
         // setupSystemMenu
-        50833: function (e, t, r) {
+        50833: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSystemMenu = void 0;
-            const s = r(4482), l = r(36343), c = i(r(11239)), u = r(21852), d = r(94774), p = r(43579), h = r(83789),
-                f = r(73553), m = r(69340), g = a(r(48021)), b = a(r(98441)), v = (0, l.defineMessages)({
-                    fileMenuTitle: {id: "desktopTopbar.fileMenu.title", defaultMessage: "File"},
-                    editMenuTitle: {id: "desktopTopbar.editMenu.title", defaultMessage: "Edit"},
-                    viewMenuTitle: {id: "desktopTopbar.viewMenu.title", defaultMessage: "View"},
-                    historyMenuTitle: {
-                        id: "desktopTopbar.historyMenu.title",
-                        defaultMessage: "History",
-                        description: "Menu for navigating the history of Notion documents"
-                    },
-                    windowMenuTitle: {id: "desktopTopbar.windowMenu.title", defaultMessage: "Window"},
-                    helpTitle: {id: "desktopTopbar.helpMenu.title", defaultMessage: "Help"},
-                    troubleshootingTitle: {
-                        id: "desktopTopbar.troubleshootingMenu.title",
-                        defaultMessage: "Troubleshooting",
-                        description: "The title of the menu that contains troubleshooting options"
-                    },
-                    whatsNewMacTitle: {
-                        id: "desktopTopbar.whatsNewMac.title",
-                        defaultMessage: "Open What's New in Notion for macOS",
-                        description: "The title for the link containing new desktop updates"
-                    },
-                    whatsNewWindowsTitle: {
-                        id: "desktopTopbar.whatsNewWindows.title",
-                        defaultMessage: "Open What's New in Notion for Windows",
-                        description: "The title for the link containing new desktop updates"
-                    },
-                    newWindow: {id: "desktopTopbar.fileMenu.newWindow", defaultMessage: "New Window"},
-                    newTab: {
-                        id: "desktopTopbar.fileMenu.newTab",
-                        defaultMessage: "New Tab",
-                        description: "Menu item for opening a new tab in the current window"
-                    },
-                    reopenLastClosedTab: {
-                        id: "desktopTopbar.fileMenu.reopenClosedTab",
-                        defaultMessage: "Reopen Last Closed Tab",
-                        description: "Menu item for reopening the last close tab(s) including their window if needed"
-                    },
-                    closeTab: {
-                        id: "desktopTopbar.fileMenu.closeTab",
-                        defaultMessage: "Close Tab",
-                        description: "Menu item for closing the current tab in the current window"
-                    },
-                    closeWindow: {id: "desktopTopbar.fileMenu.close", defaultMessage: "Close Window"},
-                    quit: {id: "desktopTopbar.fileMenu.quit", defaultMessage: "Exit"},
-                    quitWithoutSavingTabs: {
-                        id: "desktopTopbar.fileMenu.quitWithoutSavingTabs",
-                        defaultMessage: "Exit Without Saving Tabs",
-                        description: "Menu item to quit and exit without saving existing tabs"
-                    },
-                    print: {
-                        id: "desktopTopbar.fileMenu.print",
-                        defaultMessage: "Print…",
-                        description: "Menu item that allows user to print current page. The ellipsis should be the Unicode U+2026 and not three periods."
-                    },
-                    undo: {id: "desktopTopbar.editMenu.undo", defaultMessage: "Undo"},
-                    redo: {id: "desktopTopbar.editMenu.redo", defaultMessage: "Redo"},
-                    cut: {id: "desktopTopbar.editMenu.cut", defaultMessage: "Cut"},
-                    copy: {id: "desktopTopbar.editMenu.copy", defaultMessage: "Copy"},
-                    paste: {id: "desktopTopbar.editMenu.paste", defaultMessage: "Paste"},
-                    pasteAndMatchStyle: {
-                        id: "desktopTopbar.editMenu.pasteAndMatchStyle",
-                        defaultMessage: "Paste and Match Style"
-                    },
-                    selectAll: {id: "desktopTopbar.editMenu.selectAll", defaultMessage: "Select All"},
-                    startSpeaking: {id: "desktopTopbar.editMenu.speech.startSpeaking", defaultMessage: "Start Speaking"},
-                    stopSpeaking: {id: "desktopTopbar.editMenu.speech.stopSpeaking", defaultMessage: "Stop Speaking"},
-                    speech: {id: "desktopTopbar.editMenu.speech", defaultMessage: "Speech"},
-                    reload: {id: "desktopTopbar.viewMenu.reload", defaultMessage: "Reload"},
-                    forceReload: {
-                        id: "desktopTopbar.viewMenu.forceReload",
-                        defaultMessage: "Force Reload",
-                        description: "Button that refreshes all windows, clearing caches in the process."
-                    },
-                    zoomIn: {
-                        id: "desktopTopbar.viewMenu.zoomIn",
-                        defaultMessage: "Zoom In",
-                        description: "Menu item to let the user zoom in all pages in the app (like a web browser)"
-                    },
-                    zoomOut: {
-                        id: "desktopTopbar.viewMenu.zoomOut",
-                        defaultMessage: "Zoom Out",
-                        description: "Menu item to let the user zoom out all pages in the app (like a web browser)"
-                    },
-                    actualSize: {
-                        id: "desktopTopbar.viewMenu.actualSize",
-                        defaultMessage: "Actual Size",
-                        description: "Menu item to let the user reset zoom to default (like a web browser)"
-                    },
-                    showHideSidebar: {
-                        id: "desktopTopbar.viewMenu.showHideSidebar",
-                        defaultMessage: "Show/Hide Sidebar",
-                        description: "Button to let the user show/hide the sidebar that shows pages"
-                    },
-                    togglefullscreen: {id: "desktopTopbar.viewMenu.togglefullscreen", defaultMessage: "Toggle Full Screen"},
-                    toggleDevTools: {id: "desktopTopbar.toggleDevTools", defaultMessage: "Toggle Developer Tools"},
-                    toggleWindowDevTools: {
-                        id: "desktopTopbar.toggleWindowDevTools",
-                        defaultMessage: "Toggle Window Developer Tools"
-                    },
-                    historyBack: {
-                        id: "desktopTopbar.historyMenu.historyBack",
-                        defaultMessage: "Back",
-                        description: "Move back one page (similar to the back button in a browser)"
-                    },
-                    historyForward: {
-                        id: "desktopTopbar.historyMenu.historyForward",
-                        defaultMessage: "Forward",
-                        description: "Move forward one page (similar to the forward button in a browser)"
-                    },
-                    maximize: {id: "desktopTopbar.windowMenu.maximize", defaultMessage: "Maximize"},
-                    minimize: {id: "desktopTopbar.windowMenu.minimize", defaultMessage: "Minimize"},
-                    zoom: {id: "desktopTopbar.windowMenu.zoom", defaultMessage: "Zoom"},
-                    showNextTab: {
-                        id: "desktopTopbar.windowMenu.showNextTab",
-                        defaultMessage: "Show Next Tab",
-                        description: "Shows the tab to the right of the currently shown one (or loops around)"
-                    },
-                    showPreviousTab: {
-                        id: "desktopTopbar.windowMenu.showPreviousTab",
-                        defaultMessage: "Show Previous Tab",
-                        description: "Shows the tab to the left of the currently shown one (or loops around)"
-                    },
-                    front: {id: "desktopTopbar.windowMenu.front", defaultMessage: "Front"},
-                    close: {id: "desktopTopbar.windowMenu.close", defaultMessage: "Close"},
-                    help: {id: "desktopTopbar.helpMenu.openHelpAndSupport", defaultMessage: "Open Help & Documentation"},
-                    resetAndEraseAllLocalData: {
-                        id: "desktopTopbar.helpMenu.resetAndEraseAllLocalData",
-                        defaultMessage: "Reset & Erase All Local Data",
-                        description: "Button that completely resets the app, as if it were just installed."
-                    },
-                    showLogsInFinder: {
-                        id: "desktopTopbar.helpMenu.showLogsInFinder",
-                        defaultMessage: "Show Logs in Finder",
-                        description: "Used as the label for a button that shows the logs in macOS Finder"
-                    },
-                    disableHardwareAcceleration: {
-                        id: "desktopTopbar.helpMenu.disableHardwareAcceleration",
-                        defaultMessage: "Disable Hardware Acceleration and Restart",
-                        description: "Button that disables hardware (GPU) acceleration"
-                    },
-                    enableHardwareAcceleration: {
-                        id: "desktopTopbar.helpMenu.enableHardwareAcceleration",
-                        defaultMessage: "Enable Hardware Acceleration and Restart",
-                        description: "Button that enables hardware (GPU) acceleration"
-                    },
-                    disableDebugLogging: {
-                        id: "desktopTopbar.helpMenu.disableDebugLogging",
-                        defaultMessage: "Disable Advanced Logging and Restart",
-                        description: "Button that disables advanced (debug) logging"
-                    },
-                    enableDebugLogging: {
-                        id: "desktopTopbar.helpMenu.enableDebugLogging",
-                        defaultMessage: "Enable Advanced Logging and Restart",
-                        description: "Button that enables advanced (debug) logging"
-                    },
-                    showLogsInExplorer: {
-                        id: "desktopTopbar.helpMenu.showLogsInExplorer",
-                        defaultMessage: "Show Logs in Explorer",
-                        description: "Used as the label for a button that shows the logs in Windows Explorer"
-                    },
-                    recordPerformanceTrace: {
-                        id: "desktopTopbar.helpMenu.recordPerformanceTrace",
-                        defaultMessage: "Record Performance Trace…",
-                        description: "Used as the label for a button that triggers a performance trace recording"
-                    },
-                    recordPerformanceTraceConfirm: {
-                        id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirm",
-                        defaultMessage: "Do you want to record a performance trace for the next 30 seconds? Once done, it will be placed in your Downloads folder.",
-                        description: "Label for the text field in a confirmation dialog that triggers a performance trace recording"
-                    },
-                    recordPerformanceTraceConfirmTitle: {
-                        id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle",
-                        defaultMessage: "Record a performance trace?",
-                        description: "Label for the title field in a confirmation dialog that triggers a performance trace recording"
-                    },
-                    recordPerformanceTraceConfirmOk: {
-                        id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk",
-                        defaultMessage: "Record performance trace",
-                        description: "Label for the 'ok' button in a confirmation dialog that triggers a performance trace recording"
-                    },
-                    recordPerformanceTraceConfirmCancel: {
-                        id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel",
-                        defaultMessage: "Cancel",
-                        description: "Label for the 'cancel' button in a confirmation dialog that triggers a performance trace recording"
-                    },
-                    openConsole: {
-                        id: "desktopTopbar.helpMenu.openConsole",
-                        defaultMessage: "Open Console…",
-                        description: "Button that opens the developer console for the currently focused window"
-                    },
-                    preferences: {
-                        id: "desktopTopbar.appMenu.preferences",
-                        defaultMessage: "Preferences…",
-                        description: "Standard macOS 'Preferences' menu. The ellipsis should be the Unicode U+2026 and not three periods. Ideally, if you have access to a Mac, this word should match what is present in the menu of other apps."
-                    },
-                    checkForUpdate: {
-                        id: "desktopTopbar.appMenu.checkForUpdate",
-                        defaultMessage: "Check for Updates…",
-                        description: "Menu item to check for updates. The ellipsis should be the Unicode U+2026 and not three periods."
-                    },
-                    downloadingUpdate: {
-                        id: "desktopTopbar.appMenu.downloadingUpdate",
-                        defaultMessage: "Downloading Update ({percentage}%)",
-                        description: "Menu item to show that an update is being downloaded."
-                    },
-                    restartToApplyUpdate: {
-                        id: "desktopTopbar.appMenu.restartToApplyUpdate",
-                        defaultMessage: "Restart to Apply Update",
-                        description: "Menu item to restart the app to apply an update."
-                    },
-                    checkForUpdateMessageTitle: {
-                        id: "desktopTopbar.appMenu.checkForUpdate.title",
-                        defaultMessage: "Check for Updates",
-                        description: "The title of a message box displaying whether or not a new version of Notion is available."
-                    },
-                    noUpdateAvailable: {
-                        id: "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable",
-                        defaultMessage: "You're on the latest version of Notion!",
-                        description: "A message displayed in a little dialog when the user wanted to check for an update but there was none."
-                    },
-                    updateAvailable: {
-                        id: "desktopTopbar.appMenu.checkForUpdate.updateAvailable",
-                        defaultMessage: "A new version of Notion is available and currently being downloaded in the background. Thanks for staying up to date!",
-                        description: "A message displayed in a little dialog when the user wanted to check for an update and one is available."
-                    },
-                    updateCheckFailed: {
-                        id: "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed",
-                        defaultMessage: "Notion failed to make a connection with the update server, either because of a problem with your Internet connection or the update server itself. Please try again later.",
-                        description: "A message displayed in a little dialog when the user wanted to check for an update but we failed to connect to Notion's update server."
-                    },
-                    about: {id: "desktopTopbar.appMenu.about", defaultMessage: "About Notion"},
-                    services: {id: "desktopTopbar.appMenu.services", defaultMessage: "Services"},
-                    hide: {id: "desktopTopbar.appMenu.hide", defaultMessage: "Hide Notion"},
-                    hideOthers: {id: "desktopTopbar.appMenu.hideOthers", defaultMessage: "Hide Others"},
-                    unhide: {id: "desktopTopbar.appMenu.unhide", defaultMessage: "Show All"},
-                    quitMac: {id: "desktopTopbar.appMenu.quit", defaultMessage: "Quit"},
-                    quitWithoutSavingTabsMac: {
-                        id: "desktopTopbar.appMenu.quitWithoutSavingTabs",
-                        defaultMessage: "Quit Without Saving Tabs",
-                        description: "Menu item to quit and exit without saving existing tabs on Mac"
-                    }
-                });
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            const electron = __webpack_require(4482),
+                l = __webpack_require(36343),
+                __config = i(__webpack_require(11239)),
+                __AppController = __webpack_require(21852),
+                __assetCache = __webpack_require(94774),
+                __initializeAutoUpdater = __webpack_require(43579),
+                __debugMenu = __webpack_require(83789),
+                __appSlice = __webpack_require(73553),
+                __store = __webpack_require(69340),
+                g = a(__webpack_require(48021)),
+                b = a(__webpack_require(98441))
+
+            const messages = l.defineMessages({
+                fileMenuTitle: {id: "desktopTopbar.fileMenu.title", defaultMessage: "File"},
+                editMenuTitle: {id: "desktopTopbar.editMenu.title", defaultMessage: "Edit"},
+                viewMenuTitle: {id: "desktopTopbar.viewMenu.title", defaultMessage: "View"},
+                historyMenuTitle: {
+                    id: "desktopTopbar.historyMenu.title",
+                    defaultMessage: "History",
+                    description: "Menu for navigating the history of Notion documents"
+                },
+                windowMenuTitle: {id: "desktopTopbar.windowMenu.title", defaultMessage: "Window"},
+                helpTitle: {id: "desktopTopbar.helpMenu.title", defaultMessage: "Help"},
+                troubleshootingTitle: {
+                    id: "desktopTopbar.troubleshootingMenu.title",
+                    defaultMessage: "Troubleshooting",
+                    description: "The title of the menu that contains troubleshooting options"
+                },
+                whatsNewMacTitle: {
+                    id: "desktopTopbar.whatsNewMac.title",
+                    defaultMessage: "Open What's New in Notion for macOS",
+                    description: "The title for the link containing new desktop updates"
+                },
+                whatsNewWindowsTitle: {
+                    id: "desktopTopbar.whatsNewWindows.title",
+                    defaultMessage: "Open What's New in Notion for Windows",
+                    description: "The title for the link containing new desktop updates"
+                },
+                newWindow: {id: "desktopTopbar.fileMenu.newWindow", defaultMessage: "New Window"},
+                newTab: {
+                    id: "desktopTopbar.fileMenu.newTab",
+                    defaultMessage: "New Tab",
+                    description: "Menu item for opening a new tab in the current window"
+                },
+                reopenLastClosedTab: {
+                    id: "desktopTopbar.fileMenu.reopenClosedTab",
+                    defaultMessage: "Reopen Last Closed Tab",
+                    description: "Menu item for reopening the last close tab(s) including their window if needed"
+                },
+                closeTab: {
+                    id: "desktopTopbar.fileMenu.closeTab",
+                    defaultMessage: "Close Tab",
+                    description: "Menu item for closing the current tab in the current window"
+                },
+                closeWindow: {id: "desktopTopbar.fileMenu.close", defaultMessage: "Close Window"},
+                quit: {id: "desktopTopbar.fileMenu.quit", defaultMessage: "Exit"},
+                quitWithoutSavingTabs: {
+                    id: "desktopTopbar.fileMenu.quitWithoutSavingTabs",
+                    defaultMessage: "Exit Without Saving Tabs",
+                    description: "Menu item to quit and exit without saving existing tabs"
+                },
+                print: {
+                    id: "desktopTopbar.fileMenu.print",
+                    defaultMessage: "Print…",
+                    description: "Menu item that allows user to print current page. The ellipsis should be the Unicode U+2026 and not three periods."
+                },
+                undo: {id: "desktopTopbar.editMenu.undo", defaultMessage: "Undo"},
+                redo: {id: "desktopTopbar.editMenu.redo", defaultMessage: "Redo"},
+                cut: {id: "desktopTopbar.editMenu.cut", defaultMessage: "Cut"},
+                copy: {id: "desktopTopbar.editMenu.copy", defaultMessage: "Copy"},
+                paste: {id: "desktopTopbar.editMenu.paste", defaultMessage: "Paste"},
+                pasteAndMatchStyle: {
+                    id: "desktopTopbar.editMenu.pasteAndMatchStyle",
+                    defaultMessage: "Paste and Match Style"
+                },
+                selectAll: {id: "desktopTopbar.editMenu.selectAll", defaultMessage: "Select All"},
+                startSpeaking: {id: "desktopTopbar.editMenu.speech.startSpeaking", defaultMessage: "Start Speaking"},
+                stopSpeaking: {id: "desktopTopbar.editMenu.speech.stopSpeaking", defaultMessage: "Stop Speaking"},
+                speech: {id: "desktopTopbar.editMenu.speech", defaultMessage: "Speech"},
+                reload: {id: "desktopTopbar.viewMenu.reload", defaultMessage: "Reload"},
+                forceReload: {
+                    id: "desktopTopbar.viewMenu.forceReload",
+                    defaultMessage: "Force Reload",
+                    description: "Button that refreshes all windows, clearing caches in the process."
+                },
+                zoomIn: {
+                    id: "desktopTopbar.viewMenu.zoomIn",
+                    defaultMessage: "Zoom In",
+                    description: "Menu item to let the user zoom in all pages in the app (like a web browser)"
+                },
+                zoomOut: {
+                    id: "desktopTopbar.viewMenu.zoomOut",
+                    defaultMessage: "Zoom Out",
+                    description: "Menu item to let the user zoom out all pages in the app (like a web browser)"
+                },
+                actualSize: {
+                    id: "desktopTopbar.viewMenu.actualSize",
+                    defaultMessage: "Actual Size",
+                    description: "Menu item to let the user reset zoom to default (like a web browser)"
+                },
+                showHideSidebar: {
+                    id: "desktopTopbar.viewMenu.showHideSidebar",
+                    defaultMessage: "Show/Hide Sidebar",
+                    description: "Button to let the user show/hide the sidebar that shows pages"
+                },
+                togglefullscreen: {id: "desktopTopbar.viewMenu.togglefullscreen", defaultMessage: "Toggle Full Screen"},
+                toggleDevTools: {id: "desktopTopbar.toggleDevTools", defaultMessage: "Toggle Developer Tools"},
+                toggleWindowDevTools: {
+                    id: "desktopTopbar.toggleWindowDevTools",
+                    defaultMessage: "Toggle Window Developer Tools"
+                },
+                historyBack: {
+                    id: "desktopTopbar.historyMenu.historyBack",
+                    defaultMessage: "Back",
+                    description: "Move back one page (similar to the back button in a browser)"
+                },
+                historyForward: {
+                    id: "desktopTopbar.historyMenu.historyForward",
+                    defaultMessage: "Forward",
+                    description: "Move forward one page (similar to the forward button in a browser)"
+                },
+                maximize: {id: "desktopTopbar.windowMenu.maximize", defaultMessage: "Maximize"},
+                minimize: {id: "desktopTopbar.windowMenu.minimize", defaultMessage: "Minimize"},
+                zoom: {id: "desktopTopbar.windowMenu.zoom", defaultMessage: "Zoom"},
+                showNextTab: {
+                    id: "desktopTopbar.windowMenu.showNextTab",
+                    defaultMessage: "Show Next Tab",
+                    description: "Shows the tab to the right of the currently shown one (or loops around)"
+                },
+                showPreviousTab: {
+                    id: "desktopTopbar.windowMenu.showPreviousTab",
+                    defaultMessage: "Show Previous Tab",
+                    description: "Shows the tab to the left of the currently shown one (or loops around)"
+                },
+                front: {id: "desktopTopbar.windowMenu.front", defaultMessage: "Front"},
+                close: {id: "desktopTopbar.windowMenu.close", defaultMessage: "Close"},
+                help: {id: "desktopTopbar.helpMenu.openHelpAndSupport", defaultMessage: "Open Help & Documentation"},
+                resetAndEraseAllLocalData: {
+                    id: "desktopTopbar.helpMenu.resetAndEraseAllLocalData",
+                    defaultMessage: "Reset & Erase All Local Data",
+                    description: "Button that completely resets the app, as if it were just installed."
+                },
+                showLogsInFinder: {
+                    id: "desktopTopbar.helpMenu.showLogsInFinder",
+                    defaultMessage: "Show Logs in Finder",
+                    description: "Used as the label for a button that shows the logs in macOS Finder"
+                },
+                disableHardwareAcceleration: {
+                    id: "desktopTopbar.helpMenu.disableHardwareAcceleration",
+                    defaultMessage: "Disable Hardware Acceleration and Restart",
+                    description: "Button that disables hardware (GPU) acceleration"
+                },
+                enableHardwareAcceleration: {
+                    id: "desktopTopbar.helpMenu.enableHardwareAcceleration",
+                    defaultMessage: "Enable Hardware Acceleration and Restart",
+                    description: "Button that enables hardware (GPU) acceleration"
+                },
+                disableDebugLogging: {
+                    id: "desktopTopbar.helpMenu.disableDebugLogging",
+                    defaultMessage: "Disable Advanced Logging and Restart",
+                    description: "Button that disables advanced (debug) logging"
+                },
+                enableDebugLogging: {
+                    id: "desktopTopbar.helpMenu.enableDebugLogging",
+                    defaultMessage: "Enable Advanced Logging and Restart",
+                    description: "Button that enables advanced (debug) logging"
+                },
+                showLogsInExplorer: {
+                    id: "desktopTopbar.helpMenu.showLogsInExplorer",
+                    defaultMessage: "Show Logs in Explorer",
+                    description: "Used as the label for a button that shows the logs in Windows Explorer"
+                },
+                recordPerformanceTrace: {
+                    id: "desktopTopbar.helpMenu.recordPerformanceTrace",
+                    defaultMessage: "Record Performance Trace…",
+                    description: "Used as the label for a button that triggers a performance trace recording"
+                },
+                recordPerformanceTraceConfirm: {
+                    id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirm",
+                    defaultMessage: "Do you want to record a performance trace for the next 30 seconds? Once done, it will be placed in your Downloads folder.",
+                    description: "Label for the text field in a confirmation dialog that triggers a performance trace recording"
+                },
+                recordPerformanceTraceConfirmTitle: {
+                    id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirmTitle",
+                    defaultMessage: "Record a performance trace?",
+                    description: "Label for the title field in a confirmation dialog that triggers a performance trace recording"
+                },
+                recordPerformanceTraceConfirmOk: {
+                    id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirmOk",
+                    defaultMessage: "Record performance trace",
+                    description: "Label for the 'ok' button in a confirmation dialog that triggers a performance trace recording"
+                },
+                recordPerformanceTraceConfirmCancel: {
+                    id: "desktopTopbar.helpMenu.recordPerformanceTraceConfirmCancel",
+                    defaultMessage: "Cancel",
+                    description: "Label for the 'cancel' button in a confirmation dialog that triggers a performance trace recording"
+                },
+                openConsole: {
+                    id: "desktopTopbar.helpMenu.openConsole",
+                    defaultMessage: "Open Console…",
+                    description: "Button that opens the developer console for the currently focused window"
+                },
+                preferences: {
+                    id: "desktopTopbar.appMenu.preferences",
+                    defaultMessage: "Preferences…",
+                    description: "Standard macOS 'Preferences' menu. The ellipsis should be the Unicode U+2026 and not three periods. Ideally, if you have access to a Mac, this word should match what is present in the menu of other apps."
+                },
+                checkForUpdate: {
+                    id: "desktopTopbar.appMenu.checkForUpdate",
+                    defaultMessage: "Check for Updates…",
+                    description: "Menu item to check for updates. The ellipsis should be the Unicode U+2026 and not three periods."
+                },
+                downloadingUpdate: {
+                    id: "desktopTopbar.appMenu.downloadingUpdate",
+                    defaultMessage: "Downloading Update ({percentage}%)",
+                    description: "Menu item to show that an update is being downloaded."
+                },
+                restartToApplyUpdate: {
+                    id: "desktopTopbar.appMenu.restartToApplyUpdate",
+                    defaultMessage: "Restart to Apply Update",
+                    description: "Menu item to restart the app to apply an update."
+                },
+                checkForUpdateMessageTitle: {
+                    id: "desktopTopbar.appMenu.checkForUpdate.title",
+                    defaultMessage: "Check for Updates",
+                    description: "The title of a message box displaying whether or not a new version of Notion is available."
+                },
+                noUpdateAvailable: {
+                    id: "desktopTopbar.appMenu.checkForUpdate.noUpdateAvailable",
+                    defaultMessage: "You're on the latest version of Notion!",
+                    description: "A message displayed in a little dialog when the user wanted to check for an update but there was none."
+                },
+                updateAvailable: {
+                    id: "desktopTopbar.appMenu.checkForUpdate.updateAvailable",
+                    defaultMessage: "A new version of Notion is available and currently being downloaded in the background. Thanks for staying up to date!",
+                    description: "A message displayed in a little dialog when the user wanted to check for an update and one is available."
+                },
+                updateCheckFailed: {
+                    id: "desktopTopbar.appMenu.checkForUpdate.updateCheckFailed",
+                    defaultMessage: "Notion failed to make a connection with the update server, either because of a problem with your Internet connection or the update server itself. Please try again later.",
+                    description: "A message displayed in a little dialog when the user wanted to check for an update but we failed to connect to Notion's update server."
+                },
+                about: {id: "desktopTopbar.appMenu.about", defaultMessage: "About Notion"},
+                services: {id: "desktopTopbar.appMenu.services", defaultMessage: "Services"},
+                hide: {id: "desktopTopbar.appMenu.hide", defaultMessage: "Hide Notion"},
+                hideOthers: {id: "desktopTopbar.appMenu.hideOthers", defaultMessage: "Hide Others"},
+                unhide: {id: "desktopTopbar.appMenu.unhide", defaultMessage: "Show All"},
+                quitMac: {id: "desktopTopbar.appMenu.quit", defaultMessage: "Quit"},
+                quitWithoutSavingTabsMac: {
+                    id: "desktopTopbar.appMenu.quitWithoutSavingTabs",
+                    defaultMessage: "Quit Without Saving Tabs",
+                    description: "Menu item to quit and exit without saving existing tabs on Mac"
+                }
+            })
 
             function y(e) {
                 return e.map((e => {
@@ -5010,261 +5325,428 @@
                 }))
             }
 
-            function w() {
-                const e = "darwin" === process.platform, t = u.appController.intl, r = function (e) {
-                    const t = function (e) {
-                        const t = [];
-                        return t.push({
-                            label: e.formatMessage(v.newTab), accelerator: "CmdOrCtrl+T", click: () => {
-                                u.appController.getFocusedWindowController()?.searchForNewTab({
-                                    makeActiveTab: !0,
-                                    position: {type: "end"}
-                                })
+            function setupSystemMenu() {
+                const isMacOS = "darwin" === process.platform,
+                    intl = __AppController.appController.intl,
+                    _file = function (intl) {
+                        const t = function (intl) {
+                            const t = [];
+                            t.push({
+                                label: intl.formatMessage(messages.newTab),
+                                accelerator: "CmdOrCtrl+T",
+                                click: () => {
+                                    __AppController.appController.getFocusedWindowController()?.searchForNewTab({
+                                        makeActiveTab: !0,
+                                        position: {type: "end"}
+                                    })
+                                }
+                            })
+                            t.push({
+                                label: intl.formatMessage(messages.newWindow),
+                                accelerator: "CmdOrCtrl+Shift+N",
+                                click: () => {
+                                    __AppController.appController.newWindow({})
+                                }
+                            })
+                            t.push({
+                                label: intl.formatMessage(messages.reopenLastClosedTab),
+                                accelerator: "CmdOrCtrl+Shift+T",
+                                click: () => {
+                                    __AppController.appController.reopenLastClosedPages()
+                                }
+                            })
+                            t.push({type: "separator"})
+                            t.push({
+                                label: intl.formatMessage(messages.closeTab),
+                                accelerator: "CmdOrCtrl+W",
+                                click: () => {
+                                    __AppController.appController.getFocusedWindowController()?.closeActiveTab()
+                                }
+                            })
+                            t.push({
+                                accelerator: "CmdOrCtrl+Shift+W",
+                                label: intl.formatMessage(messages.closeWindow),
+                                click(e, t) {
+                                    const r = __AppController.appController.getFocusedWindowController();
+                                    return r ? r.close() : t ? t.close() : void 0
+                                }
+                            })
+                            t.push({type: "separator"})
+                            t.push({
+                                label: intl.formatMessage(messages.print),
+                                click() {
+                                    __AppController.appController.getFocusedWindowController()?.printActiveTab()
+                                }
+                            })
+                            return t
+                        }(intl);
+                        return {
+                            role: "fileMenu",
+                            label: intl.formatMessage(messages.fileMenuTitle),
+                            submenu: "darwin" === process.platform ? t : _(t, intl)
+                        }
+                    }(intl),
+                    _basicEdit = [
+                        {role: "undo", label: intl.formatMessage(messages.undo)},
+                        {
+                            role: "redo",
+                            label: intl.formatMessage(messages.redo)
+                        },
+                        {type: "separator"},
+                        {role: "cut", label: intl.formatMessage(messages.cut)},
+                        {
+                            role: "copy",
+                            label: intl.formatMessage(messages.copy)
+                        },
+                        {role: "paste", label: intl.formatMessage(messages.paste)}
+                    ],
+                    _edit = {
+                        role: "editMenu",
+                        label: intl.formatMessage(messages.editMenuTitle),
+                        submenu: isMacOS
+                            ? [
+                                ..._basicEdit,
+                                {
+                                    role: "pasteAndMatchStyle",
+                                    label: intl.formatMessage(messages.pasteAndMatchStyle)
+                                },
+                                {
+                                    role: "selectAll",
+                                    label: intl.formatMessage(messages.selectAll)
+                                },
+                                {type: "separator"},
+                                {
+                                    label: intl.formatMessage(messages.speech),
+                                    submenu: [{
+                                        role: "startSpeaking",
+                                        label: intl.formatMessage(messages.startSpeaking)
+                                    }, {role: "stopSpeaking", label: intl.formatMessage(messages.stopSpeaking)}]
+                                }
+                            ]
+                            : [
+                                ..._basicEdit,
+                                {type: "separator"},
+                                {
+                                    role: "selectAll",
+                                    label: intl.formatMessage(messages.selectAll)
+                                }
+                            ]
+                    },
+                    _view = {
+                        role: "viewMenu",
+                        label: intl.formatMessage(messages.viewMenuTitle),
+                        submenu: [
+                            {
+                                label: intl.formatMessage(messages.reload),
+                                accelerator: "CmdOrCtrl+R",
+                                click() {
+                                    __assetCache.assetCache.isUpdateAvailable() ? __assetCache.assetCache.syncVersions().then((() => {
+                                        __AppController.appController.refreshAll(!0)
+                                    })) : __AppController.appController.getFocusedWindowController()?.reloadActiveTab()
+                                }
+                            },
+                            {
+                                label: intl.formatMessage(messages.forceReload),
+                                accelerator: "CmdOrCtrl+Shift+R",
+                                async click() {
+                                    await __assetCache.assetCache.reset(), __assetCache.assetCache.checkForUpdates(), __AppController.appController.refreshAll(!0)
+                                }
+                            },
+                            {
+                                label: intl.formatMessage(messages.toggleDevTools),
+                                accelerator: isMacOS ? "Alt+Command+I" : "Ctrl+Shift+I",
+                                click() {
+                                    const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                    e && e.toggleDevTools()
+                                }
+                            },
+                            {type: "separator"},
+                            {
+                                label: intl.formatMessage(messages.showHideSidebar),
+                                accelerator: "CmdOrCtrl+\\",
+                                click() {
+                                    __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.toggleSidebarInNotion()
+                                }
+                            },
+                            {type: "separator"},
+                            {
+                                label: intl.formatMessage(messages.zoomIn),
+                                accelerator: "CmdOrCtrl+Plus",
+                                click() {
+                                    __AppController.appController.zoomIn()
+                                }
+                            },
+                            {
+                                label: intl.formatMessage(messages.zoomIn),
+                                accelerator: "CmdOrCtrl+=",
+                                visible: !1,
+                                acceleratorWorksWhenHidden: !0,
+                                click() {
+                                    __AppController.appController.zoomIn()
+                                }
+                            },
+                            {
+                                label: intl.formatMessage(messages.zoomOut),
+                                accelerator: "CmdOrCtrl+-",
+                                click() {
+                                    __AppController.appController.zoomOut()
+                                }
+                            },
+                            {
+                                label: intl.formatMessage(messages.actualSize),
+                                accelerator: "CmdOrCtrl+0",
+                                click() {
+                                    __AppController.appController.resetZoom()
+                                }
+                            },
+                            {
+                                role: "togglefullscreen",
+                                label: intl.formatMessage(messages.togglefullscreen)
                             }
-                        }), t.push({
-                            label: e.formatMessage(v.newWindow),
-                            accelerator: "CmdOrCtrl+Shift+N",
-                            click: () => {
-                                u.appController.newWindow({})
+                        ]
+                    },
+                    _history = {
+                        label: intl.formatMessage(messages.historyMenuTitle),
+                        submenu: [
+                            {
+                                accelerator: "CmdOrCtrl+[",
+                                label: intl.formatMessage(messages.historyBack),
+                                click() {
+                                    __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.goBack()
+                                }
+                            },
+                            {
+                                accelerator: "CmdOrCtrl+]",
+                                label: intl.formatMessage(messages.historyForward),
+                                click() {
+                                    __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.goForward()
+                                }
                             }
-                        }), t.push({
-                            label: e.formatMessage(v.reopenLastClosedTab),
-                            accelerator: "CmdOrCtrl+Shift+T",
-                            click: () => {
-                                u.appController.reopenLastClosedPages()
+                        ]
+                    },
+                    _window = {
+                        role: "windowMenu",
+                        label: intl.formatMessage(messages.windowMenuTitle),
+                        submenu: isMacOS
+                            ? [
+                                {
+                                    role: "minimize",
+                                    label: intl.formatMessage(messages.minimize)
+                                },
+                                {
+                                    role: "zoom",
+                                    label: intl.formatMessage(messages.zoom)
+                                },
+                                {type: "separator"},
+                                {
+                                    accelerator: "Ctrl+Shift+Tab",
+                                    label: intl.formatMessage(messages.showPreviousTab),
+                                    click() {
+                                        __AppController.appController.getFocusedWindowController()?.showPreviousTab()
+                                    }
+                                },
+                                {
+                                    accelerator: "Ctrl+Tab",
+                                    label: intl.formatMessage(messages.showNextTab),
+                                    click() {
+                                        __AppController.appController.getFocusedWindowController()?.showNextTab()
+                                    }
+                                },
+                                {type: "separator"},
+                                ...k(intl),
+                                ...T(),
+                                {role: "front"}
+                            ]
+                            : [
+                                {
+                                    role: "minimize",
+                                    label: intl.formatMessage(messages.minimize)
+                                },
+                                {
+                                    accelerator: "Ctrl+Shift+Tab",
+                                    label: intl.formatMessage(messages.showPreviousTab),
+                                    click() {
+                                        __AppController.appController.getFocusedWindowController()?.showPreviousTab()
+                                    }
+                                },
+                                {
+                                    accelerator: "Ctrl+Tab",
+                                    label: intl.formatMessage(messages.showNextTab),
+                                    click() {
+                                        __AppController.appController.getFocusedWindowController()?.showNextTab()
+                                    }
+                                },
+                                {
+                                    label: intl.formatMessage(messages.maximize),
+                                    click(e, t) {
+                                        t && (t.isMaximized() ? t.unmaximize() : t.maximize())
+                                    }
+                                },
+                                ...T()
+                            ]
+                    },
+                    _help = function (intl) {
+                        const {isHardwareAccelerationDisabled, logLevel} = __store.Store.getState().app.preferences
+                        const _help = {
+                            role: "help",
+                            label: intl.formatMessage(messages.helpTitle),
+                            submenu: [
+                                {
+                                    label: intl.formatMessage(messages.troubleshootingTitle),
+                                    submenu: [
+                                        {
+                                            label: "win32" === process.platform ? intl.formatMessage(messages.showLogsInExplorer) : intl.formatMessage(messages.showLogsInFinder),
+                                            async click(e, t) {
+                                                await b.showLogsInShell()
+                                            }
+                                        },
+                                        {
+                                            label: intl.formatMessage(messages.openConsole), click() {
+                                                __AppController.appController.getFocusedWindowController()?.getActiveTabController()?.openNotionConsole()
+                                            }
+                                        },
+                                        {
+                                            label: intl.formatMessage(messages.recordPerformanceTrace),
+                                            async click(t, r) {
+                                                const {response: n} = await electron.dialog.showMessageBox({
+                                                    title: intl.formatMessage(messages.recordPerformanceTraceConfirmTitle),
+                                                    type: "question",
+                                                    textWidth: 300,
+                                                    message: intl.formatMessage(messages.recordPerformanceTraceConfirm),
+                                                    buttons: [intl.formatMessage(messages.recordPerformanceTraceConfirmCancel), intl.formatMessage(messages.recordPerformanceTraceConfirmOk)]
+                                                });
+                                                1 === n && await g.recordTraceAndPackage(r)
+                                            }
+                                        },
+                                        {type: "separator"},
+                                        {
+                                            label: intl.formatMessage(isHardwareAccelerationDisabled ? messages.enableHardwareAcceleration : messages.disableHardwareAcceleration),
+                                            click() {
+                                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isHardwareAccelerationDisabled: !isHardwareAccelerationDisabled})), electron.app.relaunch(), process.nextTick((() => {
+                                                    electron.app.quit()
+                                                }))
+                                            }
+                                        },
+                                        {
+                                            label: intl.formatMessage("debug" === logLevel ? messages.disableDebugLogging : messages.enableDebugLogging),
+                                            click() {
+                                                __store.Store.dispatch((0, __appSlice.updatePreferences)({logLevel: "debug" === logLevel ? "info" : "debug"})), electron.app.relaunch(), process.nextTick((() => {
+                                                    electron.app.quit()
+                                                }))
+                                            }
+                                        },
+                                        {type: "separator"},
+                                        {
+                                            label: intl.formatMessage(messages.resetAndEraseAllLocalData),
+                                            click: (e, t) => b.deleteLocalData(t)
+                                        }
+                                    ]
+                                },
+                                {type: "separator"},
+                                {
+                                    label: intl.formatMessage(messages.help), click() {
+                                        electron.shell.openExternal(`${__config.default.domainBaseUrl}/help`)
+                                    }
+                                },
+                                {
+                                    label: "darwin" === process.platform ? intl.formatMessage(messages.whatsNewMacTitle) : intl.formatMessage(messages.whatsNewWindowsTitle),
+                                    click() {
+                                        electron.shell.openExternal(`${__config.default.domainBaseUrl}/desktop/whats-new`)
+                                    }
+                                }
+                            ]
+                        };
+
+                        if ("darwin" !== process.platform) {
+                            _help.submenu.unshift(
+                                {
+                                    role: "about",
+                                    label: intl.formatMessage(messages.about)
+                                },
+                                {type: "separator"}
+                            )
+                        }
+                        return _help
+                    }(intl),
+                    _app = {
+                        role: "appMenu",
+                        submenu: [
+                            {
+                                role: "about",
+                                label: intl.formatMessage(messages.about)
+                            },
+                            {type: "separator"},
+                            {
+                                label: intl.formatMessage(messages.preferences),
+                                accelerator: "Cmd+,",
+                                click(evt, focusedWindow) {
+                                    debugger
+
+                                    if (focusedWindow) {
+                                        __AppController.appController.getWindowControllerForWebContents(focusedWindow.webContents)?.getActiveTabController()?.openSettings()
+                                    }
+                                }
+                            },
+                            {type: "separator"},
+                            ...__initializeAutoUpdater.isAutoUpdateDisabled()
+                                ? []
+                                : [S(intl), {type: "separator"}],
+                            {
+                                role: "services",
+                                label: intl.formatMessage(messages.services)
+                            },
+                            {type: "separator"},
+                            {
+                                role: "hide",
+                                label: intl.formatMessage(messages.hide)
+                            },
+                            {
+                                role: "hideOthers",
+                                label: intl.formatMessage(messages.hideOthers)
+                            },
+                            {
+                                role: "unhide",
+                                label: intl.formatMessage(messages.unhide)
+                            },
+                            {type: "separator"},
+                            {
+                                label: intl.formatMessage(messages.quitWithoutSavingTabsMac),
+                                click() {
+                                    __AppController.appController.handleQuitWithoutSavingTabs()
+                                }
+                            },
+                            {
+                                role: "quit",
+                                label: intl.formatMessage(messages.quitMac)
                             }
-                        }), t.push({type: "separator"}), t.push({
-                            label: e.formatMessage(v.closeTab),
-                            accelerator: "CmdOrCtrl+W",
-                            click: () => {
-                                u.appController.getFocusedWindowController()?.closeActiveTab()
-                            }
-                        }), t.push({
-                            accelerator: "CmdOrCtrl+Shift+W",
-                            label: e.formatMessage(v.closeWindow),
-                            click(e, t) {
-                                const r = u.appController.getFocusedWindowController();
-                                return r ? r.close() : t ? t.close() : void 0
-                            }
-                        }), t.push({type: "separator"}), t.push({
-                            label: e.formatMessage(v.print), click() {
-                                u.appController.getFocusedWindowController()?.printActiveTab()
-                            }
-                        }), t
-                    }(e);
-                    return {
-                        role: "fileMenu",
-                        label: e.formatMessage(v.fileMenuTitle),
-                        submenu: "darwin" === process.platform ? t : _(t, e)
+                        ]
                     }
-                }(t), n = [{role: "undo", label: t.formatMessage(v.undo)}, {
-                    role: "redo",
-                    label: t.formatMessage(v.redo)
-                }, {type: "separator"}, {role: "cut", label: t.formatMessage(v.cut)}, {
-                    role: "copy",
-                    label: t.formatMessage(v.copy)
-                }, {role: "paste", label: t.formatMessage(v.paste)}], o = {
-                    role: "editMenu",
-                    label: t.formatMessage(v.editMenuTitle),
-                    submenu: e ? [...n, {
-                        role: "pasteAndMatchStyle",
-                        label: t.formatMessage(v.pasteAndMatchStyle)
-                    }, {
-                        role: "selectAll",
-                        label: t.formatMessage(v.selectAll)
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.speech),
-                        submenu: [{
-                            role: "startSpeaking",
-                            label: t.formatMessage(v.startSpeaking)
-                        }, {role: "stopSpeaking", label: t.formatMessage(v.stopSpeaking)}]
-                    }] : [...n, {type: "separator"}, {role: "selectAll", label: t.formatMessage(v.selectAll)}]
-                }, a = {
-                    role: "viewMenu",
-                    label: t.formatMessage(v.viewMenuTitle),
-                    submenu: [{
-                        label: t.formatMessage(v.reload), accelerator: "CmdOrCtrl+R", click() {
-                            d.assetCache.isUpdateAvailable() ? d.assetCache.syncVersions().then((() => {
-                                u.appController.refreshAll(!0)
-                            })) : u.appController.getFocusedWindowController()?.reloadActiveTab()
+
+                const menuItems = [_file, _edit, _view, _history, _window, _help];
+                if (isMacOS) {
+                    menuItems.unshift(_app)
+                }
+                if (__debugMenu.shouldShowDebugMenu()) {
+                    menuItems.push(__debugMenu.getDebugMenu())
+                }
+                const menu = electron.Menu.buildFromTemplate(y(menuItems))
+                electron.Menu.setApplicationMenu(menu)
+
+                if (isMacOS) {
+                    const dockMenu = electron.Menu.buildFromTemplate([
+                        {
+                            label: intl.formatMessage(messages.newWindow),
+                            click: () => __AppController.appController.newWindow({})
                         }
-                    }, {
-                        label: t.formatMessage(v.forceReload), accelerator: "CmdOrCtrl+Shift+R", async click() {
-                            await d.assetCache.reset(), d.assetCache.checkForUpdates(), u.appController.refreshAll(!0)
-                        }
-                    }, {
-                        label: t.formatMessage(v.toggleDevTools),
-                        accelerator: e ? "Alt+Command+I" : "Ctrl+Shift+I",
-                        click() {
-                            const e = u.appController.getFocusedWindowController()?.getActiveTabController();
-                            e && e.toggleDevTools()
-                        }
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.showHideSidebar),
-                        accelerator: "CmdOrCtrl+\\",
-                        click() {
-                            u.appController.getFocusedWindowController()?.getActiveTabController()?.toggleSidebarInNotion()
-                        }
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.zoomIn), accelerator: "CmdOrCtrl+Plus", click() {
-                            u.appController.zoomIn()
-                        }
-                    }, {
-                        label: t.formatMessage(v.zoomIn),
-                        accelerator: "CmdOrCtrl+=",
-                        visible: !1,
-                        acceleratorWorksWhenHidden: !0,
-                        click() {
-                            u.appController.zoomIn()
-                        }
-                    }, {
-                        label: t.formatMessage(v.zoomOut), accelerator: "CmdOrCtrl+-", click() {
-                            u.appController.zoomOut()
-                        }
-                    }, {
-                        label: t.formatMessage(v.actualSize), accelerator: "CmdOrCtrl+0", click() {
-                            u.appController.resetZoom()
-                        }
-                    }, {role: "togglefullscreen", label: t.formatMessage(v.togglefullscreen)}]
-                }, i = {
-                    label: t.formatMessage(v.historyMenuTitle),
-                    submenu: [{
-                        accelerator: "CmdOrCtrl+[", label: t.formatMessage(v.historyBack), click() {
-                            u.appController.getFocusedWindowController()?.getActiveTabController()?.goBack()
-                        }
-                    }, {
-                        accelerator: "CmdOrCtrl+]", label: t.formatMessage(v.historyForward), click() {
-                            u.appController.getFocusedWindowController()?.getActiveTabController()?.goForward()
-                        }
-                    }]
-                }, l = {
-                    role: "windowMenu",
-                    label: t.formatMessage(v.windowMenuTitle),
-                    submenu: e ? [{role: "minimize", label: t.formatMessage(v.minimize)}, {
-                        role: "zoom",
-                        label: t.formatMessage(v.zoom)
-                    }, {type: "separator"}, {
-                        accelerator: "Ctrl+Shift+Tab",
-                        label: t.formatMessage(v.showPreviousTab),
-                        click() {
-                            u.appController.getFocusedWindowController()?.showPreviousTab()
-                        }
-                    }, {
-                        accelerator: "Ctrl+Tab", label: t.formatMessage(v.showNextTab), click() {
-                            u.appController.getFocusedWindowController()?.showNextTab()
-                        }
-                    }, {type: "separator"}, ...k(t), ...T(), {role: "front"}] : [{
-                        role: "minimize",
-                        label: t.formatMessage(v.minimize)
-                    }, {
-                        accelerator: "Ctrl+Shift+Tab", label: t.formatMessage(v.showPreviousTab), click() {
-                            u.appController.getFocusedWindowController()?.showPreviousTab()
-                        }
-                    }, {
-                        accelerator: "Ctrl+Tab", label: t.formatMessage(v.showNextTab), click() {
-                            u.appController.getFocusedWindowController()?.showNextTab()
-                        }
-                    }, {
-                        label: t.formatMessage(v.maximize), click(e, t) {
-                            t && (t.isMaximized() ? t.unmaximize() : t.maximize())
-                        }
-                    }, ...T()]
-                }, w = function (e) {
-                    const {isHardwareAccelerationDisabled: t, logLevel: r} = m.Store.getState().app.preferences, n = {
-                        role: "help", label: e.formatMessage(v.helpTitle), submenu: [{
-                            label: e.formatMessage(v.troubleshootingTitle),
-                            submenu: [{
-                                label: "win32" === process.platform ? e.formatMessage(v.showLogsInExplorer) : e.formatMessage(v.showLogsInFinder),
-                                async click(e, t) {
-                                    await b.showLogsInShell()
-                                }
-                            }, {
-                                label: e.formatMessage(v.openConsole), click() {
-                                    u.appController.getFocusedWindowController()?.getActiveTabController()?.openNotionConsole()
-                                }
-                            }, {
-                                label: e.formatMessage(v.recordPerformanceTrace), async click(t, r) {
-                                    const {response: n} = await s.dialog.showMessageBox({
-                                        title: e.formatMessage(v.recordPerformanceTraceConfirmTitle),
-                                        type: "question",
-                                        textWidth: 300,
-                                        message: e.formatMessage(v.recordPerformanceTraceConfirm),
-                                        buttons: [e.formatMessage(v.recordPerformanceTraceConfirmCancel), e.formatMessage(v.recordPerformanceTraceConfirmOk)]
-                                    });
-                                    1 === n && await g.recordTraceAndPackage(r)
-                                }
-                            }, {type: "separator"}, {
-                                label: e.formatMessage(t ? v.enableHardwareAcceleration : v.disableHardwareAcceleration),
-                                click() {
-                                    m.Store.dispatch((0, f.updatePreferences)({isHardwareAccelerationDisabled: !t})), s.app.relaunch(), process.nextTick((() => {
-                                        s.app.quit()
-                                    }))
-                                }
-                            }, {
-                                label: e.formatMessage("debug" === r ? v.disableDebugLogging : v.enableDebugLogging),
-                                click() {
-                                    m.Store.dispatch((0, f.updatePreferences)({logLevel: "debug" === r ? "info" : "debug"})), s.app.relaunch(), process.nextTick((() => {
-                                        s.app.quit()
-                                    }))
-                                }
-                            }, {type: "separator"}, {
-                                label: e.formatMessage(v.resetAndEraseAllLocalData),
-                                click: (e, t) => b.deleteLocalData(t)
-                            }]
-                        }, {type: "separator"}, {
-                            label: e.formatMessage(v.help), click() {
-                                s.shell.openExternal(`${c.default.domainBaseUrl}/help`)
-                            }
-                        }, {
-                            label: "darwin" === process.platform ? e.formatMessage(v.whatsNewMacTitle) : e.formatMessage(v.whatsNewWindowsTitle),
-                            click() {
-                                s.shell.openExternal(`${c.default.domainBaseUrl}/desktop/whats-new`)
-                            }
-                        }]
-                    };
-                    return "darwin" !== process.platform && n.submenu.unshift({
-                        role: "about",
-                        label: e.formatMessage(v.about)
-                    }, {type: "separator"}), n
-                }(t), E = {
-                    role: "appMenu",
-                    submenu: [{
-                        role: "about",
-                        label: t.formatMessage(v.about)
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.preferences), accelerator: "Cmd+,", click(e, t) {
-                            t && u.appController.getWindowControllerForWebContents(t.webContents)?.getActiveTabController()?.openSettings()
-                        }
-                    }, {type: "separator"}, ...(0, p.isAutoUpdateDisabled)() ? [] : [S(t), {type: "separator"}], {
-                        role: "services",
-                        label: t.formatMessage(v.services)
-                    }, {type: "separator"}, {role: "hide", label: t.formatMessage(v.hide)}, {
-                        role: "hideOthers",
-                        label: t.formatMessage(v.hideOthers)
-                    }, {
-                        role: "unhide",
-                        label: t.formatMessage(v.unhide)
-                    }, {type: "separator"}, {
-                        label: t.formatMessage(v.quitWithoutSavingTabsMac), click() {
-                            u.appController.handleQuitWithoutSavingTabs()
-                        }
-                    }, {role: "quit", label: t.formatMessage(v.quitMac)}]
-                }, C = [r, o, a, i, l, w];
-                e && C.unshift(E), (0, h.shouldShowDebugMenu)() && C.push((0, h.getDebugMenu)());
-                const O = s.Menu.buildFromTemplate(y(C));
-                if (s.Menu.setApplicationMenu(O), e) {
-                    const e = s.Menu.buildFromTemplate([{
-                        label: t.formatMessage(v.newWindow),
-                        click: () => u.appController.newWindow({})
-                    }]);
-                    s.app.dock.setMenu(e)
+                    ]);
+                    electron.app.dock.setMenu(dockMenu)
                 }
             }
 
             function _(e, t) {
                 return e.push({type: "separator"}, S(t), {type: "separator"}), e.push({
                     role: "quit",
-                    label: t.formatMessage(v.quit)
+                    label: t.formatMessage(messages.quit)
                 }), e
             }
 
@@ -5273,33 +5755,33 @@
                     visible: !1,
                     accelerator: "Command+Option+Left",
                     acceleratorWorksWhenHidden: !0,
-                    label: e.formatMessage(v.showPreviousTab),
+                    label: e.formatMessage(messages.showPreviousTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showPreviousTab()
+                        __AppController.appController.getFocusedWindowController()?.showPreviousTab()
                     }
                 }, {
                     visible: !1,
                     accelerator: "Command+Option+Right",
                     acceleratorWorksWhenHidden: !0,
-                    label: e.formatMessage(v.showNextTab),
+                    label: e.formatMessage(messages.showNextTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showNextTab()
+                        __AppController.appController.getFocusedWindowController()?.showNextTab()
                     }
                 }, {
                     visible: !1,
                     accelerator: "Command+Shift+[",
                     acceleratorWorksWhenHidden: !0,
-                    label: e.formatMessage(v.showPreviousTab),
+                    label: e.formatMessage(messages.showPreviousTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showPreviousTab()
+                        __AppController.appController.getFocusedWindowController()?.showPreviousTab()
                     }
                 }, {
                     visible: !1,
                     accelerator: "Command+Shift+]",
                     acceleratorWorksWhenHidden: !0,
-                    label: e.formatMessage(v.showNextTab),
+                    label: e.formatMessage(messages.showNextTab),
                     click() {
-                        u.appController.getFocusedWindowController()?.showNextTab()
+                        __AppController.appController.getFocusedWindowController()?.showNextTab()
                     }
                 }]
             }
@@ -5312,7 +5794,7 @@
                     accelerator: `CmdOrCtrl+${t}`,
                     acceleratorWorksWhenHidden: !0,
                     click: () => {
-                        u.appController.getFocusedWindowController()?.makeTabActiveIgnoringInvalidIndices(t - 1)
+                        __AppController.appController.getFocusedWindowController()?.makeTabActiveIgnoringInvalidIndices(t - 1)
                     }
                 });
                 return e.push({
@@ -5321,30 +5803,30 @@
                     accelerator: "CmdOrCtrl+9",
                     acceleratorWorksWhenHidden: !0,
                     click: () => {
-                        u.appController.getFocusedWindowController()?.showLastTab()
+                        __AppController.appController.getFocusedWindowController()?.showLastTab()
                     }
                 }), e
             }
 
             function S(e) {
-                return p.autoUpdateStatus.downloaded ? {
-                    label: e.formatMessage(v.restartToApplyUpdate), click() {
-                        (0, p.restartToApplyUpdate)()
+                return __initializeAutoUpdater.autoUpdateStatus.downloaded ? {
+                    label: e.formatMessage(messages.restartToApplyUpdate), click() {
+                        (0, __initializeAutoUpdater.restartToApplyUpdate)()
                     }
-                } : p.autoUpdateStatus.available ? {
-                    label: e.formatMessage(v.downloadingUpdate, {percentage: Math.round(p.autoUpdateStatus.downloading?.percent || 0)}),
+                } : __initializeAutoUpdater.autoUpdateStatus.available ? {
+                    label: e.formatMessage(messages.downloadingUpdate, {percentage: Math.round(__initializeAutoUpdater.autoUpdateStatus.downloading?.percent || 0)}),
                     enabled: !1
                 } : {
-                    label: e.formatMessage(v.checkForUpdate), async click() {
+                    label: e.formatMessage(messages.checkForUpdate), async click() {
                         let t = "", r = "";
                         try {
-                            const n = await (0, p.checkForUpdate)();
-                            t = n.downloadPromise ? e.formatMessage(v.updateAvailable) : e.formatMessage(v.noUpdateAvailable), r = `${s.app.getVersion()} → ${n.updateInfo.version}`
+                            const n = await (0, __initializeAutoUpdater.checkForUpdate)();
+                            t = n.downloadPromise ? e.formatMessage(messages.updateAvailable) : e.formatMessage(messages.noUpdateAvailable), r = `${electron.app.getVersion()} → ${n.updateInfo.version}`
                         } catch (n) {
-                            t = e.formatMessage(v.updateCheckFailed), r += `\n${n}`
+                            t = e.formatMessage(messages.updateCheckFailed), r += `\n${n}`
                         }
-                        w(), s.dialog.showMessageBox({
-                            title: e.formatMessage(v.checkForUpdateMessageTitle),
+                        setupSystemMenu(), electron.dialog.showMessageBox({
+                            title: e.formatMessage(messages.checkForUpdateMessageTitle),
                             message: t,
                             detail: r
                         })
@@ -5352,7 +5834,7 @@
                 }
             }
 
-            t.setupSystemMenu = w
+            exports.setupSystemMenu = setupSystemMenu
         },
 
         // recordTraceAndPackage
@@ -5540,111 +6022,159 @@
                 }(e)), o
             }
         },
-        98441: function (e, t, r) {
+        98441: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.deleteLocalData = t.maybeDisableHardwareAcceleration = t.getAuxiliaryInfo = t.showLogsInShell = void 0;
-            const s = i(r(70857)), l = i(r(16928)), c = r(4482), u = i(r(47419)), d = r(40041), p = a(r(80115)),
-                h = r(36343), f = i(r(4928)), m = a(r(21852)), g = r(87309), b = r(13387), v = r(69340),
-                y = (0, h.defineMessages)({
-                    logsInShellFailedTitle: {
-                        id: "desktopTroubleshooting.showLogs.error.title",
-                        defaultMessage: "Showing the logs failed",
-                        description: "When the `Show logs in Finder/Explorer` fails, we show an error dialog. This message labels the title of that box."
-                    },
-                    logsInShellFailedMessageMac: {
-                        id: "desktopTroubleshooting.showLogs.error.message.mac",
-                        defaultMessage: "Notion encountered an error while trying to show the logs in Finder:",
-                        description: "When the `Show logs in Finder` fails, we show an error dialog. This message labels the message of that box. The message will be followed by the actual error."
-                    },
-                    logsInShellFailedMessageWindows: {
-                        id: "desktopTroubleshooting.showLogs.error.message.windows",
-                        defaultMessage: "Notion encountered an error while trying to show the logs in Explorer:",
-                        description: "When the `Show logs in Explorer` fails, we show an error dialog. This message labels the message of that box. The message will be followed by the actual error."
-                    }
-                });
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
 
-            async function w() {
-                const e = JSON.stringify(c.app.getAppMetrics(), void 0, 2),
-                    t = JSON.stringify([c.app.getGPUFeatureStatus(), await c.app.getGPUInfo("complete")], void 0, 2),
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const s = i(__webpack_require(70857)),
+                __path = i(__webpack_require(16928)),
+                electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                d = __webpack_require(40041),
+                __fse = a(__webpack_require(80115)),
+                h = __webpack_require(36343),
+                f = i(__webpack_require(4928)),
+                m = a(__webpack_require(21852)),
+                g = __webpack_require(87309),
+                __session = __webpack_require(13387),
+                __store = __webpack_require(69340)
+
+            const y = h.defineMessages({
+                logsInShellFailedTitle: {
+                    id: "desktopTroubleshooting.showLogs.error.title",
+                    defaultMessage: "Showing the logs failed",
+                    description: "When the `Show logs in Finder/Explorer` fails, we show an error dialog. This message labels the title of that box."
+                },
+                logsInShellFailedMessageMac: {
+                    id: "desktopTroubleshooting.showLogs.error.message.mac",
+                    defaultMessage: "Notion encountered an error while trying to show the logs in Finder:",
+                    description: "When the `Show logs in Finder` fails, we show an error dialog. This message labels the message of that box. The message will be followed by the actual error."
+                },
+                logsInShellFailedMessageWindows: {
+                    id: "desktopTroubleshooting.showLogs.error.message.windows",
+                    defaultMessage: "Notion encountered an error while trying to show the logs in Explorer:",
+                    description: "When the `Show logs in Explorer` fails, we show an error dialog. This message labels the message of that box. The message will be followed by the actual error."
+                }
+            });
+
+            async function getAuxiliaryInfo() {
+                const e = JSON.stringify(electron.app.getAppMetrics(), void 0, 2),
+                    t = JSON.stringify([electron.app.getGPUFeatureStatus(), await electron.app.getGPUInfo("complete")], void 0, 2),
                     r = JSON.stringify({
                         platform: s.default.platform(),
                         arch: s.default.arch(),
                         release: s.default.release(),
-                        appVersion: c.app.getVersion(),
+                        appVersion: electron.app.getVersion(),
                         versions: process.versions
                     }, void 0, 2), n = {};
                 return n["app-info.json"] = (0, d.strToU8)(e), n["gpu-info.json"] = (0, d.strToU8)(t), n["environment.json"] = (0, d.strToU8)(r), n
             }
 
-            t.showLogsInShell = async function () {
+            exports.showLogsInShell = async function () {
                 try {
                     const e = await async function () {
-                            const e = l.default.dirname(u.default.transports.file.getFile().path), t = await p.readdir(e),
-                                r = {};
-                            for (const n of t) {
-                                const t = l.default.join(e, n);
-                                r[n] = (0, d.strToU8)(await p.readFile(t, "utf8"))
-                            }
-                            const n = await w();
-                            return await (0, f.default)({...r, ...n})
-                        }(), t = `${c.app.getName()}-logs-${(new Date).toISOString().replace(/:/g, "-")}.zip`,
-                        r = l.default.join(c.app.getPath("downloads"), t);
-                    await p.writeFile(r, e), c.shell.showItemInFolder(r)
+                        const logDir = __path.default.dirname(electron_log.default.transports.file.getFile().path),
+                            t = await __fse.readdir(logDir),
+                            logs = {};
+                        for (const filename of t) {
+                            const logFilePath = __path.default.join(logDir, filename);
+                            logs[filename] = d.strToU8(await __fse.readFile(logFilePath, "utf8"))
+                        }
+                        const n = await getAuxiliaryInfo();
+                        return await f.default({
+                            ...logs,
+                            ...n
+                        })
+                    }()
+
+                    // Notion-logs-2024-05-07T02-54-56.934Z.zip
+                    const filename = `${electron.app.getName()}-logs-${new Date().toISOString().replace(/:/g, "-")}.zip`
+                    const fullPath = __path.default.join(electron.app.getPath("downloads"), filename);
+                    await __fse.writeFile(fullPath, e)
+                    electron.shell.showItemInFolder(fullPath)
                 } catch (e) {
-                    u.default.error(`showLogsInShell() failed: ${e}`);
-                    const t = m.appController.intl,
-                        r = "win32" === process.platform ? t.formatMessage(y.logsInShellFailedMessageWindows) : t.formatMessage(y.logsInShellFailedMessageMac);
-                    await c.dialog.showMessageBox({
-                        title: t.formatMessage(y.logsInShellFailedTitle),
+                    electron_log.default.error(`showLogsInShell() failed: ${e}`);
+                    const intl = m.appController.intl
+                    const message = "win32" === process.platform
+                        ? intl.formatMessage(y.logsInShellFailedMessageWindows)
+                        : intl.formatMessage(y.logsInShellFailedMessageMac);
+                    await electron.dialog.showMessageBox({
+                        title: intl.formatMessage(y.logsInShellFailedTitle),
                         type: "error",
-                        message: `${r}\n\n${e}`
+                        message: `${message}\n\n${e}`
                     })
                 }
-            }, t.getAuxiliaryInfo = w, t.maybeDisableHardwareAcceleration = function () {
-                const {preferences: e} = v.Store.getState().app;
-                !c.app.isReady() && e.isHardwareAccelerationDisabled && (u.default.info("Disabling GPU hardware acceleration"), c.app.disableHardwareAcceleration())
-            }, t.deleteLocalData = async function (e) {
-                if (u.default.info("Resetting and erasing all local data"), "win32" !== process.platform) try {
-                    await p.remove(c.app.getPath("userData"))
-                } catch (e) {
-                    u.default.warn("Failed to remove userData directory", e)
+            }
+            exports.getAuxiliaryInfo = getAuxiliaryInfo
+            exports.maybeDisableHardwareAcceleration = function () {
+                const {preferences} = __store.Store.getState().app;
+                if (!electron.app.isReady() && preferences.isHardwareAccelerationDisabled) {
+                    electron_log.default.info("Disabling GPU hardware acceleration")
+                    electron.app.disableHardwareAcceleration()
+                }
+            }
+            exports.deleteLocalData = async function (e) {
+                electron_log.default.info("Resetting and erasing all local data")
+                if ("win32" !== process.platform) {
+                    try {
+                        // 删除 ~/Library/Application Support/Notion 目录
+                        await __fse.remove(electron.app.getPath("userData"))
+                    } catch (e) {
+                        electron_log.default.warn("Failed to remove userData directory", e)
+                    }
                 } else if (e) {
-                    const e = c.session.fromPartition(b.electronSessionPartition);
-                    e.flushStorageData(), await e.clearStorageData(), e.flushStorageData();
-                    const t = c.app.getPath("userData"),
-                        r = [l.default.join(t, g.assetCacheDirName), l.default.join(t, "state.json"), l.default.join(t, "window-state.json"), l.default.join(t, "sentry")];
-                    for (const e of r) try {
-                        await p.remove(e)
-                    } catch (t) {
-                        u.default.info(`Tried to clear ${e}, but failed: ${t}`)
+                    const session = electron.session.fromPartition(__session.electronSessionPartition);
+                    session.flushStorageData()
+                    await session.clearStorageData()
+                    session.flushStorageData();
+                    const userDataPath = electron.app.getPath("userData")
+                    const directorys = [
+                        __path.default.join(userDataPath, g.assetCacheDirName),
+                        __path.default.join(userDataPath, "state.json"),
+                        __path.default.join(userDataPath, "window-state.json"),
+                        __path.default.join(userDataPath, "sentry")
+                    ]
+                    for (const path of directorys) {
+                        try {
+                            await __fse.remove(path)
+                        } catch (t) {
+                            electron_log.default.info(`Tried to clear ${path}, but failed: ${t}`)
+                        }
                     }
                 }
-                process.nextTick((() => {
-                    c.app.relaunch(), c.app.exit()
-                }))
+
+                process.nextTick(() => {
+                    electron.app.relaunch()
+                    electron.app.exit()
+                })
             }
         },
         // setQuarantine
@@ -24406,39 +24936,73 @@
                 }
             }
         },
-        47419: (e, t, r) => {
+
+        // electron-log
+        47419: (module, exports, __webpack_require) => {
             "use strict";
-            var n = r(77259), o = r(21789), a = r(58189), i = r(41083), s = r(65067), l = r(36209), c = r(19636),
-                u = r(55190);
-            e.exports = function e(t) {
-                var r = {
-                    catchErrors: function (e) {
-                        var t = Object.assign({}, {log: r.error, showDialog: "browser" === process.type}, e || {});
-                        n(t)
+            let catchErrors = __webpack_require(77259),
+                electronApi = __webpack_require(21789),
+                log = __webpack_require(58189),
+                scopeFactory = __webpack_require(41083),
+                transportConsole = __webpack_require(65067),
+                transportFile = __webpack_require(36209),
+                transportIpc = __webpack_require(19636),
+                transportRemote = __webpack_require(55190);
+
+            // https://unpkg.com/browse/electron-log@4.4.8/src/index.js
+            module.exports = function create(logId) {
+                let instance = {
+                    catchErrors: function (options) {
+                        let opts = Object.assign({}, {
+                            log: instance.error,
+                            showDialog: "browser" === process.type
+                        }, options || {});
+
+                        catchErrors(opts)
                     },
-                    create: e,
+                    create: create,
                     functions: {},
                     hooks: [],
-                    isDev: o.isDev(),
+                    isDev: electronApi.isDev(),
                     levels: [],
-                    logId: t,
-                    variables: {processType: process.type}
-                };
-                return r.scope = i(r), r.transports = {
-                    console: s(r),
-                    file: l(r),
-                    remote: u(r),
-                    ipc: c(r)
-                }, Object.defineProperty(r.levels, "add", {
-                    enumerable: !1, value: function (e, t) {
-                        t = void 0 === t ? r.levels.length : t, r.levels.splice(t, 0, e), r[e] = a.log.bind(null, r, {level: e}), r.functions[e] = r[e]
+                    logId: logId,
+                    variables: {
+                        processType: process.type
                     }
-                }), ["error", "warn", "info", "verbose", "debug", "silly"].forEach((function (e) {
-                    r.levels.add(e)
-                })), r.log = a.log.bind(null, r, {level: "info"}), r.functions.log = r.log, r.logMessageWithTransports = function (e, t) {
-                    return void 0 === e.date && (e.date = new Date), void 0 === e.variables && (e.variables = r.variables), a.runTransports(t, e, r)
-                }, r
-            }("default"), e.exports.default = e.exports
+                };
+                instance.scope = scopeFactory(instance)
+                instance.transports = {
+                    console: transportConsole(instance),
+                    file: transportFile(instance),
+                    remote: transportRemote(instance),
+                    ipc: transportIpc(instance)
+                }
+
+                Object.defineProperty(instance.levels, "add", {
+                    enumerable: false,
+                    value: function (name, index) {
+                        index = void 0 === index
+                            ? instance.levels.length
+                            : index
+                        instance.levels.splice(index, 0, name)
+                        instance[name] = log.log.bind(null, instance, {level: name})
+                        instance.functions[name] = instance[name]
+                    }
+                })
+
+                void ["error", "warn", "info", "verbose", "debug", "silly"].forEach(function (level) {
+                    instance.levels.add(level)
+                })
+                instance.log = log.log.bind(null, instance, {level: "info"})
+                instance.functions.log = instance.log
+                instance.logMessageWithTransports = function (message, transports) {
+                    void 0 === message.date && (message.date = new Date)
+                    void 0 === message.variables && (message.variables = instance.variables)
+                    return log.runTransports(transports, message, instance)
+                }
+                return instance
+            }("default")
+            module.exports.default = module.exports
         },
         58189: e => {
             "use strict";
@@ -24690,9 +25254,13 @@
                 }
             }
         },
-        65067: (e, t, r) => {
+
+        // transportConsole
+        65067: (module, exports, __webpack_require) => {
             "use strict";
-            var n = r(33396), o = {
+            let transform = __webpack_require(33396)
+
+            let consoleMethods = {
                 context: console,
                 error: console.error,
                 warn: console.warn,
@@ -24701,38 +25269,53 @@
                 debug: console.debug,
                 silly: console.silly,
                 log: console.log
-            };
-            e.exports = function (e) {
-                return t.level = "silly", t.useStyles = process.env.FORCE_STYLES, t.format = a[process.type] || a.browser, t;
+            }
 
-                function t(r) {
-                    var n, a, l, c, u = e.scope.getOptions();
-                    n = "renderer" === process.type || "worker" === process.type ? i(r, t, u) : s(r, t, u), a = r.level, l = n, c = o[a] || o.info, "renderer" !== process.type ? c.apply(o.context, l) : setTimeout(c.bind.apply(c, [c.context].concat(l)))
+            module.exports = function consoleTransportFactory(electronLog) {
+                function transport(message) {
+                    let data, level, l, c, scopeOptions = electronLog.scope.getOptions();
+                    data = "renderer" === process.type || "worker" === process.type
+                        ? transformRenderer(message, transport, scopeOptions)
+                        : transformMain(message, transport, scopeOptions)
+                    level = message.level
+                    l = data
+                    c = consoleMethods[level] || consoleMethods.info
+                    "renderer" !== process.type
+                        ? c.apply(consoleMethods.context, l)
+                        : setTimeout(c.bind.apply(c, [c.context].concat(l)))
                 }
-            }, e.exports.transformRenderer = i, e.exports.transformMain = s;
-            var a = {
+
+                transport.level = "silly"
+                transport.useStyles = process.env.FORCE_STYLES
+                transport.format = DEFAULT_FORMAT[process.type] || DEFAULT_FORMAT.browser
+                return transport
+            }
+            module.exports.transformRenderer = transformRenderer
+            module.exports.transformMain = transformMain
+
+            let DEFAULT_FORMAT = {
                 browser: "%c{h}:{i}:{s}.{ms}{scope}%c " + ("win32" === process.platform ? ">" : "›") + " {text}",
                 renderer: "{h}:{i}:{s}.{ms}{scope} › {text}",
                 worker: "{h}:{i}:{s}.{ms}{scope} › {text}"
             };
 
-            function i(e, t, r) {
-                return n.transform(e, [n.customFormatterFactory(t.format, !0, r)])
+            function transformRenderer(e, t, r) {
+                return transform.transform(e, [transform.customFormatterFactory(t.format, true, r)])
             }
 
-            function s(e, t, r) {
+            function transformMain(e, t, r) {
                 var o, i = function (e, t) {
                     if (!0 === e || !1 === e) return e;
                     var r = "error" === t || "warn" === t ? process.stderr : process.stdout;
                     return r && r.isTTY
                 }(t.useStyles, e.level);
-                return n.transform(e, [(o = t.format, function (e, t) {
-                    return o !== a.browser ? e : ["color:" + l(t.level), "color:unset"].concat(e)
-                }), n.customFormatterFactory(t.format, !1, r), i ? n.applyAnsiStyles : n.removeStyles, n.concatFirstStringElements, n.maxDepthFactory(4), n.toJSON])
+                return transform.transform(e, [(o = t.format, function (e, t) {
+                    return o !== DEFAULT_FORMAT.browser ? e : ["color:" + l(t.level), "color:unset"].concat(e)
+                }), transform.customFormatterFactory(t.format, !1, r), i ? transform.applyAnsiStyles : transform.removeStyles, transform.concatFirstStringElements, transform.maxDepthFactory(4), transform.toJSON])
             }
 
-            function l(e) {
-                switch (e) {
+            function l(level) {
+                switch (level) {
                     case"error":
                         return "red";
                     case"warn":

@@ -7,8 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "electron src/v3.6.0",
-    "debug": "electron --inspect-brk src",
-    "start": "electron old-resources/app"
+    "debug": "electron --inspect-brk src/v3.6.0"
   },
   "dependencies": {
     "@electron/remote": "2.0.11",
