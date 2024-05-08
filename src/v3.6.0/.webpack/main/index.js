@@ -118,8 +118,8 @@
             };
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            exports.createIntlShape = exports.getMessages = void 0;
-            const o = __webpack_require(36343),
+
+            const __intlHelpers = __webpack_require(36343),
                 da_DK = n(__webpack_require(16813)),
                 de_DE = n(__webpack_require(39687)),
                 es_LA = n(__webpack_require(29499)),
@@ -156,13 +156,14 @@
 
             exports.getMessages = getMessages
             exports.createIntlShape = function (locale) {
-                const messages = getMessages(locale),
-                    r = o.createIntlCache();
-                return o.createIntl({
+                const messages = getMessages(locale)
+                const intlCache = __intlHelpers.createIntlCache()
+
+                return __intlHelpers.createIntl({
                     locale: locale,
                     defaultLocale: "en-US",
                     messages: messages,
-                }, r)
+                }, intlCache)
             }
         },
         // getHumanPlatformName 函数
@@ -1879,31 +1880,31 @@
         19628: function (module, exports, __webpack_require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            },
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
                 i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
+                    return e && e.__esModule ? e : {default: e}
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
@@ -2947,197 +2948,290 @@
         },
 
         // initializeAutoUpdater
-        43579: function (e, t, r) {
+        43579: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isAutoUpdateDisabled = t.restartToApplyUpdate = t.checkForUpdate = t.initializeAutoUpdater = t.autoUpdateStatus = void 0;
-            const s = r(4482), l = i(r(47419)), c = r(94625), u = r(36343), d = r(37318), p = a(r(6600)), h = r(21248),
-                f = r(43067), m = i(r(11239)), g = r(3420), b = r(21852), v = r(94774), y = a(r(10454)), w = r(69340),
-                _ = r(50833), k = (0, u.defineMessages)({
-                    updateInstallButton: {
-                        id: "updatePrompt.installAndRelaunch",
-                        defaultMessage: "Install and relaunch",
-                        description: "Button to install an app update and relaunch the app"
-                    },
-                    updateRemindButton: {
-                        id: "updatePrompt.remindMeLater",
-                        defaultMessage: "Remind me later",
-                        description: "Button to remind the user later (1 day) to install their update"
-                    },
-                    updateMessage: {
-                        id: "updatePrompt.message",
-                        defaultMessage: "A new version of Notion is available!",
-                        description: "Message for the dialog telling the user that a new update is available"
-                    },
-                    updateDetail: {
-                        id: "updatePrompt.detail",
-                        defaultMessage: "Would you like to install it now? We'll reopen your windows and tabs for you.",
-                        description: "Detail text for the dialog telling the user that a new update is available"
-                    }
-                });
-            let T, S;
-            c.autoUpdater.logger = l.default.scope("AutoUpdater"), function () {
-                const {updaterChannel: e} = w.Store.getState()?.app?.preferences || {},
-                    t = "darwin" === process.platform,
-                    r = "arm64" === process.arch || s.app.runningUnderARM64Translation;
-                if (e) return c.autoUpdater.channel = e, void l.default.info(`Setting autoUpdater channel to "${e}" (from preferences)`);
-                t && r ? (c.autoUpdater.channel = "arm64", l.default.info('Setting autoUpdater channel to "arm64"')) : t && (c.autoUpdater.channel = "latest", l.default.info('Setting autoUpdater channel to "latest" (for Intel)')), c.autoUpdater.allowDowngrade = !1
-            }();
-            const E = {checking: void 0, available: void 0, downloaded: void 0, downloading: void 0};
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
 
-            function C(e) {
-                Object.assign(t.autoUpdateStatus, e), (0, _.setupSystemMenu)()
-            }
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            async function O(e) {
-                if (e && await (0, f.timeout)(e), await b.appController.waitForFocusedWindowController(), !t.autoUpdateStatus.downloaded) return void (S = void 0);
-                let r = !1;
-                const n = b.appController.intl;
-                try {
-                    0 === (await s.dialog.showMessageBox({
-                        type: "question",
-                        buttons: [n.formatMessage(k.updateInstallButton), n.formatMessage(k.updateRemindButton)],
-                        defaultId: 0,
-                        message: n.formatMessage(k.updateMessage),
-                        detail: n.formatMessage(k.updateDetail)
-                    })).response ? I({launch: !0}) : (S = O(864e5), r = !0)
-                } catch (e) {
-                    l.default.warn("Error asking windows user to update", e)
+
+            const electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                __electron_updater = __webpack_require(94625),
+                __intlHelpers = __webpack_require(36343),
+                __cleanObjectForSerialization = __webpack_require(37318),
+                lodash = a(__webpack_require(6600)),
+                __logglyHelpers = __webpack_require(21248),
+                f = __webpack_require(43067),
+                __config = i(__webpack_require(11239)),
+                __ServerLogger = __webpack_require(3420),
+                __AppController = __webpack_require(21852),
+                __assetCache = __webpack_require(94774),
+                __notionIPC = a(__webpack_require(10454)),
+                __store = __webpack_require(69340),
+                __setupSystemMenu = __webpack_require(50833)
+
+            const messages = __intlHelpers.defineMessages({
+                updateInstallButton: {
+                    id: "updatePrompt.installAndRelaunch",
+                    defaultMessage: "Install and relaunch",
+                    description: "Button to install an app update and relaunch the app"
+                },
+                updateRemindButton: {
+                    id: "updatePrompt.remindMeLater",
+                    defaultMessage: "Remind me later",
+                    description: "Button to remind the user later (1 day) to install their update"
+                },
+                updateMessage: {
+                    id: "updatePrompt.message",
+                    defaultMessage: "A new version of Notion is available!",
+                    description: "Message for the dialog telling the user that a new update is available"
+                },
+                updateDetail: {
+                    id: "updatePrompt.detail",
+                    defaultMessage: "Would you like to install it now? We'll reopen your windows and tabs for you.",
+                    description: "Detail text for the dialog telling the user that a new update is available"
                 }
-                r || (S = void 0)
+            })
+
+            let checkForUpdatesPromise, S;
+
+            __electron_updater.autoUpdater.logger = electron_log.default.scope("AutoUpdater")
+
+
+            // setting autoUpdater channel
+            void function () {
+                const {updaterChannel} = __store.Store.getState()?.app?.preferences || {},
+                    isDarwin = "darwin" === process.platform,
+                    isArm64 = "arm64" === process.arch || electron.app.runningUnderARM64Translation;
+                if (updaterChannel) {
+                    __electron_updater.autoUpdater.channel = updaterChannel
+                    electron_log.default.info(`Setting autoUpdater channel to "${updaterChannel}" (from preferences)`)
+                    return
+                }
+                if (isDarwin && isArm64) {
+                    __electron_updater.autoUpdater.channel = "arm64"
+                    electron_log.default.info('Setting autoUpdater channel to "arm64"')
+                } else if (isDarwin) {
+                    __electron_updater.autoUpdater.channel = "latest"
+                    electron_log.default.info('Setting autoUpdater channel to "latest" (for Intel)')
+                }
+                __electron_updater.autoUpdater.allowDowngrade = false
+            }()
+
+            const autoUpdateStatus = {
+                checking: void 0,
+                available: void 0,
+                downloaded: void 0,
+                downloading: void 0
+            };
+
+            function updateStatus(updater) {
+                Object.assign(exports.autoUpdateStatus, updater)
+                __setupSystemMenu.setupSystemMenu()
             }
 
-            function M() {
-                return T || (T = c.autoUpdater.checkForUpdates().then((e => (T = void 0, e))).catch((e => {
-                    throw T = void 0, e
-                })))
+            async function O(timeout) {
+                timeout && await f.timeout(timeout)
+                await __AppController.appController.waitForFocusedWindowController()
+                if (!exports.autoUpdateStatus.downloaded) {
+                    S = void 0
+                    return
+                }
+                let r = false
+                const intl = __AppController.appController.intl;
+                try {
+                    if (0 === (await electron.dialog.showMessageBox({
+                        type: "question",
+                        buttons: [intl.formatMessage(messages.updateInstallButton), intl.formatMessage(messages.updateRemindButton)],
+                        defaultId: 0,
+                        message: intl.formatMessage(messages.updateMessage),
+                        detail: intl.formatMessage(messages.updateDetail)
+                    })).response) {
+                        restartToApplyUpdate({launch: true})
+                    } else {
+                        S = O(864e5)
+                        r = true
+                    }
+                } catch (err) {
+                    electron_log.default.warn("Error asking windows user to update", err)
+                }
+                if (!r) {
+                    S = void 0
+                }
             }
 
-            function I({silent: e, launch: r} = {}) {
-                process.nextTick((() => {
-                    b.appController.handleQuit(), t.autoUpdateStatus.downloaded ? c.autoUpdater.quitAndInstall(Boolean(e), Boolean(r)) : (s.app.relaunch(), s.app.quit())
-                }))
+            function checkForUpdate() {
+                if (checkForUpdatesPromise) {
+                    return checkForUpdatesPromise
+                }
+
+                checkForUpdatesPromise = __electron_updater.autoUpdater.checkForUpdates().then(checkResult => {
+                    checkForUpdatesPromise = void 0
+                    return checkResult
+                }).catch(e => {
+                    checkForUpdatesPromise = void 0
+                    throw e
+                })
+                return checkForUpdatesPromise
             }
 
-            function A() {
+            function restartToApplyUpdate({silent, launch} = {}) {
+                process.nextTick(() => {
+                    __AppController.appController.handleQuit()
+                    if (exports.autoUpdateStatus.downloaded) {
+                        __electron_updater.autoUpdater.quitAndInstall(Boolean(silent), Boolean(launch))
+                    } else {
+                        electron.app.relaunch()
+                        electron.app.quit()
+                    }
+                })
+            }
+
+            function isAutoUpdateDisabled() {
                 if ("darwin" === process.platform) {
-                    const e = s.systemPreferences?.getUserDefault("NotionNoAutoUpdates", "boolean"),
-                        t = w.Store.getState().app.preferences?.isAutoUpdaterDisabled;
+                    const e = electron.systemPreferences?.getUserDefault("NotionNoAutoUpdates", "boolean")
+                    const t = __store.Store.getState().app.preferences?.isAutoUpdaterDisabled
                     return Boolean(e || t)
                 }
-                return !1
+                return false
             }
 
-            t.autoUpdateStatus = {...E}, c.autoUpdater.autoDownload = !1, c.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform, t.initializeAutoUpdater = function () {
-                c.autoUpdater.on("error", (e => {
-                    if (C(E), T = void 0, function (e) {
+            exports.autoUpdateStatus = {...autoUpdateStatus}
+
+            __electron_updater.autoUpdater.autoDownload = false
+            __electron_updater.autoUpdater.autoInstallOnAppQuit = "win32" !== process.platform
+            exports.initializeAutoUpdater = function () {
+                __electron_updater.autoUpdater.on("error", e => {
+                    if (updateStatus(autoUpdateStatus), checkForUpdatesPromise = void 0, function (e) {
                         return e && e.message && ["ERR_CONNECTION_REFUSED", "ECONNREFUSED"].some((t => -1 !== e.message.indexOf(t)))
-                    }(e)) return l.default.info("No electron update -- offline"), void b.appController.sendMainToAllNotionInstances("notion:update-not-available");
-                    "NSPOSIXErrorDomain" === e.domain ? g.serverLogger.log({
+                    }(e)) return electron_log.default.info("No electron update -- offline"), void __AppController.appController.sendMainToAllNotionInstances("notion:update-not-available");
+                    "NSPOSIXErrorDomain" === e.domain ? __ServerLogger.serverLogger.log({
                         level: "error",
                         from: "autoUpdater",
                         type: "NSPOSIXErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : "SQRLUpdaterErrorDomain" === e.domain ? g.serverLogger.log({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }) : "SQRLUpdaterErrorDomain" === e.domain ? __ServerLogger.serverLogger.log({
                         level: "error",
                         from: "autoUpdater",
                         type: "SQRLUpdaterErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : "NSCocoaErrorDomain" === e.domain ? g.serverLogger.log({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }) : "NSCocoaErrorDomain" === e.domain ? __ServerLogger.serverLogger.log({
                         level: "error",
                         from: "autoUpdater",
                         type: "NSCocoaErrorDomainError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : e.message.startsWith("net::ERR") ? g.serverLogger.log({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }) : e.message.startsWith("net::ERR") ? __ServerLogger.serverLogger.log({
                         level: "info",
                         from: "autoUpdater",
                         type: "networkError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : 403 === e.statusCode ? g.serverLogger.log({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }) : 403 === e.statusCode ? __ServerLogger.serverLogger.log({
                         level: "warning",
                         from: "autoUpdater",
                         type: "cloudflareCaptcha",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : 503 === e.statusCode ? g.serverLogger.log({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }) : 503 === e.statusCode ? __ServerLogger.serverLogger.log({
                         level: "warning",
                         from: "autoUpdater",
                         type: "serviceUnavailable",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : -1 !== e.message.indexOf("/opt/notion-app/app.asar") ? g.serverLogger.log({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }) : -1 !== e.message.indexOf("/opt/notion-app/app.asar") ? __ServerLogger.serverLogger.log({
                         level: "info",
                         from: "autoUpdater",
                         type: "unsupportedLinuxApp",
-                        error: (0, h.convertErrorToLog)(e)
-                    }) : -1 !== e.message.indexOf("app-update.yml") || g.serverLogger.log({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }) : -1 !== e.message.indexOf("app-update.yml") || __ServerLogger.serverLogger.log({
                         level: "error",
                         from: "autoUpdater",
                         type: "unknownAutoUpdaterError",
-                        error: (0, h.convertErrorToLog)(e)
-                    }), b.appController.sendMainToAllNotionInstances("notion:update-error", (0, d.cleanObjectForSerialization)(e))
-                })), c.autoUpdater.on("checking-for-update", (() => {
-                    l.default.info("Checking for update"), C({checking: !0}), b.appController.sendMainToAllNotionInstances("notion:checking-for-update")
-                })), c.autoUpdater.on("update-available", (e => {
-                    l.default.info("Update available", {info: e});
-                    const r = t.autoUpdateStatus.downloaded?.version !== e.version;
-                    r && (l.default.info("Downloading update", {info: e}), c.autoUpdater.downloadUpdate()), C({
+                        error: (0, __logglyHelpers.convertErrorToLog)(e)
+                    }), __AppController.appController.sendMainToAllNotionInstances("notion:update-error", (0, __cleanObjectForSerialization.cleanObjectForSerialization)(e))
+                })
+                __electron_updater.autoUpdater.on("checking-for-update", () => {
+                    electron_log.default.info("Checking for update"), updateStatus({checking: !0}), __AppController.appController.sendMainToAllNotionInstances("notion:checking-for-update")
+                })
+                __electron_updater.autoUpdater.on("update-available", e => {
+                    electron_log.default.info("Update available", {info: e});
+                    const r = exports.autoUpdateStatus.downloaded?.version !== e.version;
+                    r && (electron_log.default.info("Downloading update", {info: e}), __electron_updater.autoUpdater.downloadUpdate()), updateStatus({
                         checking: void 0,
                         available: e, ...r ? {downloaded: void 0} : {}
-                    }), (0, _.setupSystemMenu)(), b.appController.sendMainToAllNotionInstances("notion:update-available", e)
-                })), c.autoUpdater.on("update-not-available", (() => {
-                    C({
+                    }), (0, __setupSystemMenu.setupSystemMenu)(), __AppController.appController.sendMainToAllNotionInstances("notion:update-available", e)
+                })
+                __electron_updater.autoUpdater.on("update-not-available", () => {
+                    updateStatus({
                         checking: void 0,
                         available: void 0
-                    }), (0, _.setupSystemMenu)(), b.appController.sendMainToAllNotionInstances("notion:update-not-available")
-                }));
-                const e = p.throttle((e => {
-                    C({downloading: e}), b.appController.sendMainToAllNotionInstances("notion:update-progress", e), (0, _.setupSystemMenu)()
-                }), 300);
-                c.autoUpdater.on("download-progress", e), c.autoUpdater.on("update-downloaded", (e => {
-                    l.default.info("Update downloaded", {info: e}), C({
-                        ...E,
+                    }), (0, __setupSystemMenu.setupSystemMenu)(), __AppController.appController.sendMainToAllNotionInstances("notion:update-not-available")
+                })
+                const e = lodash.throttle(e => {
+                    updateStatus({downloading: e}), __AppController.appController.sendMainToAllNotionInstances("notion:update-progress", e), (0, __setupSystemMenu.setupSystemMenu)()
+                }, 300)
+                __electron_updater.autoUpdater.on("download-progress", e)
+                __electron_updater.autoUpdater.on("update-downloaded", e => {
+                    electron_log.default.info("Update downloaded", {info: e}), updateStatus({
+                        ...autoUpdateStatus,
                         downloaded: e
-                    }), b.appController.sendMainToAllNotionInstances("notion:update-ready", e), async function () {
+                    }), __AppController.appController.sendMainToAllNotionInstances("notion:update-ready", e), async function () {
                         if (S) return;
                         const e = process.uptime() < 5;
-                        await v.assetCache.checkForUpdates(), "win32" === process.platform ? S = O() : e ? I() : "production" !== m.default.env && (S = O())
+                        await __assetCache.assetCache.checkForUpdates(), "win32" === process.platform ? S = O() : e ? restartToApplyUpdate() : "production" !== __config.default.env && (S = O())
                     }()
-                }))
-            }, t.checkForUpdate = M, t.restartToApplyUpdate = I, t.isAutoUpdateDisabled = A, y.handleEventFromRenderer.addListener("notion:install-update", (() => {
-                I()
-            })), y.handleEventFromRenderer.addListener("notion:check-for-updates", (() => {
-                M()
-            })), process.env.JEST_WORKER_ID || async function () {
-                for (; ;) {
-                    if (A()) l.default.info("Auto updates are disabled."); else try {
-                        await M()
-                    } catch (e) {
-                        l.default.warn("Error checking for update", e)
+                })
+            }
+            exports.checkForUpdate = checkForUpdate
+            exports.restartToApplyUpdate = restartToApplyUpdate
+            exports.isAutoUpdateDisabled = isAutoUpdateDisabled
+
+            __notionIPC.handleEventFromRenderer.addListener("notion:install-update", () => {
+                restartToApplyUpdate()
+            })
+            __notionIPC.handleEventFromRenderer.addListener("notion:check-for-updates", () => {
+                checkForUpdate()
+            })
+
+            if (!process.env.JEST_WORKER_ID) {
+                void async function () {
+                    for (; ;) {
+                        if (isAutoUpdateDisabled()) {
+                            electron_log.default.info("Auto updates are disabled.");
+                        } else {
+                            try {
+                                await checkForUpdate()
+                            } catch (e) {
+                                electron_log.default.warn("Error checking for update", e)
+                            }
+                        }
+                        await f.timeout(864e5)
                     }
-                    await (0, f.timeout)(864e5)
-                }
-            }()
+                }()
+            }
         },
 
         // closeLastBrowserTab
@@ -3437,25 +3531,32 @@
                 // return "production" !== __config.default.env
             }
 
-            function _(e, t) {
-                k(t, !0)
+            function webContentsCreatedHandler(env, webContent) {
+                k(webContent, true)
             }
 
-            async function k(e, t) {
-                const r = e.debugger;
-                r.isAttached() || r.attach(), await r.sendCommand("Network.enable"), await r.sendCommand("Network.emulateNetworkConditions", {
-                    offline: t,
+            async function k(webContent, simulateAirplaneMode) {
+                const _debugger = webContent.debugger;
+                if (!_debugger.isAttached()) {
+                    _debugger.attach()
+                }
+                await _debugger.sendCommand("Network.enable")
+                await _debugger.sendCommand("Network.emulateNetworkConditions", {
+                    offline: simulateAirplaneMode,
                     latency: 0,
                     downloadThroughput: -1,
                     uploadThroughput: -1
                 })
             }
 
-            function T(e, t = {}) {
-                const r = electron.BrowserWindow.getFocusedWindow() || electron.BrowserWindow.getAllWindows()[0];
-                electron.dialog.showSaveDialog(r, t).then((({filePath: t}) => {
-                    t && (__fs.default.writeFileSync(t, JSON.stringify(e, null, 4)), electron.shell.openPath(t))
-                }))
+            function dumpData(json, options = {}) {
+                const win = electron.BrowserWindow.getFocusedWindow() || electron.BrowserWindow.getAllWindows()[0];
+                electron.dialog.showSaveDialog(win, options).then(({filePath}) => {
+                    if (filePath) {
+                        __fs.default.writeFileSync(filePath, JSON.stringify(json, null, 4))
+                        electron.shell.openPath(filePath)
+                    }
+                })
             }
 
             exports.shouldShowDebugMenu = shouldShowDebugMenu
@@ -3524,11 +3625,11 @@
                         {type: "separator"},
                         {
                             label: "Dump state",
-                            click: () => T(__store.Store.getState(), {defaultPath: "state.json"})
+                            click: () => dumpData(__store.Store.getState(), {defaultPath: "state.json"})
                         },
                         {
                             label: "Dump window state",
-                            click: () => T(function () {
+                            click: () => dumpData(function () {
                                 const e = __AppController.appController.windowControllers,
                                     t = electron.BrowserWindow.getAllWindows(),
                                     r = e.map((e => e.browserWindow)), n = t.filter((e => !r.includes(e))), o = e => {
@@ -3577,15 +3678,21 @@
                         {
                             label: "Simulate Airplane Mode",
                             type: "checkbox",
-                            click(e) {
-                                !async function (e) {
-                                    if (!shouldShowDebugMenu()) throw new Error("Dev tools are disabled, this should never be called!");
-                                    if (simulateAirplaneMode !== e) {
-                                        simulateAirplaneMode = e;
-                                        for (const e of electron.webContents.getAllWebContents()) await k(e, simulateAirplaneMode);
-                                        simulateAirplaneMode ? electron.app.addListener("web-contents-created", _) : electron.app.removeListener("web-contents-created", _)
+                            click(evt) {
+                                !async function (checked) {
+                                    if (!shouldShowDebugMenu()) {
+                                        throw new Error("Dev tools are disabled, this should never be called!");
                                     }
-                                }(e.checked)
+                                    if (simulateAirplaneMode !== checked) {
+                                        simulateAirplaneMode = checked;
+                                        for (const webContent of electron.webContents.getAllWebContents()) {
+                                            await k(webContent, simulateAirplaneMode);
+                                        }
+                                        simulateAirplaneMode
+                                            ? electron.app.addListener("web-contents-created", webContentsCreatedHandler)
+                                            : electron.app.removeListener("web-contents-created", webContentsCreatedHandler)
+                                    }
+                                }(evt.checked)
                             }
                         },
                         {type: "separator"},
@@ -3701,31 +3808,31 @@
         5554: function (module, exports, __webpack_require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            },
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
                 i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
+                    return e && e.__esModule ? e : {default: e}
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
@@ -3740,6 +3847,8 @@
                 __sentry = a(__webpack_require(56116)),
                 __store = __webpack_require(69340);
 
+
+            // 针对错误进行日志打印，适用于本地调试
             function setupLocalLogging() {
                 electron_log.default.transports.console.level = exports.LOG_LEVEL
                 electron_log.default.transports.file.level = exports.LOG_LEVEL
@@ -3749,31 +3858,60 @@
                     electron: process.versions.electron
                 })
 
-                electron.app.on("render-process-gone", (e, t, r) => {
+                electron.app.on("render-process-gone", (env, webContents, details) => {
                     try {
-                        electron_log.default.error("renderer-process-gone", {url: t?.getURL(), details: r})
+                        electron_log.default.error("renderer-process-gone", {
+                            url: webContents?.getURL(),
+                            details: details
+                        })
                     } catch (e) {
-                        electron_log.default.error("renderer-process-gone", {url: "[unavailable]", details: r})
+                        electron_log.default.error("renderer-process-gone", {url: "[unavailable]", details: details})
                     }
                 })
-                electron.app.on("child-process-gone", (e, t) => {
-                    electron_log.default.error("child-process-gone", t)
+                electron.app.on("child-process-gone", (env, details) => {
+                    electron_log.default.error("child-process-gone", details)
                 })
-                electron.app.on("web-contents-created", (e, t) => {
-                    const r = `${t.getType()}-${t.id}`, n = electron_log.default.scope(r);
-                    t.on("did-fail-load", ((e, t, r, o) => {
-                        n.error("did-fail-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("did-fail-provisional-load", ((e, t, r, o) => {
-                        n.error("did-fail-provisional-load", {errorCode: t, errorDescription: r, validatedURL: o})
-                    })), t.on("unresponsive", (() => n.error("unresponsive"))), t.on("destroyed", (() => n.warn("destroyed"))), t.on("unresponsive", (() => n.warn("unresponsive"))), t.on("responsive", (() => n.warn("responsive"))), shouldLog("debug") && (t.on("did-start-loading", (() => n.debug("did-start-loading"))), t.on("did-stop-loading", (() => n.debug("did-stop-loading"))), t.on("dom-ready", (() => n.debug("dom-ready"))), t.on("console-message", ((e, t, r, o, a) => {
-                        t > 1 && n.debug(`console-message: ${r}`, {line: o, sourceId: a})
-                    })))
+                electron.app.on("web-contents-created", (env, webContents) => {
+                    const scope = `${webContents.getType()}-${webContents.id}`
+                    const logger = electron_log.default.scope(scope)
+
+                    webContents.on("did-fail-load", (env, errorCode, errorDescription, validatedURL) => {
+                        logger.error("did-fail-load", {
+                            errorCode: errorCode,
+                            errorDescription: errorDescription,
+                            validatedURL: validatedURL
+                        })
+                    })
+                    webContents.on("did-fail-provisional-load", (env, errorCode, errorDescription, validatedURL) => {
+                        logger.error("did-fail-provisional-load", {
+                            errorCode: errorCode,
+                            errorDescription: errorDescription,
+                            validatedURL: validatedURL
+                        })
+                    })
+                    webContents.on("unresponsive", () => logger.error("unresponsive"))
+                    webContents.on("destroyed", () => logger.warn("destroyed"))
+                    webContents.on("unresponsive", () => logger.warn("unresponsive"))
+                    webContents.on("responsive", () => logger.warn("responsive"))
+
+                    if (shouldLog("debug")) {
+                        webContents.on("did-start-loading", () => logger.debug("did-start-loading"))
+                        webContents.on("did-stop-loading", () => logger.debug("did-stop-loading"))
+                        webContents.on("dom-ready", () => logger.debug("dom-ready"))
+                        webContents.on("console-message", (env, level, message, line, sourceId) => {
+                            if (level > 1) {
+                                logger.debug(`console-message: ${message}`, {line: line, sourceId: sourceId})
+                            }
+                        })
+                    }
                 })
                 electron.app.on("before-quit", () => electron_log.default.info("Quitting..."))
 
                 if (shouldLog("debug")) {
                     electron.app.on("browser-window-blur", () => {
-                        electron.BrowserWindow.getFocusedWindow() || electron_log.default.debug("App blurred")
+                        if (!electron.BrowserWindow.getFocusedWindow()) {
+                            electron_log.default.debug("App blurred")
+                        }
                     })
                     electron.app.on("browser-window-focus", () => {
                         electron_log.default.debug("App focused")
@@ -3781,45 +3919,67 @@
                 }
             }
 
-            function shouldLog(e, r = exports.LOG_LEVEL) {
-                return exports.LOG_LEVELS.indexOf(r) <= exports.LOG_LEVELS.indexOf(e)
+            function shouldLog(logLevel, min_log_level = exports.LOG_LEVEL) {
+                return exports.LOG_LEVELS.indexOf(min_log_level) <= exports.LOG_LEVELS.indexOf(logLevel)
             }
 
             exports.LOG_LEVEL = function () {
-                const e = __store.Store.getState();
-                return e?.app?.preferences?.logLevel ? e?.app?.preferences?.logLevel : __fse.default.existsSync(__path.default.join(electron.app.getPath("userData"), "debug")) ? "debug" : electron.app.isPackaged ? "info" : "debug"
+                const rootState = __store.Store.getState();
+                return rootState?.app?.preferences?.logLevel
+                    ? rootState?.app?.preferences?.logLevel
+                    : __fse.default.existsSync(__path.default.join(electron.app.getPath("userData"), "debug"))
+                        ? "debug"
+                        : electron.app.isPackaged
+                            ? "info"
+                            : "debug"
             }()
             exports.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"]
             exports.setupLogging = function () {
-                setupLocalLogging(), __sentry.initialize(electron.app), process.on("uncaughtException", (e => {
-                    e.message.startsWith("net::ERR") ? __ServerLogger.serverLogger.log({
-                        level: "info",
-                        from: "main",
-                        type: "networkError",
-                        error: __logglyHelpers.convertErrorToLog(e)
-                    }) : (__sentry.capture(e), __ServerLogger.serverLogger.log({
-                        level: "error",
-                        from: "main",
-                        type: "uncaughtException",
-                        error: __logglyHelpers.convertErrorToLog(e)
-                    }))
-                })), process.on("unhandledRejection", (e => {
-                    e && e instanceof Error && e.message.startsWith("net::ERR") ? __ServerLogger.serverLogger.log({
-                        level: "info",
-                        from: "main",
-                        type: "networkError",
-                        error: __logglyHelpers.convertErrorToLog(e)
-                    }) : (__sentry.capture(e), __ServerLogger.serverLogger.log({
-                        level: "error",
-                        from: "main",
-                        type: "unhandledRejection",
-                        error: __logglyHelpers.convertErrorToLog(e)
-                    }))
-                })), __notionIPC.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
-                    __ServerLogger.serverLogger.extraLoggingContext.clientEnvironmentData = t
-                })), __notionIPC.handleEventFromRenderer.addListener("notion:log-error", ((e, t) => {
-                    __ServerLogger.serverLogger.log(t)
-                }))
+                setupLocalLogging()
+                __sentry.initialize(electron.app)
+                process.on("uncaughtException", error => {
+                    if (error.message.startsWith("net::ERR")) {
+                        __ServerLogger.serverLogger.log({
+                            level: "info",
+                            from: "main",
+                            type: "networkError",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    } else {
+                        __sentry.capture(error)
+                        __ServerLogger.serverLogger.log({
+                            level: "error",
+                            from: "main",
+                            type: "uncaughtException",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    }
+                })
+                process.on("unhandledRejection", error => {
+                    if (error && error instanceof Error && error.message.startsWith("net::ERR")) {
+                        __ServerLogger.serverLogger.log({
+                            level: "info",
+                            from: "main",
+                            type: "networkError",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    } else {
+                        __sentry.capture(error)
+                        __ServerLogger.serverLogger.log({
+                            level: "error",
+                            from: "main",
+                            type: "unhandledRejection",
+                            error: __logglyHelpers.convertErrorToLog(error)
+                        })
+                    }
+                })
+
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-logger-data", (env, extraData) => {
+                    __ServerLogger.serverLogger.extraLoggingContext.clientEnvironmentData = extraData
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:log-error", (env, error) => {
+                    __ServerLogger.serverLogger.log(error)
+                })
             }
             exports.setupLocalLogging = setupLocalLogging
             exports.shouldLog = shouldLog
@@ -5064,7 +5224,7 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
             const electron = __webpack_require(4482),
-                l = __webpack_require(36343),
+                __intlHelpers = __webpack_require(36343),
                 __config = i(__webpack_require(11239)),
                 __AppController = __webpack_require(21852),
                 __assetCache = __webpack_require(94774),
@@ -5075,7 +5235,7 @@
                 g = a(__webpack_require(48021)),
                 b = a(__webpack_require(98441))
 
-            const messages = l.defineMessages({
+            const messages = __intlHelpers.defineMessages({
                 fileMenuTitle: {id: "desktopTopbar.fileMenu.title", defaultMessage: "File"},
                 editMenuTitle: {id: "desktopTopbar.editMenu.title", defaultMessage: "Edit"},
                 viewMenuTitle: {id: "desktopTopbar.viewMenu.title", defaultMessage: "View"},
@@ -5318,11 +5478,17 @@
                 }
             })
 
-            function y(e) {
-                return e.map((e => {
-                    const t = {...e};
-                    return e.label && (t.label = e.label.replace(/&/g, "&&")), e.submenu && Array.isArray(e.submenu) && (t.submenu = y(e.submenu)), t
-                }))
+            function escapeLabel(menuItems) {
+                return menuItems.map(item => {
+                    const t = {...item}
+                    if (item.label) {
+                        t.label = item.label.replace(/&/g, "&&")
+                    }
+                    if (item.submenu && Array.isArray(item.submenu)) {
+                        t.submenu = escapeLabel(item.submenu)
+                    }
+                    return t
+                })
             }
 
             function setupSystemMenu() {
@@ -5679,7 +5845,7 @@
                             {
                                 label: intl.formatMessage(messages.preferences),
                                 accelerator: "Cmd+,",
-                                click(evt, focusedWindow) {
+                                click(menuItem, focusedWindow) {
                                     debugger
 
                                     if (focusedWindow) {
@@ -5690,7 +5856,10 @@
                             {type: "separator"},
                             ...__initializeAutoUpdater.isAutoUpdateDisabled()
                                 ? []
-                                : [S(intl), {type: "separator"}],
+                                : [
+                                    S(intl),
+                                    {type: "separator"}
+                                ],
                             {
                                 role: "services",
                                 label: intl.formatMessage(messages.services)
@@ -5729,7 +5898,7 @@
                 if (__debugMenu.shouldShowDebugMenu()) {
                     menuItems.push(__debugMenu.getDebugMenu())
                 }
-                const menu = electron.Menu.buildFromTemplate(y(menuItems))
+                const menu = electron.Menu.buildFromTemplate(escapeLabel(menuItems))
                 electron.Menu.setApplicationMenu(menu)
 
                 if (isMacOS) {
@@ -5808,30 +5977,46 @@
                 }), e
             }
 
-            function S(e) {
-                return __initializeAutoUpdater.autoUpdateStatus.downloaded ? {
-                    label: e.formatMessage(messages.restartToApplyUpdate), click() {
-                        (0, __initializeAutoUpdater.restartToApplyUpdate)()
-                    }
-                } : __initializeAutoUpdater.autoUpdateStatus.available ? {
-                    label: e.formatMessage(messages.downloadingUpdate, {percentage: Math.round(__initializeAutoUpdater.autoUpdateStatus.downloading?.percent || 0)}),
-                    enabled: !1
-                } : {
-                    label: e.formatMessage(messages.checkForUpdate), async click() {
-                        let t = "", r = "";
-                        try {
-                            const n = await (0, __initializeAutoUpdater.checkForUpdate)();
-                            t = n.downloadPromise ? e.formatMessage(messages.updateAvailable) : e.formatMessage(messages.noUpdateAvailable), r = `${electron.app.getVersion()} → ${n.updateInfo.version}`
-                        } catch (n) {
-                            t = e.formatMessage(messages.updateCheckFailed), r += `\n${n}`
+            function S(intl) {
+                return __initializeAutoUpdater.autoUpdateStatus.downloaded
+                    ? {
+                        label: intl.formatMessage(messages.restartToApplyUpdate),
+                        click() {
+                            __initializeAutoUpdater.restartToApplyUpdate()
                         }
-                        setupSystemMenu(), electron.dialog.showMessageBox({
-                            title: e.formatMessage(messages.checkForUpdateMessageTitle),
-                            message: t,
-                            detail: r
-                        })
                     }
-                }
+                    : __initializeAutoUpdater.autoUpdateStatus.available
+                        ? {
+                            label: intl.formatMessage(messages.downloadingUpdate, {
+                                percentage: Math.round(__initializeAutoUpdater.autoUpdateStatus.downloading?.percent || 0)
+                            }),
+                            enabled: false
+                        }
+                        : {
+                            label: intl.formatMessage(messages.checkForUpdate),
+                            async click() {
+                                debugger
+
+                                let message = "", detail = "";
+                                try {
+                                    const checkResult = await __initializeAutoUpdater.checkForUpdate();
+                                    message = checkResult.downloadPromise
+                                        ? intl.formatMessage(messages.updateAvailable)
+                                        : intl.formatMessage(messages.noUpdateAvailable)
+                                    detail = `${electron.app.getVersion()} → ${checkResult.updateInfo.version}`
+                                } catch (err) {
+                                    debugger
+                                    message = intl.formatMessage(messages.updateCheckFailed)
+                                    detail += `\n${err}`
+                                }
+                                setupSystemMenu()
+                                electron.dialog.showMessageBox({
+                                    title: intl.formatMessage(messages.checkForUpdateMessageTitle),
+                                    message: message,
+                                    detail: detail,
+                                })
+                            }
+                        }
             }
 
             exports.setupSystemMenu = setupSystemMenu
@@ -6060,14 +6245,14 @@
                 electron_log = i(__webpack_require(47419)),
                 d = __webpack_require(40041),
                 __fse = a(__webpack_require(80115)),
-                h = __webpack_require(36343),
+                __intlHelpers = __webpack_require(36343),
                 f = i(__webpack_require(4928)),
                 m = a(__webpack_require(21852)),
                 g = __webpack_require(87309),
                 __session = __webpack_require(13387),
                 __store = __webpack_require(69340)
 
-            const y = h.defineMessages({
+            const messages = __intlHelpers.defineMessages({
                 logsInShellFailedTitle: {
                     id: "desktopTroubleshooting.showLogs.error.title",
                     defaultMessage: "Showing the logs failed",
@@ -6124,10 +6309,10 @@
                     electron_log.default.error(`showLogsInShell() failed: ${e}`);
                     const intl = m.appController.intl
                     const message = "win32" === process.platform
-                        ? intl.formatMessage(y.logsInShellFailedMessageWindows)
-                        : intl.formatMessage(y.logsInShellFailedMessageMac);
+                        ? intl.formatMessage(messages.logsInShellFailedMessageWindows)
+                        : intl.formatMessage(messages.logsInShellFailedMessageMac);
                     await electron.dialog.showMessageBox({
-                        title: intl.formatMessage(y.logsInShellFailedTitle),
+                        title: intl.formatMessage(messages.logsInShellFailedTitle),
                         type: "error",
                         message: `${message}\n\n${e}`
                     })
@@ -6274,60 +6459,88 @@
             }
         },
 
-        36343: function (e, t, r) {
+        // intl utils
+        36343: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__exportStar || function (e, t) {
-                for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createIntlCache = t.createIntl = t.RawIntlProvider = t.IntlProvider = t.FormattedNumber = t.FormattedMessage = t.FormattedList = t.FormattedDate = t.useIntl = t.injectIntl = t.defineMessages = void 0;
-            const a = r(85425);
-            Symbol.for("LocalizedString"), Symbol("defined message descriptor"), t.defineMessages = function (e) {
-                return e
-            }, t.injectIntl = function (e) {
-                return (0, a.injectIntl)(e)
-            }, t.useIntl = a.useIntl, o(r(50263), t);
-            var i = r(85425);
-            Object.defineProperty(t, "FormattedDate", {
-                enumerable: !0, get: function () {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__exportStar || function (e, t) {
+                    for (var r in e) "default" === r || Object.prototype.hasOwnProperty.call(t, r) || n(t, e, r)
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const a = __webpack_require(85425);
+            Symbol.for("LocalizedString")
+            Symbol("defined message descriptor")
+
+            exports.defineMessages = function (messages) {
+                return messages
+            }
+            exports.injectIntl = function (e) {
+                return a.injectIntl(e)
+            }
+            exports.useIntl = a.useIntl
+
+            o(__webpack_require(50263), exports);
+
+            let i = __webpack_require(85425);
+            Object.defineProperty(exports, "FormattedDate", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedDate
                 }
-            }), Object.defineProperty(t, "FormattedList", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "FormattedList", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedList
                 }
-            }), Object.defineProperty(t, "FormattedMessage", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "FormattedMessage", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedMessage
                 }
-            }), Object.defineProperty(t, "FormattedNumber", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "FormattedNumber", {
+                enumerable: !0,
+                get: function () {
                     return i.FormattedNumber
                 }
-            }), Object.defineProperty(t, "IntlProvider", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "IntlProvider", {
+                enumerable: !0,
+                get: function () {
                     return i.IntlProvider
                 }
-            }), Object.defineProperty(t, "RawIntlProvider", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "RawIntlProvider", {
+                enumerable: !0,
+                get: function () {
                     return i.RawIntlProvider
                 }
-            }), Object.defineProperty(t, "createIntl", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "createIntl", {
+                enumerable: !0,
+                get: function () {
                     return i.createIntl
                 }
-            }), Object.defineProperty(t, "createIntlCache", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "createIntlCache", {
+                enumerable: !0,
+                get: function () {
                     return i.createIntlCache
                 }
             })
@@ -25875,98 +26088,140 @@
                 }
             }
         },
-        59664: (e, t, r) => {
+
+        // HttpExecutor
+        59664: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(76982);
+                const e = __webpack_require(76982);
                 return n = function () {
                     return e
                 }, e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createHttpError = h, t.parseJson = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.createHttpError = createHttpError
+            exports.parseJson = function (e) {
                 return e.then((e => null == e || 0 === e.length ? null : JSON.parse(e)))
-            }, t.configureRequestOptionsFromUrl = b, t.configureRequestUrl = v, t.safeGetHeader = w, t.configureRequestOptions = _, t.safeStringifyJson = k, t.DigestTransform = t.HttpExecutor = t.HttpError = void 0;
-            var o, a = (o = r(55623)) && o.__esModule ? o : {default: o}, i = r(79896);
+            }
+            exports.configureRequestOptionsFromUrl = configureRequestOptionsFromUrl
+            exports.configureRequestUrl = configureRequestUrl
+            exports.safeGetHeader = safeGetHeader
+            exports.configureRequestOptions = configureRequestOptions
+            exports.safeStringifyJson = safeStringifyJson
+            exports.DigestTransform = exports.HttpExecutor = exports.HttpError = void 0;
+
+            var o,
+                __debug = (o = __webpack_require(55623)) && o.__esModule ? o : {default: o},
+                i = __webpack_require(79896);
 
             function s() {
-                const e = r(2203);
+                const e = __webpack_require(2203);
                 return s = function () {
                     return e
                 }, e
             }
 
             function l() {
-                const e = r(16857);
+                const e = __webpack_require(16857);
                 return l = function () {
                     return e
                 }, e
             }
 
             function c() {
-                const e = r(75593);
+                const e = __webpack_require(75593);
                 return c = function () {
                     return e
                 }, e
             }
 
             function u() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return u = function () {
                     return e
                 }, e
             }
 
             function d() {
-                const e = r(60193);
+                const e = __webpack_require(60193);
                 return d = function () {
                     return e
                 }, e
             }
 
-            const p = (0, a.default)("electron-builder");
+            const p = __debug.default("electron-builder");
 
-            function h(e, t = null) {
-                return new m(e.statusCode || -1, `${e.statusCode} ${e.statusMessage}` + (null == t ? "" : "\n" + JSON.stringify(t, null, "  ")) + "\nHeaders: " + k(e.headers), t)
+            function createHttpError(e, t = null) {
+                return new HttpError(e.statusCode || -1, `${e.statusCode} ${e.statusMessage}` + (null == t ? "" : "\n" + JSON.stringify(t, null, "  ")) + "\nHeaders: " + safeStringifyJson(e.headers), t)
             }
 
-            const f = new Map([[429, "Too many requests"], [400, "Bad request"], [403, "Forbidden"], [404, "Not found"], [405, "Method not allowed"], [406, "Not acceptable"], [408, "Request timeout"], [413, "Request entity too large"], [500, "Internal server error"], [502, "Bad gateway"], [503, "Service unavailable"], [504, "Gateway timeout"], [505, "HTTP version not supported"]]);
+            const f = new Map([
+                [429, "Too many requests"],
+                [400, "Bad request"],
+                [403, "Forbidden"],
+                [404, "Not found"],
+                [405, "Method not allowed"],
+                [406, "Not acceptable"],
+                [408, "Request timeout"],
+                [413, "Request entity too large"],
+                [500, "Internal server error"],
+                [502, "Bad gateway"],
+                [503, "Service unavailable"],
+                [504, "Gateway timeout"],
+                [505, "HTTP version not supported"]
+            ]);
 
-            class m extends Error {
-                constructor(e, t = `HTTP error: ${f.get(e) || e}`, r = null) {
-                    super(t), this.statusCode = e, this.description = r, this.name = "HttpError"
+            class HttpError extends Error {
+                constructor(statusCode, message = `HTTP error: ${f.get(statusCode) || statusCode}`, description = null) {
+                    super(message)
+                    this.statusCode = statusCode
+                    this.description = description
+                    this.name = "HttpError"
                 }
             }
 
-            t.HttpError = m;
+            exports.HttpError = HttpError
 
-            class g {
+            class HttpExecutor {
                 constructor() {
                     this.maxRedirects = 10
                 }
 
-                request(e, t = new (c().CancellationToken), r) {
-                    _(e);
-                    const n = null == r ? void 0 : Buffer.from(JSON.stringify(r));
-                    return null != n && (e.method = "post", e.headers["Content-Type"] = "application/json", e.headers["Content-Length"] = n.length), this.doApiRequest(e, t, (e => {
-                        e.end(n)
-                    }))
+                request(options, cancellationToken = new (c().CancellationToken), data) {
+                    configureRequestOptions(options);
+                    const body = null == data ? void 0 : Buffer.from(JSON.stringify(data));
+                    if (null != body) {
+                        options.method = "post"
+                        options.headers["Content-Type"] = "application/json"
+                        options.headers["Content-Length"] = body.length
+                    }
+                    return this.doApiRequest(options, cancellationToken, e => {
+                        e.end(body)
+                    })
                 }
 
-                doApiRequest(e, t, r, n = 0) {
-                    return p.enabled && p(`Request: ${k(e)}`), t.createPromise(((o, a, i) => {
-                        const s = this.createRequest(e, (i => {
+                doApiRequest(options, cancellationToken, callback, n = 0) {
+                    if (p.enabled) {
+                        p(`Request: ${safeStringifyJson(options)}`)
+                    }
+                    return cancellationToken.createPromise((resolve, reject, i) => {
+                        const clientRequest = this.createRequest(options, resp => {
                             try {
-                                this.handleResponse(i, e, t, o, a, n, r)
+                                this.handleResponse(resp, options, cancellationToken, resolve, reject, n, callback)
                             } catch (e) {
-                                a(e)
+                                reject(e)
                             }
-                        }));
-                        this.addErrorAndTimeoutHandlers(s, a), this.addRedirectHandlers(s, e, a, n, (e => {
-                            this.doApiRequest(e, t, r, n).then(o).catch(a)
-                        })), r(s, a), i((() => s.abort()))
-                    }))
+                        })
+                        this.addErrorAndTimeoutHandlers(clientRequest, reject)
+                        this.addRedirectHandlers(clientRequest, options, reject, n, e => {
+                            this.doApiRequest(e, cancellationToken, callback, n).then(resolve).catch(reject)
+                        })
+                        callback(clientRequest, reject)
+                        i(() => clientRequest.abort())
+                    })
                 }
 
                 addRedirectHandlers(e, t, r, n, o) {
@@ -25979,18 +26234,18 @@
                 }
 
                 handleResponse(e, t, r, n, o, a, i) {
-                    if (p.enabled && p(`Response: ${e.statusCode} ${e.statusMessage}, request options: ${k(t)}`), 404 === e.statusCode) return void o(h(e, `method: ${t.method || "GET"} url: ${t.protocol || "https:"}//${t.hostname}${t.port ? `:${t.port}` : ""}${t.path}\n\nPlease double check that your authentication token is correct. Due to security reasons actual status maybe not reported, but 404.\n`));
+                    if (p.enabled && p(`Response: ${e.statusCode} ${e.statusMessage}, request options: ${safeStringifyJson(t)}`), 404 === e.statusCode) return void o(createHttpError(e, `method: ${t.method || "GET"} url: ${t.protocol || "https:"}//${t.hostname}${t.port ? `:${t.port}` : ""}${t.path}\n\nPlease double check that your authentication token is correct. Due to security reasons actual status maybe not reported, but 404.\n`));
                     if (204 === e.statusCode) return void n();
-                    const s = w(e, "location");
-                    if (null != s) return a > this.maxRedirects ? void o(this.createMaxRedirectError()) : void this.doApiRequest(g.prepareRedirectUrlOptions(s, t), r, i, a).then(n).catch(o);
+                    const s = safeGetHeader(e, "location");
+                    if (null != s) return a > this.maxRedirects ? void o(this.createMaxRedirectError()) : void this.doApiRequest(HttpExecutor.prepareRedirectUrlOptions(s, t), r, i, a).then(n).catch(o);
                     e.setEncoding("utf8");
                     let l = "";
                     e.on("data", (e => l += e)), e.on("end", (() => {
                         try {
                             if (null != e.statusCode && e.statusCode >= 400) {
-                                const t = w(e, "content-type"),
+                                const t = safeGetHeader(e, "content-type"),
                                     r = null != t && (Array.isArray(t) ? null != t.find((e => e.includes("json"))) : t.includes("json"));
-                                o(h(e, r ? JSON.parse(l) : l))
+                                o(createHttpError(e, r ? JSON.parse(l) : l))
                             } else n(0 === l.length ? null : l)
                         } catch (e) {
                             o(e)
@@ -26002,11 +26257,11 @@
                     return await t.cancellationToken.createPromise(((r, n, o) => {
                         let a = null;
                         const i = {headers: t.headers || void 0, redirect: "manual"};
-                        v(e, i), _(i), this.doDownload(i, {
+                        configureRequestUrl(e, i), configureRequestOptions(i), this.doDownload(i, {
                             destination: null, options: t, onCancel: o, callback: e => {
                                 null == e ? r(a) : n(e)
                             }, responseHandler: (e, t) => {
-                                const r = w(e, "content-length");
+                                const r = safeGetHeader(e, "content-length");
                                 let n = -1;
                                 if (null != r) {
                                     const e = parseInt(r, 10);
@@ -26031,17 +26286,17 @@
                 doDownload(e, t, r) {
                     const n = this.createRequest(e, (n => {
                         if (n.statusCode >= 400) return void t.callback(new Error(`Cannot download "${e.protocol || "https:"}//${e.hostname}${e.path}", status ${n.statusCode}: ${n.statusMessage}`));
-                        const o = w(n, "location");
+                        const o = safeGetHeader(n, "location");
                         null == o ? null == t.responseHandler ? function (e, t) {
-                            if (r = w(t, "X-Checksum-Sha2"), n = e.options.sha2, o = e.callback, null != r && null != n && r !== n && (o(new Error(`checksum mismatch: expected ${n} but got ${r} (X-Checksum-Sha2 header)`)), 1)) return;
+                            if (r = safeGetHeader(t, "X-Checksum-Sha2"), n = e.options.sha2, o = e.callback, null != r && null != n && r !== n && (o(new Error(`checksum mismatch: expected ${n} but got ${r} (X-Checksum-Sha2 header)`)), 1)) return;
                             var r, n, o;
                             const a = [];
                             if (null != e.options.onProgress) {
-                                const r = w(t, "content-length");
+                                const r = safeGetHeader(t, "content-length");
                                 null != r && a.push(new (d().ProgressCallbackTransform)(parseInt(r, 10), e.options.cancellationToken, e.options.onProgress))
                             }
                             const s = e.options.sha512;
-                            null != s ? a.push(new y(s, "sha512", 128 !== s.length || s.includes("+") || s.includes("Z") || s.includes("=") ? "base64" : "hex")) : null != e.options.sha2 && a.push(new y(e.options.sha2, "sha256", "hex"));
+                            null != s ? a.push(new DigestTransform(s, "sha512", 128 !== s.length || s.includes("+") || s.includes("Z") || s.includes("=") ? "base64" : "hex")) : null != e.options.sha2 && a.push(new DigestTransform(e.options.sha2, "sha256", "hex"));
                             const l = (0, i.createWriteStream)(e.destination);
                             a.push(l);
                             let c = t;
@@ -26051,7 +26306,7 @@
                             l.on("finish", (() => {
                                 l.close(e.callback)
                             }))
-                        }(t, n) : t.responseHandler(n, t.callback) : r < this.maxRedirects ? this.doDownload(g.prepareRedirectUrlOptions(o, e), t, r++) : t.callback(this.createMaxRedirectError())
+                        }(t, n) : t.responseHandler(n, t.callback) : r < this.maxRedirects ? this.doDownload(HttpExecutor.prepareRedirectUrlOptions(o, e), t, r++) : t.callback(this.createMaxRedirectError())
                     }));
                     this.addErrorAndTimeoutHandlers(n, t.callback), this.addRedirectHandlers(n, e, t.callback, r, (e => {
                         this.doDownload(e, t, r++)
@@ -26071,23 +26326,28 @@
                 }
 
                 static prepareRedirectUrlOptions(e, t) {
-                    const r = b(e, Object.assign({}, t)), n = r.headers;
+                    const r = configureRequestOptionsFromUrl(e, Object.assign({}, t)), n = r.headers;
                     return null != n && null != n.authorization && n.authorization.startsWith("token") && new (l().URL)(e).hostname.endsWith(".amazonaws.com") && delete n.authorization, r
                 }
             }
 
-            function b(e, t) {
-                const r = _(t);
-                return v(new (l().URL)(e), r), r
+            function configureRequestOptionsFromUrl(e, t) {
+                const r = configureRequestOptions(t);
+                return configureRequestUrl(new (l().URL)(e), r), r
             }
 
-            function v(e, t) {
-                t.protocol = e.protocol, t.hostname = e.hostname, e.port ? t.port = e.port : t.port && delete t.port, t.path = e.pathname + e.search
+            function configureRequestUrl(e, t) {
+                t.protocol = e.protocol
+                t.hostname = e.hostname
+                e.port
+                    ? t.port = e.port
+                    : t.port && delete t.port
+                t.path = e.pathname + e.search
             }
 
-            t.HttpExecutor = g;
+            exports.HttpExecutor = HttpExecutor
 
-            class y extends s().Transform {
+            class DigestTransform extends s().Transform {
                 constructor(e, t = "sha512", r = "base64") {
                     super(), this.expected = e, this.algorithm = t, this.encoding = r, this._actual = null, this.isValidateOnEnd = !0, this.digester = (0, n().createHash)(t)
                 }
@@ -26116,22 +26376,40 @@
                 }
             }
 
-            function w(e, t) {
+            function safeGetHeader(e, t) {
                 const r = e.headers[t];
                 return null == r ? null : Array.isArray(r) ? 0 === r.length ? null : r[r.length - 1] : r
             }
 
-            function _(e, t, r) {
-                null != r && (e.method = r);
-                let n = e.headers;
-                return null == n && (n = {}, e.headers = n), null != t && (n.authorization = t.startsWith("Basic") ? t : `token ${t}`), null == n["User-Agent"] && (n["User-Agent"] = "electron-builder"), null != r && "GET" !== r && null != n["Cache-Control"] || (n["Cache-Control"] = "no-cache"), null == e.protocol && null != process.versions.electron && (e.protocol = "https:"), e
+            function configureRequestOptions(options, token, method) {
+                if (null != method) {
+                    options.method = method
+                }
+                let headers = options.headers
+                if (null == headers) {
+                    headers = {}
+                    options.headers = headers
+                }
+                if (null != token) {
+                    headers.authorization = token.startsWith("Basic") ? token : `token ${token}`
+                }
+                if (null == headers["User-Agent"]) {
+                    headers["User-Agent"] = "electron-builder"
+                }
+                if (null == method || "GET" === method || null == headers["Cache-Control"]) {
+                    headers["Cache-Control"] = "no-cache"
+                }
+                if (null == options.protocol && null != process.versions.electron) {
+                    options.protocol = "https:"
+                }
+                return options
             }
 
-            function k(e, t) {
+            function safeStringifyJson(e, t) {
                 return JSON.stringify(e, ((e, r) => e.endsWith("authorization") || e.endsWith("Password") || e.endsWith("PASSWORD") || e.endsWith("Token") || e.includes("password") || e.includes("token") || null != t && t.has(e) ? "<stripped sensitive data>" : r), 2)
             }
 
-            t.DigestTransform = y
+            exports.DigestTransform = DigestTransform
         },
         79529: (e, t, r) => {
             "use strict";
@@ -28169,60 +28447,62 @@
 
 
         // electron-updater/AppUpdater
-        96064: (e, t, r) => {
+        96064: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(76982);
+                const e = __webpack_require(76982);
                 return o = function () {
                     return e
                 }, e
             }
 
             function a() {
-                const e = r(4482);
+                const e = __webpack_require(4482);
                 return a = function () {
                     return e
                 }, e
             }
 
             function i() {
-                const e = r(24434);
+                const e = __webpack_require(24434);
                 return i = function () {
                     return e
                 }, e
             }
 
             function s() {
-                const e = r(80115);
+                const e = __webpack_require(80115);
                 return s = function () {
                     return e
                 }, e
             }
 
             function l() {
-                const e = r(69866);
+                const e = __webpack_require(69866);
                 return l = function () {
                     return e
                 }, e
             }
 
             function c() {
-                const e = r(63407);
+                const e = __webpack_require(63407);
                 return c = function () {
                     return e
                 }, e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.NoOpLogger = t.AppUpdater = void 0;
-            var u = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            let __path = function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
@@ -28230,228 +28510,376 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(__webpack_require(16928));
 
             function d() {
-                const e = r(44993);
+                const e = __webpack_require(44993);
                 return d = function () {
                     return e
                 }, e
             }
 
             function p() {
-                const e = r(17660);
+                const e = __webpack_require(17660);
                 return p = function () {
                     return e
                 }, e
             }
 
             function h() {
-                const e = r(33200);
+                const e = __webpack_require(33200);
                 return h = function () {
                     return e
                 }, e
             }
 
             function f() {
-                const e = r(5931);
+                const e = __webpack_require(5931);
                 return f = function () {
                     return e
                 }, e
             }
 
             function m() {
-                const e = r(2747);
+                const e = __webpack_require(2747);
                 return m = function () {
                     return e
                 }, e
             }
 
             function g() {
-                const e = r(94625);
+                const e = __webpack_require(94625);
                 return g = function () {
                     return e
                 }, e
             }
 
             function b() {
-                const e = r(54679);
+                const e = __webpack_require(54679);
                 return b = function () {
                     return e
                 }, e
             }
 
-            class v extends i().EventEmitter {
-                constructor(e, t) {
-                    super(), this.autoDownload = !0, this.autoInstallOnAppQuit = !0, this.allowPrerelease = !1, this.fullChangelog = !1, this.allowDowngrade = !1, this._channel = null, this.downloadedUpdateHelper = null, this.requestHeaders = null, this._logger = console, this.signals = new (g().UpdaterSignal)(this), this._appUpdateConfigPath = null, this.clientPromise = null, this.stagingUserIdPromise = new (c().Lazy)((() => this.getOrCreateStagingUserId())), this.configOnDisk = new (c().Lazy)((() => this.loadUpdateConfig())), this.checkForUpdatesPromise = null, this.updateInfoAndProvider = null, this._testOnlyOptions = null, this.on("error", (e => {
-                        this._logger.error(`Error: ${e.stack || e.message}`)
-                    })), null == t ? (this.app = new (h().ElectronAppAdapter), this.httpExecutor = new (f().ElectronHttpExecutor)(((e, t) => this.emit("login", e, t)))) : (this.app = t, this.httpExecutor = null);
-                    const r = this.app.version, o = (0, d().parse)(r);
-                    if (null == o) throw (0, n().newError)(`App version is not a valid semver version: "${r}"`, "ERR_UPDATER_INVALID_VERSION");
-                    this.currentVersion = o, this.allowPrerelease = function (e) {
-                        const t = (0, d().prerelease)(e);
-                        return null != t && t.length > 0
-                    }(o), null != e && this.setFeedURL(e)
+            class AppUpdater extends i().EventEmitter {
+                constructor(options, app) {
+                    super()
+                    this.autoDownload = true
+                    this.autoInstallOnAppQuit = true
+                    this.allowPrerelease = false
+                    this.fullChangelog = false
+                    this.allowDowngrade = false
+                    this._channel = null
+                    this.downloadedUpdateHelper = null
+                    this.requestHeaders = null
+                    this._logger = console
+                    this.signals = new (g().UpdaterSignal)(this)
+                    this._appUpdateConfigPath = null
+                    this.clientPromise = null
+
+                    this.stagingUserIdPromise = new (c().Lazy)((() => this.getOrCreateStagingUserId()))
+                    this.configOnDisk = new (c().Lazy)((() => this.loadUpdateConfig()))
+
+                    this.checkForUpdatesPromise = null
+                    this.updateInfoAndProvider = null
+                    this._testOnlyOptions = null
+
+                    this.on("error", error => {
+                        this._logger.error(`Error: ${error.stack || error.message}`)
+                    })
+
+                    if (null == app) {
+                        this.app = new (h().ElectronAppAdapter)
+                        this.httpExecutor = new (f().ElectronHttpExecutor)((authInfo, callback) => this.emit("login", authInfo, callback))
+                    } else {
+                        this.app = app
+                        this.httpExecutor = null
+                    }
+
+                    const currentVersionString = this.app.version
+                    const currentVersion = d().parse(currentVersionString);
+                    if (null == currentVersion) {
+                        throw n().newError(`App version is not a valid semver version: "${currentVersionString}"`, "ERR_UPDATER_INVALID_VERSION")
+                    }
+                    this.currentVersion = currentVersion
+                    this.allowPrerelease = function (currentVersion) {
+                        const prerelease = d().prerelease(currentVersion);
+                        return null != prerelease && prerelease.length > 0
+                    }(currentVersion)
+
+                    if (null != options) {
+                        this.setFeedURL(options)
+                    }
                 }
 
                 get channel() {
                     return this._channel
                 }
 
-                set channel(e) {
+                set channel(channel) {
+                    debugger
+
                     if (null != this._channel) {
-                        if ("string" != typeof e) throw (0, n().newError)(`Channel must be a string, but got: ${e}`, "ERR_UPDATER_INVALID_CHANNEL");
-                        if (0 === e.length) throw (0, n().newError)("Channel must be not an empty string", "ERR_UPDATER_INVALID_CHANNEL")
+                        if ("string" != typeof channel) {
+                            throw n().newError(`Channel must be a string, but got: ${channel}`, "ERR_UPDATER_INVALID_CHANNEL");
+                        }
+                        if (0 === channel.length) {
+                            throw n().newError("Channel must be not an empty string", "ERR_UPDATER_INVALID_CHANNEL")
+                        }
                     }
-                    this._channel = e, this.allowDowngrade = !0
+                    this._channel = channel
+                    this.allowDowngrade = true
                 }
 
                 get netSession() {
-                    return (0, f().getNetSession)()
+                    return f().getNetSession()
                 }
 
                 get logger() {
                     return this._logger
                 }
 
-                set logger(e) {
-                    this._logger = null == e ? new y : e
+                set logger(logger) {
+                    this._logger = null == logger ? new NoOpLogger() : logger
                 }
 
-                set updateConfigPath(e) {
-                    this.clientPromise = null, this._appUpdateConfigPath = e, this.configOnDisk = new (c().Lazy)((() => this.loadUpdateConfig()))
+                set updateConfigPath(value) {
+                    debugger
+
+                    this.clientPromise = null
+                    this._appUpdateConfigPath = value
+                    this.configOnDisk = new (c().Lazy)(() => this.loadUpdateConfig())
                 }
 
                 getFeedURL() {
+                    debugger
+
                     return "Deprecated. Do not use it."
                 }
 
-                setFeedURL(e) {
-                    const t = this.createProviderRuntimeOptions();
-                    let r;
-                    r = "string" == typeof e ? new (m().GenericProvider)({
-                        provider: "generic",
-                        url: e
-                    }, this, Object.assign({}, t, {isUseMultipleRangeRequest: (0, b().isUrlProbablySupportMultiRangeRequests)(e)})) : (0, b().createClient)(e, this, t), this.clientPromise = Promise.resolve(r)
+                setFeedURL(options) {
+                    debugger
+
+                    const runtimeOptions = this.createProviderRuntimeOptions();
+                    let provider
+                    if ("string" == typeof options) {
+                        provider = new (m().GenericProvider)({
+                            provider: "generic",
+                            url: options
+                        }, this, {
+                            ...runtimeOptions,
+                            isUseMultipleRangeRequest: b().isUrlProbablySupportMultiRangeRequests(options)
+                        })
+                    } else {
+                        provider = b().createClient(options, this, runtimeOptions)
+                    }
+                    this.clientPromise = Promise.resolve(provider)
                 }
 
                 checkForUpdates() {
-                    let e = this.checkForUpdatesPromise;
-                    if (null != e) return this._logger.info("Checking for update (already in progress)"), e;
-                    const t = () => this.checkForUpdatesPromise = null;
-                    return this._logger.info("Checking for update"), e = this.doCheckForUpdates().then((e => (t(), e))).catch((e => {
-                        throw t(), this.emit("error", e, `Cannot check for updates: ${(e.stack || e).toString()}`), e
-                    })), this.checkForUpdatesPromise = e, e
+                    debugger
+
+                    let checkForUpdatesPromise = this.checkForUpdatesPromise;
+                    if (null != checkForUpdatesPromise) {
+                        this._logger.info("Checking for update (already in progress)")
+                        return checkForUpdatesPromise;
+                    }
+
+                    const nullizePromise = () => this.checkForUpdatesPromise = null;
+                    this._logger.info("Checking for update")
+
+                    checkForUpdatesPromise = this.doCheckForUpdates().then(e => {
+                        nullizePromise()
+                        return e
+                    }).catch(error => {
+                        nullizePromise()
+                        this.emit("error", error, `Cannot check for updates: ${(error.stack || error).toString()}`)
+                        throw error
+                    })
+
+                    this.checkForUpdatesPromise = checkForUpdatesPromise
+                    return checkForUpdatesPromise
                 }
 
                 isUpdaterActive() {
-                    return !!this.app.isPackaged || (this._logger.info("Skip checkForUpdatesAndNotify because application is not packed"), !1)
+                    debugger
+
+                    if (!!this.app.isPackaged) {
+                        return true
+                    }
+                    this._logger.info("Skip checkForUpdatesAndNotify because application is not packed")
+                    return false
                 }
 
                 checkForUpdatesAndNotify() {
-                    return this.isUpdaterActive() ? this.checkForUpdates().then((e => {
-                        const t = e.downloadPromise;
-                        if (null == t) {
-                            const t = this._logger.debug;
-                            return null != t && t("checkForUpdatesAndNotify called, downloadPromise is null"), e
-                        }
-                        return t.then((() => {
-                            new (a().Notification)({
-                                title: "A new update is ready to install",
-                                body: `${this.app.name} version ${e.updateInfo.version} has been downloaded and will be automatically installed on exit`
-                            }).show()
-                        })), e
-                    })) : Promise.resolve(null)
+                    debugger
+
+                    return this.isUpdaterActive()
+                        ? this.checkForUpdates().then(checkResult => {
+                            const downloadPromise = checkResult.downloadPromise;
+                            if (null == downloadPromise) {
+                                const debug = this._logger.debug;
+                                if (null != debug) {
+                                    debug("checkForUpdatesAndNotify called, downloadPromise is null")
+                                }
+                                return checkResult
+                            }
+                            downloadPromise.then(() => {
+                                new (a().Notification)({
+                                    title: "A new update is ready to install",
+                                    body: `${this.app.name} version ${checkResult.updateInfo.version} has been downloaded and will be automatically installed on exit`
+                                }).show()
+                            })
+                            return checkResult
+                        })
+                        : Promise.resolve(null)
                 }
 
                 async isStagingMatch(e) {
+                    debugger
+
                     const t = e.stagingPercentage;
                     let r = t;
-                    if (null == r) return !0;
-                    if (r = parseInt(r, 10), isNaN(r)) return this._logger.warn(`Staging percentage is NaN: ${t}`), !0;
+                    if (null == r) {
+                        return true
+                    }
+                    r = parseInt(r, 10)
+                    if (isNaN(r)) {
+                        this._logger.warn(`Staging percentage is NaN: ${t}`)
+                        return true
+                    }
                     r /= 100;
-                    const o = await this.stagingUserIdPromise.value,
-                        a = n().UUID.parse(o).readUInt32BE(12) / 4294967295;
-                    return this._logger.info(`Staging percentage: ${r}, percentage: ${a}, user id: ${o}`), a < r
+                    const userId = await this.stagingUserIdPromise.value,
+                        a = n().UUID.parse(userId).readUInt32BE(12) / 4294967295;
+                    this._logger.info(`Staging percentage: ${r}, percentage: ${a}, user id: ${userId}`)
+                    return a < r
                 }
 
-                computeFinalHeaders(e) {
-                    return null != this.requestHeaders && Object.assign(e, this.requestHeaders), e
+                computeFinalHeaders(headers) {
+                    debugger
+
+                    if (null != this.requestHeaders) {
+                        Object.assign(headers, this.requestHeaders)
+                    }
+                    return headers
                 }
 
-                async isUpdateAvailable(e) {
-                    const t = (0, d().parse)(e.version);
-                    if (null == t) throw (0, n().newError)(`This file could not be downloaded, or the latest version (from update server) does not have a valid semver version: "${t}"`, "ERR_UPDATER_INVALID_VERSION");
-                    const r = this.currentVersion;
-                    if ((0, d().eq)(t, r)) return !1;
-                    if (!await this.isStagingMatch(e)) return !1;
-                    const o = (0, d().gt)(t, r);
-                    return this.allowDowngrade && (0, d().prerelease)(r) !== (0, d().prerelease)(t) || o
+                async isUpdateAvailable(updateInfo) {
+                    debugger
+
+                    const latestVersion = d().parse(updateInfo.version);
+                    if (null == latestVersion) {
+                        throw n().newError(`This file could not be downloaded, or the latest version (from update server) does not have a valid semver version: "${latestVersion}"`, "ERR_UPDATER_INVALID_VERSION");
+                    }
+                    const currentVersion = this.currentVersion;
+                    if (d().eq(latestVersion, currentVersion)) {
+                        return false
+                    }
+
+                    if (!await this.isStagingMatch(updateInfo)) {
+                        return false
+                    }
+
+                    const o = d().gt(latestVersion, currentVersion);
+                    return this.allowDowngrade && d().prerelease(currentVersion) !== d().prerelease(latestVersion) || o
                 }
 
                 async getUpdateInfoAndProvider() {
-                    await this.app.whenReady(), null == this.clientPromise && (this.clientPromise = this.configOnDisk.value.then((e => (0, b().createClient)(e, this, this.createProviderRuntimeOptions()))));
-                    const e = await this.clientPromise, t = await this.stagingUserIdPromise.value;
-                    return e.setRequestHeaders(this.computeFinalHeaders({"x-user-staging-id": t})), {
-                        info: await e.getLatestVersion(),
-                        provider: e
+                    debugger
+
+                    await this.app.whenReady()
+                    if (null == this.clientPromise) {
+                        this.clientPromise = this.configOnDisk.value.then(config => b().createClient(config, this, this.createProviderRuntimeOptions()))
+                    }
+
+                    const client = await this.clientPromise
+                    const stagingUserId = await this.stagingUserIdPromise.value
+
+                    client.setRequestHeaders(this.computeFinalHeaders({"x-user-staging-id": stagingUserId}))
+                    return {
+                        info: await client.getLatestVersion(),
+                        provider: client
                     }
                 }
 
                 createProviderRuntimeOptions() {
+                    debugger
+
                     return {
-                        isUseMultipleRangeRequest: !0,
+                        isUseMultipleRangeRequest: true,
                         platform: null == this._testOnlyOptions ? process.platform : this._testOnlyOptions.platform,
                         executor: this.httpExecutor
                     }
                 }
 
                 async doCheckForUpdates() {
+                    debugger
+
                     this.emit("checking-for-update");
-                    const e = await this.getUpdateInfoAndProvider(), t = e.info;
-                    if (!await this.isUpdateAvailable(t)) return this._logger.info(`Update for version ${this.currentVersion} is not available (latest version: ${t.version}, downgrade is ${this.allowDowngrade ? "allowed" : "disallowed"}).`), this.emit("update-not-available", t), {
-                        versionInfo: t,
-                        updateInfo: t
-                    };
-                    this.updateInfoAndProvider = e, this.onUpdateAvailable(t);
-                    const r = new (n().CancellationToken);
+
+                    const result = await this.getUpdateInfoAndProvider()
+                    const updateInfo = result.info;
+                    if (!await this.isUpdateAvailable(updateInfo)) {
+                        this._logger.info(`Update for version ${this.currentVersion} is not available (latest version: ${updateInfo.version}, downgrade is ${this.allowDowngrade ? "allowed" : "disallowed"}).`)
+                        this.emit("update-not-available", updateInfo)
+                        return {
+                            versionInfo: updateInfo,
+                            updateInfo: updateInfo
+                        };
+                    }
+
+                    this.updateInfoAndProvider = result
+                    this.onUpdateAvailable(updateInfo)
+
+                    const cancellationToken = new (n().CancellationToken)
                     return {
-                        versionInfo: t,
-                        updateInfo: t,
-                        cancellationToken: r,
-                        downloadPromise: this.autoDownload ? this.downloadUpdate(r) : null
+                        versionInfo: updateInfo,
+                        updateInfo: updateInfo,
+                        cancellationToken: cancellationToken,
+                        downloadPromise: this.autoDownload ? this.downloadUpdate(cancellationToken) : null
                     }
                 }
 
-                onUpdateAvailable(e) {
-                    this._logger.info(`Found version ${e.version} (url: ${(0, n().asArray)(e.files).map((e => e.url)).join(", ")})`), this.emit("update-available", e)
+                onUpdateAvailable(updateInfo) {
+                    debugger
+
+                    this._logger.info(`Found version ${updateInfo.version} (url: ${n().asArray(updateInfo.files).map(e => e.url).join(", ")})`)
+                    this.emit("update-available", updateInfo)
                 }
 
-                downloadUpdate(e = new (n().CancellationToken)) {
-                    const t = this.updateInfoAndProvider;
-                    if (null == t) {
-                        const e = new Error("Please check update first");
-                        return this.dispatchError(e), Promise.reject(e)
+                downloadUpdate(cancellationToken = new (n().CancellationToken)) {
+                    debugger
+
+                    const updateInfoAndProvider = this.updateInfoAndProvider;
+                    if (null == updateInfoAndProvider) {
+                        const error = new Error("Please check update first");
+                        this.dispatchError(error)
+                        return Promise.reject(error)
                     }
-                    this._logger.info(`Downloading update from ${(0, n().asArray)(t.info.files).map((e => e.url)).join(", ")}`);
-                    const r = e => {
-                        if (!(e instanceof n().CancellationError)) try {
-                            this.dispatchError(e)
-                        } catch (e) {
-                            this._logger.warn(`Cannot dispatch error event: ${e.stack || e}`)
+
+                    this._logger.info(`Downloading update from ${n().asArray(updateInfoAndProvider.info.files).map(e => e.url).join(", ")}`);
+
+                    const errorHandler = e => {
+                        if (!(e instanceof n().CancellationError)) {
+                            try {
+                                this.dispatchError(e)
+                            } catch (e) {
+                                this._logger.warn(`Cannot dispatch error event: ${e.stack || e}`)
+                            }
                         }
                         return e
                     };
+
                     try {
                         return this.doDownloadUpdate({
-                            updateInfoAndProvider: t,
-                            requestHeaders: this.computeRequestHeaders(t.provider),
-                            cancellationToken: e
-                        }).catch((e => {
-                            throw r(e)
-                        }))
+                            updateInfoAndProvider: updateInfoAndProvider,
+                            requestHeaders: this.computeRequestHeaders(updateInfoAndProvider.provider),
+                            cancellationToken: cancellationToken
+                        }).catch(e => {
+                            throw errorHandler(e)
+                        })
                     } catch (e) {
-                        return Promise.reject(r(e))
+                        return Promise.reject(errorHandler(e))
                     }
                 }
 
@@ -28464,93 +28892,167 @@
                 }
 
                 async loadUpdateConfig() {
-                    return null == this._appUpdateConfigPath && (this._appUpdateConfigPath = this.app.appUpdateConfigPath), (0, l().safeLoad)(await (0, s().readFile)(this._appUpdateConfigPath, "utf-8"))
+                    debugger
+
+                    if (null == this._appUpdateConfigPath) {
+                        this._appUpdateConfigPath = this.app.appUpdateConfigPath
+                    }
+                    return l().safeLoad(await s().readFile(this._appUpdateConfigPath, "utf-8"))
                 }
 
-                computeRequestHeaders(e) {
-                    const t = e.fileExtraDownloadHeaders;
-                    if (null != t) {
-                        const e = this.requestHeaders;
-                        return null == e ? t : Object.assign({}, t, e)
+                computeRequestHeaders(provider) {
+                    debugger
+
+                    const fileExtraDownloadHeaders = provider.fileExtraDownloadHeaders;
+                    if (null != fileExtraDownloadHeaders) {
+                        const requestHeaders = this.requestHeaders;
+                        return null == requestHeaders
+                            ? fileExtraDownloadHeaders
+                            : Object.assign({}, fileExtraDownloadHeaders, requestHeaders)
                     }
                     return this.computeFinalHeaders({accept: "*/*"})
                 }
 
                 async getOrCreateStagingUserId() {
-                    const e = u.join(this.app.userDataPath, ".updaterId");
+                    debugger
+
+                    const file = __path.join(this.app.userDataPath, ".updaterId");
+
                     try {
-                        const t = await (0, s().readFile)(e, "utf-8");
-                        if (n().UUID.check(t)) return t;
-                        this._logger.warn(`Staging user id file exists, but content was invalid: ${t}`)
+                        const id = await s().readFile(file, "utf-8");
+                        if (n().UUID.check(id)) {
+                            return id
+                        }
+                        this._logger.warn(`Staging user id file exists, but content was invalid: ${id}`)
                     } catch (e) {
-                        "ENOENT" !== e.code && this._logger.warn(`Couldn't read staging user ID, creating a blank one: ${e}`)
+                        if ("ENOENT" !== e.code) {
+                            this._logger.warn(`Couldn't read staging user ID, creating a blank one: ${e}`)
+                        }
                     }
-                    const t = n().UUID.v5((0, o().randomBytes)(4096), n().UUID.OID);
-                    this._logger.info(`Generated new staging user ID: ${t}`);
+
+                    const id = n().UUID.v5(o().randomBytes(4096), n().UUID.OID);
+                    this._logger.info(`Generated new staging user ID: ${id}`);
                     try {
-                        await (0, s().outputFile)(e, t)
+                        await s().outputFile(file, id)
                     } catch (e) {
                         this._logger.warn(`Couldn't write out staging user ID: ${e}`)
                     }
-                    return t
+                    return id
                 }
 
                 get isAddNoCacheQuery() {
-                    const e = this.requestHeaders;
-                    if (null == e) return !0;
-                    for (const t of Object.keys(e)) {
-                        const e = t.toLowerCase();
-                        if ("authorization" === e || "private-token" === e) return !1
+                    debugger
+
+                    const headers = this.requestHeaders;
+                    if (null == headers) {
+                        return true
                     }
-                    return !0
+
+                    for (const headerName of Object.keys(headers)) {
+                        const e = headerName.toLowerCase();
+                        if ("authorization" === e || "private-token" === e) {
+                            return false
+                        }
+                    }
+                    return true
                 }
 
                 async getOrCreateDownloadHelper() {
-                    let e = this.downloadedUpdateHelper;
-                    if (null == e) {
-                        const t = (await this.configOnDisk.value).updaterCacheDirName, r = this._logger;
-                        null == t && r.error("updaterCacheDirName is not specified in app-update.yml Was app build using at least electron-builder 20.34.0?");
-                        const n = u.join(this.app.baseCachePath, t || this.app.name);
-                        null != r.debug && r.debug(`updater cache dir: ${n}`), e = new (p().DownloadedUpdateHelper)(n), this.downloadedUpdateHelper = e
+                    debugger
+
+                    let result = this.downloadedUpdateHelper;
+                    if (null == result) {
+                        const dirName = (await this.configOnDisk.value).updaterCacheDirName
+                        const logger = this._logger;
+                        if (null == dirName) {
+                            logger.error("updaterCacheDirName is not specified in app-update.yml Was app build using at least electron-builder 20.34.0?")
+                        }
+                        const cacheDir = __path.join(this.app.baseCachePath, dirName || this.app.name);
+                        if (null != logger.debug) {
+                            logger.debug(`updater cache dir: ${cacheDir}`)
+                        }
+
+                        result = new (p().DownloadedUpdateHelper)(cacheDir)
+                        this.downloadedUpdateHelper = result
                     }
-                    return e
+                    return result
                 }
 
-                async executeDownload(e) {
-                    const t = e.fileInfo, r = {
-                        headers: e.downloadUpdateOptions.requestHeaders,
-                        cancellationToken: e.downloadUpdateOptions.cancellationToken,
-                        sha2: t.info.sha2,
-                        sha512: t.info.sha512
+                async executeDownload(taskOptions) {
+                    debugger
+
+                    const fileInfo = taskOptions.fileInfo
+                    const downloadOptions = {
+                        headers: taskOptions.downloadUpdateOptions.requestHeaders,
+                        cancellationToken: taskOptions.downloadUpdateOptions.cancellationToken,
+                        sha2: fileInfo.info.sha2,
+                        sha512: fileInfo.info.sha512
                     };
-                    this.listenerCount(g().DOWNLOAD_PROGRESS) > 0 && (r.onProgress = e => this.emit(g().DOWNLOAD_PROGRESS, e));
-                    const o = e.downloadUpdateOptions.updateInfoAndProvider.info, a = o.version, i = t.packageInfo,
-                        l = await this.getOrCreateDownloadHelper(), c = l.cacheDirForPendingUpdate;
-                    await (0, s().ensureDir)(c);
-                    const d = function () {
-                        const t = decodeURIComponent(e.fileInfo.url.pathname);
-                        return t.endsWith(`.${e.fileExtension}`) ? u.posix.basename(t) : `update.${e.fileExtension}`
-                    }();
-                    let h = u.join(c, d);
-                    const f = null == i ? null : u.join(c, `package-${a}${u.extname(i.path) || ".7z"}`),
-                        m = async r => (await l.setDownloadedFile(h, f, o, t, d, r), await e.done(Object.assign({}, o, {downloadedFile: h})), null == f ? [h] : [h, f]),
-                        b = this._logger, v = await l.validateDownloadedPath(h, o, t, b);
-                    if (null != v) return h = v, await m(!1);
-                    const y = async () => (await l.clear().catch((() => {
-                    })), await (0, s().unlink)(h).catch((() => {
-                    }))), w = await (0, p().createTempUpdateFile)(`temp-${d}`, c, b);
-                    try {
-                        await e.task(w, r, f, y), await (0, s().rename)(w, h)
-                    } catch (e) {
-                        throw await y(), e instanceof n().CancellationError && (b.info("Cancelled"), this.emit("update-cancelled", o)), e
+
+                    if (this.listenerCount(g().DOWNLOAD_PROGRESS) > 0) {
+                        downloadOptions.onProgress = e => this.emit(g().DOWNLOAD_PROGRESS, e)
                     }
-                    return b.info(`New version ${a} has been downloaded to ${h}`), await m(!0)
+
+                    const updateInfo = taskOptions.downloadUpdateOptions.updateInfoAndProvider.info,
+                        version = updateInfo.version,
+                        packageInfo = fileInfo.packageInfo,
+                        downloadedUpdateHelper = await this.getOrCreateDownloadHelper(),
+                        cacheDir = downloadedUpdateHelper.cacheDirForPendingUpdate;
+                    await s().ensureDir(cacheDir);
+
+                    const updateFileName = function () {
+                        const urlPath = decodeURIComponent(taskOptions.fileInfo.url.pathname);
+                        return urlPath.endsWith(`.${taskOptions.fileExtension}`)
+                            ? __path.posix.basename(urlPath)
+                            : `update.${taskOptions.fileExtension}`
+                    }();
+
+                    let updateFile = __path.join(cacheDir, updateFileName);
+                    const packageFile = null == packageInfo
+                            ? null
+                            : __path.join(cacheDir, `package-${version}${__path.extname(packageInfo.path) || ".7z"}`)
+
+                    const done = async isSaveCache => {
+                        await downloadedUpdateHelper.setDownloadedFile(updateFile, packageFile, updateInfo, fileInfo, updateFileName, isSaveCache)
+                        await taskOptions.done(Object.assign({}, updateInfo, {downloadedFile: updateFile}))
+                        return null == packageFile ? [updateFile] : [updateFile, packageFile]
+                    }
+
+                    const log = this._logger
+                    const cachedUpdateFile = await downloadedUpdateHelper.validateDownloadedPath(updateFile, updateInfo, fileInfo, log);
+                    if (null != cachedUpdateFile) {
+                        updateFile = cachedUpdateFile
+                        return await done(false)
+                    }
+
+                    const removeFileIfAny = async () => {
+                        await downloadedUpdateHelper.clear().catch(() => {
+                        })
+                        return await s().unlink(updateFile).catch(() => {
+                        })
+                    }
+                    const tempUpdateFile = await p().createTempUpdateFile(`temp-${updateFileName}`, cacheDir, log);
+                    try {
+                        await taskOptions.task(tempUpdateFile, downloadOptions, packageFile, removeFileIfAny)
+                        await s().rename(tempUpdateFile, updateFile)
+                    } catch (e) {
+                        await removeFileIfAny()
+
+                        if (e instanceof n().CancellationError) {
+                            log.info("Cancelled")
+                            this.emit("update-cancelled", updateInfo)
+                        }
+                        throw e
+                    }
+
+                    log.info(`New version ${version} has been downloaded to ${updateFile}`)
+                    return await done(true)
                 }
             }
 
-            t.AppUpdater = v;
+            exports.AppUpdater = AppUpdater
 
-            class y {
+            class NoOpLogger {
                 info(e) {
                 }
 
@@ -28561,7 +29063,7 @@
                 }
             }
 
-            t.NoOpLogger = y
+            exports.NoOpLogger = NoOpLogger
         },
         // electron-updater/BaseUpdater
         86216: (e, t, r) => {
@@ -28745,10 +29247,12 @@
             }
         },
         // electron-updater/ElectronAppAdapter
-        33200: (e, t, r) => {
+        33200: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.ElectronAppAdapter = void 0;
-            var n = function (e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            let __path = function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
@@ -28756,18 +29260,19 @@
                     n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
                 }
                 return t.default = e, t
-            }(r(16928));
+            }(__webpack_require(16928));
 
             function o() {
-                const e = r(64226);
-                return o = function () {
+                const e = __webpack_require(64226);
+                o = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
-            t.ElectronAppAdapter = class {
-                constructor(e = r(4482).app) {
-                    this.app = e
+            exports.ElectronAppAdapter = class {
+                constructor(app = __webpack_require(4482).app) {
+                    this.app = app
                 }
 
                 whenReady() {
@@ -28783,11 +29288,13 @@
                 }
 
                 get isPackaged() {
-                    return !0 === this.app.isPackaged
+                    return true === this.app.isPackaged
                 }
 
                 get appUpdateConfigPath() {
-                    return this.isPackaged ? n.join(process.resourcesPath, "app-update.yml") : n.join(this.app.getAppPath(), "dev-app-update.yml")
+                    return this.isPackaged
+                        ? __path.join(process.resourcesPath, "app-update.yml")
+                        : __path.join(this.app.getAppPath(), "dev-app-update.yml")
                 }
 
                 get userDataPath() {
@@ -28795,15 +29302,15 @@
                 }
 
                 get baseCachePath() {
-                    return (0, o().getAppCacheDir)()
+                    return o().getAppCacheDir()
                 }
 
                 quit() {
                     this.app.quit()
                 }
 
-                onQuit(e) {
-                    this.app.once("quit", ((t, r) => e(r)))
+                onQuit(callback) {
+                    this.app.once("quit", (event, exitCode) => callback(exitCode))
                 }
             }
         },
@@ -29759,35 +30266,41 @@
         },
 
         // electron-updater/electronHttpExecutor
-        5931: (e, t, r) => {
+        5931: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
+            // electron
             function o() {
-                const e = r(4482);
+                const electron = __webpack_require(4482);
                 return o = function () {
-                    return e
-                }, e
+                    return electron
+                }, electron
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getNetSession = i, t.ElectronHttpExecutor = t.NET_SESSION_NAME = void 0;
-            const a = "electron-updater";
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            function i() {
-                return o().session.fromPartition(a, {cache: !1})
+            exports.getNetSession = getNetSession
+            exports.ElectronHttpExecutor = exports.NET_SESSION_NAME = void 0;
+            const NET_SESSION_NAME = "electron-updater";
+
+            function getNetSession() {
+                return o().session.fromPartition(NET_SESSION_NAME, {cache: !1})
             }
 
-            t.NET_SESSION_NAME = a;
+            exports.NET_SESSION_NAME = NET_SESSION_NAME
 
-            class s extends n().HttpExecutor {
-                constructor(e) {
-                    super(), this.proxyLoginCallback = e, this.cachedSession = null
+            class ElectronHttpExecutor extends n().HttpExecutor {
+                constructor(loginCallback) {
+                    super()
+                    this.proxyLoginCallback = loginCallback
+                    this.cachedSession = null
                 }
 
                 async download(e, t, r) {
@@ -29805,10 +30318,19 @@
                     }))
                 }
 
-                createRequest(e, t) {
-                    null == this.cachedSession && (this.cachedSession = i());
-                    const r = o().net.request(Object.assign({}, e, {session: this.cachedSession}));
-                    return r.on("response", t), null != this.proxyLoginCallback && r.on("login", this.proxyLoginCallback), r
+                createRequest(options, responseCallback) {
+                    if (null == this.cachedSession) {
+                        this.cachedSession = getNetSession()
+                    }
+                    const clientRequest = o().net.request({
+                        ...options,
+                        session: this.cachedSession,
+                    })
+                    clientRequest.on("response", responseCallback)
+                    if (null != this.proxyLoginCallback) {
+                        clientRequest.on("login", this.proxyLoginCallback)
+                    }
+                    return clientRequest
                 }
 
                 addRedirectHandlers(e, t, r, o, a) {
@@ -29818,74 +30340,97 @@
                 }
             }
 
-            t.ElectronHttpExecutor = s
+            exports.ElectronHttpExecutor = ElectronHttpExecutor
         },
 
         // electron-updater/main.js 入口
-        94625: (e, t, r) => {
+        94625: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(16857);
+                const e = __webpack_require(16857);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(96064);
+                const e = __webpack_require(96064);
                 return o = function () {
                     return e
                 }, e
             }
 
             function a() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return a = function () {
                     return e
                 }, e
             }
 
             function i() {
-                const e = r(45414);
+                const e = __webpack_require(45414);
                 return i = function () {
                     return e
                 }, e
             }
 
             let s;
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getChannelFilename = function (e) {
-                return `${e}.yml`
-            }, t.newBaseUrl = function (e) {
-                const t = new (n().URL)(e);
-                return t.pathname.endsWith("/") || (t.pathname += "/"), t
-            }, t.newUrlFromBase = function (e, t, r = !1) {
-                const o = new (n().URL)(e, t), a = t.search;
-                return null != a && 0 !== a.length ? o.search = a : r && (o.search = `noCache=${Date.now().toString(32)}`), o
-            }, Object.defineProperty(t, "AppUpdater", {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.getChannelFilename = function (channelFile) {
+                return `${channelFile}.yml`
+            }
+            exports.newBaseUrl = function (url) {
+                const baseUrl = new (n().URL)(url);
+                if (!baseUrl.pathname.endsWith("/")) {
+                    baseUrl.pathname += "/"
+                }
+                return baseUrl
+            }
+            exports.newUrlFromBase = function (channelFile, baseUrl, r = false) {
+                const o = new (n().URL)(channelFile, baseUrl)
+                const search = baseUrl.search;
+                if (null != search && 0 !== search.length) {
+                    o.search = search
+                } else if (r) {
+                    o.search = `noCache=${Date.now().toString(32)}`
+                }
+                return o
+            }
+
+            Object.defineProperty(exports, "AppUpdater", {
                 enumerable: !0, get: function () {
                     return o().AppUpdater
                 }
-            }), Object.defineProperty(t, "NoOpLogger", {
+            })
+            Object.defineProperty(exports, "NoOpLogger", {
                 enumerable: !0, get: function () {
                     return o().NoOpLogger
                 }
-            }), Object.defineProperty(t, "CancellationToken", {
+            })
+            Object.defineProperty(exports, "CancellationToken", {
                 enumerable: !0, get: function () {
                     return a().CancellationToken
                 }
-            }), Object.defineProperty(t, "Provider", {
-                enumerable: !0, get: function () {
+            })
+            Object.defineProperty(exports, "Provider", {
+                enumerable: !0,
+                get: function () {
                     return i().Provider
                 }
-            }), t.UpdaterSignal = t.UPDATE_DOWNLOADED = t.DOWNLOAD_PROGRESS = void 0, Object.defineProperty(t, "autoUpdater", {
+            })
+            Object.defineProperty(exports, "autoUpdater", {
                 enumerable: !0,
-                get: () => s || (s = "win32" === process.platform ? new (r(35778).p) : "darwin" === process.platform ? new (r(95136).t) : new (r(49619).g), s)
+                get: () => s || (s = "win32" === process.platform ? new (__webpack_require(35778).p) : "darwin" === process.platform ? new (__webpack_require(95136).t) : new (__webpack_require(49619).g), s)
             });
-            const l = "download-progress";
-            t.DOWNLOAD_PROGRESS = l;
-            const c = "update-downloaded";
-            t.UPDATE_DOWNLOADED = c, t.UpdaterSignal = class {
+
+            const DOWNLOAD_PROGRESS = "download-progress"
+            exports.DOWNLOAD_PROGRESS = DOWNLOAD_PROGRESS
+            const UPDATE_DOWNLOADED = "update-downloaded"
+            exports.UPDATE_DOWNLOADED = UPDATE_DOWNLOADED
+
+            exports.UpdaterSignal = class {
                 constructor(e) {
                     this.emitter = e
                 }
@@ -29895,11 +30440,11 @@
                 }
 
                 progress(e) {
-                    d(this.emitter, l, e)
+                    d(this.emitter, DOWNLOAD_PROGRESS, e)
                 }
 
                 updateDownloaded(e) {
-                    d(this.emitter, c, e)
+                    d(this.emitter, UPDATE_DOWNLOADED, e)
                 }
 
                 updateCancelled(e) {
@@ -29916,70 +30461,77 @@
         },
 
         // electron-updater/providerFactory
-        54679: (e, t, r) => {
+        54679: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(19727);
+                const e = __webpack_require(19727);
                 return o = function () {
                     return e
                 }, e
             }
 
             function a() {
-                const e = r(2747);
+                const e = __webpack_require(2747);
                 return a = function () {
                     return e
                 }, e
             }
 
             function i() {
-                const e = r(85193);
+                const e = __webpack_require(85193);
                 return i = function () {
                     return e
                 }, e
             }
 
             function s() {
-                const e = r(90222);
+                const e = __webpack_require(90222);
                 return s = function () {
                     return e
                 }, e
             }
 
-            function l(e) {
-                return !e.includes("s3.amazonaws.com")
+            function isUrlProbablySupportMultiRangeRequests(url) {
+                return !url.includes("s3.amazonaws.com")
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isUrlProbablySupportMultiRangeRequests = l, t.createClient = function (e, t, r) {
-                if ("string" == typeof e) throw (0, n().newError)("Please pass PublishConfiguration object", "ERR_UPDATER_INVALID_PROVIDER_CONFIGURATION");
-                const c = e.provider;
-                switch (c) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.isUrlProbablySupportMultiRangeRequests = isUrlProbablySupportMultiRangeRequests
+            exports.createClient = function (config, t, r) {
+                if ("string" == typeof config) {
+                    throw n().newError("Please pass PublishConfiguration object", "ERR_UPDATER_INVALID_PROVIDER_CONFIGURATION");
+                }
+                const provider = config.provider;
+                switch (provider) {
                     case"github":
-                        const u = e,
+                        const u = config,
                             d = (u.private ? process.env.GH_TOKEN || process.env.GITHUB_TOKEN : null) || u.token;
                         return null == d ? new (i().GitHubProvider)(u, t, r) : new (s().PrivateGitHubProvider)(u, t, d, r);
                     case"s3":
                     case"spaces":
                         return new (a().GenericProvider)({
                             provider: "generic",
-                            url: (0, n().getS3LikeProviderBaseUrl)(e),
-                            channel: e.channel || null
-                        }, t, Object.assign({}, r, {isUseMultipleRangeRequest: "spaces" === c}));
+                            url: (0, n().getS3LikeProviderBaseUrl)(config),
+                            channel: config.channel || null
+                        }, t, Object.assign({}, r, {isUseMultipleRangeRequest: "spaces" === provider}));
                     case"generic":
-                        const p = e;
-                        return new (a().GenericProvider)(p, t, Object.assign({}, r, {isUseMultipleRangeRequest: !1 !== p.useMultipleRangeRequest && l(p.url)}));
+                        const _config = config;
+                        return new (a().GenericProvider)(_config, t, Object.assign({}, r, {
+                            isUseMultipleRangeRequest: false !== _config.useMultipleRangeRequest && isUrlProbablySupportMultiRangeRequests(_config.url)
+                        }));
                     case"bintray":
-                        return new (o().BintrayProvider)(e, r);
+                        return new (o().BintrayProvider)(config, r);
                     default:
-                        throw (0, n().newError)(`Unsupported provider: ${c}`, "ERR_UPDATER_UNSUPPORTED_PROVIDER")
+                        throw (0, n().newError)(`Unsupported provider: ${provider}`, "ERR_UPDATER_UNSUPPORTED_PROVIDER")
                 }
             }
         },
@@ -30054,60 +30606,97 @@
 
             t.BintrayProvider = l
         },
-        2747: (e, t, r) => {
+
+        // GenericProvider
+        2747: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(94625);
+                const e = __webpack_require(94625);
                 return o = function () {
                     return e
                 }, e
             }
 
             function a() {
-                const e = r(45414);
+                const e = __webpack_require(45414);
                 return a = function () {
                     return e
                 }, e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.GenericProvider = void 0;
+            Object.defineProperty(exports, "__esModule", {value: !0})
 
-            class i extends o().Provider {
-                constructor(e, t, r) {
-                    super(r), this.configuration = e, this.updater = t, this.baseUrl = (0, o().newBaseUrl)(this.configuration.url)
+
+            class GenericProvider extends o().Provider {
+                constructor(configuration, updater, options) {
+                    super(options)
+                    this.configuration = configuration
+                    this.updater = updater
+                    this.baseUrl = o().newBaseUrl(this.configuration.url)
                 }
 
                 get channel() {
-                    const e = this.updater.channel || this.configuration.channel;
-                    return null == e ? this.getDefaultChannelName() : this.getCustomChannelName(e)
+                    const channel = this.updater.channel || this.configuration.channel;
+                    return null == channel
+                        ? this.getDefaultChannelName()
+                        : this.getCustomChannelName(channel)
                 }
 
                 async getLatestVersion() {
-                    const e = (0, o().getChannelFilename)(this.channel),
-                        t = (0, o().newUrlFromBase)(e, this.baseUrl, this.updater.isAddNoCacheQuery);
-                    for (let r = 0; ; r++) try {
-                        return (0, a().parseUpdateInfo)(await this.httpRequest(t), e, t)
-                    } catch (t) {
-                        if (t instanceof n().HttpError && 404 === t.statusCode) throw (0, n().newError)(`Cannot find channel "${e}" update info: ${t.stack || t.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
-                        if ("ECONNREFUSED" === t.code && r < 3) {
-                            await new Promise(((e, t) => {
-                                try {
-                                    setTimeout(e, 1e3 * r)
-                                } catch (e) {
-                                    t(e)
-                                }
-                            }));
-                            continue
+                    debugger
+
+                    const channelFilename = o().getChannelFilename(this.channel)
+
+                    // https://desktop-release.notion-static.com/arm64-mac.yml?noCache=1htbc11t2
+                    const _url = o().newUrlFromBase(channelFilename, this.baseUrl, this.updater.isAddNoCacheQuery);
+
+                    for (let r = 0; ; r++) {
+                        try {
+
+                            const __version = {
+                                "version": "3.6.0",
+                                "files": [
+                                    {
+                                        "url": "Notion-arm64-3.6.0.zip",
+                                        "sha512": "CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==",
+                                        "size": 96167577
+                                    },
+                                    {
+                                        "url": "Notion-3.6.0-arm64.dmg",
+                                        "sha512": "ie0OrDj8s9RPirb3BhcjuwJec5h3ySN+2HNQswHT5bILsYSHQLdfp7vvKChnWvlTKbofxp+CmF37gWvgGx4yUQ==",
+                                        "size": 96337451
+                                    }
+                                ],
+                                "path": "Notion-arm64-3.6.0.zip",
+                                "sha512": "CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==",
+                                "releaseDate": "2024-05-03T19:28:11.345Z"
+                            }
+
+                            return a().parseUpdateInfo(await this.httpRequest(_url), channelFilename, _url)
+                        } catch (error) {
+                            if (error instanceof n().HttpError && 404 === error.statusCode) {
+                                throw n().newError(`Cannot find channel "${channelFilename}" update info: ${error.stack || error.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
+                            }
+                            if ("ECONNREFUSED" === error.code && r < 3) {
+                                await new Promise((resolve, reject) => {
+                                    try {
+                                        setTimeout(resolve, 1e3 * r)
+                                    } catch (e) {
+                                        reject(e)
+                                    }
+                                })
+                                continue
+                            }
+                            throw error
                         }
-                        throw t
                     }
                 }
 
@@ -30116,7 +30705,7 @@
                 }
             }
 
-            t.GenericProvider = i
+            exports.GenericProvider = GenericProvider
         },
         85193: (e, t, r) => {
             "use strict";
@@ -30376,25 +30965,27 @@
 
             t.PrivateGitHubProvider = u
         },
-        45414: (e, t, r) => {
+
+        // Provider
+        45414: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(69866);
+                const e = __webpack_require(69866);
                 return o = function () {
                     return e
                 }, e
             }
 
             function a() {
-                const e = r(94625);
+                const e = __webpack_require(94625);
                 return a = function () {
                     return e
                 }, e
@@ -30407,11 +30998,14 @@
                 throw (0, n().newError)(`No files provided: ${(0, n().safeStringifyJson)(e)}`, "ERR_UPDATER_NO_FILES_PROVIDED")
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.findFile = function (e, t, r) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.findFile = function (e, t, r) {
                 if (0 === e.length) throw (0, n().newError)("No files provided", "ERR_UPDATER_NO_FILES_PROVIDED");
                 const o = e.find((e => e.url.pathname.toLowerCase().endsWith(`.${t}`)));
                 return null != o ? o : null == r ? e[0] : e.find((e => !r.some((t => e.url.pathname.toLowerCase().endsWith(`.${t}`)))))
-            }, t.parseUpdateInfo = function (e, t, r) {
+            }
+            exports.parseUpdateInfo = function (e, t, r) {
                 if (null == e) throw (0, n().newError)(`Cannot parse update info from ${t} in the latest release artifacts (${r}): rawData: null`, "ERR_UPDATER_INVALID_UPDATE_INFO");
                 let a;
                 try {
@@ -30420,25 +31014,30 @@
                     throw (0, n().newError)(`Cannot parse update info from ${t} in the latest release artifacts (${r}): ${o.stack || o.message}, rawData: ${e}`, "ERR_UPDATER_INVALID_UPDATE_INFO")
                 }
                 return a
-            }, t.getFileList = i, t.resolveFiles = function (e, t, r = (e => e)) {
+            }
+            exports.getFileList = i
+            exports.resolveFiles = function (e, t, r = (e => e)) {
                 const o = i(e).map((e => {
                     if (null == e.sha2 && null == e.sha512) throw (0, n().newError)(`Update info doesn't contain nor sha256 neither sha512 checksum: ${(0, n().safeStringifyJson)(e)}`, "ERR_UPDATER_NO_CHECKSUM");
                     return {url: (0, a().newUrlFromBase)(r(e.url), t), info: e}
                 })), s = e.packages, l = null == s ? null : s[process.arch] || s.ia32;
                 return null != l && (o[0].packageInfo = Object.assign({}, l, {path: (0, a().newUrlFromBase)(r(l.path), t).href})), o
-            }, t.Provider = void 0, t.Provider = class {
-                constructor(e) {
-                    this.runtimeOptions = e, this.requestHeaders = null, this.executor = e.executor
+            }
+            exports.Provider = class {
+                constructor(runtimeOptions) {
+                    this.runtimeOptions = runtimeOptions
+                    this.requestHeaders = null
+                    this.executor = runtimeOptions.executor
                 }
 
                 get isUseMultipleRangeRequest() {
-                    return !1 !== this.runtimeOptions.isUseMultipleRangeRequest
+                    return false !== this.runtimeOptions.isUseMultipleRangeRequest
                 }
 
                 getChannelFilePrefix() {
                     if ("linux" === this.runtimeOptions.platform) {
-                        const e = process.env.TEST_UPDATER_ARCH || process.arch;
-                        return "-linux" + ("x64" === e ? "" : `-${e}`)
+                        const arch = process.env.TEST_UPDATER_ARCH || process.arch;
+                        return "-linux" + ("x64" === arch ? "" : `-${arch}`)
                     }
                     return "darwin" === this.runtimeOptions.platform ? "-mac" : ""
                 }
@@ -30447,25 +31046,33 @@
                     return this.getCustomChannelName("latest")
                 }
 
-                getCustomChannelName(e) {
-                    return `${e}${this.getChannelFilePrefix()}`
+                getCustomChannelName(channel) {
+                    return `${channel}${this.getChannelFilePrefix()}`
                 }
 
                 get fileExtraDownloadHeaders() {
                     return null
                 }
 
-                setRequestHeaders(e) {
-                    this.requestHeaders = e
+                setRequestHeaders(headers) {
+                    this.requestHeaders = headers
                 }
 
-                httpRequest(e, t, r) {
-                    return this.executor.request(this.createRequestOptions(e, t), r)
+                httpRequest(url, headers, r) {
+                    return this.executor.request(this.createRequestOptions(url, headers), r)
                 }
 
-                createRequestOptions(e, t) {
-                    const r = {};
-                    return null == this.requestHeaders ? null != t && (r.headers = t) : r.headers = null == t ? this.requestHeaders : Object.assign({}, this.requestHeaders, t), (0, n().configureRequestUrl)(e, r), r
+                createRequestOptions(url, headers) {
+                    const options = {}
+                    if (null == this.requestHeaders) {
+                        if (null != headers) {
+                            options.headers = headers
+                        }
+                    } else {
+                        options.headers = null == headers ? this.requestHeaders : Object.assign({}, this.requestHeaders, headers)
+                    }
+                    n().configureRequestUrl(url, options)
+                    return options
                 }
             }
         },

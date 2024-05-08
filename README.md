@@ -40,7 +40,7 @@
 
 79529: builder-util-runtime
 
-
+36343: intl utils
 
 56116: sentry
 34516: setupSqliteServer
@@ -119,3 +119,33 @@
 6600: lodash
 44993: semver
 ```
+
+## 本体更新逻辑
+根据平台不同，请求对应更新配置文件，如下：
+```text
+https://desktop-release.notion-static.com/arm64-mac.yml
+https://desktop-release.notion-static.com/latest.yml
+
+[channel](-mac|-linux(-x86)).yml
+```
+
+返回的结果如下:
+```yaml
+version: 3.6.0
+files:
+  - url: Notion-arm64-3.6.0.zip
+    sha512: CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==
+    size: 96167577
+  - url: Notion-3.6.0-arm64.dmg
+    sha512: ie0OrDj8s9RPirb3BhcjuwJec5h3ySN+2HNQswHT5bILsYSHQLdfp7vvKChnWvlTKbofxp+CmF37gWvgGx4yUQ==
+    size: 96337451
+path: Notion-arm64-3.6.0.zip
+sha512: CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==
+releaseDate: '2024-05-03T19:28:11.345Z'
+```
+
+然后下载对应的安装包并进行替换更新。
+
+
+## 资源包更新逻辑
+资源包通过 AssetCache 类进行更新，存放在`notionAssetCache-v2`目录下面
