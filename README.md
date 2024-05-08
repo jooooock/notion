@@ -36,7 +36,7 @@
 54679: electron-updater/providerFactory
 86216: electron-updater/BaseUpdater
 
-
+69866: yml parser
 
 79529: builder-util-runtime
 
@@ -143,6 +143,9 @@ path: Notion-arm64-3.6.0.zip
 sha512: CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==
 releaseDate: '2024-05-03T19:28:11.345Z'
 ```
+
+> 下载地址即为: `https://desktop-release.notion-static.com/Notion-arm64-3.6.0.zip`
+
 
 然后下载对应的安装包并进行替换更新。
 

@@ -5995,8 +5995,6 @@
                         : {
                             label: intl.formatMessage(messages.checkForUpdate),
                             async click() {
-                                debugger
-
                                 let message = "", detail = "";
                                 try {
                                     const checkResult = await __initializeAutoUpdater.checkForUpdate();
@@ -6005,7 +6003,6 @@
                                         : intl.formatMessage(messages.noUpdateAvailable)
                                     detail = `${electron.app.getVersion()} → ${checkResult.updateInfo.version}`
                                 } catch (err) {
-                                    debugger
                                     message = intl.formatMessage(messages.updateCheckFailed)
                                     detail += `\n${err}`
                                 }
@@ -26840,41 +26837,68 @@
                 return n === t || !0 === r && n.length === t.length && n.toLowerCase() === t.toLowerCase()
             }
         },
-        69866: (e, t, r) => {
-            "use strict";
-            var n = r(70027);
-            e.exports = n
-        },
-        70027: (e, t, r) => {
-            "use strict";
-            var n = r(88633), o = r(48359);
 
-            function a(e) {
+        // yml parser
+        69866: (module, exports, __webpack_require) => {
+            "use strict";
+            module.exports = __webpack_require(70027)
+        },
+        70027: (module, exports, __webpack_require) => {
+            "use strict";
+            let n = __webpack_require(88633),
+                o = __webpack_require(48359);
+
+            function a(name) {
                 return function () {
-                    throw new Error("Function " + e + " is deprecated and cannot be used.")
+                    throw new Error("Function " + name + " is deprecated and cannot be used.")
                 }
             }
 
-            e.exports.Type = r(57842), e.exports.Schema = r(37909), e.exports.FAILSAFE_SCHEMA = r(52617), e.exports.JSON_SCHEMA = r(75030), e.exports.CORE_SCHEMA = r(49859), e.exports.DEFAULT_SAFE_SCHEMA = r(51879), e.exports.DEFAULT_FULL_SCHEMA = r(62899), e.exports.load = n.load, e.exports.loadAll = n.loadAll, e.exports.safeLoad = n.safeLoad, e.exports.safeLoadAll = n.safeLoadAll, e.exports.dump = o.dump, e.exports.safeDump = o.safeDump, e.exports.YAMLException = r(54885), e.exports.MINIMAL_SCHEMA = r(52617), e.exports.SAFE_SCHEMA = r(51879), e.exports.DEFAULT_SCHEMA = r(62899), e.exports.scan = a("scan"), e.exports.parse = a("parse"), e.exports.compose = a("compose"), e.exports.addConstructor = a("addConstructor")
+            module.exports.Type = __webpack_require(57842)
+            module.exports.Schema = __webpack_require(37909)
+            module.exports.FAILSAFE_SCHEMA = __webpack_require(52617)
+            module.exports.JSON_SCHEMA = __webpack_require(75030)
+            module.exports.CORE_SCHEMA = __webpack_require(49859)
+            module.exports.DEFAULT_SAFE_SCHEMA = __webpack_require(51879)
+            module.exports.DEFAULT_FULL_SCHEMA = __webpack_require(62899)
+            module.exports.load = n.load
+            module.exports.loadAll = n.loadAll
+            module.exports.safeLoad = n.safeLoad
+            module.exports.safeLoadAll = n.safeLoadAll
+            module.exports.dump = o.dump
+            module.exports.safeDump = o.safeDump
+            module.exports.YAMLException = __webpack_require(54885)
+            module.exports.MINIMAL_SCHEMA = __webpack_require(52617)
+            module.exports.SAFE_SCHEMA = __webpack_require(51879)
+            module.exports.DEFAULT_SCHEMA = __webpack_require(62899)
+            module.exports.scan = a("scan")
+            module.exports.parse = a("parse")
+            module.exports.compose = a("compose")
+            module.exports.addConstructor = a("addConstructor")
         },
-        43007: e => {
+        43007: module => {
             "use strict";
 
-            function t(e) {
+            function isNothing(e) {
                 return null == e
             }
 
-            e.exports.isNothing = t, e.exports.isObject = function (e) {
+            module.exports.isNothing = isNothing
+            module.exports.isObject = function (e) {
                 return "object" == typeof e && null !== e
-            }, e.exports.toArray = function (e) {
-                return Array.isArray(e) ? e : t(e) ? [] : [e]
-            }, e.exports.repeat = function (e, t) {
+            }
+            module.exports.toArray = function (e) {
+                return Array.isArray(e) ? e : isNothing(e) ? [] : [e]
+            }
+            module.exports.repeat = function (e, t) {
                 var r, n = "";
                 for (r = 0; r < t; r += 1) n += e;
                 return n
-            }, e.exports.isNegativeZero = function (e) {
+            }
+            module.exports.isNegativeZero = function (e) {
                 return 0 === e && Number.NEGATIVE_INFINITY === 1 / e
-            }, e.exports.extend = function (e, t) {
+            }
+            module.exports.extend = function (e, t) {
                 var r, n, o, a;
                 if (t) for (r = 0, n = (a = Object.keys(t)).length; r < n; r += 1) e[o = a[r]] = t[o];
                 return e
@@ -27091,17 +27115,27 @@
                 return re(e, n.extend({schema: i}, t))
             }
         },
-        54885: e => {
+        54885: module => {
             "use strict";
 
-            function t(e, t) {
-                Error.call(this), this.name = "YAMLException", this.reason = e, this.mark = t, this.message = (this.reason || "(unknown reason)") + (this.mark ? " " + this.mark.toString() : ""), Error.captureStackTrace ? Error.captureStackTrace(this, this.constructor) : this.stack = (new Error).stack || ""
+            function YAMLException(reason, mark) {
+                Error.call(this)
+                this.name = "YAMLException"
+                this.reason = reason
+                this.mark = mark
+                this.message = (this.reason || "(unknown reason)") + (this.mark ? " " + this.mark.toString() : "")
+                Error.captureStackTrace
+                    ? Error.captureStackTrace(this, this.constructor)
+                    : this.stack = (new Error).stack || ""
             }
 
-            t.prototype = Object.create(Error.prototype), t.prototype.constructor = t, t.prototype.toString = function (e) {
+            YAMLException.prototype = Object.create(Error.prototype)
+            YAMLException.prototype.constructor = YAMLException
+            YAMLException.prototype.toString = function (e) {
                 var t = this.name + ": ";
                 return t += this.reason || "(unknown reason)", !e && this.mark && (t += " " + this.mark.toString()), t
-            }, e.exports = t
+            }
+            module.exports = YAMLException
         },
         88633: (e, t, r) => {
             "use strict";
@@ -28446,6 +28480,241 @@
         },
 
 
+        // electron-updater/DownloadedUpdateHelper
+        17660: (module, exports, __webpack_require) => {
+            "use strict";
+
+            function n() {
+                const e = __webpack_require(76982);
+                return n = function () {
+                    return e
+                }, e
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.createTempUpdateFile = async function (e, t, r) {
+                let n = 0, o = __path.join(t, e);
+                for (let a = 0; a < 3; a++) try {
+                    return await (0, i().unlink)(o), o
+                } catch (a) {
+                    if ("ENOENT" === a.code) return o;
+                    r.warn(`Error on remove temp update file: ${a}`), o = __path.join(t, `${n++}-${e}`)
+                }
+                return o
+            }
+
+
+            var o = __webpack_require(79896);
+
+            function a() {
+                const e = (t = __webpack_require(50328)) && t.__esModule ? t : {default: t};
+                var t;
+                return a = function () {
+                    return e
+                }, e
+            }
+
+            function i() {
+                const e = __webpack_require(80115);
+                return i = function () {
+                    return e
+                }, e
+            }
+
+            let __path = function (e) {
+                if (e && e.__esModule) return e;
+                var t = {};
+                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
+                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
+                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
+                }
+                return t.default = e, t
+            }(__webpack_require(16928));
+
+            exports.DownloadedUpdateHelper = class {
+                constructor(cacheDir) {
+                    this.cacheDir = cacheDir
+                    this._file = null
+                    this._packageFile = null
+                    this.versionInfo = null
+                    this.fileInfo = null
+                    this._downloadedFileInfo = null
+                }
+
+                get downloadedFileInfo() {
+                    return this._downloadedFileInfo
+                }
+
+                get file() {
+                    return this._file
+                }
+
+                get packageFile() {
+                    return this._packageFile
+                }
+
+                get cacheDirForPendingUpdate() {
+                    return __path.join(this.cacheDir, "pending")
+                }
+
+                async validateDownloadedPath(e, t, r, n) {
+                    if (null != this.versionInfo && this.file === e && null != this.fileInfo) {
+                        return a().default(this.versionInfo, t) && a().default(this.fileInfo.info, r.info) && await i().pathExists(e)
+                            ? e
+                            : null;
+                    }
+                    const o = await this.getValidCachedUpdateFile(r, n);
+                    return null == o
+                        ? null
+                        : (n.info(`Update has already been downloaded to ${e}).`), this._file = o, o)
+                }
+
+                async setDownloadedFile(file, packageFile, versionInfo, fileInfo, fileName, isSaveCache) {
+                    this._file = file
+                    this._packageFile = packageFile
+                    this.versionInfo = versionInfo
+                    this.fileInfo = fileInfo
+                    this._downloadedFileInfo = {
+                        fileName: fileName,
+                        sha512: fileInfo.info.sha512,
+                        isAdminRightsRequired: true === fileInfo.info.isAdminRightsRequired
+                    }
+                    if (isSaveCache) {
+                        await i().outputJson(this.getUpdateInfoFile(), this._downloadedFileInfo)
+                    }
+                }
+
+                async clear() {
+                    this._file = null
+                    this._packageFile = null
+                    this.versionInfo = null
+                    this.fileInfo = null
+                    await this.cleanCacheDirForPendingUpdate()
+                }
+
+                async cleanCacheDirForPendingUpdate() {
+                    try {
+                        await i().emptyDir(this.cacheDirForPendingUpdate)
+                    } catch (e) {
+                    }
+                }
+
+                async getValidCachedUpdateFile(e, t) {
+                    let r;
+                    const a = this.getUpdateInfoFile();
+                    try {
+                        r = await (0, i().readJson)(a)
+                    } catch (e) {
+                        let r = "No cached update info available";
+                        return "ENOENT" !== e.code && (await this.cleanCacheDirForPendingUpdate(), r += ` (error on read: ${e.message})`), t.info(r), null
+                    }
+                    if (null == r.fileName) {
+                        t.warn("Cached update info is corrupted: no fileName, directory for cached update will be cleaned")
+                        await this.cleanCacheDirForPendingUpdate()
+                        return null;
+                    }
+
+                    if (e.info.sha512 !== r.sha512) {
+                        t.info(`Cached update sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${r.sha512}, expected: ${e.info.sha512}. Directory for cached update will be cleaned`)
+                        await this.cleanCacheDirForPendingUpdate()
+                        return null;
+                    }
+                    const l = __path.join(this.cacheDirForPendingUpdate, r.fileName);
+                    if (!await i().pathExists(l)) {
+                        t.info("Cached update file doesn't exist, directory for cached update will be cleaned")
+                        await this.cleanCacheDirForPendingUpdate()
+                        return null;
+                    }
+
+                    const c = await function (e, t = "sha512", r = "base64", a) {
+                        return new Promise(((i, s) => {
+                            const l = (0, n().createHash)(t);
+                            l.on("error", s).setEncoding(r), (0, o.createReadStream)(e, Object.assign({}, a, {highWaterMark: 1048576})).on("error", s).on("end", (() => {
+                                l.end(), i(l.read())
+                            })).pipe(l, {end: !1})
+                        }))
+                    }(l);
+
+                    return e.info.sha512 !== c
+                        ? (t.warn(`Sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${c}, expected: ${e.info.sha512}`), await this.cleanCacheDirForPendingUpdate(), null)
+                        : (this._downloadedFileInfo = r, l)
+                }
+
+                getUpdateInfoFile() {
+                    return __path.join(this.cacheDirForPendingUpdate, "update-info.json")
+                }
+            }
+        },
+        // electron-updater/ElectronAppAdapter
+        33200: (module, exports, __webpack_require) => {
+            "use strict";
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            let __path = function (e) {
+                if (e && e.__esModule) return e;
+                var t = {};
+                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
+                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
+                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
+                }
+                return t.default = e, t
+            }(__webpack_require(16928));
+
+            function o() {
+                const e = __webpack_require(64226);
+                o = function () {
+                    return e
+                }
+                return e
+            }
+
+            exports.ElectronAppAdapter = class {
+                constructor(app = __webpack_require(4482).app) {
+                    this.app = app
+                }
+
+                whenReady() {
+                    return this.app.whenReady()
+                }
+
+                get version() {
+                    return this.app.getVersion()
+                }
+
+                get name() {
+                    return this.app.getName()
+                }
+
+                get isPackaged() {
+                    return true === this.app.isPackaged
+                }
+
+                get appUpdateConfigPath() {
+                    return this.isPackaged
+                        ? __path.join(process.resourcesPath, "app-update.yml")
+                        : __path.join(this.app.getAppPath(), "dev-app-update.yml")
+                }
+
+                get userDataPath() {
+                    return this.app.getPath("userData")
+                }
+
+                get baseCachePath() {
+                    return o().getAppCacheDir()
+                }
+
+                quit() {
+                    this.app.quit()
+                }
+
+                onQuit(callback) {
+                    this.app.once("quit", (event, exitCode) => callback(exitCode))
+                }
+            }
+        },
+
         // electron-updater/AppUpdater
         96064: (module, exports, __webpack_require) => {
             "use strict";
@@ -28564,6 +28833,7 @@
             class AppUpdater extends i().EventEmitter {
                 constructor(options, app) {
                     super()
+
                     this.autoDownload = true
                     this.autoInstallOnAppQuit = true
                     this.allowPrerelease = false
@@ -28617,8 +28887,6 @@
                 }
 
                 set channel(channel) {
-                    debugger
-
                     if (null != this._channel) {
                         if ("string" != typeof channel) {
                             throw n().newError(`Channel must be a string, but got: ${channel}`, "ERR_UPDATER_INVALID_CHANNEL");
@@ -28644,22 +28912,16 @@
                 }
 
                 set updateConfigPath(value) {
-                    debugger
-
                     this.clientPromise = null
                     this._appUpdateConfigPath = value
                     this.configOnDisk = new (c().Lazy)(() => this.loadUpdateConfig())
                 }
 
                 getFeedURL() {
-                    debugger
-
                     return "Deprecated. Do not use it."
                 }
 
                 setFeedURL(options) {
-                    debugger
-
                     const runtimeOptions = this.createProviderRuntimeOptions();
                     let provider
                     if ("string" == typeof options) {
@@ -28677,8 +28939,6 @@
                 }
 
                 checkForUpdates() {
-                    debugger
-
                     let checkForUpdatesPromise = this.checkForUpdatesPromise;
                     if (null != checkForUpdatesPromise) {
                         this._logger.info("Checking for update (already in progress)")
@@ -28702,8 +28962,6 @@
                 }
 
                 isUpdaterActive() {
-                    debugger
-
                     if (!!this.app.isPackaged) {
                         return true
                     }
@@ -28712,8 +28970,6 @@
                 }
 
                 checkForUpdatesAndNotify() {
-                    debugger
-
                     return this.isUpdaterActive()
                         ? this.checkForUpdates().then(checkResult => {
                             const downloadPromise = checkResult.downloadPromise;
@@ -28736,8 +28992,6 @@
                 }
 
                 async isStagingMatch(e) {
-                    debugger
-
                     const t = e.stagingPercentage;
                     let r = t;
                     if (null == r) {
@@ -28756,8 +29010,6 @@
                 }
 
                 computeFinalHeaders(headers) {
-                    debugger
-
                     if (null != this.requestHeaders) {
                         Object.assign(headers, this.requestHeaders)
                     }
@@ -28765,8 +29017,6 @@
                 }
 
                 async isUpdateAvailable(updateInfo) {
-                    debugger
-
                     const latestVersion = d().parse(updateInfo.version);
                     if (null == latestVersion) {
                         throw n().newError(`This file could not be downloaded, or the latest version (from update server) does not have a valid semver version: "${latestVersion}"`, "ERR_UPDATER_INVALID_VERSION");
@@ -28785,8 +29035,6 @@
                 }
 
                 async getUpdateInfoAndProvider() {
-                    debugger
-
                     await this.app.whenReady()
                     if (null == this.clientPromise) {
                         this.clientPromise = this.configOnDisk.value.then(config => b().createClient(config, this, this.createProviderRuntimeOptions()))
@@ -28796,6 +29044,7 @@
                     const stagingUserId = await this.stagingUserIdPromise.value
 
                     client.setRequestHeaders(this.computeFinalHeaders({"x-user-staging-id": stagingUserId}))
+
                     return {
                         info: await client.getLatestVersion(),
                         provider: client
@@ -28803,8 +29052,6 @@
                 }
 
                 createProviderRuntimeOptions() {
-                    debugger
-
                     return {
                         isUseMultipleRangeRequest: true,
                         platform: null == this._testOnlyOptions ? process.platform : this._testOnlyOptions.platform,
@@ -28813,12 +29060,11 @@
                 }
 
                 async doCheckForUpdates() {
-                    debugger
-
                     this.emit("checking-for-update");
 
                     const result = await this.getUpdateInfoAndProvider()
                     const updateInfo = result.info;
+
                     if (!await this.isUpdateAvailable(updateInfo)) {
                         this._logger.info(`Update for version ${this.currentVersion} is not available (latest version: ${updateInfo.version}, downgrade is ${this.allowDowngrade ? "allowed" : "disallowed"}).`)
                         this.emit("update-not-available", updateInfo)
@@ -28841,15 +29087,11 @@
                 }
 
                 onUpdateAvailable(updateInfo) {
-                    debugger
-
                     this._logger.info(`Found version ${updateInfo.version} (url: ${n().asArray(updateInfo.files).map(e => e.url).join(", ")})`)
                     this.emit("update-available", updateInfo)
                 }
 
                 downloadUpdate(cancellationToken = new (n().CancellationToken)) {
-                    debugger
-
                     const updateInfoAndProvider = this.updateInfoAndProvider;
                     if (null == updateInfoAndProvider) {
                         const error = new Error("Please check update first");
@@ -28892,8 +29134,6 @@
                 }
 
                 async loadUpdateConfig() {
-                    debugger
-
                     if (null == this._appUpdateConfigPath) {
                         this._appUpdateConfigPath = this.app.appUpdateConfigPath
                     }
@@ -28901,8 +29141,6 @@
                 }
 
                 computeRequestHeaders(provider) {
-                    debugger
-
                     const fileExtraDownloadHeaders = provider.fileExtraDownloadHeaders;
                     if (null != fileExtraDownloadHeaders) {
                         const requestHeaders = this.requestHeaders;
@@ -28914,8 +29152,6 @@
                 }
 
                 async getOrCreateStagingUserId() {
-                    debugger
-
                     const file = __path.join(this.app.userDataPath, ".updaterId");
 
                     try {
@@ -28941,8 +29177,6 @@
                 }
 
                 get isAddNoCacheQuery() {
-                    debugger
-
                     const headers = this.requestHeaders;
                     if (null == headers) {
                         return true
@@ -28958,8 +29192,6 @@
                 }
 
                 async getOrCreateDownloadHelper() {
-                    debugger
-
                     let result = this.downloadedUpdateHelper;
                     if (null == result) {
                         const dirName = (await this.configOnDisk.value).updaterCacheDirName
@@ -28979,8 +29211,6 @@
                 }
 
                 async executeDownload(taskOptions) {
-                    debugger
-
                     const fileInfo = taskOptions.fileInfo
                     const downloadOptions = {
                         headers: taskOptions.downloadUpdateOptions.requestHeaders,
@@ -29009,13 +29239,15 @@
 
                     let updateFile = __path.join(cacheDir, updateFileName);
                     const packageFile = null == packageInfo
-                            ? null
-                            : __path.join(cacheDir, `package-${version}${__path.extname(packageInfo.path) || ".7z"}`)
+                        ? null
+                        : __path.join(cacheDir, `package-${version}${__path.extname(packageInfo.path) || ".7z"}`)
 
                     const done = async isSaveCache => {
                         await downloadedUpdateHelper.setDownloadedFile(updateFile, packageFile, updateInfo, fileInfo, updateFileName, isSaveCache)
                         await taskOptions.done(Object.assign({}, updateInfo, {downloadedFile: updateFile}))
-                        return null == packageFile ? [updateFile] : [updateFile, packageFile]
+                        return null == packageFile
+                            ? [updateFile]
+                            : [updateFile, packageFile]
                     }
 
                     const log = this._logger
@@ -29065,370 +29297,162 @@
 
             exports.NoOpLogger = NoOpLogger
         },
-        // electron-updater/BaseUpdater
-        86216: (e, t, r) => {
-            "use strict";
-
-            function n() {
-                const e = r(96064);
-                return n = function () {
-                    return e
-                }, e
-            }
-
-            Object.defineProperty(t, "__esModule", {value: !0}), t.BaseUpdater = void 0;
-
-            class o extends n().AppUpdater {
-                constructor(e, t) {
-                    super(e, t), this.quitAndInstallCalled = !1, this.quitHandlerAdded = !1
-                }
-
-                quitAndInstall(e = !1, t = !1) {
-                    this._logger.info("Install on explicit quitAndInstall"), this.install(e, !e || t) ? setImmediate((() => {
-                        this.app.quit()
-                    })) : this.quitAndInstallCalled = !1
-                }
-
-                executeDownload(e) {
-                    return super.executeDownload(Object.assign({}, e, {
-                        done: async e => {
-                            this.dispatchUpdateDownloaded(e), this.addQuitHandler()
-                        }
-                    }))
-                }
-
-                install(e, t) {
-                    if (this.quitAndInstallCalled) return this._logger.warn("install call ignored: quitAndInstallCalled is set to true"), !1;
-                    const r = this.downloadedUpdateHelper, n = null == r ? null : r.file,
-                        o = null == r ? null : r.downloadedFileInfo;
-                    if (null == n || null == o) return this.dispatchError(new Error("No valid update available, can't quit and install")), !1;
-                    this.quitAndInstallCalled = !0;
-                    try {
-                        return this._logger.info(`Install: isSilent: ${e}, isForceRunAfter: ${t}`), this.doInstall({
-                            installerPath: n,
-                            isSilent: e,
-                            isForceRunAfter: t,
-                            isAdminRightsRequired: o.isAdminRightsRequired
-                        })
-                    } catch (e) {
-                        return this.dispatchError(e), !1
-                    }
-                }
-
-                addQuitHandler() {
-                    !this.quitHandlerAdded && this.autoInstallOnAppQuit && (this.quitHandlerAdded = !0, this.app.onQuit((e => {
-                        this.quitAndInstallCalled ? this._logger.info("Update installer has already been triggered. Quitting application.") : 0 === e ? (this._logger.info("Auto install update on quit"), this.install(!0, !1)) : this._logger.info(`Update will be not installed on quit because application is quitting with exit code ${e}`)
-                    })))
-                }
-            }
-
-            t.BaseUpdater = o
-        },
-        // electron-updater/DownloadedUpdateHelper
-        17660: (e, t, r) => {
-            "use strict";
-
-            function n() {
-                const e = r(76982);
-                return n = function () {
-                    return e
-                }, e
-            }
-
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createTempUpdateFile = async function (e, t, r) {
-                let n = 0, o = s.join(t, e);
-                for (let a = 0; a < 3; a++) try {
-                    return await (0, i().unlink)(o), o
-                } catch (a) {
-                    if ("ENOENT" === a.code) return o;
-                    r.warn(`Error on remove temp update file: ${a}`), o = s.join(t, `${n++}-${e}`)
-                }
-                return o
-            }, t.DownloadedUpdateHelper = void 0;
-            var o = r(79896);
-
-            function a() {
-                const e = (t = r(50328)) && t.__esModule ? t : {default: t};
-                var t;
-                return a = function () {
-                    return e
-                }, e
-            }
-
-            function i() {
-                const e = r(80115);
-                return i = function () {
-                    return e
-                }, e
-            }
-
-            var s = function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
-                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
-                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
-                }
-                return t.default = e, t
-            }(r(16928));
-            t.DownloadedUpdateHelper = class {
-                constructor(e) {
-                    this.cacheDir = e, this._file = null, this._packageFile = null, this.versionInfo = null, this.fileInfo = null, this._downloadedFileInfo = null
-                }
-
-                get downloadedFileInfo() {
-                    return this._downloadedFileInfo
-                }
-
-                get file() {
-                    return this._file
-                }
-
-                get packageFile() {
-                    return this._packageFile
-                }
-
-                get cacheDirForPendingUpdate() {
-                    return s.join(this.cacheDir, "pending")
-                }
-
-                async validateDownloadedPath(e, t, r, n) {
-                    if (null != this.versionInfo && this.file === e && null != this.fileInfo) return (0, a().default)(this.versionInfo, t) && (0, a().default)(this.fileInfo.info, r.info) && await (0, i().pathExists)(e) ? e : null;
-                    const o = await this.getValidCachedUpdateFile(r, n);
-                    return null == o ? null : (n.info(`Update has already been downloaded to ${e}).`), this._file = o, o)
-                }
-
-                async setDownloadedFile(e, t, r, n, o, a) {
-                    this._file = e, this._packageFile = t, this.versionInfo = r, this.fileInfo = n, this._downloadedFileInfo = {
-                        fileName: o,
-                        sha512: n.info.sha512,
-                        isAdminRightsRequired: !0 === n.info.isAdminRightsRequired
-                    }, a && await (0, i().outputJson)(this.getUpdateInfoFile(), this._downloadedFileInfo)
-                }
-
-                async clear() {
-                    this._file = null, this._packageFile = null, this.versionInfo = null, this.fileInfo = null, await this.cleanCacheDirForPendingUpdate()
-                }
-
-                async cleanCacheDirForPendingUpdate() {
-                    try {
-                        await (0, i().emptyDir)(this.cacheDirForPendingUpdate)
-                    } catch (e) {
-                    }
-                }
-
-                async getValidCachedUpdateFile(e, t) {
-                    let r;
-                    const a = this.getUpdateInfoFile();
-                    try {
-                        r = await (0, i().readJson)(a)
-                    } catch (e) {
-                        let r = "No cached update info available";
-                        return "ENOENT" !== e.code && (await this.cleanCacheDirForPendingUpdate(), r += ` (error on read: ${e.message})`), t.info(r), null
-                    }
-                    if (null == r.fileName) return t.warn("Cached update info is corrupted: no fileName, directory for cached update will be cleaned"), await this.cleanCacheDirForPendingUpdate(), null;
-                    if (e.info.sha512 !== r.sha512) return t.info(`Cached update sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${r.sha512}, expected: ${e.info.sha512}. Directory for cached update will be cleaned`), await this.cleanCacheDirForPendingUpdate(), null;
-                    const l = s.join(this.cacheDirForPendingUpdate, r.fileName);
-                    if (!await (0, i().pathExists)(l)) return t.info("Cached update file doesn't exist, directory for cached update will be cleaned"), await this.cleanCacheDirForPendingUpdate(), null;
-                    const c = await function (e, t = "sha512", r = "base64", a) {
-                        return new Promise(((i, s) => {
-                            const l = (0, n().createHash)(t);
-                            l.on("error", s).setEncoding(r), (0, o.createReadStream)(e, Object.assign({}, a, {highWaterMark: 1048576})).on("error", s).on("end", (() => {
-                                l.end(), i(l.read())
-                            })).pipe(l, {end: !1})
-                        }))
-                    }(l);
-                    return e.info.sha512 !== c ? (t.warn(`Sha512 checksum doesn't match the latest available update. New update must be downloaded. Cached: ${c}, expected: ${e.info.sha512}`), await this.cleanCacheDirForPendingUpdate(), null) : (this._downloadedFileInfo = r, l)
-                }
-
-                getUpdateInfoFile() {
-                    return s.join(this.cacheDirForPendingUpdate, "update-info.json")
-                }
-            }
-        },
-        // electron-updater/ElectronAppAdapter
-        33200: (module, exports, __webpack_require) => {
-            "use strict";
-            Object.defineProperty(exports, "__esModule", {value: !0})
-
-
-            let __path = function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
-                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
-                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
-                }
-                return t.default = e, t
-            }(__webpack_require(16928));
-
-            function o() {
-                const e = __webpack_require(64226);
-                o = function () {
-                    return e
-                }
-                return e
-            }
-
-            exports.ElectronAppAdapter = class {
-                constructor(app = __webpack_require(4482).app) {
-                    this.app = app
-                }
-
-                whenReady() {
-                    return this.app.whenReady()
-                }
-
-                get version() {
-                    return this.app.getVersion()
-                }
-
-                get name() {
-                    return this.app.getName()
-                }
-
-                get isPackaged() {
-                    return true === this.app.isPackaged
-                }
-
-                get appUpdateConfigPath() {
-                    return this.isPackaged
-                        ? __path.join(process.resourcesPath, "app-update.yml")
-                        : __path.join(this.app.getAppPath(), "dev-app-update.yml")
-                }
-
-                get userDataPath() {
-                    return this.app.getPath("userData")
-                }
-
-                get baseCachePath() {
-                    return o().getAppCacheDir()
-                }
-
-                quit() {
-                    this.app.quit()
-                }
-
-                onQuit(callback) {
-                    this.app.once("quit", (event, exitCode) => callback(exitCode))
-                }
-            }
-        },
 
         // electron-updater/MacUpdater
-        95136: (e, t, r) => {
+        95136: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(80115);
+                const e = __webpack_require(80115);
                 return o = function () {
                     return e
                 }, e
             }
 
-            t.t = void 0;
-            var a = r(79896);
+            let __fs = __webpack_require(79896);
 
+            // http
             function i() {
-                const e = r(58611);
-                return i = function () {
+                const e = __webpack_require(58611);
+                i = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function s() {
-                const e = r(96064);
+                const e = __webpack_require(96064);
                 return s = function () {
                     return e
                 }, e
             }
 
+            // Provider
             function l() {
-                const e = r(45414);
-                return l = function () {
+                const e = __webpack_require(45414);
+                l = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
-            class c extends s().AppUpdater {
-                constructor(e, t) {
-                    super(e, t), this.nativeUpdater = r(4482).autoUpdater, this.updateInfoForPendingUpdateDownloadedEvent = null, this.nativeUpdater.on("error", (e => {
-                        this._logger.warn(e), this.emit("error", e)
-                    })), this.nativeUpdater.on("update-downloaded", (() => {
+            class MacUpdater extends s().AppUpdater {
+                constructor(options, app) {
+                    super(options, app)
+
+                    this.nativeUpdater = __webpack_require(4482).autoUpdater
+                    this.updateInfoForPendingUpdateDownloadedEvent = null
+                    this.nativeUpdater.on("error", e => {
+                        this._logger.warn(e)
+                        this.emit("error", e)
+                    })
+                    this.nativeUpdater.on("update-downloaded", () => {
                         const e = this.updateInfoForPendingUpdateDownloadedEvent;
-                        this.updateInfoForPendingUpdateDownloadedEvent = null, this.dispatchUpdateDownloaded(e)
-                    }))
+                        this.updateInfoForPendingUpdateDownloadedEvent = null
+                        this.dispatchUpdateDownloaded(e)
+                    })
                 }
 
-                doDownloadUpdate(e) {
+                doDownloadUpdate(downloadUpdateOptions) {
                     this.updateInfoForPendingUpdateDownloadedEvent = null;
-                    const t = e.updateInfoAndProvider.provider.resolveFiles(e.updateInfoAndProvider.info),
-                        r = (0, l().findFile)(t, "zip", ["pkg", "dmg"]);
-                    if (null == r) throw (0, n().newError)(`ZIP file not provided: ${(0, n().safeStringifyJson)(t)}`, "ERR_UPDATER_ZIP_FILE_NOT_FOUND");
-                    const s = (0, i().createServer)();
+                    const files = downloadUpdateOptions.updateInfoAndProvider.provider.resolveFiles(downloadUpdateOptions.updateInfoAndProvider.info)
+                    let zipFileInfo = l().findFile(files, "zip", ["pkg", "dmg"]);
 
-                    function c() {
-                        return `http://127.0.0.1:${s.address().port}`
+                    if (null == zipFileInfo) {
+                        throw n().newError(`ZIP file not provided: ${n().safeStringifyJson(files)}`, "ERR_UPDATER_ZIP_FILE_NOT_FOUND");
                     }
 
-                    return s.on("close", (() => {
-                        this._logger.info(`Proxy server for native Squirrel.Mac is closed (was started to download ${r.url.href})`)
-                    })), this.executeDownload({
+                    const server = i().createServer();
+
+                    function getServerUrl() {
+                        return `http://127.0.0.1:${server.address().port}`
+                    }
+
+                    server.on("close", () => {
+                        this._logger.info(`Proxy server for native Squirrel.Mac is closed (was started to download ${zipFileInfo.url.href})`)
+                    })
+
+                    return this.executeDownload({
                         fileExtension: "zip",
-                        fileInfo: r,
-                        downloadUpdateOptions: e,
-                        task: (e, t) => this.httpExecutor.download(r.url, e, t),
-                        done: async e => {
-                            const t = e.downloadedFile;
-                            this.updateInfoForPendingUpdateDownloadedEvent = e;
-                            let n = r.info.size;
-                            return null == n && (n = (await (0, o().stat)(t)).size), await new Promise(((e, r) => {
-                                const o = "/" + Date.now() + "-" + Math.floor(9999 * Math.random()) + ".zip";
-                                s.on("request", ((i, l) => {
-                                    const u = i.url;
-                                    if (this._logger.info(`${u} requested`), "/" === u) {
-                                        const e = Buffer.from(`{ "url": "${c()}${o}" }`);
-                                        return l.writeHead(200, {
+                        fileInfo: zipFileInfo,
+                        downloadUpdateOptions: downloadUpdateOptions,
+                        task: (destinationFile, downloadOptions) => this.httpExecutor.download(zipFileInfo.url, destinationFile, downloadOptions),
+                        done: async event => {
+                            this.updateInfoForPendingUpdateDownloadedEvent = event;
+
+                            const downloadedFile = event.downloadedFile;
+                            let updateFileSize = zipFileInfo.info.size;
+                            if (null == updateFileSize) {
+                                updateFileSize = (await o().stat(downloadedFile)).size
+                            }
+
+                            return await new Promise((resolve, reject) => {
+                                const fileUrl = "/" + Date.now() + "-" + Math.floor(9999 * Math.random()) + ".zip";
+
+                                server.on("request", (req, res) => {
+                                    const url = req.url;
+                                    this._logger.info(`${url} requested`)
+                                    if ("/" === url) {
+                                        const data = Buffer.from(`{ "url": "${getServerUrl()}${fileUrl}" }`);
+                                        res.writeHead(200, {
                                             "Content-Type": "application/json",
-                                            "Content-Length": e.length
-                                        }), void l.end(e)
+                                            "Content-Length": data.length
+                                        })
+                                        res.end(data)
+                                        return
                                     }
-                                    if (!u.startsWith(o)) return this._logger.warn(`${u} requested, but not supported`), l.writeHead(404), void l.end();
-                                    this._logger.info(`${o} requested by Squirrel.Mac, pipe ${t}`);
-                                    let d = !1;
-                                    l.on("finish", (() => {
+                                    if (!url.startsWith(fileUrl)) {
+                                        this._logger.warn(`${url} requested, but not supported`)
+                                        res.writeHead(404)
+                                        res.end()
+                                        return
+                                    }
+
+                                    this._logger.info(`${fileUrl} requested by Squirrel.Mac, pipe ${downloadedFile}`);
+
+                                    let errorOccurred = false
+
+                                    res.on("finish", () => {
                                         try {
-                                            setImmediate((() => s.close()))
+                                            setImmediate((() => server.close()))
                                         } finally {
-                                            d || (this.nativeUpdater.removeListener("error", r), e([]))
+                                            errorOccurred || (this.nativeUpdater.removeListener("error", reject), resolve([]))
                                         }
-                                    }));
-                                    const p = (0, a.createReadStream)(t);
-                                    p.on("error", (e => {
+                                    })
+                                    const readStream = __fs.createReadStream(downloadedFile)
+                                    readStream.on("error", e => {
                                         try {
-                                            l.end()
+                                            res.end()
                                         } catch (e) {
                                             this._logger.warn(`cannot end response: ${e}`)
                                         }
-                                        d = !0, this.nativeUpdater.removeListener("error", r), r(new Error(`Cannot pipe "${t}": ${e}`))
-                                    })), l.writeHead(200, {
+                                        errorOccurred = true
+                                        this.nativeUpdater.removeListener("error", reject)
+                                        reject(new Error(`Cannot pipe "${downloadedFile}": ${e}`))
+                                    })
+                                    res.writeHead(200, {
                                         "Content-Type": "application/zip",
-                                        "Content-Length": n
-                                    }), p.pipe(l)
-                                })), s.listen(0, "127.0.0.1", (() => {
+                                        "Content-Length": updateFileSize
+                                    })
+                                    readStream.pipe(res)
+                                })
+
+                                server.listen(0, "127.0.0.1", () => {
                                     this.nativeUpdater.setFeedURL({
-                                        url: c(),
+                                        url: getServerUrl(),
                                         headers: {"Cache-Control": "no-cache"}
-                                    }), this.nativeUpdater.once("error", r), this.nativeUpdater.checkForUpdates()
-                                }))
-                            }))
+                                    })
+                                    this.nativeUpdater.once("error", reject)
+                                    this.nativeUpdater.checkForUpdates()
+                                })
+                            })
                         }
                     })
                 }
@@ -29438,7 +29462,95 @@
                 }
             }
 
-            t.t = c
+            exports.t = MacUpdater
+        },
+        // electron-updater/BaseUpdater
+        86216: (module, exports, __webpack_require) => {
+            "use strict";
+
+            function n() {
+                const e = __webpack_require(96064);
+                n = function () {
+                    return e
+                }
+                return e
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            class BaseUpdater extends n().AppUpdater {
+                constructor(options, app) {
+                    super(options, app)
+
+                    this.quitAndInstallCalled = false
+                    this.quitHandlerAdded = false
+                }
+
+                quitAndInstall(isSilent = false, isForceRunAfter = false) {
+                    this._logger.info("Install on explicit quitAndInstall")
+
+                    this.install(isSilent, !isSilent || isForceRunAfter)
+                        ? setImmediate(() => {
+                            this.app.quit()
+                        })
+                        : this.quitAndInstallCalled = false
+                }
+
+                executeDownload(taskOptions) {
+                    return super.executeDownload(Object.assign({}, taskOptions, {
+                        done: async event => {
+                            this.dispatchUpdateDownloaded(event)
+                            this.addQuitHandler()
+                        }
+                    }))
+                }
+
+                install(isSilent, isForceRunAfter) {
+                    if (this.quitAndInstallCalled) {
+                        this._logger.warn("install call ignored: quitAndInstallCalled is set to true")
+                        return false
+                    }
+
+                    const downloadedUpdateHelper = this.downloadedUpdateHelper
+                    const installerPath = null == downloadedUpdateHelper ? null : downloadedUpdateHelper.file
+                    const downloadedFileInfo = null == downloadedUpdateHelper ? null : downloadedUpdateHelper.downloadedFileInfo
+                    if (null == installerPath || null == downloadedFileInfo) {
+                        this.dispatchError(new Error("No valid update available, can't quit and install"))
+                        return false
+                    }
+
+                    this.quitAndInstallCalled = true
+
+                    try {
+                        this._logger.info(`Install: isSilent: ${isSilent}, isForceRunAfter: ${isForceRunAfter}`)
+                        return this.doInstall({
+                            installerPath: installerPath,
+                            isSilent: isSilent,
+                            isForceRunAfter: isForceRunAfter,
+                            isAdminRightsRequired: downloadedFileInfo.isAdminRightsRequired
+                        })
+                    } catch (e) {
+                        this.dispatchError(e)
+                        return false
+                    }
+                }
+
+                addQuitHandler() {
+                    if (!this.quitHandlerAdded && this.autoInstallOnAppQuit) {
+                        this.quitHandlerAdded = true
+                        this.app.onQuit(exitCode => {
+                            this.quitAndInstallCalled
+                                ? this._logger.info("Update installer has already been triggered. Quitting application.")
+                                : 0 === exitCode
+                                    ? (this._logger.info("Auto install update on quit"), this.install(true, false))
+                                    : this._logger.info(`Update will be not installed on quit because application is quitting with exit code ${exitCode}`)
+                        })
+                    }
+                }
+            }
+
+            exports.BaseUpdater = BaseUpdater
         },
         // electron-updater/NsisUpdater
         35778: (e, t, r) => {
@@ -29765,46 +29877,51 @@
             t.g = d
         },
 
-        4558: (e, t, r) => {
+        4558: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.copyData = c, t.DataSplitter = void 0;
-            var o = r(79896);
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.copyData = copyData
+
+            let __fs = __webpack_require(79896);
 
             function a() {
-                const e = r(2203);
+                const e = __webpack_require(2203);
                 return a = function () {
                     return e
                 }, e
             }
 
             function i() {
-                const e = r(70491);
+                const e = __webpack_require(70491);
                 return i = function () {
                     return e
                 }, e
             }
 
             const s = Buffer.from("\r\n\r\n");
-            var l;
+            let l = {}
 
-            function c(e, t, r, n, a) {
-                const i = (0, o.createReadStream)("", {fd: r, autoClose: !1, start: e.start, end: e.end - 1});
+            function copyData(e, t, r, n, a) {
+                const i = (0, __fs.createReadStream)("", {fd: r, autoClose: !1, start: e.start, end: e.end - 1});
                 i.on("error", n), i.once("end", a), i.pipe(t, {end: !1})
             }
 
-            !function (e) {
-                e[e.INIT = 0] = "INIT", e[e.HEADER = 1] = "HEADER", e[e.BODY = 2] = "BODY"
-            }(l || (l = {}));
+            !function (l) {
+                l[l.INIT = 0] = "INIT"
+                l[l.HEADER = 1] = "HEADER"
+                l[l.BODY = 2] = "BODY"
+            }(l)
 
-            class u extends a().Writable {
+            class DataSplitter extends a().Writable {
                 constructor(e, t, r, n, o, a) {
                     super(), this.out = e, this.options = t, this.partIndexToTaskIndex = r, this.partIndexToLength = o, this.finishHandler = a, this.partIndex = -1, this.headerListBuffer = null, this.readState = l.INIT, this.ignoreByteCount = 0, this.remainingPartDataCount = 0, this.actualPartLength = 0, this.boundaryLength = n.length + 4, this.ignoreByteCount = this.boundaryLength - 2
                 }
@@ -29858,7 +29975,7 @@
                         const o = () => {
                             if (e === t) return void r();
                             const a = this.options.tasks[e];
-                            a.kind === i().OperationKind.COPY ? c(a, this.out, this.options.oldFileFd, n, (() => {
+                            a.kind === i().OperationKind.COPY ? copyData(a, this.out, this.options.oldFileFd, n, (() => {
                                 e++, o()
                             })) : n(new Error("Task kind must be COPY"))
                         };
@@ -29894,51 +30011,55 @@
                 }
             }
 
-            t.DataSplitter = u
+            exports.DataSplitter = DataSplitter
         },
-        50847: (e, t, r) => {
+        // DifferentialDownloader
+        50847: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(80115);
+                const e = __webpack_require(80115);
                 return o = function () {
                     return e
                 }, e
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.DifferentialDownloader = void 0;
-            var a = r(79896);
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            let a = __webpack_require(79896);
 
             function i() {
-                const e = r(4558);
-                return i = function () {
+                const e = __webpack_require(4558);
+                i = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function s() {
-                const e = r(16857);
+                const e = __webpack_require(16857);
                 return s = function () {
                     return e
                 }, e
             }
 
             function l() {
-                const e = r(70491);
+                const e = __webpack_require(70491);
                 return l = function () {
                     return e
                 }, e
             }
 
             function c() {
-                const e = r(51939);
+                const e = __webpack_require(51939);
                 return c = function () {
                     return e
                 }, e
@@ -29948,7 +30069,7 @@
                 return new Intl.NumberFormat("en").format((e / 1024).toFixed(2)) + t
             }
 
-            t.DifferentialDownloader = class {
+            exports.DifferentialDownloader = class {
                 constructor(e, t, r) {
                     this.blockAwareFileInfo = e, this.httpExecutor = t, this.options = r, this.fileMetadataBuffer = null, this.logger = r.logger
                 }
@@ -30189,31 +30310,32 @@
                 return t
             }
         },
-        51939: (e, t, r) => {
+        51939: (module, exports, __webpack_require) => {
             "use strict";
 
             function n() {
-                const e = r(79529);
+                const e = __webpack_require(79529);
                 return n = function () {
                     return e
                 }, e
             }
 
             function o() {
-                const e = r(4558);
-                return o = function () {
+                const e = __webpack_require(4558);
+                o = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function a() {
-                const e = r(70491);
+                const e = __webpack_require(70491);
                 return a = function () {
                     return e
                 }, e
             }
 
-            function i(e, t) {
+            function checkIsRangesSupported(e, t) {
                 if (e.statusCode >= 400) return t((0, n().createHttpError)(e)), !1;
                 if (206 !== e.statusCode) {
                     const r = (0, n().safeGetHeader)(e, "accept-ranges");
@@ -30222,7 +30344,9 @@
                 return !0
             }
 
-            Object.defineProperty(t, "__esModule", {value: !0}), t.executeTasksUsingMultipleRangeRequests = function (e, t, r, s, l) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.executeTasksUsingMultipleRangeRequests = function (e, t, r, s, l) {
                 const c = u => {
                     if (u >= t.length) return null != e.fileMetadataBuffer && r.write(e.fileMetadataBuffer), void r.end();
                     const d = u + 1e3;
@@ -30241,7 +30365,7 @@
                                     const t = e.createRequestOptions();
                                     t.headers.Range = `bytes=${u.start}-${u.end - 1}`;
                                     const o = e.httpExecutor.createRequest(t, (e => {
-                                        i(e, l) && (e.pipe(r, {end: !1}), e.once("end", (() => n(c))))
+                                        checkIsRangesSupported(e, l) && (e.pipe(r, {end: !1}), e.once("end", (() => n(c))))
                                     }));
                                     e.httpExecutor.addErrorAndTimeoutHandlers(o, l), o.end()
                                 }
@@ -30251,7 +30375,7 @@
                         const h = e.createRequestOptions();
                         h.headers.Range = c.substring(0, c.length - 2);
                         const f = e.httpExecutor.createRequest(h, (e => {
-                            if (!i(e, l)) return;
+                            if (!checkIsRangesSupported(e, l)) return;
                             const a = (0, n().safeGetHeader)(e, "content-type"),
                                 c = /^multipart\/.+?(?:; boundary=(?:(?:"(.+)")|(?:([^\s]+))))$/i.exec(a);
                             if (null == c) return void l(new Error(`Content-Type "multipart/byteranges" is expected, but got "${a}"`));
@@ -30262,7 +30386,8 @@
                     }(e, {tasks: t, start: u, end: Math.min(t.length, d), oldFileFd: s}, r, (() => c(d)), l)
                 };
                 return c
-            }, t.checkIsRangesSupported = i
+            }
+            exports.checkIsRangesSupported = checkIsRangesSupported
         },
 
         // electron-updater/electronHttpExecutor
@@ -30368,11 +30493,13 @@
                 }, e
             }
 
+            // Provider
             function i() {
                 const e = __webpack_require(45414);
-                return i = function () {
+                i = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             let s;
@@ -30388,15 +30515,15 @@
                 }
                 return baseUrl
             }
-            exports.newUrlFromBase = function (channelFile, baseUrl, r = false) {
-                const o = new (n().URL)(channelFile, baseUrl)
+            exports.newUrlFromBase = function (path, baseUrl, addNoCacheQuery = false) {
+                const url = new (n().URL)(path, baseUrl)
                 const search = baseUrl.search;
                 if (null != search && 0 !== search.length) {
-                    o.search = search
-                } else if (r) {
-                    o.search = `noCache=${Date.now().toString(32)}`
+                    url.search = search
+                } else if (addNoCacheQuery) {
+                    url.search = `noCache=${Date.now().toString(32)}`
                 }
-                return o
+                return url
             }
 
             Object.defineProperty(exports, "AppUpdater", {
@@ -30422,7 +30549,11 @@
             })
             Object.defineProperty(exports, "autoUpdater", {
                 enumerable: !0,
-                get: () => s || (s = "win32" === process.platform ? new (__webpack_require(35778).p) : "darwin" === process.platform ? new (__webpack_require(95136).t) : new (__webpack_require(49619).g), s)
+                get: () => s || (s = "win32" === process.platform
+                    ? new (__webpack_require(35778).p)
+                    : "darwin" === process.platform
+                        ? new (__webpack_require(95136).t)
+                        : new (__webpack_require(49619).g), s)
             });
 
             const DOWNLOAD_PROGRESS = "download-progress"
@@ -30466,37 +30597,46 @@
 
             function n() {
                 const e = __webpack_require(79529);
-                return n = function () {
+                n = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
+            // BintrayProvider
             function o() {
                 const e = __webpack_require(19727);
-                return o = function () {
+                o = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
+            // GenericProvider
             function a() {
                 const e = __webpack_require(2747);
-                return a = function () {
+                a = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
+            // BaseGitHubProvider
             function i() {
                 const e = __webpack_require(85193);
-                return i = function () {
+                i = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
+            // PrivateGitHubProvider
             function s() {
                 const e = __webpack_require(90222);
-                return s = function () {
+                s = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function isUrlProbablySupportMultiRangeRequests(url) {
@@ -30506,465 +30646,46 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
             exports.isUrlProbablySupportMultiRangeRequests = isUrlProbablySupportMultiRangeRequests
-            exports.createClient = function (config, t, r) {
-                if ("string" == typeof config) {
+
+            exports.createClient = function (configuration, updater, runtimeOptions) {
+                if ("string" == typeof configuration) {
                     throw n().newError("Please pass PublishConfiguration object", "ERR_UPDATER_INVALID_PROVIDER_CONFIGURATION");
                 }
-                const provider = config.provider;
+
+                const provider = configuration.provider;
                 switch (provider) {
                     case"github":
-                        const u = config,
-                            d = (u.private ? process.env.GH_TOKEN || process.env.GITHUB_TOKEN : null) || u.token;
-                        return null == d ? new (i().GitHubProvider)(u, t, r) : new (s().PrivateGitHubProvider)(u, t, d, r);
+                        let token = (configuration.private ? process.env.GH_TOKEN || process.env.GITHUB_TOKEN : null) || configuration.token
+                        return null == token
+                            ? new (i().GitHubProvider)(configuration, updater, runtimeOptions)
+                            : new (s().PrivateGitHubProvider)(configuration, updater, token, runtimeOptions);
+
                     case"s3":
                     case"spaces":
                         return new (a().GenericProvider)({
                             provider: "generic",
-                            url: (0, n().getS3LikeProviderBaseUrl)(config),
-                            channel: config.channel || null
-                        }, t, Object.assign({}, r, {isUseMultipleRangeRequest: "spaces" === provider}));
+                            url: n().getS3LikeProviderBaseUrl(configuration),
+                            channel: configuration.channel || null
+                        }, updater, {
+                            ...runtimeOptions,
+                            isUseMultipleRangeRequest: "spaces" === provider
+                        });
+
                     case"generic":
-                        const _config = config;
-                        return new (a().GenericProvider)(_config, t, Object.assign({}, r, {
-                            isUseMultipleRangeRequest: false !== _config.useMultipleRangeRequest && isUrlProbablySupportMultiRangeRequests(_config.url)
-                        }));
+                        return new (a().GenericProvider)(configuration, updater, {
+                            ...runtimeOptions,
+                            isUseMultipleRangeRequest: false !== configuration.useMultipleRangeRequest && isUrlProbablySupportMultiRangeRequests(configuration.url),
+                        });
+
                     case"bintray":
-                        return new (o().BintrayProvider)(config, r);
+                        return new (o().BintrayProvider)(configuration, runtimeOptions);
+
                     default:
-                        throw (0, n().newError)(`Unsupported provider: ${provider}`, "ERR_UPDATER_UNSUPPORTED_PROVIDER")
+                        throw n().newError(`Unsupported provider: ${provider}`, "ERR_UPDATER_UNSUPPORTED_PROVIDER")
                 }
             }
         },
-        19727: (e, t, r) => {
-            "use strict";
 
-            function n() {
-                const e = r(79529);
-                return n = function () {
-                    return e
-                }, e
-            }
-
-            function o() {
-                const e = r(85064);
-                return o = function () {
-                    return e
-                }, e
-            }
-
-            function a() {
-                const e = r(16857);
-                return a = function () {
-                    return e
-                }, e
-            }
-
-            function i() {
-                const e = r(94625);
-                return i = function () {
-                    return e
-                }, e
-            }
-
-            function s() {
-                const e = r(45414);
-                return s = function () {
-                    return e
-                }, e
-            }
-
-            Object.defineProperty(t, "__esModule", {value: !0}), t.BintrayProvider = void 0;
-
-            class l extends i().Provider {
-                constructor(e, t) {
-                    super(t), this.client = new (o().BintrayClient)(e, t.executor, new (n().CancellationToken)), this.baseUrl = (0, i().newBaseUrl)(`https://dl.bintray.com/${this.client.owner}/${this.client.repo}`)
-                }
-
-                setRequestHeaders(e) {
-                    super.setRequestHeaders(e), this.client.setRequestHeaders(e)
-                }
-
-                async getLatestVersion() {
-                    try {
-                        const e = await this.client.getVersion("_latest"),
-                            t = (0, i().getChannelFilename)(this.getDefaultChannelName()),
-                            r = await this.client.getVersionFiles(e.name),
-                            o = r.find((e => e.name.endsWith(`_${t}`) || e.name.endsWith(`-${t}`)));
-                        if (null == o) throw (0, n().newError)(`Cannot find channel file "${t}", existing files:\n${r.map((e => JSON.stringify(e, null, 2))).join(",\n")}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
-                        const l = new (a().URL)(`https://dl.bintray.com/${this.client.owner}/${this.client.repo}/${o.name}`);
-                        return (0, s().parseUpdateInfo)(await this.httpRequest(l), t, l)
-                    } catch (e) {
-                        if ("statusCode" in e && 404 === e.statusCode) throw (0, n().newError)(`No latest version, please ensure that user, package and repository correctly configured. Or at least one version is published. ${e.stack || e.message}`, "ERR_UPDATER_LATEST_VERSION_NOT_FOUND");
-                        throw e
-                    }
-                }
-
-                resolveFiles(e) {
-                    return (0, s().resolveFiles)(e, this.baseUrl)
-                }
-            }
-
-            t.BintrayProvider = l
-        },
-
-        // GenericProvider
-        2747: (module, exports, __webpack_require) => {
-            "use strict";
-
-            function n() {
-                const e = __webpack_require(79529);
-                return n = function () {
-                    return e
-                }, e
-            }
-
-            function o() {
-                const e = __webpack_require(94625);
-                return o = function () {
-                    return e
-                }, e
-            }
-
-            function a() {
-                const e = __webpack_require(45414);
-                return a = function () {
-                    return e
-                }, e
-            }
-
-            Object.defineProperty(exports, "__esModule", {value: !0})
-
-
-            class GenericProvider extends o().Provider {
-                constructor(configuration, updater, options) {
-                    super(options)
-                    this.configuration = configuration
-                    this.updater = updater
-                    this.baseUrl = o().newBaseUrl(this.configuration.url)
-                }
-
-                get channel() {
-                    const channel = this.updater.channel || this.configuration.channel;
-                    return null == channel
-                        ? this.getDefaultChannelName()
-                        : this.getCustomChannelName(channel)
-                }
-
-                async getLatestVersion() {
-                    debugger
-
-                    const channelFilename = o().getChannelFilename(this.channel)
-
-                    // https://desktop-release.notion-static.com/arm64-mac.yml?noCache=1htbc11t2
-                    const _url = o().newUrlFromBase(channelFilename, this.baseUrl, this.updater.isAddNoCacheQuery);
-
-                    for (let r = 0; ; r++) {
-                        try {
-
-                            const __version = {
-                                "version": "3.6.0",
-                                "files": [
-                                    {
-                                        "url": "Notion-arm64-3.6.0.zip",
-                                        "sha512": "CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==",
-                                        "size": 96167577
-                                    },
-                                    {
-                                        "url": "Notion-3.6.0-arm64.dmg",
-                                        "sha512": "ie0OrDj8s9RPirb3BhcjuwJec5h3ySN+2HNQswHT5bILsYSHQLdfp7vvKChnWvlTKbofxp+CmF37gWvgGx4yUQ==",
-                                        "size": 96337451
-                                    }
-                                ],
-                                "path": "Notion-arm64-3.6.0.zip",
-                                "sha512": "CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==",
-                                "releaseDate": "2024-05-03T19:28:11.345Z"
-                            }
-
-                            return a().parseUpdateInfo(await this.httpRequest(_url), channelFilename, _url)
-                        } catch (error) {
-                            if (error instanceof n().HttpError && 404 === error.statusCode) {
-                                throw n().newError(`Cannot find channel "${channelFilename}" update info: ${error.stack || error.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
-                            }
-                            if ("ECONNREFUSED" === error.code && r < 3) {
-                                await new Promise((resolve, reject) => {
-                                    try {
-                                        setTimeout(resolve, 1e3 * r)
-                                    } catch (e) {
-                                        reject(e)
-                                    }
-                                })
-                                continue
-                            }
-                            throw error
-                        }
-                    }
-                }
-
-                resolveFiles(e) {
-                    return (0, a().resolveFiles)(e, this.baseUrl)
-                }
-            }
-
-            exports.GenericProvider = GenericProvider
-        },
-        85193: (e, t, r) => {
-            "use strict";
-
-            function n() {
-                const e = r(79529);
-                return n = function () {
-                    return e
-                }, e
-            }
-
-            function o() {
-                const e = function (e) {
-                    if (e && e.__esModule) return e;
-                    var t = {};
-                    if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
-                        var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
-                        n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
-                    }
-                    return t.default = e, t
-                }(r(44993));
-                return o = function () {
-                    return e
-                }, e
-            }
-
-            function a() {
-                const e = r(16857);
-                return a = function () {
-                    return e
-                }, e
-            }
-
-            function i() {
-                const e = r(94625);
-                return i = function () {
-                    return e
-                }, e
-            }
-
-            function s() {
-                const e = r(45414);
-                return s = function () {
-                    return e
-                }, e
-            }
-
-            Object.defineProperty(t, "__esModule", {value: !0}), t.computeReleaseNotes = d, t.GitHubProvider = t.BaseGitHubProvider = void 0;
-            const l = /\/tag\/v?([^\/]+)$/;
-
-            class c extends i().Provider {
-                constructor(e, t, r) {
-                    super(Object.assign({}, r, {isUseMultipleRangeRequest: !1})), this.options = e, this.baseUrl = (0, i().newBaseUrl)((0, n().githubUrl)(e, t));
-                    const o = "github.com" === t ? "api.github.com" : t;
-                    this.baseApiUrl = (0, i().newBaseUrl)((0, n().githubUrl)(e, o))
-                }
-
-                computeGithubBasePath(e) {
-                    const t = this.options.host;
-                    return null != t && "github.com" !== t && "api.github.com" !== t ? `/api/v3${e}` : e
-                }
-            }
-
-            function u(e) {
-                const t = e.elementValueOrEmpty("content");
-                return "No content." === t ? "" : t
-            }
-
-            function d(e, t, r, n) {
-                if (!t) return u(n);
-                const a = [];
-                for (const t of r.getElements("entry")) {
-                    const r = t.element("link").attribute("href").match(/\/tag\/v?([^\/]+)$/)[1];
-                    o().lt(e, r) && a.push({version: r, note: u(t)})
-                }
-                return a.sort(((e, t) => o().rcompare(e.version, t.version)))
-            }
-
-            t.BaseGitHubProvider = c, t.GitHubProvider = class extends c {
-                constructor(e, t, r) {
-                    super(e, "github.com", r), this.options = e, this.updater = t
-                }
-
-                async getLatestVersion() {
-                    const e = new (n().CancellationToken),
-                        t = await this.httpRequest((0, i().newUrlFromBase)(`${this.basePath}.atom`, this.baseUrl), {accept: "application/xml, application/atom+xml, text/xml, */*"}, e),
-                        r = (0, n().parseXml)(t);
-                    let o, a = r.element("entry", !1, "No published versions on GitHub");
-                    try {
-                        if (this.updater.allowPrerelease) o = a.element("link").attribute("href").match(l)[1]; else {
-                            o = await this.getLatestVersionString(e);
-                            for (const e of r.getElements("entry")) if (e.element("link").attribute("href").match(l)[1] === o) {
-                                a = e;
-                                break
-                            }
-                        }
-                    } catch (e) {
-                        throw (0, n().newError)(`Cannot parse releases feed: ${e.stack || e.message},\nXML:\n${t}`, "ERR_UPDATER_INVALID_RELEASE_FEED")
-                    }
-                    if (null == o) throw (0, n().newError)("No published versions on GitHub", "ERR_UPDATER_NO_PUBLISHED_VERSIONS");
-                    const c = (0, i().getChannelFilename)(this.getDefaultChannelName()),
-                        u = (0, i().newUrlFromBase)(this.getBaseDownloadPath(o, c), this.baseUrl),
-                        p = this.createRequestOptions(u);
-                    let h;
-                    try {
-                        h = await this.executor.request(p, e)
-                    } catch (e) {
-                        if (!this.updater.allowPrerelease && e instanceof n().HttpError && 404 === e.statusCode) throw (0, n().newError)(`Cannot find ${c} in the latest release artifacts (${u}): ${e.stack || e.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
-                        throw e
-                    }
-                    const f = (0, s().parseUpdateInfo)(h, c, u);
-                    return null == f.releaseName && (f.releaseName = a.elementValueOrEmpty("title")), null == f.releaseNotes && (f.releaseNotes = d(this.updater.currentVersion, this.updater.fullChangelog, r, a)), f
-                }
-
-                async getLatestVersionString(e) {
-                    const t = this.options,
-                        r = null == t.host || "github.com" === t.host ? (0, i().newUrlFromBase)(`${this.basePath}/latest`, this.baseUrl) : new (a().URL)(`${this.computeGithubBasePath(`/repos/${t.owner}/${t.repo}/releases`)}/latest`, this.baseApiUrl);
-                    try {
-                        const t = await this.httpRequest(r, {Accept: "application/json"}, e);
-                        if (null == t) return null;
-                        const n = JSON.parse(t);
-                        return n.tag_name.startsWith("v") ? n.tag_name.substring(1) : n.tag_name
-                    } catch (e) {
-                        throw (0, n().newError)(`Unable to find latest version on GitHub (${r}), please ensure a production release exists: ${e.stack || e.message}`, "ERR_UPDATER_LATEST_VERSION_NOT_FOUND")
-                    }
-                }
-
-                get basePath() {
-                    return `/${this.options.owner}/${this.options.repo}/releases`
-                }
-
-                resolveFiles(e) {
-                    return (0, s().resolveFiles)(e, this.baseUrl, (t => this.getBaseDownloadPath(e.version, t.replace(/ /g, "-"))))
-                }
-
-                getBaseDownloadPath(e, t) {
-                    return `${this.basePath}/download/${!1 === this.options.vPrefixedTagName ? "" : "v"}${e}/${t}`
-                }
-            }
-        },
-        90222: (e, t, r) => {
-            "use strict";
-
-            function n() {
-                const e = r(79529);
-                return n = function () {
-                    return e
-                }, e
-            }
-
-            function o() {
-                const e = r(69866);
-                return o = function () {
-                    return e
-                }, e
-            }
-
-            Object.defineProperty(t, "__esModule", {value: !0}), t.PrivateGitHubProvider = void 0;
-            var a = function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
-                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
-                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
-                }
-                return t.default = e, t
-            }(r(16928));
-
-            function i() {
-                const e = r(16857);
-                return i = function () {
-                    return e
-                }, e
-            }
-
-            function s() {
-                const e = r(85193);
-                return s = function () {
-                    return e
-                }, e
-            }
-
-            function l() {
-                const e = r(94625);
-                return l = function () {
-                    return e
-                }, e
-            }
-
-            function c() {
-                const e = r(45414);
-                return c = function () {
-                    return e
-                }, e
-            }
-
-            class u extends s().BaseGitHubProvider {
-                constructor(e, t, r, n) {
-                    super(e, "api.github.com", n), this.updater = t, this.token = r
-                }
-
-                createRequestOptions(e, t) {
-                    const r = super.createRequestOptions(e, t);
-                    return r.redirect = "manual", r
-                }
-
-                async getLatestVersion() {
-                    const e = new (n().CancellationToken),
-                        t = (0, l().getChannelFilename)(this.getDefaultChannelName()),
-                        r = await this.getLatestVersionInfo(e), a = r.assets.find((e => e.name === t));
-                    if (null == a) throw (0, n().newError)(`Cannot find ${t} in the release ${r.html_url || r.name}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
-                    const s = new (i().URL)(a.url);
-                    let c;
-                    try {
-                        c = (0, o().safeLoad)(await this.httpRequest(s, this.configureHeaders("application/octet-stream"), e))
-                    } catch (e) {
-                        if (e instanceof n().HttpError && 404 === e.statusCode) throw (0, n().newError)(`Cannot find ${t} in the latest release artifacts (${s}): ${e.stack || e.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
-                        throw e
-                    }
-                    return c.assets = r.assets, c
-                }
-
-                get fileExtraDownloadHeaders() {
-                    return this.configureHeaders("application/octet-stream")
-                }
-
-                configureHeaders(e) {
-                    return {accept: e, authorization: `token ${this.token}`}
-                }
-
-                async getLatestVersionInfo(e) {
-                    const t = this.updater.allowPrerelease;
-                    let r = this.basePath;
-                    t || (r = `${r}/latest`);
-                    const o = (0, l().newUrlFromBase)(r, this.baseUrl);
-                    try {
-                        const r = JSON.parse(await this.httpRequest(o, this.configureHeaders("application/vnd.github.v3+json"), e));
-                        return t ? r.find((e => e.prerelease)) || r[0] : r
-                    } catch (e) {
-                        throw (0, n().newError)(`Unable to find latest version on GitHub (${o}), please ensure a production release exists: ${e.stack || e.message}`, "ERR_UPDATER_LATEST_VERSION_NOT_FOUND")
-                    }
-                }
-
-                get basePath() {
-                    return this.computeGithubBasePath(`/repos/${this.options.owner}/${this.options.repo}/releases`)
-                }
-
-                resolveFiles(e) {
-                    return (0, c().getFileList)(e).map((t => {
-                        const r = a.posix.basename(t.url).replace(/ /g, "-"),
-                            o = e.assets.find((e => null != e && e.name === r));
-                        if (null == o) throw (0, n().newError)(`Cannot find asset "${r}" in: ${JSON.stringify(e.assets, null, 2)}`, "ERR_UPDATER_ASSET_NOT_FOUND");
-                        return {url: new (i().URL)(o.url), info: t}
-                    }))
-                }
-            }
-
-            t.PrivateGitHubProvider = u
-        },
 
         // Provider
         45414: (module, exports, __webpack_require) => {
@@ -30977,52 +30698,86 @@
                 }, e
             }
 
+            // yml parser
             function o() {
                 const e = __webpack_require(69866);
-                return o = function () {
+                o = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
             function a() {
                 const e = __webpack_require(94625);
-                return a = function () {
+                a = function () {
                     return e
-                }, e
+                }
+                return e
             }
 
-            function i(e) {
-                const t = e.files;
-                if (null != t && t.length > 0) return t;
-                if (null != e.path) return [{url: e.path, sha2: e.sha2, sha512: e.sha512}];
-                throw (0, n().newError)(`No files provided: ${(0, n().safeStringifyJson)(e)}`, "ERR_UPDATER_NO_FILES_PROVIDED")
+            function getFileList(info) {
+                const files = info.files;
+                if (null != files && files.length > 0) {
+                    return files;
+                }
+                if (null != info.path) {
+                    return [
+                        {
+                            url: info.path,
+                            sha2: info.sha2,
+                            sha512: info.sha512
+                        }
+                    ];
+                }
+                throw n().newError(`No files provided: ${n().safeStringifyJson(info)}`, "ERR_UPDATER_NO_FILES_PROVIDED")
             }
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            exports.findFile = function (e, t, r) {
-                if (0 === e.length) throw (0, n().newError)("No files provided", "ERR_UPDATER_NO_FILES_PROVIDED");
-                const o = e.find((e => e.url.pathname.toLowerCase().endsWith(`.${t}`)));
-                return null != o ? o : null == r ? e[0] : e.find((e => !r.some((t => e.url.pathname.toLowerCase().endsWith(`.${t}`)))))
-            }
-            exports.parseUpdateInfo = function (e, t, r) {
-                if (null == e) throw (0, n().newError)(`Cannot parse update info from ${t} in the latest release artifacts (${r}): rawData: null`, "ERR_UPDATER_INVALID_UPDATE_INFO");
-                let a;
-                try {
-                    a = (0, o().safeLoad)(e)
-                } catch (o) {
-                    throw (0, n().newError)(`Cannot parse update info from ${t} in the latest release artifacts (${r}): ${o.stack || o.message}, rawData: ${e}`, "ERR_UPDATER_INVALID_UPDATE_INFO")
+            exports.findFile = function (files, ext, r) {
+                if (0 === files.length) {
+                    throw n().newError("No files provided", "ERR_UPDATER_NO_FILES_PROVIDED");
                 }
-                return a
+                const targetFile = files.find(file => file.url.pathname.toLowerCase().endsWith(`.${ext}`))
+                return null != targetFile
+                    ? targetFile
+                    : null == r
+                        ? files[0]
+                        : files.find(file => !r.some(ext => file.url.pathname.toLowerCase().endsWith(`.${ext}`)))
             }
-            exports.getFileList = i
-            exports.resolveFiles = function (e, t, r = (e => e)) {
-                const o = i(e).map((e => {
-                    if (null == e.sha2 && null == e.sha512) throw (0, n().newError)(`Update info doesn't contain nor sha256 neither sha512 checksum: ${(0, n().safeStringifyJson)(e)}`, "ERR_UPDATER_NO_CHECKSUM");
-                    return {url: (0, a().newUrlFromBase)(r(e.url), t), info: e}
-                })), s = e.packages, l = null == s ? null : s[process.arch] || s.ia32;
-                return null != l && (o[0].packageInfo = Object.assign({}, l, {path: (0, a().newUrlFromBase)(r(l.path), t).href})), o
+            exports.parseUpdateInfo = function (content, filename, url) {
+                if (null == content) {
+                    throw n().newError(`Cannot parse update info from ${filename} in the latest release artifacts (${url}): rawData: null`, "ERR_UPDATER_INVALID_UPDATE_INFO");
+                }
+                let result;
+                try {
+                    result = o().safeLoad(content)
+                } catch (error) {
+                    throw n().newError(`Cannot parse update info from ${filename} in the latest release artifacts (${url}): ${error.stack || error.message}, rawData: ${content}`, "ERR_UPDATER_INVALID_UPDATE_INFO")
+                }
+                return result
             }
+            exports.getFileList = getFileList
+            exports.resolveFiles = function (info, baseUrl, filter = (e => e)) {
+                const files = getFileList(info).map(file => {
+                    if (null == file.sha2 && null == file.sha512) {
+                        throw n().newError(`Update info doesn't contain nor sha256 neither sha512 checksum: ${n().safeStringifyJson(file)}`, "ERR_UPDATER_NO_CHECKSUM");
+                    }
+                    return {
+                        url: a().newUrlFromBase(filter(file.url), baseUrl),
+                        info: file
+                    }
+                })
+                let packages = info.packages
+                let l = null == packages ? null : packages[process.arch] || packages.ia32;
+                if (null != l) {
+                    files[0].packageInfo = Object.assign({}, l, {
+                        path: a().newUrlFromBase(filter(l.path), baseUrl).href
+                    })
+                }
+                return files
+            }
+
             exports.Provider = class {
                 constructor(runtimeOptions) {
                     this.runtimeOptions = runtimeOptions
@@ -31076,6 +30831,448 @@
                 }
             }
         },
+        // GenericProvider
+        2747: (module, exports, __webpack_require) => {
+            "use strict";
+
+            function n() {
+                const e = __webpack_require(79529);
+                return n = function () {
+                    return e
+                }, e
+            }
+
+            function o() {
+                const e = __webpack_require(94625);
+                return o = function () {
+                    return e
+                }, e
+            }
+
+            // Provider
+            function a() {
+                const e = __webpack_require(45414);
+                a = function () {
+                    return e
+                }
+                return e
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            class GenericProvider extends o().Provider {
+                constructor(configuration, updater, runtimeOptions) {
+                    super(runtimeOptions)
+                    this.configuration = configuration
+                    this.updater = updater
+                    this.baseUrl = o().newBaseUrl(this.configuration.url)
+                }
+
+                get channel() {
+                    const channel = this.updater.channel || this.configuration.channel;
+                    return null == channel
+                        ? this.getDefaultChannelName()
+                        : this.getCustomChannelName(channel)
+                }
+
+                async getLatestVersion() {
+                    const channelFilename = o().getChannelFilename(this.channel)
+
+                    // https://desktop-release.notion-static.com/arm64-mac.yml?noCache=1htbc11t2
+                    const _url = o().newUrlFromBase(channelFilename, this.baseUrl, this.updater.isAddNoCacheQuery);
+
+                    for (let r = 0; ; r++) {
+                        try {
+
+                            const __version = {
+                                "version": "3.6.0",
+                                "files": [
+                                    {
+                                        "url": "Notion-arm64-3.6.0.zip",
+                                        "sha512": "CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==",
+                                        "size": 96167577
+                                    },
+                                    {
+                                        "url": "Notion-3.6.0-arm64.dmg",
+                                        "sha512": "ie0OrDj8s9RPirb3BhcjuwJec5h3ySN+2HNQswHT5bILsYSHQLdfp7vvKChnWvlTKbofxp+CmF37gWvgGx4yUQ==",
+                                        "size": 96337451
+                                    }
+                                ],
+                                "path": "Notion-arm64-3.6.0.zip",
+                                "sha512": "CIcPy/z80S7zHUFcrvnxe88GVVKwzPyg1+40TMNwsmmEgsQR8prtJpdORIaBoVFSPV9WLbuetvuswqZLUnL/jA==",
+                                "releaseDate": "2024-05-03T19:28:11.345Z"
+                            }
+
+                            return a().parseUpdateInfo(await this.httpRequest(_url), channelFilename, _url)
+                        } catch (error) {
+                            if (error instanceof n().HttpError && 404 === error.statusCode) {
+                                throw n().newError(`Cannot find channel "${channelFilename}" update info: ${error.stack || error.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
+                            }
+                            if ("ECONNREFUSED" === error.code && r < 3) {
+                                await new Promise((resolve, reject) => {
+                                    try {
+                                        setTimeout(resolve, 1e3 * r)
+                                    } catch (e) {
+                                        reject(e)
+                                    }
+                                })
+                                continue
+                            }
+                            throw error
+                        }
+                    }
+                }
+
+                resolveFiles(info) {
+                    return a().resolveFiles(info, this.baseUrl)
+                }
+            }
+
+            exports.GenericProvider = GenericProvider
+        },
+        // BaseGitHubProvider
+        85193: (module, exports, __webpack_require) => {
+            "use strict";
+
+            function n() {
+                const e = __webpack_require(79529);
+                return n = function () {
+                    return e
+                }, e
+            }
+
+            function o() {
+                const e = function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
+                        var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
+                        n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
+                    }
+                    return t.default = e, t
+                }(__webpack_require(44993));
+                return o = function () {
+                    return e
+                }, e
+            }
+
+            function a() {
+                const e = __webpack_require(16857);
+                return a = function () {
+                    return e
+                }, e
+            }
+
+            function i() {
+                const e = __webpack_require(94625);
+                return i = function () {
+                    return e
+                }, e
+            }
+
+            function s() {
+                const e = __webpack_require(45414);
+                return s = function () {
+                    return e
+                }, e
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.computeReleaseNotes = computeReleaseNotes
+
+
+            const l = /\/tag\/v?([^\/]+)$/;
+
+            class BaseGitHubProvider extends i().Provider {
+                constructor(e, t, r) {
+                    super(Object.assign({}, r, {isUseMultipleRangeRequest: !1})), this.options = e, this.baseUrl = (0, i().newBaseUrl)((0, n().githubUrl)(e, t));
+                    const o = "github.com" === t ? "api.github.com" : t;
+                    this.baseApiUrl = (0, i().newBaseUrl)((0, n().githubUrl)(e, o))
+                }
+
+                computeGithubBasePath(e) {
+                    const t = this.options.host;
+                    return null != t && "github.com" !== t && "api.github.com" !== t ? `/api/v3${e}` : e
+                }
+            }
+
+            function u(e) {
+                const t = e.elementValueOrEmpty("content");
+                return "No content." === t ? "" : t
+            }
+
+            function computeReleaseNotes(e, t, r, n) {
+                if (!t) return u(n);
+                const a = [];
+                for (const t of r.getElements("entry")) {
+                    const r = t.element("link").attribute("href").match(/\/tag\/v?([^\/]+)$/)[1];
+                    o().lt(e, r) && a.push({version: r, note: u(t)})
+                }
+                return a.sort(((e, t) => o().rcompare(e.version, t.version)))
+            }
+
+            exports.BaseGitHubProvider = BaseGitHubProvider
+            exports.GitHubProvider = class extends BaseGitHubProvider {
+                constructor(e, t, r) {
+                    super(e, "github.com", r), this.options = e, this.updater = t
+                }
+
+                async getLatestVersion() {
+                    const e = new (n().CancellationToken),
+                        t = await this.httpRequest((0, i().newUrlFromBase)(`${this.basePath}.atom`, this.baseUrl), {accept: "application/xml, application/atom+xml, text/xml, */*"}, e),
+                        r = (0, n().parseXml)(t);
+                    let o, a = r.element("entry", !1, "No published versions on GitHub");
+                    try {
+                        if (this.updater.allowPrerelease) o = a.element("link").attribute("href").match(l)[1]; else {
+                            o = await this.getLatestVersionString(e);
+                            for (const e of r.getElements("entry")) if (e.element("link").attribute("href").match(l)[1] === o) {
+                                a = e;
+                                break
+                            }
+                        }
+                    } catch (e) {
+                        throw (0, n().newError)(`Cannot parse releases feed: ${e.stack || e.message},\nXML:\n${t}`, "ERR_UPDATER_INVALID_RELEASE_FEED")
+                    }
+                    if (null == o) throw (0, n().newError)("No published versions on GitHub", "ERR_UPDATER_NO_PUBLISHED_VERSIONS");
+                    const c = (0, i().getChannelFilename)(this.getDefaultChannelName()),
+                        u = (0, i().newUrlFromBase)(this.getBaseDownloadPath(o, c), this.baseUrl),
+                        p = this.createRequestOptions(u);
+                    let h;
+                    try {
+                        h = await this.executor.request(p, e)
+                    } catch (e) {
+                        if (!this.updater.allowPrerelease && e instanceof n().HttpError && 404 === e.statusCode) throw (0, n().newError)(`Cannot find ${c} in the latest release artifacts (${u}): ${e.stack || e.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
+                        throw e
+                    }
+                    const f = (0, s().parseUpdateInfo)(h, c, u);
+                    return null == f.releaseName && (f.releaseName = a.elementValueOrEmpty("title")), null == f.releaseNotes && (f.releaseNotes = computeReleaseNotes(this.updater.currentVersion, this.updater.fullChangelog, r, a)), f
+                }
+
+                async getLatestVersionString(e) {
+                    const t = this.options,
+                        r = null == t.host || "github.com" === t.host ? (0, i().newUrlFromBase)(`${this.basePath}/latest`, this.baseUrl) : new (a().URL)(`${this.computeGithubBasePath(`/repos/${t.owner}/${t.repo}/releases`)}/latest`, this.baseApiUrl);
+                    try {
+                        const t = await this.httpRequest(r, {Accept: "application/json"}, e);
+                        if (null == t) return null;
+                        const n = JSON.parse(t);
+                        return n.tag_name.startsWith("v") ? n.tag_name.substring(1) : n.tag_name
+                    } catch (e) {
+                        throw (0, n().newError)(`Unable to find latest version on GitHub (${r}), please ensure a production release exists: ${e.stack || e.message}`, "ERR_UPDATER_LATEST_VERSION_NOT_FOUND")
+                    }
+                }
+
+                get basePath() {
+                    return `/${this.options.owner}/${this.options.repo}/releases`
+                }
+
+                resolveFiles(e) {
+                    return (0, s().resolveFiles)(e, this.baseUrl, (t => this.getBaseDownloadPath(e.version, t.replace(/ /g, "-"))))
+                }
+
+                getBaseDownloadPath(e, t) {
+                    return `${this.basePath}/download/${!1 === this.options.vPrefixedTagName ? "" : "v"}${e}/${t}`
+                }
+            }
+        },
+        // PrivateGitHubProvider
+        90222: (module, exports, __webpack_require) => {
+            "use strict";
+
+            function n() {
+                const e = __webpack_require(79529);
+                return n = function () {
+                    return e
+                }, e
+            }
+
+            function o() {
+                const e = __webpack_require(69866);
+                return o = function () {
+                    return e
+                }, e
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            let __path = function (e) {
+                if (e && e.__esModule) return e;
+                var t = {};
+                if (null != e) for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
+                    var n = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(e, r) : {};
+                    n.get || n.set ? Object.defineProperty(t, r, n) : t[r] = e[r]
+                }
+                return t.default = e, t
+            }(__webpack_require(16928))
+
+            function i() {
+                const e = __webpack_require(16857);
+                return i = function () {
+                    return e
+                }, e
+            }
+
+            function s() {
+                const e = __webpack_require(85193);
+                return s = function () {
+                    return e
+                }, e
+            }
+
+            function l() {
+                const e = __webpack_require(94625);
+                return l = function () {
+                    return e
+                }, e
+            }
+
+            function c() {
+                const e = __webpack_require(45414);
+                return c = function () {
+                    return e
+                }, e
+            }
+
+            class PrivateGitHubProvider extends s().BaseGitHubProvider {
+                constructor(e, t, r, n) {
+                    super(e, "api.github.com", n), this.updater = t, this.token = r
+                }
+
+                createRequestOptions(e, t) {
+                    const r = super.createRequestOptions(e, t);
+                    return r.redirect = "manual", r
+                }
+
+                async getLatestVersion() {
+                    const e = new (n().CancellationToken),
+                        t = (0, l().getChannelFilename)(this.getDefaultChannelName()),
+                        r = await this.getLatestVersionInfo(e), a = r.assets.find((e => e.name === t));
+                    if (null == a) throw (0, n().newError)(`Cannot find ${t} in the release ${r.html_url || r.name}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
+                    const s = new (i().URL)(a.url);
+                    let c;
+                    try {
+                        c = (0, o().safeLoad)(await this.httpRequest(s, this.configureHeaders("application/octet-stream"), e))
+                    } catch (e) {
+                        if (e instanceof n().HttpError && 404 === e.statusCode) throw (0, n().newError)(`Cannot find ${t} in the latest release artifacts (${s}): ${e.stack || e.message}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
+                        throw e
+                    }
+                    return c.assets = r.assets, c
+                }
+
+                get fileExtraDownloadHeaders() {
+                    return this.configureHeaders("application/octet-stream")
+                }
+
+                configureHeaders(e) {
+                    return {accept: e, authorization: `token ${this.token}`}
+                }
+
+                async getLatestVersionInfo(e) {
+                    const t = this.updater.allowPrerelease;
+                    let r = this.basePath;
+                    t || (r = `${r}/latest`);
+                    const o = (0, l().newUrlFromBase)(r, this.baseUrl);
+                    try {
+                        const r = JSON.parse(await this.httpRequest(o, this.configureHeaders("application/vnd.github.v3+json"), e));
+                        return t ? r.find((e => e.prerelease)) || r[0] : r
+                    } catch (e) {
+                        throw (0, n().newError)(`Unable to find latest version on GitHub (${o}), please ensure a production release exists: ${e.stack || e.message}`, "ERR_UPDATER_LATEST_VERSION_NOT_FOUND")
+                    }
+                }
+
+                get basePath() {
+                    return this.computeGithubBasePath(`/repos/${this.options.owner}/${this.options.repo}/releases`)
+                }
+
+                resolveFiles(e) {
+                    return (0, c().getFileList)(e).map((t => {
+                        const r = __path.posix.basename(t.url).replace(/ /g, "-"),
+                            o = e.assets.find((e => null != e && e.name === r));
+                        if (null == o) throw (0, n().newError)(`Cannot find asset "${r}" in: ${JSON.stringify(e.assets, null, 2)}`, "ERR_UPDATER_ASSET_NOT_FOUND");
+                        return {url: new (i().URL)(o.url), info: t}
+                    }))
+                }
+            }
+
+            exports.PrivateGitHubProvider = PrivateGitHubProvider
+        },
+        // BintrayProvider
+        19727: (module, exports, __webpack_require) => {
+            "use strict";
+
+            function n() {
+                const e = __webpack_require(79529);
+                return n = function () {
+                    return e
+                }, e
+            }
+
+            function o() {
+                const e = __webpack_require(85064);
+                return o = function () {
+                    return e
+                }, e
+            }
+
+            function a() {
+                const e = __webpack_require(16857);
+                return a = function () {
+                    return e
+                }, e
+            }
+
+            function i() {
+                const e = __webpack_require(94625);
+                return i = function () {
+                    return e
+                }, e
+            }
+
+            function s() {
+                const e = __webpack_require(45414);
+                return s = function () {
+                    return e
+                }, e
+            }
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            class BintrayProvider extends i().Provider {
+                constructor(e, t) {
+                    super(t), this.client = new (o().BintrayClient)(e, t.executor, new (n().CancellationToken)), this.baseUrl = (0, i().newBaseUrl)(`https://dl.bintray.com/${this.client.owner}/${this.client.repo}`)
+                }
+
+                setRequestHeaders(e) {
+                    super.setRequestHeaders(e), this.client.setRequestHeaders(e)
+                }
+
+                async getLatestVersion() {
+                    try {
+                        const e = await this.client.getVersion("_latest"),
+                            t = (0, i().getChannelFilename)(this.getDefaultChannelName()),
+                            r = await this.client.getVersionFiles(e.name),
+                            o = r.find((e => e.name.endsWith(`_${t}`) || e.name.endsWith(`-${t}`)));
+                        if (null == o) throw (0, n().newError)(`Cannot find channel file "${t}", existing files:\n${r.map((e => JSON.stringify(e, null, 2))).join(",\n")}`, "ERR_UPDATER_CHANNEL_FILE_NOT_FOUND");
+                        const l = new (a().URL)(`https://dl.bintray.com/${this.client.owner}/${this.client.repo}/${o.name}`);
+                        return (0, s().parseUpdateInfo)(await this.httpRequest(l), t, l)
+                    } catch (e) {
+                        if ("statusCode" in e && 404 === e.statusCode) throw (0, n().newError)(`No latest version, please ensure that user, package and repository correctly configured. Or at least one version is published. ${e.stack || e.message}`, "ERR_UPDATER_LATEST_VERSION_NOT_FOUND");
+                        throw e
+                    }
+                }
+
+                resolveFiles(e) {
+                    return (0, s().resolveFiles)(e, this.baseUrl)
+                }
+            }
+
+            exports.BintrayProvider = BintrayProvider
+        },
+
+
         55916: (e, t, r) => {
             "use strict";
 
