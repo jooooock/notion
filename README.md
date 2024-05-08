@@ -126,7 +126,8 @@
 https://desktop-release.notion-static.com/arm64-mac.yml
 https://desktop-release.notion-static.com/latest.yml
 
-[channel](-mac|-linux(-x86)).yml
+格式为：
+[channel](-mac|-linux).yml
 ```
 
 返回的结果如下:
