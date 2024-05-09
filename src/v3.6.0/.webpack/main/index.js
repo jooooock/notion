@@ -368,450 +368,6 @@
             exports.default = util.promisify(o.zip)
         },
 
-
-        // AppController
-        21852: function (module, exports, __webpack_require) {
-            "use strict";
-            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                    void 0 === n && (n = r);
-                    var o = Object.getOwnPropertyDescriptor(t, r);
-                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                        enumerable: !0,
-                        get: function () {
-                            return t[r]
-                        }
-                    }), Object.defineProperty(e, n, o)
-                } : function (e, t, r, n) {
-                    void 0 === n && (n = r), e[n] = t[r]
-                }),
-                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
-                } : function (e, t) {
-                    e.default = t
-                }),
-                a = this && this.__importStar || function (e) {
-                    if (e && e.__esModule) return e;
-                    var t = {};
-                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                    return o(t, e), t
-                },
-                i = this && this.__importDefault || function (e) {
-                    return e && e.__esModule ? e : {default: e}
-                };
-
-            Object.defineProperty(exports, "__esModule", {value: !0})
-
-
-            const electron = __webpack_require(4482),
-                electron_log = i(__webpack_require(47419)),
-                c = __webpack_require(43277),
-                u = __webpack_require(83704),
-                d = __webpack_require(28902),
-                lodash = a(__webpack_require(6600)),
-                h = a(__webpack_require(60411)),
-                __config = i(__webpack_require(11239)),
-                m = __webpack_require(55870),
-                g = a(__webpack_require(68115)),
-                b = __webpack_require(26605),
-                v = __webpack_require(88493),
-                y = __webpack_require(29902),
-                __QuickSearchController = __webpack_require(26760),
-                __appSlice = __webpack_require(73553),
-                __appStatePersister = __webpack_require(30506),
-                __historySlice = __webpack_require(28192),
-                __store = __webpack_require(69340),
-                __tabSlice = __webpack_require(54417),
-                __windowSlice = __webpack_require(772),
-                __TrayController = __webpack_require(84087),
-                __WindowController = __webpack_require(1147)
-
-            const logger = electron_log.default.scope("AppController")
-
-            class AppController {
-                constructor() {
-                    this.windowControllers = []
-                    this.isQuitting = false
-                    this.previousRestorationState = __store.Store.getState().history.appRestorationState
-                    this.appStateUnsubscribe = __store.subscribeToSelector(
-                        __store.selectAppState,
-                        (value, oldValue) => this.handleAppStateChange(value, oldValue)
-                    )
-                    this.historyStateUnsubscribe = __store.subscribeToSelector(
-                        rootState => __store.selectHistory(rootState),
-                        value => {
-                            __appStatePersister.appStatePersister.set("history", value)
-                        }
-                    )
-                    this.focusedWindowStateUnsubscribe = __store.subscribeToSelector(
-                        rootState => __store.selectFocusedWindowDisplayState(rootState),
-                        value => {
-                            value && __store.Store.dispatch(__historySlice.updateLastFocusedWindowDisplayState(value))
-                        },
-                        {wait: 30_000}
-                    )
-                    this.appRestorationStateUnsubscribe = __store.subscribeToSelector(
-                        rootState => ({
-                            tabs: rootState.tabs,
-                            windows: rootState.windows
-                        }),
-                        value => {
-                            this.handleAppRestorationStateChange(value)
-                        },
-                        {wait: 30_000}
-                    )
-                }
-
-                async onAppReady() {
-                    await electron.app.whenReady()
-                    this.initializeQuickSearchController()
-                    this.trayController = new __TrayController.TrayController()
-                }
-
-                get intl() {
-                    if (!electron.app.isReady()) {
-                        if ("production" === __config.default.env) {
-                            return m.createIntlShape("en-US");
-                        }
-                        throw new Error("Cannot request intl before app is ready because locale isn't available")
-                    }
-                    if (!this._intl) {
-                        const _locale = electron.app.getLocale()
-                        const locale = "es-419" === _locale ? "es-LA" : _locale;
-                        this._notionLocale = d.externalLocaleToNotionLocale(locale, "production" === __config.default.env);
-                        const intlShape = m.createIntlShape(this._notionLocale);
-                        if (!electron.app.isReady()) {
-                            return intlShape;
-                        }
-                        this._intl = intlShape
-                    }
-                    return this._intl
-                }
-
-                get notionLocale() {
-                    return this._notionLocale ? this._notionLocale : "en-US"
-                }
-
-                rehydrateSingleTabInBackground(e) {
-                    if (!this.previousRestorationState || e) return !1;
-                    const t = lodash.maxBy(this.previousRestorationState, "focusOrder");
-                    if (!t) return !1;
-                    const r = t.tabs.find((e => e.isActive));
-                    return !!r && (this.newWindow({
-                        windowId: t.windowId,
-                        displayState: t.displayState,
-                        initialUrl: this.getRestoredUrl(r.url),
-                        initialTabId: r.tabId,
-                        initialParentTabId: r.parentTabId,
-                        showWhenLoaded: !1
-                    }), !0)
-                }
-
-                rehydrateEntireAppInForeground(e) {
-                    if (!this.previousRestorationState) return !1;
-                    const t = this.previousRestorationState;
-                    return lodash.orderBy(t, ["focusOrder"], ["asc"]).forEach(((r, n) => {
-                        const o = this.getWindowControllerForId(r.windowId) || this.newWindow({
-                            windowId: r.windowId,
-                            displayState: r.displayState,
-                            initialUrl: this.getRestoredUrl(r.tabs[0].url),
-                            initialTabId: r.tabs[0].tabId,
-                            initialParentTabId: r.tabs[0].parentTabId,
-                            showWhenLoaded: !1
-                        });
-                        o.browserWindow.show(), o.browserWindow.focus(), r.tabs.forEach((e => {
-                            o.hasTabWithId(e.tabId) || o.newTabAtIndex({
-                                url: this.getRestoredUrl(e.url),
-                                insertionIndex: e.index,
-                                makeActiveTab: e.isActive,
-                                tabId: e.tabId,
-                                parentTabId: e.parentTabId
-                            })
-                        })), e && n === t.length - 1 && o.newTabAtIndex({url: e, insertionIndex: 0, makeActiveTab: !0})
-                    })), this.previousRestorationState = void 0, !0
-                }
-
-                newWindow(e) {
-                    this.trackAnalyticsEvent("electron_new_window");
-                    const t = __WindowController.WindowController.newInstanceWithUrl({
-                        intl: this.intl,
-                        windowId: e.windowId || (0, __windowSlice.createWindowId)(),
-                        initialTabUrl: (0, y.normalizeUrlProtocolWithDefault)(e.initialUrl),
-                        displayState: e.displayState,
-                        initialTabId: e.initialTabId,
-                        initialParentTabId: e.initialParentTabId,
-                        showWhenLoaded: e.showWhenLoaded
-                    });
-                    return this.windowControllers.push(t), t.browserWindow.on("focus", (() => {
-                        this.mostRecentlyFocusedWindowController = t
-                    })), t
-                }
-
-                createWindowForTabController(e) {
-                    const t = __WindowController.WindowController.newInstanceWithController({
-                        windowId: (0, __windowSlice.createWindowId)(),
-                        intl: this.intl,
-                        initialTabController: e
-                    });
-                    this.windowControllers.push(t);
-                    const r = t.browserWindow;
-                    return r.on("focus", (() => {
-                        this.mostRecentlyFocusedWindowController = t
-                    })), r
-                }
-
-                reopenLastClosedPages() {
-                    const e = __store.Store.getState().history.closeEvents?.[0];
-                    if (!e) return;
-                    __store.Store.dispatch((0, __historySlice.popCloseEvent)());
-                    const t = this.getWindowControllerForId(e.windowId);
-                    if (t) if ("single-tab" === e.type) t.newTabAtIndex({
-                        url: this.getRestoredUrl(e.url),
-                        insertionIndex: e.index,
-                        makeActiveTab: !0,
-                        tabId: e.tabId,
-                        parentTabId: e.parentTabId
-                    }); else if ("multiple-tabs" === e.type) e.tabs.forEach((e => {
-                        t?.newTabAtIndex({
-                            url: this.getRestoredUrl(e.url),
-                            insertionIndex: e.index,
-                            makeActiveTab: e.isActive,
-                            tabId: e.tabId,
-                            parentTabId: e.parentTabId
-                        })
-                    })); else if ("window" === e.type) {
-                        if (0 === e.tabs.length) return;
-                        this.newWindow({
-                            initialUrl: this.getRestoredUrl(e.tabs[0].url),
-                            initialTabId: e.tabs[0].tabId,
-                            initialParentTabId: e.tabs[0].parentTabId,
-                            windowId: e.windowId,
-                            displayState: e.displayState
-                        }), e.tabs.slice(1).forEach((e => {
-                            t.newTabAtIndex({
-                                url: this.getRestoredUrl(e.url),
-                                insertionIndex: e.index,
-                                makeActiveTab: e.isActive,
-                                tabId: e.tabId,
-                                parentTabId: e.parentTabId
-                            })
-                        }))
-                    }
-                }
-
-                initializeQuickSearchController() {
-                    __appSlice.QUICK_SEARCH_ENABLED && (this.quickSearchController || (this.quickSearchController = new __QuickSearchController.QuickSearchController))
-                }
-
-                openURLOptionallySurfacingExistingTab(e) {
-                    const t = this.getWindowAndTabControllerWithEquivalentURL(h.parse(e));
-                    t ? this.openUrlInTab(e, t) : this.openUrlInNewTabOrWindow(e), electron.app.focus({steal: !0})
-                }
-
-                openUserSettings() {
-                    const e = this.getMostRecentlyFocusedWindowController();
-                    if (e) e.browserWindow.show(), e.getActiveTabController().openSettings("user_settings"), e.getActiveTabController().focus(); else {
-                        const e = `${(0, y.initialBaseUrl)()}?target=user_settings`;
-                        this.newWindow({initialUrl: e})
-                    }
-                }
-
-                handleProtocolUrl(e) {
-                    if (!e) return;
-                    const {protocol: t, host: r, pathname: n, search: o, hash: a} = new URL(e),
-                        i = new URLSearchParams(o);
-                    if ("true" === i.get(c.deepLinkOpenNewTabQueryParam)) {
-                        i.delete(c.deepLinkOpenNewTabQueryParam);
-                        const e = i.toString(), o = [t, "//", r, n, e ? `?${e}` : "", a].join("");
-                        this.openURLOptionallySurfacingExistingTab(o)
-                    } else this.navigateFocusedWindowToUrl(e);
-                    g.closeLastBrowserTab({urlContaining: n}).catch((e => {
-                        logger.error("Error closing last browser tab", e)
-                    }))
-                }
-
-                getFocusedWindowController() {
-                    return this.getWindowControllerForWebContents(electron.BrowserWindow.getFocusedWindow()?.webContents)
-                }
-
-                async waitForFocusedWindowController() {
-                    return this.getFocusedWindowController() || new Promise((e => {
-                        const t = () => {
-                            const r = this.getFocusedWindowController();
-                            r && (e(r), electron.app.removeListener("browser-window-focus", t))
-                        };
-                        electron.app.on("browser-window-focus", t)
-                    }))
-                }
-
-                getMostRecentlyFocusedWindowController() {
-                    const e = lodash.maxBy(Object.values(__store.Store.getState().windows), (e => e.focusOrder));
-                    if (e) {
-                        const t = this.getWindowControllerForId(e.windowId);
-                        if (t) return t
-                    }
-                    if (this.windowControllers.length > 0) return this.windowControllers[0]
-                }
-
-                getWindowControllerForWebContents(e) {
-                    if (!e) return;
-                    const t = electron.BrowserWindow.fromWebContents(e);
-                    return t ? this.windowControllers.find((e => e.browserWindow.id === t.id)) : void 0
-                }
-
-                getTabControllerForWebContents(e) {
-                    for (const t of this.windowControllers) {
-                        const r = t.getTabControllerForWebContents(e);
-                        if (r) return r
-                    }
-                }
-
-                sendMainToAllNotionInstances(e, ...t) {
-                    this.windowControllers.forEach((r => {
-                        r.sendMainToAllNotionInstances(e, ...t)
-                    }))
-                }
-
-                refreshAll(e) {
-                    const t = electron.BrowserWindow.getFocusedWindow();
-                    if (e || !t) return this.windowControllers.forEach((e => e.refresh({includeActiveTab: !0}))), void this.quickSearchController?.reload();
-                    this.windowControllers.forEach((e => {
-                        e.refresh({includeActiveTab: e.browserWindow.id !== t.id})
-                    })), this.quickSearchController?.reload()
-                }
-
-                refreshForWindowsMenuBarSpacing() {
-                    "darwin" !== process.platform && this.windowControllers.forEach((e => {
-                        e.refreshForWindowsMenuBarSpacing()
-                    }))
-                }
-
-                trackAnalyticsEvent(e, t = {}) {
-                    this.getMostRecentlyFocusedWindowController()?.getActiveTabController()?.sendToNotion("notion:track", e, t)
-                }
-
-                zoomIn() {
-                    const e = __store.Store.getState().app.zoomFactor + u.ELECTRON_ZOOM_INCREMENT;
-                    this.setZoom(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, e), u.ELECTRON_ZOOM_MAXIMUM))
-                }
-
-                zoomOut() {
-                    const e = __store.Store.getState().app.zoomFactor - u.ELECTRON_ZOOM_INCREMENT;
-                    this.setZoom(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, e), u.ELECTRON_ZOOM_MAXIMUM))
-                }
-
-                resetZoom() {
-                    this.setZoom(u.ELECTRON_DEFAULT_ZOOM)
-                }
-
-                setZoom(e) {
-                    __store.Store.dispatch((0, __appSlice.updateZoomFactor)(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, e), u.ELECTRON_ZOOM_MAXIMUM)))
-                }
-
-                handleAppStateChange(e, t) {
-                    __appStatePersister.appStatePersister.set("appState", e);
-                    const r = e.preferences || {}, n = t.preferences || {};
-                    "darwin" === process.platform && r.isClosingBrowserTabs && !n.isClosingBrowserTabs && g.closeLastBrowserTab({
-                        urlContaining: "notion.so",
-                        dryRun: !0
-                    }), r.isOpenAtLoginEnabled !== n.isOpenAtLoginEnabled && this.handleOpenAtLoginChange(!!r.isOpenAtLoginEnabled), r.isHideLastWindowOnCloseEnabled !== n.isHideLastWindowOnCloseEnabled && (r.isHideLastWindowOnCloseEnabled || this.windowControllers.forEach((e => {
-                        e.browserWindow.show()
-                    })))
-                }
-
-                handleAppRestorationStateChange(e) {
-                    if (lodash.isEmpty(e.windows)) return;
-                    const t = Object.values(e.windows).map((t => ({
-                        windowId: t.windowId,
-                        focusOrder: t.focusOrder,
-                        displayState: t.displayState,
-                        tabs: t.tabs.map(((r, n) => {
-                            const o = e.tabs[r.tabId];
-                            return {
-                                tabId: r.tabId,
-                                url: o.url,
-                                parentTabId: r.parentTabId,
-                                index: n,
-                                isActive: t.activeTabId === r.tabId
-                            }
-                        }))
-                    })));
-                    __store.Store.dispatch((0, __historySlice.setAppRestorationState)(t))
-                }
-
-                handleQuit() {
-                    this.isQuitting = !0, this.focusedWindowStateUnsubscribe(), this.appRestorationStateUnsubscribe(), this.appStateUnsubscribe(), this.historyStateUnsubscribe()
-                }
-
-                handleQuitWithoutSavingTabs() {
-                    __store.Store.dispatch((0, __tabSlice.resetTabState)()), __store.Store.dispatch((0, __windowSlice.resetWindowState)()), __store.Store.dispatch((0, __historySlice.resetHistoryState)()), electron.app.quit()
-                }
-
-                handleWindowClose(e, t) {
-                    const r = 1 === this.windowControllers.length, n = this.isQuitting,
-                        o = __store.Store.getState().app.preferences, a = !1 === o.isHideLastWindowOnCloseEnabled,
-                        i = !1 === o.isQuickSearchEnabled;
-                    return electron_log.default.debug("Window close", {
-                        lastWindow: r,
-                        isQuitting: n,
-                        isHideDisabled: a
-                    }), !(r && !n && !a || (this.windowControllers = this.windowControllers.filter((e => e.browserWindow !== t)), this.mostRecentlyFocusedWindowController?.browserWindow.id === t.id && (this.mostRecentlyFocusedWindowController = void 0), "win32" === process.platform && 0 === this.windowControllers.length && i && !n && electron.app.quit(), 0))
-                }
-
-                getWindowAndTabControllerWithEquivalentURL(e) {
-                    const t = this.getMostRecentlyFocusedWindowController(),
-                        r = lodash.compact([t, ...this.windowControllers.filter((e => e !== t))]);
-                    for (const t of r) {
-                        const r = t.getTabControllerWithEquivalentUrl(e);
-                        if (r) return {windowController: t, tabController: r}
-                    }
-                }
-
-                openUrlInTab(e, {windowController: t, tabController: r}) {
-                    r.navigateToUrl(e), t.makeTabActive(r.tabId), t.browserWindow.isMinimized() && t.browserWindow.restore(), t.browserWindow.show()
-                }
-
-                openUrlInNewTabOrWindow(e) {
-                    const t = this.getMostRecentlyFocusedWindowController();
-                    t ? (t.newTab({
-                        initialUrl: e,
-                        makeActiveTab: !0,
-                        position: {type: "end"}
-                    }), t.browserWindow.isMinimized() && t.browserWindow.restore(), t.browserWindow.show()) : this.newWindow({initialUrl: e}).browserWindow.focus()
-                }
-
-                navigateFocusedWindowToUrl(e) {
-                    const t = this.getMostRecentlyFocusedWindowController();
-                    t ? (t.browserWindow.isVisible() || t.browserWindow.show(), this.openUrlInTab(e, {
-                        windowController: t,
-                        tabController: t.getActiveTabController()
-                    })) : this.newWindow({initialUrl: e}).browserWindow.focus()
-                }
-
-                getWindowControllerForId(e) {
-                    return this.windowControllers.find((t => t.windowId === e))
-                }
-
-                handleOpenAtLoginChange(e) {
-                    (0, b.setIsOpenAtLogin)(e), e && ((0, b.getIsOpenAtLogin)() || (electron_log.default.warn("Tried to enable open at login, but failed."), (0, v.showOpenAtLoginErrorDialog)(), __store.Store.dispatch((0, __appSlice.updatePreferences)({isOpenAtLoginEnabled: !1}))))
-                }
-
-                getRestoredUrl(e) {
-                    return h.addQueryParams((0, y.normalizeUrlProtocolWithDefault)(e), {pvs: 3})
-                }
-
-                updateMediaIndicator(e, r) {
-                    const n = exports.appController.getTabControllerForWebContents(e);
-                    n && __store.Store.dispatch((0, __tabSlice.updateTabIsMediaInputActive)({
-                        tabId: n.tabId,
-                        isMediaInputActive: r
-                    }))
-                }
-            }
-
-            exports.appController = new AppController()
-            exports.AppController_TEST_ONLY = AppController
-        },
-
         // AssetCache 类
         87309: function (e, t, r) {
             "use strict";
@@ -1204,6 +760,623 @@
                     }))
                 }
             }
+        },
+        // assetCache 实例
+        94774: function (e, t, r) {
+            "use strict";
+            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                void 0 === n && (n = r);
+                var o = Object.getOwnPropertyDescriptor(t, r);
+                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                    enumerable: !0,
+                    get: function () {
+                        return t[r]
+                    }
+                }), Object.defineProperty(e, n, o)
+            } : function (e, t, r, n) {
+                void 0 === n && (n = r), e[n] = t[r]
+            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                Object.defineProperty(e, "default", {enumerable: !0, value: t})
+            } : function (e, t) {
+                e.default = t
+            }), a = this && this.__importStar || function (e) {
+                if (e && e.__esModule) return e;
+                var t = {};
+                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                return o(t, e), t
+            }, i = this && this.__importDefault || function (e) {
+                return e && e.__esModule ? e : {default: e}
+            };
+            Object.defineProperty(t, "__esModule", {value: !0}), t.assetCache = void 0;
+            const s = i(r(4482)), l = r(37318), c = i(r(11239)), u = r(21852), d = r(87309), p = a(r(10454));
+            t.assetCache = new d.AssetCache({
+                baseUrl: c.default.domainBaseUrl,
+                baseDir: s.default.app.getPath("userData"),
+                tempDir: s.default.app.getPath("temp")
+            }), t.assetCache.events.addListener("error", (e => {
+                u.appController.sendMainToAllNotionInstances("notion:app-update-error", (0, l.cleanObjectForSerialization)(e))
+            })), t.assetCache.events.addListener("checking-for-update", (() => {
+                u.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
+            })), t.assetCache.events.addListener("update-available", (e => {
+                u.appController.sendMainToAllNotionInstances("notion:app-update-available", e)
+            })), t.assetCache.events.addListener("update-not-available", (() => {
+                u.appController.sendMainToAllNotionInstances("notion:app-update-not-available")
+            })), t.assetCache.events.addListener("download-progress", (e => {
+                u.appController.sendMainToAllNotionInstances("notion:app-update-progress", e)
+            })), t.assetCache.events.addListener("update-downloaded", (e => {
+                u.appController.sendMainToAllNotionInstances("notion:app-update-ready", e)
+            })), t.assetCache.events.addListener("update-finished", (e => {
+                u.appController.sendMainToAllNotionInstances("notion:app-update-finished", e)
+            })), p.handleEventFromRenderer.addListener("notion:check-for-app-updates", (() => {
+                t.assetCache.checkForUpdates()
+            }))
+        },
+
+
+        // AppController
+        21852: function (module, exports, __webpack_require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                c = __webpack_require(43277),
+                u = __webpack_require(83704), // zoom 常量
+                d = __webpack_require(28902),
+                lodash = a(__webpack_require(6600)),
+                h = a(__webpack_require(60411)),
+                __config = i(__webpack_require(11239)),
+                m = __webpack_require(55870),
+                g = a(__webpack_require(68115)),
+                __openAtLogin = __webpack_require(26605),
+                v = __webpack_require(88493),
+                y = __webpack_require(29902),
+                __QuickSearchController = __webpack_require(26760),
+                __appSlice = __webpack_require(73553),
+                __appStatePersister = __webpack_require(30506),
+                __historySlice = __webpack_require(28192),
+                __store = __webpack_require(69340),
+                __tabSlice = __webpack_require(54417),
+                __windowSlice = __webpack_require(772),
+                __TrayController = __webpack_require(84087),
+                __WindowController = __webpack_require(1147)
+
+            const logger = electron_log.default.scope("AppController")
+
+            class AppController {
+                constructor() {
+                    this.windowControllers = []
+                    this.isQuitting = false
+                    this.previousRestorationState = __store.Store.getState().history.appRestorationState
+                    this.appStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectAppState,
+                        (value, oldValue) => this.handleAppStateChange(value, oldValue)
+                    )
+
+                    // 持久化保存 history 状态(state.json#history)
+                    this.historyStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => __store.selectHistory(rootState),
+                        value => {
+                            __appStatePersister.appStatePersister.set("history", value)
+                        }
+                    )
+                    this.focusedWindowStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => __store.selectFocusedWindowDisplayState(rootState),
+                        value => {
+                            value && __store.Store.dispatch(__historySlice.updateLastFocusedWindowDisplayState(value))
+                        },
+                        {wait: 30_000}
+                    )
+                    this.appRestorationStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => ({
+                            tabs: rootState.tabs,
+                            windows: rootState.windows
+                        }),
+                        value => {
+                            this.handleAppRestorationStateChange(value)
+                        },
+                        {wait: 30_000}
+                    )
+                }
+
+                async onAppReady() {
+                    await electron.app.whenReady()
+                    this.initializeQuickSearchController()
+                    this.trayController = new __TrayController.TrayController()
+                }
+
+                get intl() {
+                    if (!electron.app.isReady()) {
+                        if ("production" === __config.default.env) {
+                            return m.createIntlShape("en-US");
+                        }
+                        throw new Error("Cannot request intl before app is ready because locale isn't available")
+                    }
+                    if (!this._intl) {
+                        const _locale = electron.app.getLocale()
+                        const locale = "es-419" === _locale ? "es-LA" : _locale;
+
+                        this._notionLocale = d.externalLocaleToNotionLocale(locale, "production" === __config.default.env);
+                        const intlShape = m.createIntlShape(this._notionLocale);
+                        if (!electron.app.isReady()) {
+                            return intlShape;
+                        }
+                        this._intl = intlShape
+                    }
+                    return this._intl
+                }
+
+                get notionLocale() {
+                    return this._notionLocale ? this._notionLocale : "en-US"
+                }
+
+                rehydrateSingleTabInBackground(url) {
+                    debugger
+
+                    if (!this.previousRestorationState || url) {
+                        return false
+                    }
+                    const t = lodash.maxBy(this.previousRestorationState, "focusOrder");
+                    if (!t) {
+                        return false
+                    }
+                    const r = t.tabs.find(e => e.isActive)
+                    if (!!r) {
+                        this.newWindow({
+                            windowId: t.windowId,
+                            displayState: t.displayState,
+                            initialUrl: this.getRestoredUrl(r.url),
+                            initialTabId: r.tabId,
+                            initialParentTabId: r.parentTabId,
+                            showWhenLoaded: false
+                        })
+                        return true
+                    }
+                    return false
+                }
+
+                rehydrateEntireAppInForeground(url) {
+                    debugger
+
+                    if (!this.previousRestorationState) {
+                        return false
+                    }
+                    const t = this.previousRestorationState;
+                    lodash.orderBy(t, ["focusOrder"], ["asc"]).forEach((r, n) => {
+                        const windowController = this.getWindowControllerForId(r.windowId) || this.newWindow({
+                            windowId: r.windowId,
+                            displayState: r.displayState,
+                            initialUrl: this.getRestoredUrl(r.tabs[0].url),
+                            initialTabId: r.tabs[0].tabId,
+                            initialParentTabId: r.tabs[0].parentTabId,
+                            showWhenLoaded: false
+                        });
+                        windowController.browserWindow.show()
+                        windowController.browserWindow.focus()
+
+                        r.tabs.forEach(tab => {
+                            if (!windowController.hasTabWithId(tab.tabId)) {
+                                windowController.newTabAtIndex({
+                                    url: this.getRestoredUrl(tab.url),
+                                    insertionIndex: tab.index,
+                                    makeActiveTab: tab.isActive,
+                                    tabId: tab.tabId,
+                                    parentTabId: tab.parentTabId
+                                })
+                            }
+                        })
+                        if (url && n === t.length - 1) {
+                            windowController.newTabAtIndex({
+                                url: url,
+                                insertionIndex: 0,
+                                makeActiveTab: true
+                            })
+                        }
+                    })
+                    this.previousRestorationState = void 0
+                    return true
+                }
+
+                newWindow(options) {
+                    this.trackAnalyticsEvent("electron_new_window");
+
+                    const windowController = __WindowController.WindowController.newInstanceWithUrl({
+                        intl: this.intl,
+                        windowId: options.windowId || __windowSlice.createWindowId(),
+                        initialTabUrl: y.normalizeUrlProtocolWithDefault(options.initialUrl),
+                        displayState: options.displayState,
+                        initialTabId: options.initialTabId,
+                        initialParentTabId: options.initialParentTabId,
+                        showWhenLoaded: options.showWhenLoaded
+                    });
+                    this.windowControllers.push(windowController)
+
+                    windowController.browserWindow.on("focus", () => {
+                        this.mostRecentlyFocusedWindowController = windowController
+                    })
+                    return windowController
+                }
+
+                createWindowForTabController(taController) {
+                    const windowController = __WindowController.WindowController.newInstanceWithController({
+                        windowId: __windowSlice.createWindowId(),
+                        intl: this.intl,
+                        initialTabController: taController
+                    });
+                    this.windowControllers.push(windowController);
+
+                    const win = windowController.browserWindow;
+                    win.on("focus", () => {
+                        this.mostRecentlyFocusedWindowController = windowController
+                    })
+                    return win
+                }
+
+                reopenLastClosedPages() {
+                    debugger
+
+                    const closeEvent = __store.Store.getState().history.closeEvents?.[0];
+                    if (!closeEvent) {
+                        return
+                    }
+
+                    __store.Store.dispatch(__historySlice.popCloseEvent())
+
+                    const windowController = this.getWindowControllerForId(closeEvent.windowId);
+                    if (windowController) {
+                        if ("single-tab" === closeEvent.type) {
+                            windowController.newTabAtIndex({
+                                url: this.getRestoredUrl(closeEvent.url),
+                                insertionIndex: closeEvent.index,
+                                makeActiveTab: true,
+                                tabId: closeEvent.tabId,
+                                parentTabId: closeEvent.parentTabId
+                            })
+                        } else if ("multiple-tabs" === closeEvent.type) {
+                            closeEvent.tabs.forEach(tab => {
+                                windowController?.newTabAtIndex({
+                                    url: this.getRestoredUrl(tab.url),
+                                    insertionIndex: tab.index,
+                                    makeActiveTab: tab.isActive,
+                                    tabId: tab.tabId,
+                                    parentTabId: tab.parentTabId
+                                })
+                            })
+                        } else if ("window" === closeEvent.type) {
+                            if (0 === closeEvent.tabs.length) return;
+                            this.newWindow({
+                                initialUrl: this.getRestoredUrl(closeEvent.tabs[0].url),
+                                initialTabId: closeEvent.tabs[0].tabId,
+                                initialParentTabId: closeEvent.tabs[0].parentTabId,
+                                windowId: closeEvent.windowId,
+                                displayState: closeEvent.displayState
+                            })
+                            closeEvent.tabs.slice(1).forEach(tab => {
+                                windowController.newTabAtIndex({
+                                    url: this.getRestoredUrl(tab.url),
+                                    insertionIndex: tab.index,
+                                    makeActiveTab: tab.isActive,
+                                    tabId: tab.tabId,
+                                    parentTabId: tab.parentTabId
+                                })
+                            })
+                        }
+                    }
+                }
+
+                initializeQuickSearchController() {
+                    if (__appSlice.QUICK_SEARCH_ENABLED) {
+                        if (!this.quickSearchController) {
+                            this.quickSearchController = new __QuickSearchController.QuickSearchController()
+                        }
+                    }
+                }
+
+                openURLOptionallySurfacingExistingTab(url) {
+                    const t = this.getWindowAndTabControllerWithEquivalentURL(h.parse(url));
+                    t
+                        ? this.openUrlInTab(url, t)
+                        : this.openUrlInNewTabOrWindow(url)
+                    electron.app.focus({steal: true})
+                }
+
+                openUserSettings() {
+                    const windowController = this.getMostRecentlyFocusedWindowController();
+                    if (windowController) {
+                        windowController.browserWindow.show()
+                        windowController.getActiveTabController().openSettings("user_settings")
+                        windowController.getActiveTabController().focus();
+                    } else {
+                        const url = `${y.initialBaseUrl()}?target=user_settings`;
+                        this.newWindow({initialUrl: url})
+                    }
+                }
+
+                handleProtocolUrl(url) {
+                    if (!url) return;
+                    const {protocol, host, pathname, search, hash} = new URL(url)
+                    const searchParams = new URLSearchParams(search)
+                    if ("true" === searchParams.get(c.deepLinkOpenNewTabQueryParam)) {
+                        searchParams.delete(c.deepLinkOpenNewTabQueryParam);
+                        const query = searchParams.toString(),
+                            o = [protocol, "//", host, pathname, query ? `?${query}` : "", hash].join("");
+                        this.openURLOptionallySurfacingExistingTab(o)
+                    } else {
+                        this.navigateFocusedWindowToUrl(url)
+                    }
+                    g.closeLastBrowserTab({urlContaining: pathname}).catch(e => {
+                        logger.error("Error closing last browser tab", e)
+                    })
+                }
+
+                getFocusedWindowController() {
+                    return this.getWindowControllerForWebContents(electron.BrowserWindow.getFocusedWindow()?.webContents)
+                }
+
+                async waitForFocusedWindowController() {
+                    return this.getFocusedWindowController() || new Promise(resolve => {
+                        const windowFocusHandler = () => {
+                            const windowController = this.getFocusedWindowController();
+                            if (windowController) {
+                                resolve(windowController)
+                                electron.app.removeListener("browser-window-focus", windowFocusHandler)
+                            }
+                        };
+                        electron.app.on("browser-window-focus", windowFocusHandler)
+                    })
+                }
+
+                getMostRecentlyFocusedWindowController() {
+                    const win = lodash.maxBy(Object.values(__store.Store.getState().windows), e => e.focusOrder);
+                    if (win) {
+                        const controller = this.getWindowControllerForId(win.windowId);
+                        if (controller) {
+                            return controller
+                        }
+                    }
+                    if (this.windowControllers.length > 0) {
+                        return this.windowControllers[0]
+                    }
+                }
+
+                getWindowControllerForWebContents(webContents) {
+                    if (!webContents) return;
+                    const win = electron.BrowserWindow.fromWebContents(webContents);
+                    return win
+                        ? this.windowControllers.find(controller => controller.browserWindow.id === win.id)
+                        : void 0
+                }
+
+                getTabControllerForWebContents(webContents) {
+                    for (const windowController of this.windowControllers) {
+                        const tabController = windowController.getTabControllerForWebContents(webContents);
+                        if (tabController) return tabController
+                    }
+                }
+
+                sendMainToAllNotionInstances(channel, ...args) {
+                    this.windowControllers.forEach(windowController => {
+                        windowController.sendMainToAllNotionInstances(channel, ...args)
+                    })
+                }
+
+                refreshAll(e) {
+                    const focusedWindow = electron.BrowserWindow.getFocusedWindow();
+                    if (e || !focusedWindow) {
+                        this.windowControllers.forEach(controller => controller.refresh({includeActiveTab: true}))
+                        this.quickSearchController?.reload()
+                        return
+                    }
+                    this.windowControllers.forEach(controller => {
+                        controller.refresh({
+                            includeActiveTab: controller.browserWindow.id !== focusedWindow.id
+                        })
+                    })
+                    this.quickSearchController?.reload()
+                }
+
+                refreshForWindowsMenuBarSpacing() {
+                    "darwin" !== process.platform && this.windowControllers.forEach(controller => {
+                        controller.refreshForWindowsMenuBarSpacing()
+                    })
+                }
+
+                trackAnalyticsEvent(event, args = {}) {
+                    this.getMostRecentlyFocusedWindowController()?.getActiveTabController()?.sendToNotion("notion:track", event, args)
+                }
+
+                zoomIn() {
+                    const zoomFactor = __store.Store.getState().app.zoomFactor + u.ELECTRON_ZOOM_INCREMENT; // 0.1
+                    this.setZoom(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, zoomFactor), u.ELECTRON_ZOOM_MAXIMUM))
+                }
+
+                zoomOut() {
+                    const zoomFactor = __store.Store.getState().app.zoomFactor - u.ELECTRON_ZOOM_INCREMENT; // 0.1
+                    this.setZoom(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, zoomFactor), u.ELECTRON_ZOOM_MAXIMUM))
+                }
+
+                resetZoom() {
+                    this.setZoom(u.ELECTRON_DEFAULT_ZOOM)
+                }
+
+                setZoom(zoomFactor) {
+                    __store.Store.dispatch(__appSlice.updateZoomFactor(Math.min(Math.max(u.ELECTRON_ZOOM_MINIMUM, zoomFactor), u.ELECTRON_ZOOM_MAXIMUM)))
+                }
+
+                handleAppStateChange(appState, oldState) {
+                    // 持久化 appState 状态(state.json#appState)
+                    __appStatePersister.appStatePersister.set("appState", appState);
+
+                    const preferences = appState.preferences || {},
+                        oldPreferences = oldState.preferences || {};
+                    if ("darwin" === process.platform && preferences.isClosingBrowserTabs && !oldPreferences.isClosingBrowserTabs) {
+                        g.closeLastBrowserTab({
+                            urlContaining: "notion.so",
+                            dryRun: !0
+                        })
+                    }
+
+                    if (preferences.isOpenAtLoginEnabled !== oldPreferences.isOpenAtLoginEnabled) {
+                        this.handleOpenAtLoginChange(!!preferences.isOpenAtLoginEnabled)
+                    }
+
+                    if (preferences.isHideLastWindowOnCloseEnabled !== oldPreferences.isHideLastWindowOnCloseEnabled) {
+                        preferences.isHideLastWindowOnCloseEnabled || this.windowControllers.forEach(e => {
+                            e.browserWindow.show()
+                        })
+                    }
+                }
+
+                handleAppRestorationStateChange(e) {
+                    if (lodash.isEmpty(e.windows)) return;
+                    const t = Object.values(e.windows).map(t => ({
+                        windowId: t.windowId,
+                        focusOrder: t.focusOrder,
+                        displayState: t.displayState,
+                        tabs: t.tabs.map(((r, n) => {
+                            const o = e.tabs[r.tabId];
+                            return {
+                                tabId: r.tabId,
+                                url: o.url,
+                                parentTabId: r.parentTabId,
+                                index: n,
+                                isActive: t.activeTabId === r.tabId
+                            }
+                        }))
+                    }))
+                    __store.Store.dispatch(__historySlice.setAppRestorationState(t))
+                }
+
+                handleQuit() {
+                    this.isQuitting = true
+                    this.focusedWindowStateUnsubscribe()
+                    this.appRestorationStateUnsubscribe()
+                    this.appStateUnsubscribe()
+                    this.historyStateUnsubscribe()
+                }
+
+                handleQuitWithoutSavingTabs() {
+                    __store.Store.dispatch(__tabSlice.resetTabState())
+                    __store.Store.dispatch(__windowSlice.resetWindowState())
+                    __store.Store.dispatch(__historySlice.resetHistoryState())
+                    electron.app.quit()
+                }
+
+                handleWindowClose(e, t) {
+                    const r = 1 === this.windowControllers.length, n = this.isQuitting,
+                        o = __store.Store.getState().app.preferences, a = !1 === o.isHideLastWindowOnCloseEnabled,
+                        i = !1 === o.isQuickSearchEnabled;
+                    return electron_log.default.debug("Window close", {
+                        lastWindow: r,
+                        isQuitting: n,
+                        isHideDisabled: a
+                    }), !(r && !n && !a || (this.windowControllers = this.windowControllers.filter((e => e.browserWindow !== t)), this.mostRecentlyFocusedWindowController?.browserWindow.id === t.id && (this.mostRecentlyFocusedWindowController = void 0), "win32" === process.platform && 0 === this.windowControllers.length && i && !n && electron.app.quit(), 0))
+                }
+
+                getWindowAndTabControllerWithEquivalentURL(e) {
+                    const t = this.getMostRecentlyFocusedWindowController(),
+                        r = lodash.compact([t, ...this.windowControllers.filter((e => e !== t))]);
+                    for (const t of r) {
+                        const r = t.getTabControllerWithEquivalentUrl(e);
+                        if (r) return {windowController: t, tabController: r}
+                    }
+                }
+
+                openUrlInTab(url, {windowController, tabController}) {
+                    tabController.navigateToUrl(url)
+                    windowController.makeTabActive(tabController.tabId)
+                    windowController.browserWindow.isMinimized() && windowController.browserWindow.restore()
+                    windowController.browserWindow.show()
+                }
+
+                openUrlInNewTabOrWindow(url) {
+                    const windowController = this.getMostRecentlyFocusedWindowController();
+                    if (windowController) {
+                        windowController.newTab({
+                            initialUrl: url,
+                            makeActiveTab: true,
+                            position: {type: "end"}
+                        })
+                        windowController.browserWindow.isMinimized() && windowController.browserWindow.restore()
+                        windowController.browserWindow.show()
+                    } else {
+                        this.newWindow({initialUrl: url}).browserWindow.focus()
+                    }
+                }
+
+                navigateFocusedWindowToUrl(url) {
+                    const windowController = this.getMostRecentlyFocusedWindowController();
+                    if (windowController) {
+                        windowController.browserWindow.isVisible() || windowController.browserWindow.show()
+                        this.openUrlInTab(url, {
+                            windowController: windowController,
+                            tabController: windowController.getActiveTabController()
+                        })
+                    } else {
+                        this.newWindow({initialUrl: url}).browserWindow.focus()
+                    }
+                }
+
+                getWindowControllerForId(id) {
+                    return this.windowControllers.find(t => t.windowId === id)
+                }
+
+                handleOpenAtLoginChange(isOpenAtLoginEnabled) {
+                    __openAtLogin.setIsOpenAtLogin(isOpenAtLoginEnabled)
+                    if (isOpenAtLoginEnabled) {
+                        if (!__openAtLogin.getIsOpenAtLogin()) {
+                            electron_log.default.warn("Tried to enable open at login, but failed.")
+                            v.showOpenAtLoginErrorDialog()
+                            __store.Store.dispatch(__appSlice.updatePreferences({isOpenAtLoginEnabled: false}))
+                        }
+                    }
+                }
+
+                getRestoredUrl(url) {
+                    return h.addQueryParams(y.normalizeUrlProtocolWithDefault(url), {pvs: 3})
+                }
+
+                updateMediaIndicator(webContents, isMediaInputActive) {
+                    const tabController = exports.appController.getTabControllerForWebContents(webContents);
+                    if (tabController) {
+                        __store.Store.dispatch(__tabSlice.updateTabIsMediaInputActive({
+                            tabId: tabController.tabId,
+                            isMediaInputActive: isMediaInputActive
+                        }))
+                    }
+                }
+            }
+
+            exports.appController = new AppController()
+            exports.AppController_TEST_ONLY = AppController
         },
 
         // QuickSearchController
@@ -1996,84 +2169,168 @@
             exports.TabController = TabController
         },
 
-        // TrayController
-        84087: function (e, t, r) {
+        // buildTrayMenuTemplate
+        63374: (module, exports, __webpack_require) => {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                intlHelpers = __webpack_require(36343),
+                __AppController = __webpack_require(21852),
+                __appSlice = __webpack_require(73553),
+                __quickSearchSlice = __webpack_require(14473),
+                __store = __webpack_require(69340)
+
+            const messages = intlHelpers.defineMessages({
+                    showNotionInMenuBar: {
+                        id: "menuBarIcon.menu.showNotionInMenuBar",
+                        defaultMessage: "Show Notion in menu bar",
+                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that enables/disables showing that icon"
+                    },
+                    toggleCommandSearch: {
+                        id: "menuBarIcon.menu.toggleCommandSearch",
+                        defaultMessage: "Toggle Command Search",
+                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that opens/hides Notion's AI-enabled search window"
+                    },
+                    changeCommandSearchShortcut: {
+                        id: "menuBarIcon.menu.selectCommandSearchShortcut",
+                        defaultMessage: "Change Command Search Shortcut",
+                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that lets users pick the global shortcut "
+                    },
+                    launchPreferences: {
+                        id: "menuBarIcon.menu.launchPreferences",
+                        defaultMessage: "Launch Preferences",
+                        description: "A drop-down menu shown (when right clicking the icon in the Windows tray) that controls how Notion launches and runs"
+                    },
+                    openOnLogin: {
+                        id: "menuBarIcon.menu.openOnLogin",
+                        defaultMessage: "Open Notion at Login",
+                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion opens when the user logs into their computer"
+                    },
+                    enableQuickSearch: {
+                        id: "menuBarIcon.menu.enableQuickSearch",
+                        defaultMessage: "Enable Quick Search",
+                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Quick Search is enabled"
+                    },
+                    keepInBackground: {
+                        id: "menuBarIcon.menu.keepInBackground",
+                        defaultMessage: "Keep in Background",
+                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
+                    },
+                    showImmediately: {
+                        id: "menuBarIcon.menu.showImmediately",
+                        defaultMessage: "Show Immediately",
+                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
+                    },
+                    quitNotion: {
+                        id: "menuBarIcon.menu.quitNotion",
+                        defaultMessage: "Quit Notion",
+                        description: "Menu item (when right clicking the icon in the top left) to quit the Notion app"
                     }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.TrayController = void 0;
-            const s = i(r(16928)), l = r(4482), c = i(r(47419)), u = r(14473), d = r(69340), p = r(63374),
-                h = c.default.scope("Tray");
-            t.TrayController = class {
-                constructor() {
-                    this.isEnabled = !1, this.appStateUnsubscribe = (0, d.subscribeToSelector)(d.selectAppState, ((e, t) => this.updateAppState(e, t)));
-                    const e = d.Store.getState().app;
-                    this.updateAppState(e), this.onClick = this.onClick.bind(this), this.onRightClick = this.onRightClick.bind(this)
-                }
+                }),
+                u = "open-on-login",
+                d = "enable-quick-search",
+                p = "keep-in-background",
+                h = "show-immediately";
 
-                async onClick() {
-                    const {preferences: e} = d.Store.getState().app, {isQuickSearchEnabled: t} = e;
-                    if (t) d.Store.dispatch((0, u.toggleVisibilityStateIfReady)("tray-icon")); else {
-                        const {handleActivate: e} = await Promise.resolve().then((() => a(r(64982))));
-                        e()
+            exports.buildTrayMenuTemplate = function () {
+                const intl = __AppController.appController.intl
+                const preferences = __store.Store.getState().app.preferences
+                const quickSearchMenu = function (intl, preferences) {
+                    const {isQuickSearchEnabled, quickSearchShortcut} = preferences;
+                    return isQuickSearchEnabled ? [
+                        {
+                            label: intl.formatMessage(messages.toggleCommandSearch),
+                            accelerator: quickSearchShortcut,
+                            click() {
+                                __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("tray-icon"))
+                            }
+                        },
+                        {
+                            label: intl.formatMessage(messages.changeCommandSearchShortcut),
+                            click() {
+                                __AppController.appController.openUserSettings()
+                            }
+                        },
+                        {type: "separator"}
+                    ] : []
+                }(intl, preferences)
+
+                const menuItems = [
+                    ...quickSearchMenu,
+                    {
+                        label: intl.formatMessage(messages.quitNotion),
+                        click() {
+                            electron.app.quit()
+                        }
                     }
-                }
+                ];
 
-                onRightClick() {
-                    this.tray && this.trayMenu && this.tray.popUpContextMenu(this.trayMenu)
-                }
+                "win32" === process.platform
+                    ? menuItems.splice(quickSearchMenu.length, 0, function (intl, preferences) {
+                        const {isOpenAtLoginEnabled, isQuickSearchEnabled, isHideLastWindowOnCloseEnabled} = preferences;
+                        return {
+                            label: intl.formatMessage(messages.launchPreferences),
+                            submenu: [
+                                {
+                                    label: intl.formatMessage(messages.openOnLogin),
+                                    type: "checkbox",
+                                    id: u,
+                                    checked: isOpenAtLoginEnabled,
+                                    click(e) {
+                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isOpenAtLoginEnabled: e.checked}))
+                                    }
+                                },
+                                {
+                                    label: intl.formatMessage(messages.enableQuickSearch),
+                                    type: "checkbox",
+                                    id: d,
+                                    checked: isQuickSearchEnabled,
+                                    click(e) {
+                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isQuickSearchEnabled: e.checked}))
+                                    }
+                                },
+                                {type: "separator"},
+                                {
+                                    label: intl.formatMessage(messages.keepInBackground),
+                                    type: "radio",
+                                    id: p,
+                                    checked: isHideLastWindowOnCloseEnabled,
+                                    click() {
+                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isHideLastWindowOnCloseEnabled: !0}))
+                                    }
+                                },
+                                {
+                                    label: intl.formatMessage(messages.showImmediately),
+                                    type: "radio",
+                                    id: h,
+                                    checked: !isHideLastWindowOnCloseEnabled,
+                                    click() {
+                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isHideLastWindowOnCloseEnabled: !1}))
+                                    }
+                                }
+                            ]
+                        }
+                    }(intl, preferences))
+                    : menuItems.splice(quickSearchMenu.length, 0, function (intl, t) {
+                        return {
+                            label: intl.formatMessage(messages.showNotionInMenuBar),
+                            type: "checkbox",
+                            checked: true,
+                            click() {
+                                __store.Store.dispatch(__appSlice.updatePreferences({isMenuBarIconEnabled: false}))
+                            }
+                        }
+                    }(intl))
 
-                getIsEnabled(e) {
-                    const {preferences: t} = e, {
-                        isMenuBarIconEnabled: r,
-                        isQuickSearchEnabled: n,
-                        isHideLastWindowOnCloseEnabled: o
-                    } = t;
-                    return !(!r || !n) || "win32" === process.platform || (h.debug("Tray disabled", {
-                        isMenuBarIconEnabled: r,
-                        isQuickSearchEnabled: n,
-                        isHideLastWindowOnCloseEnabled: o
-                    }), !1)
-                }
-
-                updateAppState(e, t) {
-                    const {preferences: r} = e;
-                    this.isEnabled = this.getIsEnabled(e), [r.quickSearchShortcut !== t?.preferences?.quickSearchShortcut, r.isMenuBarIconEnabled !== t?.preferences?.isMenuBarIconEnabled, r.isQuickSearchEnabled !== t?.preferences?.isQuickSearchEnabled, t && this.isEnabled !== this.getIsEnabled(t)].some((e => e)) && (this.trayMenu && !this.isEnabled ? this.trayMenu = void 0 : this.isEnabled && (this.trayMenu = l.Menu.buildFromTemplate((0, p.buildTrayMenuTemplate)())), this.tray && !this.isEnabled ? (this.tray.destroy(), this.tray = void 0) : !this.tray && this.isEnabled && (this.tray = new l.Tray(this.getIcon()), this.tray.on("click", (() => {
-                        this.onClick()
-                    })), this.tray.on("right-click", (() => this.onRightClick())), this.tray.setToolTip(l.app.getName())))
-                }
-
-                getIcon() {
-                    const e = "darwin" === process.platform ? "menuBarIconTemplate.png" : "trayIcon.ico";
-                    return l.app.isPackaged ? s.default.join(process.resourcesPath, e) : s.default.join("extra-resources", e)
-                }
+                return menuItems
             }
         },
-
-        // WebUpdater
-        19628: function (module, exports, __webpack_require) {
+        // TrayController
+        84087: function (module, exports, __webpack_require) {
             "use strict";
+
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                     void 0 === n && (n = r);
                     var o = Object.getOwnPropertyDescriptor(t, r);
@@ -2104,76 +2361,107 @@
             Object.defineProperty(exports, "__esModule", {value: !0})
 
 
-            const electron_log = i(__webpack_require(47419)),
-                __config = i(__webpack_require(11239)),
-                __AppController = __webpack_require(21852),
-                __notionIPC = a(__webpack_require(10454)),
-                d = __webpack_require(29902),
-                __store = __webpack_require(69340);
+            const __path = i(__webpack_require(16928)),
+                electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                __quickSearchSlice = __webpack_require(14473),
+                __store = __webpack_require(69340),
+                __trayMenuTemplate = __webpack_require(63374)
 
-            exports.WebUpdater = class {
-                constructor(app, assetCache) {
-                    this.pendingUpdate = void 0
-                    this.backgroundInterval = void 0
-                    this.app = app
-                    this.assetCache = assetCache
-                    this.isAppVisible = true
-                    __store.subscribeToSelector(__store.selectAppVisibilityBaseOnRenderers, value => {
-                        this.isAppVisible = value
-                        electron_log.default.info(`App is visible: ${value}`)
-                        this.onAppVisibilityChange(value)
+            const logger = electron_log.default.scope("Tray");
+
+            exports.TrayController = class {
+                constructor() {
+                    this.isEnabled = false
+
+                    // 监听 appState 状态变化
+                    this.appStateUnsubscribe = __store.subscribeToSelector(__store.selectAppState,
+                        (appState, previousAppState) => this.updateAppState(appState, previousAppState)
+                    )
+
+                    // 初始状态
+                    const appState = __store.Store.getState().app;
+                    this.updateAppState(appState)
+
+                    this.onClick = this.onClick.bind(this)
+                    this.onRightClick = this.onRightClick.bind(this)
+                }
+
+                async onClick() {
+                    const {preferences} = __store.Store.getState().app
+                    const {isQuickSearchEnabled} = preferences
+                    if (isQuickSearchEnabled) {
+                        __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("tray-icon"))
+                    } else {
+                        const {handleActivate} = await Promise.resolve().then(() => a(__webpack_require(64982)))
+                        handleActivate()
+                    }
+                }
+
+                onRightClick() {
+                    if (this.tray && this.trayMenu) {
+                        this.tray.popUpContextMenu(this.trayMenu)
+                    }
+                }
+
+                getIsEnabled(appState) {
+                    const {preferences} = appState
+                    const {
+                        isMenuBarIconEnabled,
+                        isQuickSearchEnabled,
+                        isHideLastWindowOnCloseEnabled
+                    } = preferences;
+
+                    if ((isMenuBarIconEnabled && isQuickSearchEnabled)) {
+                        return true
+                    } else if ("win32" === process.platform) {
+                        return true
+                    }
+                    logger.debug("Tray disabled", {
+                        isMenuBarIconEnabled: isMenuBarIconEnabled,
+                        isQuickSearchEnabled: isQuickSearchEnabled,
+                        isHideLastWindowOnCloseEnabled: isHideLastWindowOnCloseEnabled
                     })
-                    this.assetCache.events.addListener("update-finished", () => this.updateFinished())
-                    this.assetCache.events.addListener("update-applied", () => this.updateApplied())
+                    return false
+                }
 
-                    __notionIPC.handleEventFromRenderer.addListener("notion:install-appjs-update", (evt, url) => {
-                        if (this.pendingUpdate) {
-                            this.assetCache.syncVersions().then(() => {
-                                const _url = d.normalizeUrlProtocol(url)
-                                if (_url) {
-                                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.loadUrl(_url)
-                                    __AppController.appController.refreshAll(false)
-                                } else {
-                                    __AppController.appController.refreshAll(true)
-                                }
-                            })
+                updateAppState(appState, oldAppState) {
+                    const {preferences} = appState;
+                    this.isEnabled = this.getIsEnabled(appState)
+                    if ([
+                        preferences.quickSearchShortcut !== oldAppState?.preferences?.quickSearchShortcut,
+                        preferences.isMenuBarIconEnabled !== oldAppState?.preferences?.isMenuBarIconEnabled,
+                        preferences.isQuickSearchEnabled !== oldAppState?.preferences?.isQuickSearchEnabled,
+                        oldAppState && this.isEnabled !== this.getIsEnabled(oldAppState)
+                    ].some(_ => _)) {
+                        if (this.trayMenu && !this.isEnabled) {
+                            this.trayMenu = void 0
+                        } else if (this.isEnabled) {
+                            // 创建 tray 右键菜单
+                            this.trayMenu = electron.Menu.buildFromTemplate(__trayMenuTemplate.buildTrayMenuTemplate())
                         }
-                    })
-                }
 
-                updateFinished() {
-                    if (this.pendingUpdate) return;
+                        if (this.tray && !this.isEnabled) {
+                            this.tray.destroy()
+                            this.tray = void 0
+                        } else if (!this.tray && this.isEnabled) {
+                            // 创建 tray 实例
+                            this.tray = new electron.Tray(this.getIcon())
 
-                    const now = Date.now()
-                    const delay = "production" === __config.default.env ? 864e5 * Math.random() : 0;
-
-                    this.pendingUpdate = {
-                        updateAvailableAt: now,
-                        applyUpdateAfter: now + delay
+                            this.tray.on("click", () => {
+                                this.onClick()
+                            })
+                            this.tray.on("right-click", () => this.onRightClick())
+                            this.tray.setToolTip(electron.app.getName())
+                        }
                     }
                 }
 
-                updateApplied() {
-                    this.pendingUpdate = void 0
-                }
-
-                onAppVisibilityChange(visible) {
-                    if (visible) {
-                        if (this.backgroundInterval) return;
-
-                        this.backgroundInterval = setInterval(async () => {
-                            if (this.pendingUpdate) {
-                                if (!this.isAppVisible && Date.now() >= this.pendingUpdate.applyUpdateAfter) {
-                                    electron_log.default.info("Sending update install notification to all windows")
-                                    await this.assetCache.syncVersions()
-                                    __AppController.appController.refreshAll(true)
-                                }
-                            }
-                        }, 60_000)
-                    } else if (this.backgroundInterval) {
-                        clearInterval(this.backgroundInterval)
-                        this.backgroundInterval = void 0
-                    }
+                getIcon() {
+                    const trayIcon = "darwin" === process.platform ? "menuBarIconTemplate.png" : "trayIcon.ico";
+                    return electron.app.isPackaged
+                        ? __path.default.join(process.resourcesPath, trayIcon)
+                        : __path.default.join(process.cwd(), "extra-resources", trayIcon)
                 }
             }
         },
@@ -3128,6 +3416,7 @@
             exports.WindowController = WindowController
         },
 
+
         // getAnalyticsInfo
         68543: function (e, t, r) {
             "use strict";
@@ -3165,57 +3454,6 @@
                     arch: process.arch
                 }
             }
-        },
-
-        // assetCache 实例
-        94774: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.assetCache = void 0;
-            const s = i(r(4482)), l = r(37318), c = i(r(11239)), u = r(21852), d = r(87309), p = a(r(10454));
-            t.assetCache = new d.AssetCache({
-                baseUrl: c.default.domainBaseUrl,
-                baseDir: s.default.app.getPath("userData"),
-                tempDir: s.default.app.getPath("temp")
-            }), t.assetCache.events.addListener("error", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-error", (0, l.cleanObjectForSerialization)(e))
-            })), t.assetCache.events.addListener("checking-for-update", (() => {
-                u.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
-            })), t.assetCache.events.addListener("update-available", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-available", e)
-            })), t.assetCache.events.addListener("update-not-available", (() => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-not-available")
-            })), t.assetCache.events.addListener("download-progress", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-progress", e)
-            })), t.assetCache.events.addListener("update-downloaded", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-ready", e)
-            })), t.assetCache.events.addListener("update-finished", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-finished", e)
-            })), p.handleEventFromRenderer.addListener("notion:check-for-app-updates", (() => {
-                t.assetCache.checkForUpdates()
-            }))
         },
 
         // initializeAutoUpdater
@@ -3504,6 +3742,116 @@
                 }()
             }
         },
+
+        // WebUpdater
+        19628: function (module, exports, __webpack_require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron_log = i(__webpack_require(47419)),
+                __config = i(__webpack_require(11239)),
+                __AppController = __webpack_require(21852),
+                __notionIPC = a(__webpack_require(10454)),
+                d = __webpack_require(29902),
+                __store = __webpack_require(69340);
+
+            exports.WebUpdater = class {
+                constructor(app, assetCache) {
+                    this.pendingUpdate = void 0
+                    this.backgroundInterval = void 0
+                    this.app = app
+                    this.assetCache = assetCache
+                    this.isAppVisible = true
+
+                    __store.subscribeToSelector(__store.selectAppVisibilityBaseOnRenderers, value => {
+                        this.isAppVisible = value
+                        electron_log.default.info(`App is visible: ${value}`)
+                        this.onAppVisibilityChange(value)
+                    })
+
+                    this.assetCache.events.addListener("update-finished", () => this.updateFinished())
+                    this.assetCache.events.addListener("update-applied", () => this.updateApplied())
+
+                    __notionIPC.handleEventFromRenderer.addListener("notion:install-appjs-update", (evt, url) => {
+                        if (this.pendingUpdate) {
+                            this.assetCache.syncVersions().then(() => {
+                                const _url = d.normalizeUrlProtocol(url)
+                                if (_url) {
+                                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.loadUrl(_url)
+                                    __AppController.appController.refreshAll(false)
+                                } else {
+                                    __AppController.appController.refreshAll(true)
+                                }
+                            })
+                        }
+                    })
+                }
+
+                updateFinished() {
+                    if (this.pendingUpdate) return;
+
+                    const now = Date.now()
+                    const delay = "production" === __config.default.env ? 864e5 * Math.random() : 0;
+
+                    this.pendingUpdate = {
+                        updateAvailableAt: now,
+                        applyUpdateAfter: now + delay
+                    }
+                }
+
+                updateApplied() {
+                    this.pendingUpdate = void 0
+                }
+
+                onAppVisibilityChange(visible) {
+                    if (visible) {
+                        if (this.backgroundInterval) return;
+
+                        this.backgroundInterval = setInterval(async () => {
+                            if (this.pendingUpdate) {
+                                if (!this.isAppVisible && Date.now() >= this.pendingUpdate.applyUpdateAfter) {
+                                    electron_log.default.info("Sending update install notification to all windows")
+                                    await this.assetCache.syncVersions()
+                                    __AppController.appController.refreshAll(true)
+                                }
+                            }
+                        }, 60_000)
+                    } else if (this.backgroundInterval) {
+                        clearInterval(this.backgroundInterval)
+                        this.backgroundInterval = void 0
+                    }
+                }
+            }
+        },
+
 
         // closeLastBrowserTab
         68115: function (e, t, r) {
@@ -4281,7 +4629,7 @@
                 __debugMenu = __webpack_require(83789),
                 __logging = __webpack_require(5554),
                 __handleNotionProtocol = __webpack_require(77514),
-                m = __webpack_require(26605),
+                __openAtLogin = __webpack_require(26605),
                 g = __webpack_require(29902),
                 __setupRendererListeners = __webpack_require(35219),
                 v = __webpack_require(15425), // isNavigationAllowed 设置页面导航规则
@@ -4301,7 +4649,7 @@
                         e.loadUrlInActiveTab(initialUrl)
                     }
                     e.browserWindow.show()
-                } else if (m.getWasOpenedAsHidden()) {
+                } else if (__openAtLogin.getWasOpenedAsHidden()) {
                     if (!__AppController.appController.rehydrateSingleTabInBackground(initialUrl)) {
                         __AppController.appController.newWindow({
                             initialUrl: initialUrl,
@@ -4524,24 +4872,38 @@
             }
         },
         // open at login
-        26605: function (e, t, r) {
+        26605: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setIsOpenAtLogin = t.getIsOpenAtLogin = t.getWasOpenedAsHidden = void 0;
-            const o = r(4482), a = n(r(47419)).default.scope("launchOnLogin"), i = "--open-at-login";
-            t.getWasOpenedAsHidden = function () {
-                return "darwin" === process.platform ? o.app.getLoginItemSettings().wasOpenedAsHidden || o.app.getLoginItemSettings().wasOpenedAtLogin : process.argv.includes(i)
-            }, t.getIsOpenAtLogin = function () {
-                const e = o.app.getLoginItemSettings({args: [i]});
-                return e.openAtLogin || Boolean(e.executableWillLaunchAtLogin)
-            }, t.setIsOpenAtLogin = function (e) {
-                o.app.isPackaged && (a.info(`Setting open at login to ${e}`), o.app.setLoginItemSettings({
-                    openAtLogin: e,
-                    openAsHidden: !0,
-                    args: [i]
-                }))
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.setIsOpenAtLogin = exports.getIsOpenAtLogin = exports.getWasOpenedAsHidden = void 0;
+            const electron = __webpack_require(4482)
+
+            const logger = n(__webpack_require(47419)).default.scope("launchOnLogin")
+            const arg = "--open-at-login";
+
+            exports.getWasOpenedAsHidden = function () {
+                return "darwin" === process.platform
+                    ? electron.app.getLoginItemSettings().wasOpenedAsHidden || electron.app.getLoginItemSettings().wasOpenedAtLogin
+                    : process.argv.includes(arg)
+            }
+            exports.getIsOpenAtLogin = function () {
+                const settings = electron.app.getLoginItemSettings({args: [arg]});
+                return settings.openAtLogin || Boolean(settings.executableWillLaunchAtLogin)
+            }
+            exports.setIsOpenAtLogin = function (openAtLogin) {
+                if (electron.app.isPackaged) {
+                    logger.info(`Setting open at login to ${openAtLogin}`)
+                    electron.app.setLoginItemSettings({
+                        openAtLogin: openAtLogin,
+                        openAsHidden: true,
+                        args: [arg]
+                    })
+                }
             }
         },
 
@@ -4574,29 +4936,44 @@
         },
 
         // url protocol utils
-        29902: function (e, t, r) {
+        29902: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.findNotionProtocolUrl = t.normalizeUrlProtocolWithDefault = t.normalizeUrlProtocol = t.initialBaseUrl = t.getIsProtocolRegistered = void 0;
-            const o = n(r(47419)), a = r(32289), i = r(60411), s = n(r(11239)), l = r(31957), c = r(69340);
 
-            function u() {
-                return c.Store.getState().app.preferences.isUsingHttps ? s.default.domainBaseUrl : (0, a.getSchemeUrl)({
-                    httpUrl: s.default.domainBaseUrl,
-                    protocol: s.default.protocol,
-                    includePort: !0
-                })
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = n(__webpack_require(47419)),
+                a = __webpack_require(32289),
+                i = __webpack_require(60411),
+                __config = n(__webpack_require(11239)),
+                l = __webpack_require(31957),
+                __store = __webpack_require(69340);
+
+            function initialBaseUrl() {
+                return __store.Store.getState().app.preferences.isUsingHttps
+                    ? __config.default.domainBaseUrl
+                    : a.getSchemeUrl({
+                        httpUrl: __config.default.domainBaseUrl,
+                        protocol: __config.default.protocol,
+                        includePort: true
+                    })
             }
 
-            function d(e) {
-                if (!e) return;
-                const t = (0, i.isStrictRelativeUrl)(e) ? e : (0, i.removeBaseUrl)(e), r = u();
-                return t.startsWith("/") ? `${r}${t}` : `${r}/${t}`
+            function normalizeUrlProtocol(url) {
+                if (!url) return;
+
+                const relativeUrl = i.isStrictRelativeUrl(url) ? url : i.removeBaseUrl(url)
+                const baseUrl = initialBaseUrl();
+
+                return relativeUrl.startsWith("/") ? `${baseUrl}${relativeUrl}` : `${baseUrl}/${relativeUrl}`
             }
 
-            t.getIsProtocolRegistered = async function (e) {
+
+            exports.getIsProtocolRegistered = async function (e) {
                 return !!function (e) {
                     const t = i.allowedProtocols.map((e => e.replace(/:$/, "")));
                     return t.includes(e)
@@ -4615,10 +4992,14 @@
                         return o.default.error(`Error checking for protocol registration: ${e}`), !1
                     }
                 }(e))
-            }, t.initialBaseUrl = u, t.normalizeUrlProtocol = d, t.normalizeUrlProtocolWithDefault = function (e) {
-                return d(e) || u()
-            }, t.findNotionProtocolUrl = function (e) {
-                return d(e.find((e => e.startsWith(`${s.default.protocol}:`))))
+            }
+            exports.initialBaseUrl = initialBaseUrl
+            exports.normalizeUrlProtocol = normalizeUrlProtocol
+            exports.normalizeUrlProtocolWithDefault = function (e) {
+                return normalizeUrlProtocol(e) || initialBaseUrl()
+            }
+            exports.findNotionProtocolUrl = function (e) {
+                return normalizeUrlProtocol(e.find((e => e.startsWith(`${__config.default.protocol}:`))))
             }
         },
 
@@ -5021,357 +5402,631 @@
             }
         },
 
-        // app slice
-        73553: function (e, t, r) {
-            "use strict";
-            var n, o = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.updateNotificationCount = t.updatePreferences = t.updateTheme = t.updateZoomFactor = t.appSlice = t.DEFAULT_PERSISTED_PREFERENCES = t.ALWAYS_SET_ELECTRON_APP_FEATURES = t.TAB_DRAG_INTO_WINDOW_ENABLED = t.NEW_TAB_SEARCH_ENABLED = t.NAVIGATION_HISTORY_ENABLED = t.IS_USING_HTTPS = t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED = t.QUICK_SEARCH_ENABLED = void 0;
-            const a = r(55869), i = r(50019), s = o(r(11239)), l = r(26605), c = r(30506);
-            t.QUICK_SEARCH_ENABLED = !0, t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED = !0, t.IS_USING_HTTPS = !1, t.NAVIGATION_HISTORY_ENABLED = "local" === s.default.env || "development" === s.default.env, t.NEW_TAB_SEARCH_ENABLED = "local" === s.default.env || "development" === s.default.env, t.TAB_DRAG_INTO_WINDOW_ENABLED = "local" === s.default.env, t.ALWAYS_SET_ELECTRON_APP_FEATURES = {
-                isElectronUsingCommandNumber: !0,
-                isNotionProtocolBugFixed: !1,
-                isElectronHandlingZoom: !0,
-                isQuickSearchSupported: t.QUICK_SEARCH_ENABLED,
-                isMenuBarIconSupported: t.QUICK_SEARCH_ENABLED,
-                isTabPositionSupported: !0,
-                isNavigationHistorySupported: !0
-            }, t.DEFAULT_PERSISTED_PREFERENCES = {
-                isClosingBrowserTabs: !1,
-                isHardwareAccelerationDisabled: !1,
-                updaterChannel: null,
-                isQuickSearchEnabled: !!t.QUICK_SEARCH_ENABLED || void 0,
-                isAutoUpdaterDisabled: !1,
-                isOpenAtLoginEnabled: !0,
-                isHideLastWindowOnCloseEnabled: !0,
-                isUnifiedTitleBarEnabled: !!t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED || void 0,
-                isNewSidebarToggleEnabled: !1,
-                isUsingHttps: !!t.IS_USING_HTTPS || void 0,
-                isVibrancyEnabled: null,
-                isNavigationHistoryEnabled: !!t.NAVIGATION_HISTORY_ENABLED || void 0,
-                isNewTabSearchEnabled: !!t.NEW_TAB_SEARCH_ENABLED || void 0,
-                isTabDragIntoWindowEnabled: !!t.TAB_DRAG_INTO_WINDOW_ENABLED || void 0
-            }, t.appSlice = (0, a.createSlice)({
-                name: "app", initialState: function () {
-                    const e = c.appStatePersister.get("appState", {
-                        zoomFactor: 1,
-                        theme: (0, i.getElectronTheme)("light", !1),
-                        preferences: t.DEFAULT_PERSISTED_PREFERENCES,
-                        notificationCount: 0
-                    });
-                    return function (e) {
-                        if (void 0 === e.preferences) return void (e.preferences = t.DEFAULT_PERSISTED_PREFERENCES);
-                        const r = e.preferences;
-                        void 0 === r.isOpenAtLoginEnabled ? (r.isOpenAtLoginEnabled = !0, (0, l.setIsOpenAtLogin)(!0)) : r.isOpenAtLoginEnabled = (0, l.getIsOpenAtLogin)(), void 0 === r.isHideLastWindowOnCloseEnabled && (r.isHideLastWindowOnCloseEnabled = !0), void 0 === r.isQuickSearchEnabled && t.QUICK_SEARCH_ENABLED && (r.isQuickSearchEnabled = !0), void 0 === r.quickSearchShortcut && t.QUICK_SEARCH_ENABLED && (r.quickSearchShortcut = "darwin" === process.platform ? "shift+command+k" : "shift+ctrl+k"), void 0 === r.isMenuBarIconEnabled && t.QUICK_SEARCH_ENABLED && (r.isMenuBarIconEnabled = !0), void 0 === r.isUnifiedTitleBarEnabled && t.WINDOWS_UNIFIED_TITLE_BAR_ENABLED && (r.isUnifiedTitleBarEnabled = !0), void 0 === r.isUsingHttps && t.IS_USING_HTTPS && (r.isUsingHttps = !0), void 0 === r.isNavigationHistoryEnabled && t.NAVIGATION_HISTORY_ENABLED && (r.isNavigationHistoryEnabled = !0), void 0 === r.isNewTabSearchEnabled && t.NEW_TAB_SEARCH_ENABLED && (r.isNewTabSearchEnabled = !0), void 0 === r.isTabDragIntoWindowEnabled && t.TAB_DRAG_INTO_WINDOW_ENABLED && (r.isTabDragIntoWindowEnabled = !0)
-                    }(e), void 0 === e.notificationCount && (e.notificationCount = 0), e
-                }(), reducers: {
-                    updateZoomFactor(e, t) {
-                        e.zoomFactor = t.payload
-                    }, updateTheme(e, t) {
-                        e.theme = t.payload
-                    }, updatePreferences(e, t) {
-                        e.preferences = {...e.preferences, ...t.payload}
-                    }, updateNotificationCount(e, t) {
-                        e.notificationCount = t.payload
-                    }
-                }
-            }), n = t.appSlice.actions, t.updateZoomFactor = n.updateZoomFactor, t.updateTheme = n.updateTheme, t.updatePreferences = n.updatePreferences, t.updateNotificationCount = n.updateNotificationCount
-        },
-
-        // history slice
-        28192: (e, t, r) => {
-            "use strict";
-            var n;
-            Object.defineProperty(t, "__esModule", {value: !0}), t.resetHistoryState = t.setAppRestorationState = t.insertCloseEvent = t.popCloseEvent = t.updateLastFocusedWindowDisplayState = t.historySlice = void 0;
-            const o = r(55869), a = r(30506), i = {};
-            t.historySlice = (0, o.createSlice)({
-                name: "history", initialState: function () {
-                    const e = a.appStatePersister.get("history", i);
-                    var t;
-                    return void 0 !== (t = e).lastFocusedWindowDisplayState && (void 0 === t.lastFocusedWindowDisplayState.isFullScreen && (t.lastFocusedWindowDisplayState.isFullScreen = !1), void 0 === t.lastFocusedWindowDisplayState.isHtmlFullScreen && (t.lastFocusedWindowDisplayState.isHtmlFullScreen = !1)), e
-                }(), reducers: {
-                    updateLastFocusedWindowDisplayState(e, t) {
-                        e.lastFocusedWindowDisplayState = t.payload
-                    }, popCloseEvent(e) {
-                        e.closeEvents = e.closeEvents?.slice(1)
-                    }, insertCloseEvent(e, t) {
-                        const r = e.closeEvents;
-                        r ? r.length < 10 ? e.closeEvents = [t.payload, ...r] : e.closeEvents = [t.payload, ...r.slice(0, 10)] : e.closeEvents = [t.payload]
-                    }, setAppRestorationState(e, t) {
-                        e.appRestorationState = t.payload
-                    }, resetHistoryState: () => i
-                }
-            }), n = t.historySlice.actions, t.updateLastFocusedWindowDisplayState = n.updateLastFocusedWindowDisplayState, t.popCloseEvent = n.popCloseEvent, t.insertCloseEvent = n.insertCloseEvent, t.setAppRestorationState = n.setAppRestorationState, t.resetHistoryState = n.resetHistoryState
-        },
-
-        // quick search slice
-        14473: (e, t, r) => {
-            "use strict";
-            var n;
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setReadyState = t.toggleVisibilityStateIfReady = t.quickSearchSlice = void 0;
-            const o = r(55869);
-            t.quickSearchSlice = (0, o.createSlice)({
-                name: "quickSearch",
-                initialState: {visibilityState: {type: "not-visible"}, readyState: {type: "not-ready"}},
-                reducers: {
-                    toggleVisibilityStateIfReady(e, t) {
-                        "ready" !== e.readyState.type || "visible" === e.visibilityState.type ? e.visibilityState = {
-                            type: "not-visible",
-                            source: t.payload
-                        } : e.visibilityState = {type: "visible", source: t.payload}
-                    }, setReadyState(e, t) {
-                        e.readyState = t.payload
-                    }
-                }
-            }), n = t.quickSearchSlice.actions, t.toggleVisibilityStateIfReady = n.toggleVisibilityStateIfReady, t.setReadyState = n.setReadyState
-        },
 
         // redux store
-        69340: function (e, t, r) {
+        69340: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getElectronAppFeatures = t.subscribeToSelector = t.Store = t.selectQuickSearchState = t.selectHistory = t.selectTabStates = t.selectTabState = t.selectAppVisibilityBaseOnRenderers = t.selectFocusedWindowDisplayState = t.selectWindowState = t.selectAppState = void 0;
-            const s = r(55869), l = a(r(6600)), c = i(r(80637)), u = r(73553), d = r(28192), p = r(14473), h = r(54417),
-                f = r(772), m = (0, s.combineReducers)({
-                    windows: f.windowSlice.reducer,
-                    tabs: h.tabSlice.reducer,
-                    app: u.appSlice.reducer,
-                    history: d.historySlice.reducer,
-                    quickSearch: p.quickSearchSlice.reducer
-                });
 
-            function g(e) {
-                return e => t => e(t)
-            }
-
-            t.selectAppState = function (e) {
-                return e.app
-            }, t.selectWindowState = function (e, t) {
-                return e.windows[t]
-            }, t.selectFocusedWindowDisplayState = function (e) {
-                const t = l.maxBy(Object.values(e.windows), (e => e.focusOrder));
-                return t?.displayState
-            }, t.selectAppVisibilityBaseOnRenderers = function (e) {
-                return Object.values(e.windows).some((e => e.isVisible))
-            }, t.selectTabState = function (e, t) {
-                return e.tabs[t]
-            }, t.selectTabStates = function (e, t) {
-                return l.compact(t.map((t => e.tabs[t])))
-            }, t.selectHistory = function (e) {
-                return e.history
-            }, t.selectQuickSearchState = function (e) {
-                return e.quickSearch
-            }, t.Store = (0, s.configureStore)({
-                reducer: m,
-                middleware: e => e().concat(g)
-            }), t.subscribeToSelector = function (e, r, n) {
-                let o = e(t.Store.getState()), a = o;
-                const i = () => {
-                    const n = e(t.Store.getState());
-                    (0, c.default)(o, n) || (a = o, o = n, r(o, a))
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
                 };
-                if (n) {
-                    const e = void 0 === n.leading || n.leading, r = void 0 === n.trailing || n.trailing,
-                        o = l.throttle(i, n.wait, {leading: e, trailing: r}), a = t.Store.subscribe(o);
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __reduxToolkit = __webpack_require(55869),
+                lodash = a(__webpack_require(6600)),
+                c = i(__webpack_require(80637)),
+                __appSlice = __webpack_require(73553),
+                __historySlice = __webpack_require(28192),
+                __quickSearchSlice = __webpack_require(14473),
+                __tabSlice = __webpack_require(54417),
+                __windowSlice = __webpack_require(772)
+
+            const rootReducer = __reduxToolkit.combineReducers({
+                windows: __windowSlice.windowSlice.reducer,
+                tabs: __tabSlice.tabSlice.reducer,
+                app: __appSlice.appSlice.reducer,
+                history: __historySlice.historySlice.reducer,
+                quickSearch: __quickSearchSlice.quickSearchSlice.reducer
+            });
+
+            function middleware(storeAPI) {
+                return next => action => next(action)
+            }
+
+            exports.selectAppState = function (rootState) {
+                return rootState.app
+            }
+            exports.selectWindowState = function (rootState, windowId) {
+                return rootState.windows[windowId]
+            }
+            exports.selectFocusedWindowDisplayState = function (rootState) {
+                const windowState = lodash.maxBy(Object.values(rootState.windows), _ => _.focusOrder);
+                return windowState?.displayState
+            }
+            exports.selectAppVisibilityBaseOnRenderers = function (rootState) {
+                return Object.values(rootState.windows).some(_ => _.isVisible)
+            }
+            exports.selectTabState = function (rootState, tabId) {
+                return rootState.tabs[tabId]
+            }
+            exports.selectTabStates = function (rootState, tabIds) {
+                return lodash.compact(tabIds.map(id => rootState.tabs[id]))
+            }
+            exports.selectHistory = function (rootState) {
+                return rootState.history
+            }
+            exports.selectQuickSearchState = function (rootState) {
+                return rootState.quickSearch
+            }
+
+            exports.Store = __reduxToolkit.configureStore({
+                reducer: rootReducer,
+                middleware: getDefaultMiddleware => getDefaultMiddleware().concat(middleware)
+            })
+
+            exports.subscribeToSelector = function (selector, callback, options) {
+                let currentValue = selector(exports.Store.getState())
+                let previousValue = currentValue;
+
+                const listener = () => {
+                    const newValue = selector(exports.Store.getState());
+                    if (!c.default(currentValue, newValue)) {
+                        previousValue = currentValue
+                        currentValue = newValue
+                        callback(currentValue, previousValue)
+                    }
+                };
+                if (options) {
+                    const leading = void 0 === options.leading || options.leading,
+                        trailing = void 0 === options.trailing || options.trailing,
+                        throttledListener = lodash.throttle(listener, options.wait, {
+                            leading: leading,
+                            trailing: trailing
+                        }),
+                        unsubscribe = exports.Store.subscribe(throttledListener);
                     return () => {
-                        r ? o.flush() : o.cancel(), a()
+                        trailing ? throttledListener.flush() : throttledListener.cancel()
+                        unsubscribe()
                     }
                 }
-                return t.Store.subscribe(i)
-            }, t.getElectronAppFeatures = function (e = {}) {
-                const r = {...u.DEFAULT_PERSISTED_PREFERENCES, ...t.Store.getState().app.preferences || {}, ...e.preferences},
-                    n = t.Store.getState().app.zoomFactor;
-                return {...u.ALWAYS_SET_ELECTRON_APP_FEATURES, ...e, preferences: r, zoomFactor: n}
+                return exports.Store.subscribe(listener)
+            }
+            exports.getElectronAppFeatures = function (feature = {}) {
+                const preferences = {
+                    ...__appSlice.DEFAULT_PERSISTED_PREFERENCES,
+                    ...exports.Store.getState().app.preferences || {},
+                    ...feature.preferences
+                }
+                const zoomFactor = exports.Store.getState().app.zoomFactor;
+                return {
+                    ...__appSlice.ALWAYS_SET_ELECTRON_APP_FEATURES,
+                    ...feature,
+                    preferences: preferences,
+                    zoomFactor: zoomFactor
+                }
             }
         },
 
-        // tab slice
-        54417: function (e, t, r) {
+        // app state (持久化)
+        73553: function (module, exports, __webpack_require) {
             "use strict";
-            var n, o = this && this.__importDefault || function (e) {
+            let o = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.resetTabState = t.removeTabState = t.updateAppStoreState = t.updateTabIsMediaInputActive = t.updateTabIsOverlayActive = t.updateTabColors = t.updateTabUrl = t.updateTabSearchingState = t.updateParentWindowControllerId = t.updatePageHistoryFaviconMap = t.updateTabTitle = t.initializeTabState = t.tabSlice = t.createTabId = void 0;
-            const a = o(r(76982)), i = r(55869);
-            t.createTabId = function () {
-                return a.default.randomUUID()
-            };
-            const s = {};
-            t.tabSlice = (0, i.createSlice)({
-                name: "tabs", initialState: s, reducers: {
-                    initializeTabState(e, t) {
-                        e[t.payload.tabId] = {...t.payload, pageHistoryFaviconMap: {}, parentWindowControllerId: void 0}
-                    }, updateTabTitle(e, t) {
-                        e[t.payload.tabId].title = t.payload.title
-                    }, updatePageHistoryFaviconMap(e, t) {
-                        e[t.payload.tabId].pageHistoryFaviconMap[t.payload.url] = t.payload.favicon, e[t.payload.tabId].favicon = t.payload.favicon
-                    }, updateParentWindowControllerId(e, t) {
-                        e[t.payload.tabId].parentWindowControllerId = t.payload.parentWindowControllerId
-                    }, updateTabSearchingState(e, t) {
-                        e[t.payload.tabId].searching = {
-                            isSearching: t.payload.isSearching,
-                            isSearchingCenterPeek: t.payload.isSearchingCenterPeek,
-                            isFirstQuery: t.payload.isFirstQuery
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const a = __webpack_require(55869),
+                i = __webpack_require(50019),
+                __config = o(__webpack_require(11239)),
+                __openAtLogin = __webpack_require(26605),
+                __appStatePersister = __webpack_require(30506);
+
+            exports.QUICK_SEARCH_ENABLED = true
+            exports.WINDOWS_UNIFIED_TITLE_BAR_ENABLED = true
+            exports.IS_USING_HTTPS = false
+            exports.NAVIGATION_HISTORY_ENABLED = "local" === __config.default.env || "development" === __config.default.env
+            exports.NEW_TAB_SEARCH_ENABLED = "local" === __config.default.env || "development" === __config.default.env
+            exports.TAB_DRAG_INTO_WINDOW_ENABLED = "local" === __config.default.env
+            exports.ALWAYS_SET_ELECTRON_APP_FEATURES = {
+                isElectronUsingCommandNumber: true,
+                isNotionProtocolBugFixed: false,
+                isElectronHandlingZoom: true,
+                isQuickSearchSupported: exports.QUICK_SEARCH_ENABLED,
+                isMenuBarIconSupported: exports.QUICK_SEARCH_ENABLED,
+                isTabPositionSupported: true,
+                isNavigationHistorySupported: true
+            }
+            exports.DEFAULT_PERSISTED_PREFERENCES = {
+                isClosingBrowserTabs: false,
+                isHardwareAccelerationDisabled: false,
+                updaterChannel: null,
+                isQuickSearchEnabled: !!exports.QUICK_SEARCH_ENABLED || void 0,
+                isAutoUpdaterDisabled: false,
+                isOpenAtLoginEnabled: true,
+                isHideLastWindowOnCloseEnabled: true,
+                isUnifiedTitleBarEnabled: !!exports.WINDOWS_UNIFIED_TITLE_BAR_ENABLED || void 0,
+                isNewSidebarToggleEnabled: false,
+                isUsingHttps: !!exports.IS_USING_HTTPS || void 0,
+                isVibrancyEnabled: null,
+                isNavigationHistoryEnabled: !!exports.NAVIGATION_HISTORY_ENABLED || void 0,
+                isNewTabSearchEnabled: !!exports.NEW_TAB_SEARCH_ENABLED || void 0,
+                isTabDragIntoWindowEnabled: !!exports.TAB_DRAG_INTO_WINDOW_ENABLED || void 0
+            }
+
+            exports.appSlice = a.createSlice({
+                name: "app",
+                initialState: function () {
+                    // 读取 appState
+                    const appState = __appStatePersister.appStatePersister.get("appState", {
+                        zoomFactor: 1,
+                        theme: i.getElectronTheme("light", false),
+                        preferences: exports.DEFAULT_PERSISTED_PREFERENCES,
+                        notificationCount: 0
+                    });
+
+                    void function (appState) {
+                        if (void 0 === appState.preferences) {
+                            appState.preferences = exports.DEFAULT_PERSISTED_PREFERENCES
+                            return
                         }
-                    }, updateTabUrl(e, t) {
-                        e[t.payload.tabId].url = t.payload.url
-                    }, updateTabColors(e, t) {
-                        e[t.payload.tabId].tabColors = t.payload.colors
-                    }, updateTabIsOverlayActive(e, t) {
-                        e[t.payload.tabId].isOverlayActive = t.payload.isOverlayActive
-                    }, updateTabIsMediaInputActive(e, t) {
-                        e[t.payload.tabId].isMediaInputActive = t.payload.isMediaInputActive
-                    }, updateAppStoreState(e, t) {
-                        e[t.payload.tabId].appStoreState = t.payload.appStoreState
-                    }, removeTabState(e, t) {
-                        delete e[t.payload.tabId]
-                    }, resetTabState: () => s
+                        const preferences = appState.preferences;
+                        if (void 0 === preferences.isOpenAtLoginEnabled) {
+                            preferences.isOpenAtLoginEnabled = true
+                            __openAtLogin.setIsOpenAtLogin(true)
+                        } else {
+                            preferences.isOpenAtLoginEnabled = __openAtLogin.getIsOpenAtLogin()
+                        }
+                        void 0 === preferences.isHideLastWindowOnCloseEnabled && (preferences.isHideLastWindowOnCloseEnabled = true)
+                        void 0 === preferences.isQuickSearchEnabled && exports.QUICK_SEARCH_ENABLED && (preferences.isQuickSearchEnabled = !0)
+                        void 0 === preferences.quickSearchShortcut && exports.QUICK_SEARCH_ENABLED && (preferences.quickSearchShortcut = "darwin" === process.platform ? "shift+command+k" : "shift+ctrl+k")
+                        void 0 === preferences.isMenuBarIconEnabled && exports.QUICK_SEARCH_ENABLED && (preferences.isMenuBarIconEnabled = !0)
+                        void 0 === preferences.isUnifiedTitleBarEnabled && exports.WINDOWS_UNIFIED_TITLE_BAR_ENABLED && (preferences.isUnifiedTitleBarEnabled = !0)
+                        void 0 === preferences.isUsingHttps && exports.IS_USING_HTTPS && (preferences.isUsingHttps = !0)
+                        void 0 === preferences.isNavigationHistoryEnabled && exports.NAVIGATION_HISTORY_ENABLED && (preferences.isNavigationHistoryEnabled = !0)
+                        void 0 === preferences.isNewTabSearchEnabled && exports.NEW_TAB_SEARCH_ENABLED && (preferences.isNewTabSearchEnabled = !0)
+                        void 0 === preferences.isTabDragIntoWindowEnabled && exports.TAB_DRAG_INTO_WINDOW_ENABLED && (preferences.isTabDragIntoWindowEnabled = !0)
+                    }(appState)
+
+                    if (void 0 === appState.notificationCount) {
+                        appState.notificationCount = 0
+                    }
+
+                    return appState
+                }(),
+                reducers: {
+                    updateZoomFactor(state, ctx) {
+                        state.zoomFactor = ctx.payload
+                    },
+                    updateTheme(state, ctx) {
+                        state.theme = ctx.payload
+                    },
+                    updatePreferences(state, ctx) {
+                        state.preferences = {
+                            ...state.preferences,
+                            ...ctx.payload
+                        }
+                    },
+                    updateNotificationCount(state, ctx) {
+                        state.notificationCount = ctx.payload
+                    }
                 }
-            }), n = t.tabSlice.actions, t.initializeTabState = n.initializeTabState, t.updateTabTitle = n.updateTabTitle, t.updatePageHistoryFaviconMap = n.updatePageHistoryFaviconMap, t.updateParentWindowControllerId = n.updateParentWindowControllerId, t.updateTabSearchingState = n.updateTabSearchingState, t.updateTabUrl = n.updateTabUrl, t.updateTabColors = n.updateTabColors, t.updateTabIsOverlayActive = n.updateTabIsOverlayActive, t.updateTabIsMediaInputActive = n.updateTabIsMediaInputActive, t.updateAppStoreState = n.updateAppStoreState, t.removeTabState = n.removeTabState, t.resetTabState = n.resetTabState
+            })
+
+            let actions = exports.appSlice.actions
+            exports.updateZoomFactor = actions.updateZoomFactor
+            exports.updateTheme = actions.updateTheme
+            exports.updatePreferences = actions.updatePreferences
+            exports.updateNotificationCount = actions.updateNotificationCount
         },
 
-        // window slice
-        772: function (e, t, r) {
+        // history state (持久化)
+        28192: (module, exports, __webpack_require) => {
             "use strict";
-            var n, o = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), a = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), i = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && o(t, e, r);
-                return a(t, e), t
-            }, s = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setShouldShowAppMenuFromAlt = t.resetWindowState = t.setTabOrder = t.removeWindowState = t.focusWindow = t.updateIsWindowVisible = t.updateDisplayState = t.closeAllNonActiveTabs = t.sliceTabRange = t.removeTabFromWindow = t.addTabToWindow = t.updateActiveTabId = t.updateWindowSidebarState = t.initializeWindowState = t.windowSlice = t.createWindowId = void 0;
-            const l = s(r(76982)), c = r(55869), u = i(r(6600));
-            t.createWindowId = function () {
-                return l.default.randomUUID()
-            };
-            const d = {};
-            t.windowSlice = (0, c.createSlice)({
-                name: "windows", initialState: d, reducers: {
-                    initializeWindowState(e, t) {
-                        const r = t.payload;
-                        e[r.windowId] = {
-                            windowId: r.windowId,
-                            tabs: [{tabId: r.initialTabId, parentTabId: r.initialParentTabId}],
-                            activeTabId: r.initialTabId,
-                            displayState: r.displayState,
-                            isVisible: r.isVisible,
-                            focusOrder: 0,
-                            shouldShowAppMenuFromAltKey: !1
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const o = __webpack_require(55869),
+                __appStatePersister = __webpack_require(30506),
+                defaultValues = {};
+
+            exports.historySlice = o.createSlice({
+                name: "history",
+                initialState: function () {
+                    // 读取 history 状态
+                    const historyState = __appStatePersister.appStatePersister.get("history", defaultValues);
+                    let t = historyState;
+                    if (void 0 !== t.lastFocusedWindowDisplayState) {
+                        if (void 0 === t.lastFocusedWindowDisplayState.isFullScreen) {
+                            t.lastFocusedWindowDisplayState.isFullScreen = false
                         }
-                    }, updateWindowSidebarState(e, t) {
-                        e[t.payload.windowId].sidebarState = t.payload.sidebarState
-                    }, updateActiveTabId(e, t) {
-                        e[t.payload.windowId].activeTabId = t.payload.activeTabId
-                    }, addTabToWindow(e, t) {
-                        const r = t.payload;
-                        e[r.windowId].tabs.splice(r.index, 0, {
-                            tabId: r.tabId,
-                            parentTabId: r.parentTabId
-                        }), r.makeActiveTab && (e[r.windowId].activeTabId = r.tabId)
-                    }, removeTabFromWindow(e, t) {
-                        const r = t.payload;
-                        e[r.windowId].tabs.splice(r.index, 1), r.newActiveTabId && (e[r.windowId].activeTabId = r.newActiveTabId)
-                    }, sliceTabRange(e, t) {
-                        const r = t.payload, n = e[t.payload.windowId];
-                        n.tabs = n.tabs.slice(r.startIndex, r.endIndex)
-                    }, closeAllNonActiveTabs(e, t) {
-                        const r = e[t.payload.windowId];
-                        r.tabs = r.tabs.filter((e => e.tabId === r.activeTabId))
-                    }, updateDisplayState(e, t) {
-                        const r = e[t.payload.windowId];
-                        r.displayState = {...r.displayState, ...t.payload.update}
-                    }, updateIsWindowVisible(e, t) {
-                        e[t.payload.windowId].isVisible = t.payload.isVisible
-                    }, focusWindow(e, t) {
-                        const r = u.max(Object.values(e).map((e => e.focusOrder))) || 0;
-                        e[t.payload.windowId].focusOrder = r + 1
-                    }, removeWindowState(e, t) {
-                        delete e[t.payload.windowId]
-                    }, setTabOrder(e, t) {
-                        const r = {};
-                        e[t.payload.windowId].tabs.forEach((e => {
-                            r[e.tabId] = e
-                        })), e[t.payload.windowId].tabs = t.payload.tabs.map((e => r[e]))
-                    }, resetWindowState: () => d, setShouldShowAppMenuFromAlt: (e, t) => {
-                        e[t.payload.windowId].shouldShowAppMenuFromAltKey = t.payload.shouldShowAppMenuFromAltKey
+                        if (void 0 === t.lastFocusedWindowDisplayState.isHtmlFullScreen) {
+                            t.lastFocusedWindowDisplayState.isHtmlFullScreen = false
+                        }
+                    }
+                    return historyState
+                }(),
+                reducers: {
+                    updateLastFocusedWindowDisplayState(state, ctx) {
+                        state.lastFocusedWindowDisplayState = ctx.payload
+                    },
+                    popCloseEvent(state) {
+                        state.closeEvents = state.closeEvents?.slice(1)
+                    },
+                    insertCloseEvent(state, ctx) {
+                        const closeEvents = state.closeEvents;
+                        closeEvents
+                            ? closeEvents.length < 10
+                                ? state.closeEvents = [ctx.payload, ...closeEvents]
+                                : state.closeEvents = [ctx.payload, ...closeEvents.slice(0, 10)]
+                            : state.closeEvents = [ctx.payload]
+                    },
+                    setAppRestorationState(state, ctx) {
+                        state.appRestorationState = ctx.payload
+                    },
+                    resetHistoryState: () => defaultValues
+                }
+            })
+
+            let actions = exports.historySlice.actions
+            exports.updateLastFocusedWindowDisplayState = actions.updateLastFocusedWindowDisplayState
+            exports.popCloseEvent = actions.popCloseEvent
+            exports.insertCloseEvent = actions.insertCloseEvent
+            exports.setAppRestorationState = actions.setAppRestorationState
+            exports.resetHistoryState = actions.resetHistoryState
+        },
+
+        // quick search state
+        14473: (module, exports, __webpack_require) => {
+            "use strict";
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.setReadyState = exports.toggleVisibilityStateIfReady = exports.quickSearchSlice = void 0;
+            const o = __webpack_require(55869);
+
+            exports.quickSearchSlice = o.createSlice({
+                name: "quickSearch",
+                initialState: {
+                    visibilityState: {
+                        type: "not-visible"
+                    },
+                    readyState: {
+                        type: "not-ready"
+                    }
+                },
+                reducers: {
+                    toggleVisibilityStateIfReady(state, ctx) {
+                        if ("ready" !== state.readyState.type || "visible" === state.visibilityState.type) {
+                            state.visibilityState = {
+                                type: "not-visible",
+                                source: ctx.payload
+                            }
+                        } else {
+                            state.visibilityState = {
+                                type: "visible",
+                                source: ctx.payload
+                            }
+                        }
+                    },
+                    setReadyState(state, ctx) {
+                        state.readyState = ctx.payload
                     }
                 }
-            }), n = t.windowSlice.actions, t.initializeWindowState = n.initializeWindowState, t.updateWindowSidebarState = n.updateWindowSidebarState, t.updateActiveTabId = n.updateActiveTabId, t.addTabToWindow = n.addTabToWindow, t.removeTabFromWindow = n.removeTabFromWindow, t.sliceTabRange = n.sliceTabRange, t.closeAllNonActiveTabs = n.closeAllNonActiveTabs, t.updateDisplayState = n.updateDisplayState, t.updateIsWindowVisible = n.updateIsWindowVisible, t.focusWindow = n.focusWindow, t.removeWindowState = n.removeWindowState, t.setTabOrder = n.setTabOrder, t.resetWindowState = n.resetWindowState, t.setShouldShowAppMenuFromAlt = n.setShouldShowAppMenuFromAlt
+            })
+
+            let actions = exports.quickSearchSlice.actions
+            exports.toggleVisibilityStateIfReady = actions.toggleVisibilityStateIfReady
+            exports.setReadyState = actions.setReadyState
+        },
+
+        // tab state
+        54417: function (module, exports, __webpack_require) {
+            "use strict";
+            let o = this && this.__importDefault || function (e) {
+                return e && e.__esModule ? e : {default: e}
+            };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = o(__webpack_require(76982)),
+                i = __webpack_require(55869);
+            exports.createTabId = function () {
+                return crypto.default.randomUUID()
+            };
+
+            const initialState = {};
+            exports.tabSlice = i.createSlice({
+                name: "tabs",
+                initialState: initialState,
+                reducers: {
+                    initializeTabState(state, ctx) {
+                        state[ctx.payload.tabId] = {
+                            ...ctx.payload,
+                            pageHistoryFaviconMap: {},
+                            parentWindowControllerId: void 0
+                        }
+                    },
+                    updateTabTitle(state, ctx) {
+                        state[ctx.payload.tabId].title = ctx.payload.title
+                    },
+                    updatePageHistoryFaviconMap(state, ctx) {
+                        state[ctx.payload.tabId].pageHistoryFaviconMap[ctx.payload.url] = ctx.payload.favicon
+                        state[ctx.payload.tabId].favicon = ctx.payload.favicon
+                    },
+                    updateParentWindowControllerId(state, ctx) {
+                        state[ctx.payload.tabId].parentWindowControllerId = ctx.payload.parentWindowControllerId
+                    },
+                    updateTabSearchingState(state, ctx) {
+                        state[ctx.payload.tabId].searching = {
+                            isSearching: ctx.payload.isSearching,
+                            isSearchingCenterPeek: ctx.payload.isSearchingCenterPeek,
+                            isFirstQuery: ctx.payload.isFirstQuery
+                        }
+                    },
+                    updateTabUrl(state, ctx) {
+                        state[ctx.payload.tabId].url = ctx.payload.url
+                    },
+                    updateTabColors(state, ctx) {
+                        state[ctx.payload.tabId].tabColors = ctx.payload.colors
+                    },
+                    updateTabIsOverlayActive(state, ctx) {
+                        state[ctx.payload.tabId].isOverlayActive = ctx.payload.isOverlayActive
+                    },
+                    updateTabIsMediaInputActive(state, ctx) {
+                        state[ctx.payload.tabId].isMediaInputActive = ctx.payload.isMediaInputActive
+                    },
+                    updateAppStoreState(state, ctx) {
+                        state[ctx.payload.tabId].appStoreState = ctx.payload.appStoreState
+                    },
+                    removeTabState(state, ctx) {
+                        delete state[ctx.payload.tabId]
+                    },
+                    resetTabState: () => initialState
+                }
+            })
+
+            let actions = exports.tabSlice.actions
+            exports.initializeTabState = actions.initializeTabState
+            exports.updateTabTitle = actions.updateTabTitle
+            exports.updatePageHistoryFaviconMap = actions.updatePageHistoryFaviconMap
+            exports.updateParentWindowControllerId = actions.updateParentWindowControllerId
+            exports.updateTabSearchingState = actions.updateTabSearchingState
+            exports.updateTabUrl = actions.updateTabUrl
+            exports.updateTabColors = actions.updateTabColors
+            exports.updateTabIsOverlayActive = actions.updateTabIsOverlayActive
+            exports.updateTabIsMediaInputActive = actions.updateTabIsMediaInputActive
+            exports.updateAppStoreState = actions.updateAppStoreState
+            exports.removeTabState = actions.removeTabState
+            exports.resetTabState = actions.resetTabState
+        },
+
+        // window state
+        772: function (module, exports, __webpack_require) {
+            "use strict";
+            let o = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                a = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                i = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && o(t, e, r);
+                    return a(t, e), t
+                },
+                s = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = s(__webpack_require(76982)),
+                c = __webpack_require(55869),
+                u = i(__webpack_require(6600));
+
+            exports.createWindowId = function () {
+                return crypto.default.randomUUID()
+            };
+
+            const initialState = {};
+            exports.windowSlice = c.createSlice({
+                name: "windows",
+                initialState: initialState,
+                reducers: {
+                    initializeWindowState(state, ctx) {
+                        const payload = ctx.payload;
+                        state[payload.windowId] = {
+                            windowId: payload.windowId,
+                            tabs: [
+                                {
+                                    tabId: payload.initialTabId,
+                                    parentTabId: payload.initialParentTabId
+                                }
+                            ],
+                            activeTabId: payload.initialTabId,
+                            displayState: payload.displayState,
+                            isVisible: payload.isVisible,
+                            focusOrder: 0,
+                            shouldShowAppMenuFromAltKey: false
+                        }
+                    },
+                    updateWindowSidebarState(state, ctx) {
+                        state[ctx.payload.windowId].sidebarState = ctx.payload.sidebarState
+                    },
+                    updateActiveTabId(state, ctx) {
+                        state[ctx.payload.windowId].activeTabId = ctx.payload.activeTabId
+                    },
+                    addTabToWindow(state, ctx) {
+                        const payload = ctx.payload;
+                        state[payload.windowId].tabs.splice(payload.index, 0, {
+                            tabId: payload.tabId,
+                            parentTabId: payload.parentTabId
+                        })
+                        if (payload.makeActiveTab) {
+                            state[payload.windowId].activeTabId = payload.tabId
+                        }
+                    },
+                    removeTabFromWindow(state, ctx) {
+                        const payload = ctx.payload;
+                        state[payload.windowId].tabs.splice(payload.index, 1)
+                        if (payload.newActiveTabId) {
+                            state[payload.windowId].activeTabId = payload.newActiveTabId
+                        }
+                    },
+                    sliceTabRange(state, ctx) {
+                        const payload = ctx.payload, windowState = state[ctx.payload.windowId];
+                        windowState.tabs = windowState.tabs.slice(payload.startIndex, payload.endIndex)
+                    },
+                    closeAllNonActiveTabs(state, ctx) {
+                        const windowState = state[ctx.payload.windowId];
+                        windowState.tabs = windowState.tabs.filter(_ => _.tabId === windowState.activeTabId)
+                    },
+                    updateDisplayState(state, ctx) {
+                        const windowState = state[ctx.payload.windowId];
+                        windowState.displayState = {
+                            ...windowState.displayState,
+                            ...ctx.payload.update
+                        }
+                    },
+                    updateIsWindowVisible(state, ctx) {
+                        state[ctx.payload.windowId].isVisible = ctx.payload.isVisible
+                    },
+                    focusWindow(state, ctx) {
+                        const maxFocusOrder = u.max(Object.values(state).map(_ => _.focusOrder)) || 0;
+                        state[ctx.payload.windowId].focusOrder = maxFocusOrder + 1
+                    },
+                    removeWindowState(state, ctx) {
+                        delete state[ctx.payload.windowId]
+                    },
+                    setTabOrder(state, ctx) {
+                        const tabs = {};
+                        state[ctx.payload.windowId].tabs.forEach(_ => {
+                            tabs[_.tabId] = _
+                        })
+                        state[ctx.payload.windowId].tabs = ctx.payload.tabs.map(_ => tabs[_])
+                    },
+                    resetWindowState: () => initialState,
+                    setShouldShowAppMenuFromAlt: (state, ctx) => {
+                        state[ctx.payload.windowId].shouldShowAppMenuFromAltKey = ctx.payload.shouldShowAppMenuFromAltKey
+                    }
+                }
+            })
+
+            let actions = exports.windowSlice.actions
+            exports.initializeWindowState = actions.initializeWindowState
+            exports.updateWindowSidebarState = actions.updateWindowSidebarState
+            exports.updateActiveTabId = actions.updateActiveTabId
+            exports.addTabToWindow = actions.addTabToWindow
+            exports.removeTabFromWindow = actions.removeTabFromWindow
+            exports.sliceTabRange = actions.sliceTabRange
+            exports.closeAllNonActiveTabs = actions.closeAllNonActiveTabs
+            exports.updateDisplayState = actions.updateDisplayState
+            exports.updateIsWindowVisible = actions.updateIsWindowVisible
+            exports.focusWindow = actions.focusWindow
+            exports.removeWindowState = actions.removeWindowState
+            exports.setTabOrder = actions.setTabOrder
+            exports.resetWindowState = actions.resetWindowState
+            exports.setShouldShowAppMenuFromAlt = actions.setShouldShowAppMenuFromAlt
         },
 
         // appStatePersister
-        30506: function (e, t, r) {
+        30506: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.appStatePersister = void 0;
-            const o = n(r(9245));
-            t.appStatePersister = new o.default({name: "state"})
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron_store = n(__webpack_require(9245));
+
+            // 指定持久化文件为 state.json
+            exports.appStatePersister = new electron_store.default({name: "state"})
         },
-        55385: (e, t, r) => {
+
+
+        55385: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.boundsSelector = t.searchStateSelector = t.electronAppFeaturesSelector = t.backgroundColorSelector = t.targetTabBarHeightSelector = t.themeModeSelector = t.themeSelector = t.preferenceSelector = t.zoomFactorSelector = void 0;
-            const n = r(13984), o = r(27683), a = r(60522), i = r(73553), s = r(78401), l = r(40257), c = r(54198);
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const n = __webpack_require(13984),
+                __TabColors = __webpack_require(27683),
+                a = __webpack_require(60522),
+                __appSlice = __webpack_require(73553),
+                s = __webpack_require(78401),
+                l = __webpack_require(40257),
+                c = __webpack_require(54198);
 
             function u(e) {
                 return e.app
             }
 
-            t.zoomFactorSelector = (0, l.createSelector)(u, (e => e.zoomFactor)), t.preferenceSelector = (0, l.createSelector)(u, (e => e.preferences)), t.themeSelector = (0, l.createSelector)(u, (e => e.theme)), t.themeModeSelector = (0, l.createSelector)(t.themeSelector, (e => e.mode));
-            const d = (0, l.createSelector)(t.preferenceSelector, (e => e.isVibrancyEnabled));
-            t.targetTabBarHeightSelector = (0, l.createSelector)([t.zoomFactorSelector, c.isShowingTabBarSelector], ((e, t) => t ? Math.ceil(a.TAB_BAR_HEIGHT_PX * e) : 0)), t.backgroundColorSelector = (0, l.createSelector)([d, t.themeModeSelector], ((e, t) => e ? "#00000000" : o.electronColors.notionBackground[t])), t.electronAppFeaturesSelector = (0, l.createSelector)([t.preferenceSelector, t.zoomFactorSelector, c.isShowingTabBarSelector], ((e, t, r) => {
+            exports.zoomFactorSelector = l.createSelector(u, (e => e.zoomFactor))
+            exports.preferenceSelector = l.createSelector(u, (e => e.preferences))
+            exports.themeSelector = l.createSelector(u, (e => e.theme))
+            exports.themeModeSelector = l.createSelector(exports.themeSelector, (e => e.mode));
+
+            const d = l.createSelector(exports.preferenceSelector, (e => e.isVibrancyEnabled));
+            exports.targetTabBarHeightSelector = l.createSelector([exports.zoomFactorSelector, c.isShowingTabBarSelector], ((e, t) => t ? Math.ceil(a.TAB_BAR_HEIGHT_PX * e) : 0))
+            exports.backgroundColorSelector = l.createSelector([d, exports.themeModeSelector], ((e, t) => e ? "#00000000" : __TabColors.electronColors.notionBackground[t]))
+            exports.electronAppFeaturesSelector = l.createSelector([exports.preferenceSelector, exports.zoomFactorSelector, c.isShowingTabBarSelector], ((e, t, r) => {
                 if (void 0 !== r) return {
-                    ...i.ALWAYS_SET_ELECTRON_APP_FEATURES,
+                    ...__appSlice.ALWAYS_SET_ELECTRON_APP_FEATURES,
                     isShowingTabBar: r,
-                    preferences: {...i.DEFAULT_PERSISTED_PREFERENCES, ...e || {}},
+                    preferences: {...__appSlice.DEFAULT_PERSISTED_PREFERENCES, ...e || {}},
                     zoomFactor: t
                 }
-            })), t.searchStateSelector = (0, l.createSelector)([s.tabSearchingStateSelector, t.zoomFactorSelector, (e, t, r) => r, (e, t, r, n) => n], ((e, t, r, o) => {
+            }))
+            exports.searchStateSelector = l.createSelector([s.tabSearchingStateSelector, exports.zoomFactorSelector, (e, t, r) => r, (e, t, r, n) => n], ((e, t, r, o) => {
                 const a = e?.isSearchingCenterPeek ? 0 : (0, n.getTopbarHeight)("darwin" === process.platform),
                     i = Math.ceil(80 * t), s = Math.ceil(500 * t);
                 return {searchBounds: {x: r - s, y: a + o, width: s, height: i}, searchingState: e}
-            })), t.boundsSelector = (0, l.createSelector)([d, c.isActiveTabSelector, (e, t, r) => r, (e, t, r, n) => n], ((e, t, r, n) => {
+            }))
+            exports.boundsSelector = l.createSelector([d, c.isActiveTabSelector, (e, t, r) => r, (e, t, r, n) => n], ((e, t, r, n) => {
                 if (r) return {
                     x: e && !t ? 1e4 : 0,
                     y: e && !t ? 1e4 : n,
@@ -6367,114 +7022,7 @@
             }
         },
 
-        // buildTrayMenuTemplate
-        63374: (e, t, r) => {
-            "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.buildTrayMenuTemplate = void 0;
-            const n = r(4482), o = r(36343), a = r(21852), i = r(73553), s = r(14473), l = r(69340),
-                c = (0, o.defineMessages)({
-                    showNotionInMenuBar: {
-                        id: "menuBarIcon.menu.showNotionInMenuBar",
-                        defaultMessage: "Show Notion in menu bar",
-                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that enables/disables showing that icon"
-                    },
-                    toggleCommandSearch: {
-                        id: "menuBarIcon.menu.toggleCommandSearch",
-                        defaultMessage: "Toggle Command Search",
-                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that opens/hides Notion's AI-enabled search window"
-                    },
-                    changeCommandSearchShortcut: {
-                        id: "menuBarIcon.menu.selectCommandSearchShortcut",
-                        defaultMessage: "Change Command Search Shortcut",
-                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that lets users pick the global shortcut "
-                    },
-                    launchPreferences: {
-                        id: "menuBarIcon.menu.launchPreferences",
-                        defaultMessage: "Launch Preferences",
-                        description: "A drop-down menu shown (when right clicking the icon in the Windows tray) that controls how Notion launches and runs"
-                    },
-                    openOnLogin: {
-                        id: "menuBarIcon.menu.openOnLogin",
-                        defaultMessage: "Open Notion at Login",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion opens when the user logs into their computer"
-                    },
-                    enableQuickSearch: {
-                        id: "menuBarIcon.menu.enableQuickSearch",
-                        defaultMessage: "Enable Quick Search",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Quick Search is enabled"
-                    },
-                    keepInBackground: {
-                        id: "menuBarIcon.menu.keepInBackground",
-                        defaultMessage: "Keep in Background",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
-                    },
-                    showImmediately: {
-                        id: "menuBarIcon.menu.showImmediately",
-                        defaultMessage: "Show Immediately",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
-                    },
-                    quitNotion: {
-                        id: "menuBarIcon.menu.quitNotion",
-                        defaultMessage: "Quit Notion",
-                        description: "Menu item (when right clicking the icon in the top left) to quit the Notion app"
-                    }
-                }), u = "open-on-login", d = "enable-quick-search", p = "keep-in-background", h = "show-immediately";
-            t.buildTrayMenuTemplate = function () {
-                const e = a.appController.intl, t = l.Store.getState().app.preferences, r = function (e, t) {
-                    const {isQuickSearchEnabled: r, quickSearchShortcut: n} = t;
-                    return r ? [{
-                        label: e.formatMessage(c.toggleCommandSearch), accelerator: n, click() {
-                            l.Store.dispatch((0, s.toggleVisibilityStateIfReady)("tray-icon"))
-                        }
-                    }, {
-                        label: e.formatMessage(c.changeCommandSearchShortcut), click() {
-                            a.appController.openUserSettings()
-                        }
-                    }, {type: "separator"}] : []
-                }(e, t), o = [...r, {
-                    label: e.formatMessage(c.quitNotion), click() {
-                        n.app.quit()
-                    }
-                }];
-                return "win32" === process.platform ? o.splice(r.length, 0, function (e, t) {
-                    const {isOpenAtLoginEnabled: r, isQuickSearchEnabled: n, isHideLastWindowOnCloseEnabled: o} = t;
-                    return {
-                        label: e.formatMessage(c.launchPreferences),
-                        submenu: [{
-                            label: e.formatMessage(c.openOnLogin),
-                            type: "checkbox",
-                            id: u,
-                            checked: r,
-                            click(e) {
-                                l.Store.dispatch((0, i.updatePreferences)({isOpenAtLoginEnabled: e.checked}))
-                            }
-                        }, {
-                            label: e.formatMessage(c.enableQuickSearch), type: "checkbox", id: d, checked: n, click(e) {
-                                l.Store.dispatch((0, i.updatePreferences)({isQuickSearchEnabled: e.checked}))
-                            }
-                        }, {type: "separator"}, {
-                            label: e.formatMessage(c.keepInBackground),
-                            type: "radio",
-                            id: p,
-                            checked: o,
-                            click() {
-                                l.Store.dispatch((0, i.updatePreferences)({isHideLastWindowOnCloseEnabled: !0}))
-                            }
-                        }, {
-                            label: e.formatMessage(c.showImmediately), type: "radio", id: h, checked: !o, click() {
-                                l.Store.dispatch((0, i.updatePreferences)({isHideLastWindowOnCloseEnabled: !1}))
-                            }
-                        }]
-                    }
-                }(e, t)) : o.splice(r.length, 0, function (e, t) {
-                    return {
-                        label: e.formatMessage(c.showNotionInMenuBar), type: "checkbox", checked: !0, click() {
-                            l.Store.dispatch((0, i.updatePreferences)({isMenuBarIconEnabled: !1}))
-                        }
-                    }
-                }(e)), o
-            }
-        },
+
         98441: function (module, exports, __webpack_require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
@@ -9177,21 +9725,34 @@
                 return r(e) ? t.AsyncIter.withStats(e, n) : t.Iter.withStats(e, n)
             }
         },
-        28902: (e, t) => {
+
+        28902: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getContentfulSupportedLocale = t.getContentfulLocale = t.localeFormatter = t.allLocales = t.deprecatedLocales = t.defaultLocale = t.getLocaleFromCookie = t.externalLocaleToNotionLocale = t.isSupportedLanguageCode = t.isPreferredLanguageCode = t.isPreferredLocaleOrigin = t.isPreferredLocaleExtended = t.isPreferredLocale = t.isBetaLocale = t.isDevelopmentLocale = t.languageCodeToPreferredLocaleExtended = t.languageCodeToPreferredLocale = t.countryToPreferredLocale = t.preferredContentfulLocales = t.ALL_LOCALE_ROUTES = t.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = t.ALL_LOCALES = t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = t.PSEUDOLOCALES = t.VALID_PREFERRED_LOCALES_IN_BETA = t.VALID_PREFERRED_LOCALES = t.VALID_PREFERRED_LOCALES_FOR_MARKETING = void 0, t.VALID_PREFERRED_LOCALES_FOR_MARKETING = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR"], t.VALID_PREFERRED_LOCALES = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"], t.VALID_PREFERRED_LOCALES_IN_BETA = ["ja-JP", "zh-CN", "zh-TW", "da-DK", "nl-NL", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"], t.PSEUDOLOCALES = ["pseudo"], t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = ["zh-CN", "zh-TW", ...t.PSEUDOLOCALES], t.ALL_LOCALES = [...t.VALID_PREFERRED_LOCALES, ...t.VALID_PREFERRED_LOCALES_IN_BETA, ...t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT], t.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.map((e => {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.VALID_PREFERRED_LOCALES_FOR_MARKETING = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR"]
+            exports.VALID_PREFERRED_LOCALES = ["en-US", "ko-KR", "ja-JP", "fr-FR", "de-DE", "es-ES", "es-LA", "pt-BR", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"]
+            exports.VALID_PREFERRED_LOCALES_IN_BETA = ["ja-JP", "zh-CN", "zh-TW", "da-DK", "nl-NL", "fi-FI", "da-DK", "nl-NL", "nb-NO", "sv-SE"]
+            exports.PSEUDOLOCALES = ["pseudo"]
+            exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT = ["zh-CN", "zh-TW", ...exports.PSEUDOLOCALES]
+            exports.ALL_LOCALES = [...exports.VALID_PREFERRED_LOCALES, ...exports.VALID_PREFERRED_LOCALES_IN_BETA, ...exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT]
+            exports.VALID_PREFERRED_LOCALE_ROUTES_IN_DEVELOPMENT = exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.map(e => {
                 const t = e.split("-").join(""), r = e.toLocaleLowerCase();
                 return {[t]: `/${r}`}
-            })).reduce(((e, t) => Object.assign(e, t)), {}), t.ALL_LOCALE_ROUTES = t.ALL_LOCALES.map((e => {
+            }).reduce((e, t) => Object.assign(e, t), {})
+            exports.ALL_LOCALE_ROUTES = exports.ALL_LOCALES.map(e => {
                 const t = e.split("-").join(""), r = e.toLocaleLowerCase();
                 return {[t]: `/${r}`}
-            })).reduce(((e, t) => Object.assign(e, t)), {});
+            }).reduce((e, t) => Object.assign(e, t), {});
+
             const r = ["autodetect", "user_choice", "legacy", "inferred_from_inviter"];
-            t.preferredContentfulLocales = {
+            exports.preferredContentfulLocales = {
                 "es-LA": "es-419",
                 "zh-TW": "zh-Hant-TW",
                 pseudo: "yav"
-            }, t.countryToPreferredLocale = {
+            }
+            exports.countryToPreferredLocale = {
                 KR: "ko-KR",
                 US: "en-US",
                 JA: "ja-JP",
@@ -9219,34 +9780,35 @@
                 UY: "es-LA",
                 VE: "es-LA"
             };
+
             const n = ["en", "ko", "ja", "fr", "de", "es", "pt", "fi", "da", "nl", "nb", "sv"],
                 o = ["es", "fr", "pt", "zh"];
 
-            function a(e) {
-                return t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.includes(e)
+            function isDevelopmentLocale(e) {
+                return exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT.includes(e)
             }
 
-            function i(e) {
-                return t.VALID_PREFERRED_LOCALES.includes(e)
+            function isPreferredLocale(e) {
+                return exports.VALID_PREFERRED_LOCALES.includes(e)
             }
 
-            function s(e) {
-                return i(e) || a(e)
+            function isPreferredLocaleExtended(e) {
+                return isPreferredLocale(e) || isDevelopmentLocale(e)
             }
 
-            function l(e) {
+            function isPreferredLanguageCode(e) {
                 return n.includes(e)
             }
 
-            function c(e) {
-                return l(e) || o.includes(e)
+            function isSupportedLanguageCode(e) {
+                return isPreferredLanguageCode(e) || o.includes(e)
             }
 
-            function u(e) {
-                return e && t.deprecatedLocales.includes(e) ? t.defaultLocale : e?.replace(/(\-[a-z])\w+/g, (e => e.toUpperCase()))?.replace(/([A-Z]*[A-Z]\-)+/gm, (e => e.toLocaleLowerCase())) || t.defaultLocale
+            function localeFormatter(e) {
+                return e && exports.deprecatedLocales.includes(e) ? exports.defaultLocale : e?.replace(/(\-[a-z])\w+/g, (e => e.toUpperCase()))?.replace(/([A-Z]*[A-Z]\-)+/gm, (e => e.toLocaleLowerCase())) || exports.defaultLocale
             }
 
-            t.languageCodeToPreferredLocale = {
+            exports.languageCodeToPreferredLocale = {
                 de: "de-DE",
                 ko: "ko-KR",
                 en: "en-US",
@@ -9259,7 +9821,8 @@
                 nl: "nl-NL",
                 nb: "nb-NO",
                 sv: "sv-SE"
-            }, t.languageCodeToPreferredLocaleExtended = {
+            }
+            exports.languageCodeToPreferredLocaleExtended = {
                 de: "de-DE",
                 ko: "ko-KR",
                 en: "en-US",
@@ -9273,23 +9836,42 @@
                 nl: "nl-NL",
                 nb: "nb-NO",
                 sv: "sv-SE"
-            }, t.isDevelopmentLocale = a, t.isBetaLocale = function (e) {
-                return t.VALID_PREFERRED_LOCALES_IN_BETA.includes(e)
-            }, t.isPreferredLocale = i, t.isPreferredLocaleExtended = s, t.isPreferredLocaleOrigin = function (e) {
+            }
+            exports.isDevelopmentLocale = isDevelopmentLocale
+            exports.isBetaLocale = function (e) {
+                return exports.VALID_PREFERRED_LOCALES_IN_BETA.includes(e)
+            }
+            exports.isPreferredLocale = isPreferredLocale
+            exports.isPreferredLocaleExtended = isPreferredLocaleExtended
+            exports.isPreferredLocaleOrigin = function (e) {
                 return r.includes(e)
-            }, t.isPreferredLanguageCode = l, t.isSupportedLanguageCode = c, t.externalLocaleToNotionLocale = function (e, r) {
-                const [n, o] = e.split("-");
-                return n && !o && (Boolean(r) && l(n) || c(n)) ? t.languageCodeToPreferredLocaleExtended[n] : Boolean(r) && i(e) || s(e) ? e : "en-US"
-            }, t.getLocaleFromCookie = function (e) {
+            }
+            exports.isPreferredLanguageCode = isPreferredLanguageCode
+            exports.isSupportedLanguageCode = isSupportedLanguageCode
+            exports.externalLocaleToNotionLocale = function (locale, r) {
+                const [n, o] = locale.split("-");
+                return n && !o && (Boolean(r) && isPreferredLanguageCode(n) || isSupportedLanguageCode(n))
+                    ? exports.languageCodeToPreferredLocaleExtended[n]
+                    : Boolean(r) && isPreferredLocale(locale) || isPreferredLocaleExtended(locale)
+                        ? locale
+                        : "en-US"
+            }
+            exports.getLocaleFromCookie = function (e) {
                 if ("" === e) return "en-US";
                 const [t] = decodeURIComponent(e).split("/");
-                return t && s(t) ? t : "en-US"
-            }, t.defaultLocale = "en-US", t.deprecatedLocales = ["ko"], t.allLocales = "*", t.localeFormatter = u, t.getContentfulLocale = function (e) {
-                const r = u(e);
-                return t.preferredContentfulLocales[r] || r
-            }, t.getContentfulSupportedLocale = function (e) {
-                const r = u(e);
-                return [...t.VALID_PREFERRED_LOCALES, ...t.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT, ...t.VALID_PREFERRED_LOCALES_IN_BETA].includes(r) ? r : t.defaultLocale
+                return t && isPreferredLocaleExtended(t) ? t : "en-US"
+            }
+            exports.defaultLocale = "en-US"
+            exports.deprecatedLocales = ["ko"]
+            exports.allLocales = "*"
+            exports.localeFormatter = localeFormatter
+            exports.getContentfulLocale = function (e) {
+                const r = localeFormatter(e);
+                return exports.preferredContentfulLocales[r] || r
+            }
+            exports.getContentfulSupportedLocale = function (e) {
+                const r = localeFormatter(e);
+                return [...exports.VALID_PREFERRED_LOCALES, ...exports.VALID_PREFERRED_LOCALES_IN_DEVELOPMENT, ...exports.VALID_PREFERRED_LOCALES_IN_BETA].includes(r) ? r : exports.defaultLocale
             }
         },
 
@@ -11016,34 +11598,45 @@
             "use strict";
             Object.defineProperty(t, "__esModule", {value: !0}), t.peekViewQueryParam = t.configureOpenInDesktopAppQueryParam = t.deepLinkOpenNewTabQueryParam = void 0, t.deepLinkOpenNewTabQueryParam = "deepLinkOpenNewTab", t.configureOpenInDesktopAppQueryParam = "configureOpenInDesktopApp", t.peekViewQueryParam = "p"
         },
-        83704: function (e, t, r) {
+        83704: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getPaddingRightForDesktopWindows = t.getPaddingLeftForDesktopMac = t.ELECTRON_DEFAULT_ZOOM = t.ELECTRON_ZOOM_INCREMENT = t.ELECTRON_ZOOM_MAXIMUM = t.ELECTRON_ZOOM_MINIMUM = void 0;
-            const i = a(r(6600));
-            t.ELECTRON_ZOOM_MINIMUM = .5, t.ELECTRON_ZOOM_MAXIMUM = 4.9, t.ELECTRON_ZOOM_INCREMENT = .1, t.ELECTRON_DEFAULT_ZOOM = 1, t.getPaddingLeftForDesktopMac = function (e) {
-                switch (i.clamp(i.round(e, 1), t.ELECTRON_ZOOM_MINIMUM, t.ELECTRON_ZOOM_MAXIMUM)) {
-                    case t.ELECTRON_ZOOM_MINIMUM:
+
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const i = a(__webpack_require(6600));
+
+            exports.ELECTRON_ZOOM_MINIMUM = 0.5
+            exports.ELECTRON_ZOOM_MAXIMUM = 4.9
+            exports.ELECTRON_ZOOM_INCREMENT = 0.1
+            exports.ELECTRON_DEFAULT_ZOOM = 1
+            exports.getPaddingLeftForDesktopMac = function (e) {
+                switch (i.clamp(i.round(e, 1), exports.ELECTRON_ZOOM_MINIMUM, exports.ELECTRON_ZOOM_MAXIMUM)) {
+                    case exports.ELECTRON_ZOOM_MINIMUM:
                         return 155;
                     case.6:
                         return 128;
@@ -11056,10 +11649,11 @@
                     default:
                         return 75
                 }
-            }, t.getPaddingRightForDesktopWindows = function (e) {
-                const r = i.clamp(i.round(e, 1), t.ELECTRON_ZOOM_MINIMUM, t.ELECTRON_ZOOM_MAXIMUM);
+            }
+            exports.getPaddingRightForDesktopWindows = function (e) {
+                const r = i.clamp(i.round(e, 1), exports.ELECTRON_ZOOM_MINIMUM, exports.ELECTRON_ZOOM_MAXIMUM);
                 switch (r) {
-                    case t.ELECTRON_ZOOM_MINIMUM:
+                    case exports.ELECTRON_ZOOM_MINIMUM:
                         return 273;
                     case.6:
                         return 228;
@@ -11130,18 +11724,27 @@
                 }
             }
         },
-        13984: (e, t, r) => {
+        13984: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getSpaceBetweenWindowLeftEdgeAndSidebarIcon = t.getSpaceBetweenTopbarAndModal = t.getTopbarHeight = t.MAC_DESKTOP_TOPBAR_HEIGHT = t.NEW_DEFAULT_TOPBAR_HEIGHT = t.DEFAULT_TOPBAR_HEIGHT = t.TEMPLATE_GALLERY_TOPBAR_HEIGHT = void 0;
-            const n = r(83704);
 
-            function o(e, r) {
-                return Boolean(r) ? t.NEW_DEFAULT_TOPBAR_HEIGHT : e ? t.MAC_DESKTOP_TOPBAR_HEIGHT : t.DEFAULT_TOPBAR_HEIGHT
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.getSpaceBetweenWindowLeftEdgeAndSidebarIcon = exports.getSpaceBetweenTopbarAndModal = exports.getTopbarHeight = exports.MAC_DESKTOP_TOPBAR_HEIGHT = exports.NEW_DEFAULT_TOPBAR_HEIGHT = exports.DEFAULT_TOPBAR_HEIGHT = exports.TEMPLATE_GALLERY_TOPBAR_HEIGHT = void 0;
+            const n = __webpack_require(83704);
+
+            function getTopbarHeight(e, r) {
+                return Boolean(r) ? exports.NEW_DEFAULT_TOPBAR_HEIGHT : e ? exports.MAC_DESKTOP_TOPBAR_HEIGHT : exports.DEFAULT_TOPBAR_HEIGHT
             }
 
-            t.TEMPLATE_GALLERY_TOPBAR_HEIGHT = 52, t.DEFAULT_TOPBAR_HEIGHT = 45, t.NEW_DEFAULT_TOPBAR_HEIGHT = 48, t.MAC_DESKTOP_TOPBAR_HEIGHT = 37, t.getTopbarHeight = o, t.getSpaceBetweenTopbarAndModal = function (e) {
-                return 2 * o(e)
-            }, t.getSpaceBetweenWindowLeftEdgeAndSidebarIcon = function (e, t, r) {
+            exports.TEMPLATE_GALLERY_TOPBAR_HEIGHT = 52
+            exports.DEFAULT_TOPBAR_HEIGHT = 45
+            exports.NEW_DEFAULT_TOPBAR_HEIGHT = 48
+            exports.MAC_DESKTOP_TOPBAR_HEIGHT = 37
+            exports.getTopbarHeight = getTopbarHeight
+            exports.getSpaceBetweenTopbarAndModal = function (e) {
+                return 2 * getTopbarHeight(e)
+            }
+            exports.getSpaceBetweenWindowLeftEdgeAndSidebarIcon = function (e, t, r) {
                 return (e && !t ? (0, n.getPaddingLeftForDesktopMac)(r) : 12) + 30
             }
         },
@@ -26153,35 +26756,74 @@
                 }
             }
         },
-        9245: (e, t, r) => {
+        // electron-store
+        9245: (module, exports, __webpack_require) => {
             "use strict";
-            const n = r(16928), {app: o, ipcMain: a, ipcRenderer: i, shell: s} = r(4482), l = r(25054);
-            let c = !1;
-            const u = () => {
-                if (!a || !o) throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
-                const e = {defaultCwd: o.getPath("userData"), appVersion: o.getVersion()};
-                return c || (a.on("electron-store-get-data", (t => {
-                    t.returnValue = e
-                })), c = !0), e
+            const __path = __webpack_require(16928),
+                {app, ipcMain, ipcRenderer, shell} = __webpack_require(4482),
+                Conf = __webpack_require(25054);
+
+            let isInitialized = false;
+
+            const initDataListener = () => {
+                if (!ipcMain || !app) {
+                    throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.")
+                }
+                const appData = {
+                    defaultCwd: app.getPath("userData"),
+                    appVersion: app.getVersion()
+                };
+                if (!isInitialized) {
+                    ipcMain.on("electron-store-get-data", event => {
+                        event.returnValue = appData
+                    })
+                    isInitialized = true
+                }
+                return appData
             };
-            e.exports = class extends l {
-                constructor(e) {
-                    let t, r;
-                    if (i) {
-                        const e = i.sendSync("electron-store-get-data");
-                        if (!e) throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
-                        ({defaultCwd: t, appVersion: r} = e)
-                    } else a && o && ({defaultCwd: t, appVersion: r} = u());
-                    (e = {name: "config", ...e}).projectVersion || (e.projectVersion = r), e.cwd ? e.cwd = n.isAbsolute(e.cwd) ? e.cwd : n.join(t, e.cwd) : e.cwd = t, e.configName = e.name, delete e.name, super(e)
+
+            module.exports = class extends Conf {
+                constructor(options) {
+                    let defaultCwd, appVersion;
+                    if (ipcRenderer) {
+                        const appData = ipcRenderer.sendSync("electron-store-get-data");
+                        if (!appData) {
+                            throw new Error("Electron Store: You need to call `.initRenderer()` from the main process.");
+                        }
+
+                        ({defaultCwd: defaultCwd, appVersion: appVersion} = appData)
+                    } else if (ipcMain && app) {
+                        ({defaultCwd: defaultCwd, appVersion: appVersion} = initDataListener())
+                    }
+
+                    options = {
+                        name: "config",
+                        ...options
+                    }
+
+                    if (!options.projectVersion) {
+                        options.projectVersion = appVersion
+                    }
+
+                    if (options.cwd) {
+                        options.cwd = __path.isAbsolute(options.cwd) ? options.cwd : __path.join(defaultCwd, options.cwd)
+                    } else {
+                        options.cwd = defaultCwd
+                    }
+
+                    options.configName = options.name
+                    delete options.name
+
+                    super(options)
                 }
 
                 static initRenderer() {
-                    u()
+                    initDataListener()
                 }
 
                 async openInEditor() {
-                    const e = await s.openPath(this.path);
-                    if (e) throw new Error(e)
+                    const error = await shell.openPath(this.path);
+                    if (error) throw new Error(error)
                 }
             }
         },

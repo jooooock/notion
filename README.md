@@ -13,10 +13,10 @@
 
 21852: AppController
 26760: QuickSearchController
-84087: TrayController
 1147: WindowController
-19628: WebUpdater
 52728: TabController
+84087: TrayController
+19628: WebUpdater
 
 87309: AssetCache 类
 94774: AssetCache 实例
@@ -111,6 +111,7 @@
 
 80115: fse
 6354: redux toolkit
+63853/55869: redux toolkit
 
 47419: electron-log
 99163: debug for browser
@@ -118,6 +119,7 @@
 55623: debug
 6600: lodash
 44993: semver
+9245: electron-store
 ```
 
 ## 本体更新逻辑
