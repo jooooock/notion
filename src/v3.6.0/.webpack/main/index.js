@@ -1380,20 +1380,42 @@
         },
 
         // QuickSearchController
-        26760: (e, t, r) => {
+        26760: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.QuickSearchController = void 0;
-            const n = r(4482), o = r(36343), a = r(21852), i = r(29902), s = r(13387), l = r(14473), c = r(69340),
-                u = (0, o.defineMessages)({
-                    windowTitle: {
-                        id: "commandSearch.window.title",
-                        defaultMessage: "Notion - Command Search",
-                        description: "Title of the Command Search modal. We want Notion to be in there because this shows up at the OS level"
-                    }
-                });
-            t.QuickSearchController = class {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                intlHelpers = __webpack_require(36343),
+                __AppController = __webpack_require(21852),
+                i = __webpack_require(29902),
+                s = __webpack_require(13387),
+                __quickSearchSlice = __webpack_require(14473),
+                __store = __webpack_require(69340)
+
+            const messages = intlHelpers.defineMessages({
+                windowTitle: {
+                    id: "commandSearch.window.title",
+                    defaultMessage: "Notion - Command Search",
+                    description: "Title of the Command Search modal. We want Notion to be in there because this shows up at the OS level"
+                }
+            });
+
+
+            exports.QuickSearchController = class {
                 constructor() {
-                    this.nodeMacWindow = "darwin" === process.platform ? r(34681) : void 0, this.quickSearchStateUnsubscribe = (0, c.subscribeToSelector)(c.selectQuickSearchState, ((e, t) => this.updateQuickSearchState(e, t))), this.appStateUnsubscribe = (0, c.subscribeToSelector)(c.selectAppState, ((e, t) => this.updateAppState(e, t))), this.updateAppState(c.Store.getState().app)
+                    this.nodeMacWindow = "darwin" === process.platform ? __webpack_require(34681) : void 0
+
+                    this.quickSearchStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectQuickSearchState,
+                        (state, previousState) => this.updateQuickSearchState(state, previousState)
+                    )
+                    this.appStateUnsubscribe = __store.subscribeToSelector(
+                        __store.selectAppState,
+                        (state, previousState) => this.updateAppState(state, previousState)
+                    )
+
+                    this.updateAppState(__store.Store.getState().app)
                 }
 
                 toggleDevTools() {
@@ -1402,94 +1424,167 @@
 
                 reload() {
                     if (!this.quickSearchBrowserWindow) return;
-                    clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = void 0;
-                    const e = c.Store.getState().quickSearch.readyState, t = "error" === e.type ? e.attempts : 0;
-                    c.Store.dispatch((0, l.setReadyState)({
-                        type: "loading",
-                        attempts: t + 1
-                    })), this.quickSearchBrowserWindow.webContents.loadURL(`${(0, i.initialBaseUrl)()}/quick-search`).then((() => {
-                        c.Store.dispatch((0, l.setReadyState)({type: "loaded"}))
-                    })).catch((() => {
-                        const e = c.Store.getState().quickSearch.readyState;
-                        "loading" === e.type && c.Store.dispatch((0, l.setReadyState)({
-                            type: "error",
-                            attempts: e.attempts
-                        }))
-                    }))
-                }
 
-                updateQuickSearchState(e, t) {
-                    if (this.quickSearchBrowserWindow) {
-                        if ("visible" === e.visibilityState.type && "not-visible" === t.visibilityState.type) {
-                            this.quickSearchBrowserWindow.webContents.send("quick-search:visibility-state-changed", !0, e.visibilityState.source);
-                            const t = "darwin" === process.platform && n.app.isHidden();
-                            if (this.quickSearchBrowserWindow.showInactive(), "darwin" === process.platform ? this.nodeMacWindow?.makeKeyAndOrderFront(this.quickSearchBrowserWindow.getNativeWindowHandle()) : this.quickSearchBrowserWindow.focus(), t) {
-                                const e = this.quickSearchBrowserWindow;
-                                n.BrowserWindow.getAllWindows().forEach((t => {
-                                    t.id !== e.id && t.hide()
+                    clearInterval(this.loadingWatchdogTimeout)
+                    this.loadingWatchdogTimeout = void 0;
+
+                    const readyState = __store.Store.getState().quickSearch.readyState
+                    const attempts = "error" === readyState.type ? readyState.attempts : 0;
+
+                    __store.Store.dispatch(__quickSearchSlice.setReadyState({
+                        type: "loading",
+                        attempts: attempts + 1
+                    }))
+
+                    debugger
+
+                    // notion://www.notion.so/quick-search
+                    this.quickSearchBrowserWindow.webContents
+                        .loadURL(`${i.initialBaseUrl()}/quick-search`)
+                        .then(() => {
+                            __store.Store.dispatch(__quickSearchSlice.setReadyState({type: "loaded"}))
+                        })
+                        .catch(() => {
+                            const readyState = __store.Store.getState().quickSearch.readyState;
+                            if ("loading" === readyState.type) {
+                                __store.Store.dispatch(__quickSearchSlice.setReadyState({
+                                    type: "error",
+                                    attempts: readyState.attempts
                                 }))
                             }
-                        } else "not-visible" === e.visibilityState.type && "visible" === t.visibilityState.type && (this.quickSearchBrowserWindow.webContents.send("quick-search:visibility-state-changed", !1, e.visibilityState.source), this.quickSearchBrowserWindow.hide());
-                        if ("error" === e.readyState.type && "error" !== t.readyState.type) {
-                            const t = 1e3 * 2 ** Math.min(e.readyState.attempts, 10);
-                            clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = setInterval((() => {
+                        })
+                }
+
+                updateQuickSearchState(state, previousState) {
+                    if (this.quickSearchBrowserWindow) {
+                        if ("visible" === state.visibilityState.type && "not-visible" === previousState.visibilityState.type) {
+                            this.quickSearchBrowserWindow.webContents.send("quick-search:visibility-state-changed", true, state.visibilityState.source);
+                            const isHidden = "darwin" === process.platform && electron.app.isHidden();
+                            this.quickSearchBrowserWindow.showInactive()
+                            "darwin" === process.platform
+                                ? this.nodeMacWindow?.makeKeyAndOrderFront(this.quickSearchBrowserWindow.getNativeWindowHandle())
+                                : this.quickSearchBrowserWindow.focus()
+                            if (isHidden) {
+                                const searchWin = this.quickSearchBrowserWindow;
+                                electron.BrowserWindow.getAllWindows().forEach(win => {
+                                    win.id !== searchWin.id && win.hide()
+                                })
+                            }
+                        } else if ("not-visible" === state.visibilityState.type && "visible" === previousState.visibilityState.type) {
+                            this.quickSearchBrowserWindow.webContents.send("quick-search:visibility-state-changed", false, state.visibilityState.source)
+                            this.quickSearchBrowserWindow.hide()
+                        }
+
+                        if ("error" === state.readyState.type && "error" !== previousState.readyState.type) {
+                            const interval = 1000 * 2 ** Math.min(state.readyState.attempts, 10);
+                            clearInterval(this.loadingWatchdogTimeout)
+                            this.loadingWatchdogTimeout = setInterval(() => {
                                 this.reload()
-                            }), t)
+                            }, interval)
                         }
                     }
                 }
 
-                updateAppState(e, t) {
-                    const r = Boolean(e.preferences.isQuickSearchEnabled),
-                        o = Boolean(t?.preferences?.isQuickSearchEnabled), a = e.preferences.quickSearchShortcut,
-                        i = t?.preferences?.quickSearchShortcut;
-                    !this.quickSearchBrowserWindow && r ? this.initializeQuickSearch() : this.quickSearchBrowserWindow && !r && this.destroyQuickSearch(), r && o ? a !== i && (i && n.globalShortcut.unregister(i), a && n.globalShortcut.register(a, (() => {
-                        this.handleGlobalShortcutPress()
-                    }))) : !r && o ? (a && n.globalShortcut.unregister(a), i && n.globalShortcut.unregister(i)) : r && !o && a && n.globalShortcut.register(a, (() => {
-                        this.handleGlobalShortcutPress()
-                    }))
+                updateAppState(appState, previousAppState) {
+                    const isQuickSearchEnabled = Boolean(appState.preferences.isQuickSearchEnabled),
+                        previousIsQuickSearchEnabled = Boolean(previousAppState?.preferences?.isQuickSearchEnabled),
+                        quickSearchShortcut = appState.preferences.quickSearchShortcut,
+                        previousQuickSearchShortcut = previousAppState?.preferences?.quickSearchShortcut;
+
+                    if (!this.quickSearchBrowserWindow && isQuickSearchEnabled) {
+                        // 初始化搜索窗口
+                        this.initializeQuickSearch()
+                    } else if (this.quickSearchBrowserWindow && !isQuickSearchEnabled) {
+                        // 销毁搜索窗口
+                        this.destroyQuickSearch()
+                    }
+
+                    // 处理快捷键
+                    if (isQuickSearchEnabled && previousIsQuickSearchEnabled) {
+                        if (quickSearchShortcut !== previousQuickSearchShortcut) {
+                            if (previousQuickSearchShortcut) {
+                                electron.globalShortcut.unregister(previousQuickSearchShortcut)
+                            }
+                            if (quickSearchShortcut) {
+                                electron.globalShortcut.register(quickSearchShortcut, () => {
+                                    this.handleGlobalShortcutPress()
+                                })
+                            }
+                        }
+                    } else if (!isQuickSearchEnabled && previousIsQuickSearchEnabled) {
+                        if (quickSearchShortcut) {
+                            electron.globalShortcut.unregister(quickSearchShortcut)
+                        }
+                        if (previousQuickSearchShortcut) {
+                            electron.globalShortcut.unregister(previousQuickSearchShortcut)
+                        }
+                    } else if (isQuickSearchEnabled && !previousIsQuickSearchEnabled && quickSearchShortcut) {
+                        electron.globalShortcut.register(quickSearchShortcut, () => {
+                            this.handleGlobalShortcutPress()
+                        })
+                    }
                 }
 
                 handleGlobalShortcutPress() {
-                    const e = a.appController.getMostRecentlyFocusedWindowController();
-                    e && e.browserWindow.isFocused() ? e.getActiveTabController().openSearchModalInNotion() : c.Store.dispatch((0, l.toggleVisibilityStateIfReady)("shortcut"))
+                    const windowController = __AppController.appController.getMostRecentlyFocusedWindowController();
+                    if (windowController && windowController.browserWindow.isFocused()) {
+                        windowController.getActiveTabController().openSearchModalInNotion()
+                    } else {
+                        __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("shortcut"))
+                    }
                 }
 
                 initializeQuickSearch() {
-                    this.quickSearchBrowserWindow = new n.BrowserWindow({
+                    this.quickSearchBrowserWindow = new electron.BrowserWindow({
                         width: 755,
                         maxWidth: 755,
                         minWidth: 755,
                         height: 570,
                         minHeight: 570,
-                        maximizable: !1,
-                        resizable: !0,
-                        fullscreenable: !1,
-                        hiddenInMissionControl: !0,
-                        show: !1,
-                        frame: !1,
+                        maximizable: false,
+                        resizable: true,
+                        fullscreenable: false,
+                        hiddenInMissionControl: true,
+                        show: false,
+                        frame: false,
                         type: "panel",
-                        alwaysOnTop: !0,
-                        title: a.appController.intl.formatMessage(u.windowTitle),
+                        alwaysOnTop: true,
+                        title: __AppController.appController.intl.formatMessage(messages.windowTitle),
                         webPreferences: {
-                            sandbox: !0,
-                            session: n.session.fromPartition(s.electronSessionPartition),
+                            sandbox: true,
+                            session: electron.session.fromPartition(s.electronSessionPartition),
                             preload: require("path").resolve(__dirname, "../renderer", "tab_browser_view", "preload.js"),
-                            backgroundThrottling: !1
+                            backgroundThrottling: false
                         }
-                    }), this.quickSearchBrowserWindow.on("page-title-updated", (e => {
-                        e.preventDefault()
-                    })), this.quickSearchBrowserWindow.on("blur", (() => {
-                        "visible" !== c.Store.getState().quickSearch.visibilityState.type || this.quickSearchBrowserWindow?.webContents?.isDevToolsOpened() || c.Store.dispatch((0, l.toggleVisibilityStateIfReady)("navigation"))
-                    })), this.quickSearchBrowserWindow.webContents.on("render-process-gone", (() => {
-                        clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = void 0, c.Store.dispatch((0, l.setReadyState)({type: "crashed"}))
-                    })), n.app.on("before-quit", (() => {
+                    })
+
+                    this.quickSearchBrowserWindow.on("page-title-updated", evt => {
+                        evt.preventDefault()
+                    })
+                    this.quickSearchBrowserWindow.on("blur", () => {
+                        if ("visible" === __store.Store.getState().quickSearch.visibilityState.type &&
+                            !this.quickSearchBrowserWindow?.webContents?.isDevToolsOpened()
+                        ) {
+                            __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("navigation"))
+                        }
+                    })
+                    this.quickSearchBrowserWindow.webContents.on("render-process-gone", () => {
+                        clearInterval(this.loadingWatchdogTimeout)
+                        this.loadingWatchdogTimeout = void 0
+                        __store.Store.dispatch(__quickSearchSlice.setReadyState({type: "crashed"}))
+                    })
+                    electron.app.on("before-quit", () => {
                         this.destroyQuickSearch()
-                    })), this.reload()
+                    })
+                    this.reload()
                 }
 
                 destroyQuickSearch() {
-                    clearInterval(this.loadingWatchdogTimeout), this.loadingWatchdogTimeout = void 0, this.quickSearchBrowserWindow?.removeAllListeners(), this.quickSearchBrowserWindow?.destroy(), this.quickSearchBrowserWindow = void 0
+                    clearInterval(this.loadingWatchdogTimeout)
+                    this.loadingWatchdogTimeout = void 0
+                    this.quickSearchBrowserWindow?.removeAllListeners()
+                    this.quickSearchBrowserWindow?.destroy()
+                    this.quickSearchBrowserWindow = void 0
                 }
             }
         },
@@ -1539,7 +1634,7 @@
                 g = __webpack_require(29902),
                 __session = __webpack_require(13387),
                 __store = __webpack_require(69340),
-                y = __webpack_require(55385),
+                __selector = __webpack_require(55385),
                 w = __webpack_require(78401),
                 _ = __webpack_require(54198),
                 __tabSlice = __webpack_require(54417);
@@ -1569,37 +1664,43 @@
                         }
                     })
 
-                    this.notion.webContents.addListener("found-in-page", (e, t) => this.handleFoundInPage(e, t))
-                    this.notion.webContents.addListener("context-menu", (e, t) => this.handleContextMenu(e, t))
-                    this.notion.webContents.addListener("did-navigate-in-page", (e, t, r, n, o) => {
-                        o && this.shouldTrackUrlInHistory(t) && __store.Store.dispatch((0, __tabSlice.updateTabUrl)({
-                            tabId: this.tabId,
-                            url: t
-                        }))
+                    this.notion.webContents.addListener("found-in-page", (evt, result) => this.handleFoundInPage(evt, result))
+                    this.notion.webContents.addListener("context-menu", (evt, params) => this.handleContextMenu(evt, params))
+                    this.notion.webContents.addListener("did-navigate-in-page", (evt, url, isMainFrame, frameProcessId, frameRoutingId) => {
+                        if (frameRoutingId && this.shouldTrackUrlInHistory(url)) {
+                            __store.Store.dispatch(__tabSlice.updateTabUrl({
+                                tabId: this.tabId,
+                                url: url
+                            }))
+                        }
                     })
-                    this.notion.webContents.setWindowOpenHandler(e => {
-                        const t = "about:blank#blocked" === e.url || "about:blank",
-                            r = e.frameName.startsWith("Notion");
-                        return t && r ? {
-                            action: "allow",
-                            show: !1,
-                            overrideBrowserWindowOptions: {
-                                webPreferences: {
-                                    nodeIntegration: !1,
-                                    nodeIntegrationInWorker: !1,
-                                    nodeIntegrationInSubFrames: !1,
-                                    preload: void 0,
-                                    webSecurity: !0,
-                                    sandbox: !0
+                    this.notion.webContents.setWindowOpenHandler(details => {
+                        const t = "about:blank#blocked" === details.url || "about:blank",
+                            r = details.frameName.startsWith("Notion");
+                        return t && r
+                            ? {
+                                action: "allow",
+                                show: false,
+                                overrideBrowserWindowOptions: {
+                                    webPreferences: {
+                                        nodeIntegration: false,
+                                        nodeIntegrationInWorker: false,
+                                        nodeIntegrationInSubFrames: false,
+                                        preload: void 0,
+                                        webSecurity: true,
+                                        sandbox: true,
+                                    }
                                 }
                             }
-                        } : (this.sendToNotion("notion:new-window", e.url), {action: "deny"})
+                            : (this.sendToNotion("notion:new-window", details.url), {action: "deny"})
                     })
-                    this.notion.webContents.addListener("page-favicon-updated", (e, t) => this.handlePageFaviconUpdated(e, t))
+                    this.notion.webContents.addListener("page-favicon-updated", (evt, favicons) => this.handlePageFaviconUpdated(evt, favicons))
+
                     this.initialLoadedOrErroredDeferred = p.deferred()
                     this.initialReadyToShowDeferred = p.deferred()
 
-                    if ("dark" === y.themeModeSelector(rootState)) {
+                    if ("dark" === __selector.themeModeSelector(rootState)) {
+                        // dark 模式, 加载占位符页面 file://../renderer/darkmode_placeholder/index.html
                         this._loadingState = "loading-not-ready-to-show"
                         this.notion.webContents
                             .loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "darkmode_placeholder", "index.html")}`)
@@ -1610,59 +1711,64 @@
                                     this.notion.webContents.clearHistory()
                                     this._loadingState = "loaded"
                                     this.initialLoadedOrErroredDeferred.resolve()
-                                }).catch(t => {
+                                }).catch(err => {
                                     this.notion.webContents.clearHistory()
-                                    this.handleInitialLoadError(options.initialUrl, t)
+                                    this.handleInitialLoadError(options.initialUrl, err)
                                 })
                             })
                             .catch(() => {
                                 electron_log.default.error("Error loading placeholder page")
                             })
                     } else {
+                        // light 模式
                         this._loadingState = "loading-ready-to-show"
                         this.initialReadyToShowDeferred.resolve()
                         this.notion.webContents.loadURL(options.initialUrl).then(() => {
                             this._loadingState = "loaded"
                             this.initialLoadedOrErroredDeferred.resolve()
-                        }).catch(t => {
-                            this.handleInitialLoadError(options.initialUrl, t)
+                        }).catch(err => {
+                            this.handleInitialLoadError(options.initialUrl, err)
                         })
                     }
 
-                    const webPreferences = {
-                        spellcheck: false,
-                        contextIsolation: false,
-                        sandbox: false,
-                        preload: require("path").resolve(__dirname, "../renderer", "search", "preload.js"),
-                        transparent: true
-                    };
-                    this.search = new electron.BrowserView({webPreferences: webPreferences})
+
+                    this.search = new electron.BrowserView({
+                        webPreferences: {
+                            spellcheck: false,
+                            contextIsolation: false,
+                            sandbox: false,
+                            preload: require("path").resolve(__dirname, "../renderer", "search", "preload.js"),
+                            transparent: true
+                        }
+                    })
+                    // file://../renderer/search/index.html
                     this.search.webContents
                         .loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "search", "index.html")}`)
                         .then(() => {
-                            const e = y.themeSelector(rootState);
-                            this.updateSearchTheme(e)
+                            const theme = __selector.themeSelector(rootState);
+                            this.updateSearchTheme(theme)
                         })
-                        .catch(e => {
-                            electron_log.default.error("Error loading search URL", e)
+                        .catch(err => {
+                            electron_log.default.error("Error loading search URL", err)
                         })
 
                     __store.Store.dispatch(__tabSlice.initializeTabState({
                         tabId: options.id,
                         url: options.initialUrl
                     }))
-                    const o = y.backgroundColorSelector(rootState);
-                    this.updateBackgroundColor(o)
 
-                    this.subscribeToSelector(e => y.backgroundColorSelector(e), e => this.updateBackgroundColor(e))
-                    this.subscribeToSelector(e => y.themeSelector(e), e => this.updateSearchTheme(e))
-                    this.subscribeToSelector(e => y.zoomFactorSelector(e), e => this.updateZoomFactor(e))
-                    this.subscribeToSelector(e => y.electronAppFeaturesSelector(e, this.tabId), e => this.updateElectronAppFeatures(e))
-                    this.subscribeToSelector(e => _.isActiveTabSelector(e, this.tabId), e => this.updateActiveTab(e))
-                    this.subscribeToSelector(e => _.windowSidebarStateSelector(e, this.tabId), e => this.updateSidebarState(e))
-                    this.subscribeToSelector(e => y.targetTabBarHeightSelector(e, this.tabId), e => this.updateTabBarOffset(e))
-                    this.subscribeToSelector(e => y.boundsSelector(e, this.tabId, this.parentWindow?.getContentBounds(), this.tabBarOffset), e => this.updateBounds(e))
-                    this.subscribeToSelector(e => y.searchStateSelector(e, this.tabId, this.parentWindow?.getContentBounds().width ?? 0, this.tabBarOffset), e => this.updateSearchState(e))
+                    const bgColor = __selector.backgroundColorSelector(rootState);
+                    this.updateBackgroundColor(bgColor)
+
+                    this.subscribeToSelector(state => __selector.backgroundColorSelector(state), bgColor => this.updateBackgroundColor(bgColor))
+                    this.subscribeToSelector(state => __selector.themeSelector(state), theme => this.updateSearchTheme(theme))
+                    this.subscribeToSelector(state => __selector.zoomFactorSelector(state), zoomFactor => this.updateZoomFactor(zoomFactor))
+                    this.subscribeToSelector(state => __selector.electronAppFeaturesSelector(state, this.tabId), features => this.updateElectronAppFeatures(features))
+                    this.subscribeToSelector(state => _.isActiveTabSelector(state, this.tabId), tab => this.updateActiveTab(tab))
+                    this.subscribeToSelector(state => _.windowSidebarStateSelector(state, this.tabId), sidebarState => this.updateSidebarState(sidebarState))
+                    this.subscribeToSelector(state => __selector.targetTabBarHeightSelector(state, this.tabId), offset => this.updateTabBarOffset(offset))
+                    this.subscribeToSelector(state => __selector.boundsSelector(state, this.tabId, this.parentWindow?.getContentBounds(), this.tabBarOffset), bounds => this.updateBounds(bounds))
+                    this.subscribeToSelector(state => __selector.searchStateSelector(state, this.tabId, this.parentWindow?.getContentBounds().width ?? 0, this.tabBarOffset), searchState => this.updateSearchState(searchState))
                 }
 
                 get initialReadyStatePromise() {
@@ -1677,26 +1783,24 @@
                     return this._loadingState
                 }
 
-                isManagerOf(e) {
-                    return !!e && (this.notion.webContents.id === e.id || this.search.webContents.id === e.id)
+                isManagerOf(webContents) {
+                    return !!webContents && (this.notion.webContents.id === webContents.id || this.search.webContents.id === webContents.id)
                 }
 
-                loadUrl(e) {
-                    debugger
-
-                    return this.loadFullUrl(e)
+                loadUrl(url) {
+                    return this.loadFullUrl(url)
                 }
 
                 navigateToUrl(url) {
-                    const t = {url: url, deduplicationID: __crypto.default.randomUUID()};
-                    this.sendToNotion("notion:navigate-to-url", t)
+                    const options = {url: url, deduplicationID: __crypto.default.randomUUID()};
+                    this.sendToNotion("notion:navigate-to-url", options)
                 }
 
                 reloadAtCurrentUrl() {
                     let url = this.notion.webContents.getURL();
-                    const t = g.initialBaseUrl();
-                    if (!url.startsWith(t)) {
-                        url = t
+                    const baseUrl = g.initialBaseUrl();
+                    if (!url.startsWith(baseUrl)) {
+                        url = baseUrl
                     }
                     return this.loadFullUrl(url)
                 }
@@ -1714,17 +1818,17 @@
                     })
                 }
 
-                attachToWindow(e, win) {
-                    if (this.parentWindow !== win) {
+                attachToWindow(parentWindowControllerId, parentWindow) {
+                    if (this.parentWindow !== parentWindow) {
                         if (this.parentWindow) {
                             throw new Error("Already attached to some other window")
                         }
-                        this.parentWindow = win
+                        this.parentWindow = parentWindow
                         this.parentWindow.addBrowserView(this.notion)
                         w.tabSearchingStateSelector(__store.Store.getState(), this.tabId)?.isSearching && this.parentWindow.addBrowserView(this.search)
                         __store.Store.dispatch(__tabSlice.updateParentWindowControllerId({
                             tabId: this.tabId,
-                            parentWindowControllerId: e
+                            parentWindowControllerId: parentWindowControllerId
                         }))
                     }
                 }
@@ -1763,10 +1867,11 @@
                     this.notion.webContents.removeAllListeners()
                     this.search.webContents.removeAllListeners()
                     this.detachFromWindowWithoutUpdatingState();
-                    const e = this.search.webContents,
-                        t = this.notion.webContents;
-                    e.destroy()
-                    t.destroy()
+
+                    const searchWebContents = this.search.webContents
+                    const notionWebContents = this.notion.webContents;
+                    searchWebContents.destroy()
+                    notionWebContents.destroy()
                     __store.Store.dispatch(__tabSlice.removeTabState({tabId: this.tabId}))
                 }
 
@@ -1777,12 +1882,12 @@
                     }))
                 }
 
-                handleSearchStartFromNotion(e) {
+                handleSearchStartFromNotion(isSearchingCenterPeek) {
                     __store.Store.dispatch(__tabSlice.updateTabSearchingState({
                         tabId: this.tabId,
                         isSearching: true,
                         isFirstQuery: true,
-                        isSearchingCenterPeek: e
+                        isSearchingCenterPeek: isSearchingCenterPeek
                     }))
                     this.search.webContents.focus()
                     this.sendToSearch("search:start")
@@ -1808,9 +1913,9 @@
                     if (w.tabSearchingStateSelector(__store.Store.getState(), this.tabId)?.isSearching) {
                         __store.Store.dispatch(__tabSlice.updateTabSearchingState({
                             tabId: this.tabId,
-                            isSearching: !1,
-                            isFirstQuery: !0,
-                            isSearchingCenterPeek: !1
+                            isSearching: false,
+                            isFirstQuery: true,
+                            isSearchingCenterPeek: false
                         }))
                         this.notion.webContents.focus()
                         this.notion.webContents.stopFindInPage("clearSelection")
@@ -1818,35 +1923,39 @@
                     }
                 }
 
-                handleSearchNextFromSearch(e) {
-                    const t = w.tabSearchingStateSelector(__store.Store.getState(), this.tabId);
-                    if (!t?.isSearching) return;
-                    const r = !t.isFirstQuery;
+                handleSearchNextFromSearch(text) {
+                    const searchingState = w.tabSearchingStateSelector(__store.Store.getState(), this.tabId);
+                    if (!searchingState?.isSearching) return;
+
+                    const isFirstQuery = !searchingState.isFirstQuery;
                     __store.Store.dispatch(__tabSlice.updateTabSearchingState({
-                        tabId: this.tabId, ...t,
-                        isFirstQuery: !1
+                        tabId: this.tabId,
+                        ...searchingState,
+                        isFirstQuery: false
                     }))
-                    this.notion.webContents.findInPage(e, {forward: true, findNext: r})
+                    this.notion.webContents.findInPage(text, {forward: true, findNext: isFirstQuery})
                 }
 
-                handleSearchPrevFromSearch(e) {
-                    const t = w.tabSearchingStateSelector(__store.Store.getState(), this.tabId);
-                    if (!t?.isSearching) return;
-                    const r = !t.isFirstQuery;
+                handleSearchPrevFromSearch(text) {
+                    const searchingState = w.tabSearchingStateSelector(__store.Store.getState(), this.tabId);
+                    if (!searchingState?.isSearching) return;
+
+                    const isFirstQuery = !searchingState.isFirstQuery;
                     __store.Store.dispatch(__tabSlice.updateTabSearchingState({
-                        tabId: this.tabId, ...t,
-                        isFirstQuery: !1
+                        tabId: this.tabId,
+                        ...searchingState,
+                        isFirstQuery: false
                     }))
-                    this.notion.webContents.findInPage(e, {forward: !1, findNext: r})
+                    this.notion.webContents.findInPage(text, {forward: false, findNext: isFirstQuery})
                 }
 
                 handleSearchClearFromSearch() {
-                    const e = w.tabSearchingStateSelector(__store.Store.getState(), this.tabId);
-                    if (e?.isSearching) {
+                    const searchingState = w.tabSearchingStateSelector(__store.Store.getState(), this.tabId);
+                    if (searchingState?.isSearching) {
                         __store.Store.dispatch(__tabSlice.updateTabSearchingState({
                             tabId: this.tabId,
-                            ...e,
-                            isFirstQuery: !0
+                            ...searchingState,
+                            isFirstQuery: true
                         }))
                         this.notion.webContents.stopFindInPage("clearSelection")
                     }
@@ -1874,13 +1983,13 @@
                     }
                 }
 
-                canGoToOffset(e) {
-                    return this.notion.webContents.canGoToOffset(e)
+                canGoToOffset(offset) {
+                    return this.notion.webContents.canGoToOffset(offset)
                 }
 
-                goToOffset(e) {
-                    if (this.canGoToOffset(e)) {
-                        this.notion.webContents.goToOffset(e)
+                goToOffset(offset) {
+                    if (this.canGoToOffset(offset)) {
+                        this.notion.webContents.goToOffset(offset)
                         this.focus()
                     }
                 }
@@ -1889,8 +1998,8 @@
                     return this.notion.webContents.navigationHistory.getActiveIndex()
                 }
 
-                getEntryAtIndex(e) {
-                    return this.notion.webContents.navigationHistory.getEntryAtIndex(e)
+                getEntryAtIndex(index) {
+                    return this.notion.webContents.navigationHistory.getEntryAtIndex(index)
                 }
 
                 getHistoryLength() {
@@ -1901,13 +2010,13 @@
                     return this.notion.webContents.getURL()
                 }
 
-                hasEquivalentUrl(e) {
+                hasEquivalentUrl(targetUrl) {
                     const t = f.parse(this.getUrl()),
-                        r = t.pathname?.split("/")?.slice(-1)?.[0],
-                        n = e.pathname?.split("/")?.slice(-1)?.[0],
-                        o = t.query[u.peekViewQueryParam],
-                        a = e.query[u.peekViewQueryParam];
-                    return r === n && o === a
+                        file = t.pathname?.split("/")?.slice(-1)?.[0],
+                        targetFile = targetUrl.pathname?.split("/")?.slice(-1)?.[0],
+                        o = t.query[u.peekViewQueryParam], // p
+                        a = targetUrl.query[u.peekViewQueryParam];
+                    return file === targetFile && o === a
                 }
 
                 openSettings(e) {
@@ -2068,7 +2177,7 @@
                     const s = () => {
                         const e = Date.now(), l = e - r;
                         r = e, n.step(l), this.tabBarOffset = Math.ceil(n.currentValue), n.isAtRest() ? (this.animating = !1, this.tabBarOffset = t) : (clearTimeout(i), i = setTimeout(s));
-                        const c = (0, y.boundsSelector)(o, this.tabId, a, this.tabBarOffset);
+                        const c = (0, __selector.boundsSelector)(o, this.tabId, a, this.tabBarOffset);
                         this.updateBounds(c)
                     };
                     i = setTimeout(s, 50)
@@ -2183,63 +2292,60 @@
                 __store = __webpack_require(69340)
 
             const messages = intlHelpers.defineMessages({
-                    showNotionInMenuBar: {
-                        id: "menuBarIcon.menu.showNotionInMenuBar",
-                        defaultMessage: "Show Notion in menu bar",
-                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that enables/disables showing that icon"
-                    },
-                    toggleCommandSearch: {
-                        id: "menuBarIcon.menu.toggleCommandSearch",
-                        defaultMessage: "Toggle Command Search",
-                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that opens/hides Notion's AI-enabled search window"
-                    },
-                    changeCommandSearchShortcut: {
-                        id: "menuBarIcon.menu.selectCommandSearchShortcut",
-                        defaultMessage: "Change Command Search Shortcut",
-                        description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that lets users pick the global shortcut "
-                    },
-                    launchPreferences: {
-                        id: "menuBarIcon.menu.launchPreferences",
-                        defaultMessage: "Launch Preferences",
-                        description: "A drop-down menu shown (when right clicking the icon in the Windows tray) that controls how Notion launches and runs"
-                    },
-                    openOnLogin: {
-                        id: "menuBarIcon.menu.openOnLogin",
-                        defaultMessage: "Open Notion at Login",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion opens when the user logs into their computer"
-                    },
-                    enableQuickSearch: {
-                        id: "menuBarIcon.menu.enableQuickSearch",
-                        defaultMessage: "Enable Quick Search",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Quick Search is enabled"
-                    },
-                    keepInBackground: {
-                        id: "menuBarIcon.menu.keepInBackground",
-                        defaultMessage: "Keep in Background",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
-                    },
-                    showImmediately: {
-                        id: "menuBarIcon.menu.showImmediately",
-                        defaultMessage: "Show Immediately",
-                        description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
-                    },
-                    quitNotion: {
-                        id: "menuBarIcon.menu.quitNotion",
-                        defaultMessage: "Quit Notion",
-                        description: "Menu item (when right clicking the icon in the top left) to quit the Notion app"
-                    }
-                }),
-                u = "open-on-login",
-                d = "enable-quick-search",
-                p = "keep-in-background",
-                h = "show-immediately";
+                showNotionInMenuBar: {
+                    id: "menuBarIcon.menu.showNotionInMenuBar",
+                    defaultMessage: "Show Notion in menu bar",
+                    description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that enables/disables showing that icon"
+                },
+                toggleCommandSearch: {
+                    id: "menuBarIcon.menu.toggleCommandSearch",
+                    defaultMessage: "Toggle Command Search",
+                    description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that opens/hides Notion's AI-enabled search window"
+                },
+                changeCommandSearchShortcut: {
+                    id: "menuBarIcon.menu.selectCommandSearchShortcut",
+                    defaultMessage: "Change Command Search Shortcut",
+                    description: "Menu item (when right clicking the icon in the menu bar or Windows tray) that lets users pick the global shortcut "
+                },
+                launchPreferences: {
+                    id: "menuBarIcon.menu.launchPreferences",
+                    defaultMessage: "Launch Preferences",
+                    description: "A drop-down menu shown (when right clicking the icon in the Windows tray) that controls how Notion launches and runs"
+                },
+                openOnLogin: {
+                    id: "menuBarIcon.menu.openOnLogin",
+                    defaultMessage: "Open Notion at Login",
+                    description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion opens when the user logs into their computer"
+                },
+                enableQuickSearch: {
+                    id: "menuBarIcon.menu.enableQuickSearch",
+                    defaultMessage: "Enable Quick Search",
+                    description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Quick Search is enabled"
+                },
+                keepInBackground: {
+                    id: "menuBarIcon.menu.keepInBackground",
+                    defaultMessage: "Keep in Background",
+                    description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
+                },
+                showImmediately: {
+                    id: "menuBarIcon.menu.showImmediately",
+                    defaultMessage: "Show Immediately",
+                    description: "Menu item (when right clicking the icon in the Windows tray) that toggles whether or not Notion stays open when the user closes the last window"
+                },
+                quitNotion: {
+                    id: "menuBarIcon.menu.quitNotion",
+                    defaultMessage: "Quit Notion",
+                    description: "Menu item (when right clicking the icon in the top left) to quit the Notion app"
+                }
+            })
 
             exports.buildTrayMenuTemplate = function () {
                 const intl = __AppController.appController.intl
                 const preferences = __store.Store.getState().app.preferences
-                const quickSearchMenu = function (intl, preferences) {
-                    const {isQuickSearchEnabled, quickSearchShortcut} = preferences;
-                    return isQuickSearchEnabled ? [
+
+                const {isQuickSearchEnabled, quickSearchShortcut} = preferences;
+                const quickSearchMenu = isQuickSearchEnabled
+                    ? [
                         {
                             label: intl.formatMessage(messages.toggleCommandSearch),
                             accelerator: quickSearchShortcut,
@@ -2254,8 +2360,8 @@
                             }
                         },
                         {type: "separator"}
-                    ] : []
-                }(intl, preferences)
+                    ]
+                    : []
 
                 const menuItems = [
                     ...quickSearchMenu,
@@ -2276,38 +2382,38 @@
                                 {
                                     label: intl.formatMessage(messages.openOnLogin),
                                     type: "checkbox",
-                                    id: u,
+                                    id: "open-on-login",
                                     checked: isOpenAtLoginEnabled,
-                                    click(e) {
-                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isOpenAtLoginEnabled: e.checked}))
+                                    click(item) {
+                                        __store.Store.dispatch(__appSlice.updatePreferences({isOpenAtLoginEnabled: item.checked}))
                                     }
                                 },
                                 {
                                     label: intl.formatMessage(messages.enableQuickSearch),
                                     type: "checkbox",
-                                    id: d,
+                                    id: "enable-quick-search",
                                     checked: isQuickSearchEnabled,
-                                    click(e) {
-                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isQuickSearchEnabled: e.checked}))
+                                    click(item) {
+                                        __store.Store.dispatch(__appSlice.updatePreferences({isQuickSearchEnabled: item.checked}))
                                     }
                                 },
                                 {type: "separator"},
                                 {
                                     label: intl.formatMessage(messages.keepInBackground),
                                     type: "radio",
-                                    id: p,
+                                    id: "keep-in-background",
                                     checked: isHideLastWindowOnCloseEnabled,
                                     click() {
-                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isHideLastWindowOnCloseEnabled: !0}))
+                                        __store.Store.dispatch(__appSlice.updatePreferences({isHideLastWindowOnCloseEnabled: true}))
                                     }
                                 },
                                 {
                                     label: intl.formatMessage(messages.showImmediately),
                                     type: "radio",
-                                    id: h,
+                                    id: "show-immediately",
                                     checked: !isHideLastWindowOnCloseEnabled,
                                     click() {
-                                        __store.Store.dispatch((0, __appSlice.updatePreferences)({isHideLastWindowOnCloseEnabled: !1}))
+                                        __store.Store.dispatch(__appSlice.updatePreferences({isHideLastWindowOnCloseEnabled: false}))
                                     }
                                 }
                             ]
@@ -2319,7 +2425,9 @@
                             type: "checkbox",
                             checked: true,
                             click() {
-                                __store.Store.dispatch(__appSlice.updatePreferences({isMenuBarIconEnabled: false}))
+                                __store.Store.dispatch(__appSlice.updatePreferences({
+                                    isMenuBarIconEnabled: false
+                                }))
                             }
                         }
                     }(intl))
@@ -2506,7 +2614,7 @@
                 lodash = a(__webpack_require(6600)),
                 __TabColors = __webpack_require(27683),
                 h = __webpack_require(51916),
-                f = __webpack_require(60522),
+                __tabBarSize = __webpack_require(60522),
                 m = __webpack_require(18503),
                 __AppController = __webpack_require(21852),
                 b = __webpack_require(29902),
@@ -2622,7 +2730,7 @@
                         g = "win32" === process.platform ? {
                             titleBarStyle: "hidden",
                             titleBarOverlay: {
-                                height: (this.hasMultipleTabs() ? f.TAB_BAR_HEIGHT_PX : (0, c.getTopbarHeight)(!1)) * appState.zoomFactor,
+                                height: (this.hasMultipleTabs() ? __tabBarSize.TAB_BAR_HEIGHT_PX : (0, c.getTopbarHeight)(!1)) * appState.zoomFactor,
                                 color: __TabColors.electronColors.titleBarOverlayBackground[mode],
                                 symbolColor: __TabColors.electronColors.enabledButtonColor[mode]
                             }
@@ -2684,7 +2792,7 @@
 
                     if ("darwin" === process.platform) {
                         const e = Boolean(appState.preferences.isNewSidebarToggleEnabled),
-                            t = Math.ceil(f.TAB_BAR_HEIGHT_PX * appState.zoomFactor),
+                            t = Math.ceil(__tabBarSize.TAB_BAR_HEIGHT_PX * appState.zoomFactor),
                             r = Math.ceil(c.getTopbarHeight(false, e) * appState.zoomFactor);
                         this.browserWindow.setWindowButtonPosition(m.getTrafficLightPosition(this.hasMultipleTabs() ? t : r, appState.zoomFactor))
                     }
@@ -3164,7 +3272,7 @@
                 updateState() {
                     const e = __store.Store.getState().app, t = __store.Store.getState().windows[this.windowId],
                         r = Boolean(e.preferences.isNewSidebarToggleEnabled),
-                        n = Math.ceil(f.TAB_BAR_HEIGHT_PX * e.zoomFactor),
+                        n = Math.ceil(__tabBarSize.TAB_BAR_HEIGHT_PX * e.zoomFactor),
                         o = Math.ceil((0, c.getTopbarHeight)(!1, r) * e.zoomFactor), a = e.theme.mode;
                     if (!t) return;
                     if (this.backgroundColor = e.preferences.isVibrancyEnabled ? "#00000000" : __TabColors.electronColors.notionBackground[a], "win32" === process.platform) {
@@ -4204,7 +4312,7 @@
                             submenu: [
                                 {
                                     label: "Toggle Window Visibility", click() {
-                                        __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("debug-menu"))
+                                        __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("debug-menu"))
                                     }
                                 },
                                 {
@@ -5004,9 +5112,10 @@
         },
 
         // setupRendererListeners
-        35219: function (e, t, r) {
+        35219: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -5017,87 +5126,172 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
+            },
+                i = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupRendererListeners = void 0;
-            const s = r(4482);
-            r(84041), r(15425);
-            const l = i(r(47419)), c = a(r(6600)), u = r(80004), d = a(r(60411)), p = r(55108), h = r(68543),
-                f = r(21852), m = r(89304), g = r(43041), b = a(r(10454)), v = r(29902), y = r(73553), w = r(14473),
-                _ = r(69340), k = r(54417);
-            t.setupRendererListeners = function () {
-                s.app.on("browser-window-blur", (() => {
-                    f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleRequestFromRenderer.addListener("notion:refresh-all", ((e, t) => (f.appController.refreshAll(void 0 === t || t), Promise.resolve({value: void 0})))), b.handleEventFromRenderer.addListener("notion:focus", (e => {
-                    f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleEventFromRenderer.addListener("notion:blur", (() => {
-                    f.appController.refreshForWindowsMenuBarSpacing()
-                })), b.handleEventFromRenderer.addListener("notion:renderer-visibility-changed", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.setRendererVisibility(t)
-                })), b.handleRequestFromRenderer.addListener("notion:is-active-tab", (e => f.appController.getWindowControllerForWebContents(e.sender)?.isActiveTab(e.sender) || !1)), b.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", (e => "visible" === _.Store.getState().quickSearch.visibilityState.type)), b.handleEventFromRenderer.addListener("notion:toggle-maximized", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
-                    t && (t.isMaximized() ? t.unmaximize() : t.maximize())
-                })), b.handleRequestFromRenderer.addListener("notion:is-main-tab", (e => {
-                    const t = f.appController.getMostRecentlyFocusedWindowController();
-                    return t && t.browserWindow.isVisible() ? {value: t.getActiveTabController().isManagerOf(e.sender)} : {value: !1}
-                })), b.handleRequestFromRenderer.addListener("notion:is-window-visible", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
-                    return t ? {value: t.isVisible()} : {value: !1}
-                })), b.handleEventFromRenderer.addListener("notion:set-theme", ((e, t) => {
-                    _.Store.dispatch((0, y.updateTheme)(t))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-colors", ((e, t) => {
-                    const r = f.appController.getTabControllerForWebContents(e.sender);
-                    r && _.Store.dispatch((0, k.updateTabColors)({tabId: r.tabId, colors: t}))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", ((e, t) => {
-                    const r = f.appController.getTabControllerForWebContents(e.sender);
-                    r && _.Store.dispatch((0, k.updateTabIsOverlayActive)({tabId: r.tabId, isOverlayActive: t}))
-                })), b.handleEventFromRenderer.addListener("notion:set-tab-order", ((e, t) => {
-                    const r = f.appController.getWindowControllerForWebContents(e.sender);
-                    r && r.reorderTabs(t)
-                })), b.handleEventFromRenderer.addListener("notion:zoom", ((e, t) => {
-                    f.appController.setZoom(t)
-                })), b.DEPRECATED_receiveSyncMainFromRenderer.addListener("notion:get-fullscreen", (e => {
-                    const t = s.BrowserWindow.fromWebContents(e.sender);
-                    return t ? {value: t.isFullScreen()} : {value: !1}
-                })), b.handleRequestFromRenderer.addListener("notion:get-electron-app-features", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
-                    return (0, _.getElectronAppFeatures)({isShowingTabBar: !t || t.hasMultipleTabs()})
-                })), b.handleEventFromRenderer.addListener("notion:set-user-preference", ((e, t, r) => {
-                    l.default.info("notion:set-user-preference", {
-                        key: t,
-                        value: r
-                    }), _.Store.dispatch((0, y.updatePreferences)({[t]: r}))
-                })), b.handleRequestFromRenderer.addListener("notion:get-app-version", (e => ({value: s.app.getVersion()}))), b.handleRequestFromRenderer.addListener("notion:get-is-running-under-arm64-translation", (e => s.app.runningUnderARM64Translation)), b.handleRequestFromRenderer.addListener("notion:get-analytics-info", (async e => await (0, h.getAnalyticsInfo)())), b.handleRequestFromRenderer.addListener("notion:get-app-path", (e => ({value: s.app.getAppPath()}))), b.handleEventFromRenderer.addListener("notion:cut", (e => {
-                    e.sender.cut()
-                })), b.handleEventFromRenderer.addListener("notion:copy", (e => {
-                    e.sender.copy()
-                })), b.handleEventFromRenderer.addListener("notion:paste", (e => {
-                    e.sender.paste()
-                })), function () {
-                    const e = e => (0, p.isNotionWebContents)(e.sender);
-                    b.handleRequestFromRenderer.addListener("notion:clipboard:read-text", (t => e(t) ? s.clipboard.readText() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-html", (t => e(t) ? s.clipboard.readHTML() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-rtf", (t => e(t) ? s.clipboard.readRTF() : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:read-image", (t => e(t) ? s.clipboard.readImage()?.toDataURL() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-bookmark", (t => e(t) ? s.clipboard.readBookmark() : null)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-text", ((t, r) => e(t) ? s.clipboard.writeText(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-html", ((t, r) => e(t) ? s.clipboard.writeHTML(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-rtf", ((t, r) => e(t) ? s.clipboard.writeRTF(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-image", ((t, r) => e(t) ? s.clipboard.writeImage(s.nativeImage.createFromDataURL(r)) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-bookmark", ((t, r) => e(t) ? s.clipboard.writeBookmark(r.title, r.url) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:clear", (t => e(t) ? s.clipboard.clear() : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:available-formats", (t => e(t) ? s.clipboard.availableFormats() : [])), b.handleRequestFromRenderer.addListener("notion:clipboard:has", ((t, r) => !!e(t) && s.clipboard.has(r))), b.handleRequestFromRenderer.addListener("notion:clipboard:read", ((t, r) => e(t) ? s.clipboard.read(r) : "")), b.handleRequestFromRenderer.addListener("notion:clipboard:write", ((t, r) => e(t) ? s.clipboard.write(r) : void 0)), b.handleRequestFromRenderer.addListener("notion:clipboard:read-buffer", ((t, r) => e(t) ? new Uint8Array(s.clipboard.readBuffer(r)) : new Uint8Array)), b.handleRequestFromRenderer.addListener("notion:clipboard:write-buffer", ((t, r, n) => e(t) ? s.clipboard.writeBuffer(r, Buffer.from(n)) : void 0))
-                }(), b.handleEventFromRenderer.addListener("notion:set-sidebar-state", ((e, t) => {
-                })), b.handleEventFromRenderer.addListener("notion:toggle-sidebar-expanded", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().toggleSidebarInNotion()
-                })), b.handleEventFromRenderer.addListener("notion:set-sidebar-open", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController().setSidebarOpenInNotion(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-window-sidebar-state", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.setWindowSidebarState(e.sender, t)
-                })), b.handleEventFromRenderer.addListener("notion:set-app-store-state", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.setAppStoreState(t)
-                })), b.handleEventFromRenderer.addListener("notion:new-tab-from-notion", ((e, t, r, n) => {
-                    const o = f.appController.getWindowControllerForWebContents(e.sender),
-                        a = f.appController.getTabControllerForWebContents(e.sender);
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482);
+
+            // crash reporter
+            __webpack_require(84041)
+            // isNavigationAllowed 设置页面导航规则
+            __webpack_require(15425)
+
+            const electron_log = i(__webpack_require(47419)),
+                lodash = a(__webpack_require(6600)),
+                u = __webpack_require(80004),
+                d = a(__webpack_require(60411)),
+                p = __webpack_require(55108),
+                h = __webpack_require(68543),
+                __AppController = __webpack_require(21852),
+                m = __webpack_require(89304),
+                g = __webpack_require(43041),
+                __notionIPC = a(__webpack_require(10454)),
+                v = __webpack_require(29902),
+                __appSlice = __webpack_require(73553),
+                __quickSearchSlice = __webpack_require(14473),
+                __store = __webpack_require(69340),
+                __tabSlice = __webpack_require(54417);
+
+            exports.setupRendererListeners = function () {
+                electron.app.on("browser-window-blur", (() => {
+                    __AppController.appController.refreshForWindowsMenuBarSpacing()
+                }))
+
+                __notionIPC.handleRequestFromRenderer.addListener("notion:refresh-all", (evt, t) => {
+                    __AppController.appController.refreshAll(void 0 === t || t)
+                    return Promise.resolve({value: void 0})
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:focus", evt => {
+                    __AppController.appController.refreshForWindowsMenuBarSpacing()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:blur", () => {
+                    __AppController.appController.refreshForWindowsMenuBarSpacing()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:renderer-visibility-changed", (evt, value) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.setRendererVisibility(value)
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-active-tab", evt => __AppController.appController.getWindowControllerForWebContents(evt.sender)?.isActiveTab(evt.sender) || false)
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-quick-search-visible", evt => "visible" === __store.Store.getState().quickSearch.visibilityState.type)
+                __notionIPC.handleEventFromRenderer.addListener("notion:toggle-maximized", evt => {
+                    const win = electron.BrowserWindow.fromWebContents(evt.sender);
+                    if (win) {
+                        win.isMaximized() ? win.unmaximize() : win.maximize()
+                    }
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-main-tab", evt => {
+                    const controller = __AppController.appController.getMostRecentlyFocusedWindowController();
+                    return controller && controller.browserWindow.isVisible()
+                        ? {value: controller.getActiveTabController().isManagerOf(evt.sender)}
+                        : {value: false}
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:is-window-visible", evt => {
+                    const win = electron.BrowserWindow.fromWebContents(evt.sender);
+                    return win ? {value: win.isVisible()} : {value: false}
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-theme", (evt, theme) => {
+                    __store.Store.dispatch(__appSlice.updateTheme(theme))
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-colors", (evt, colors) => {
+                    const tabController = __AppController.appController.getTabControllerForWebContents(evt.sender);
+                    tabController && __store.Store.dispatch(__tabSlice.updateTabColors({tabId: tabController.tabId, colors: colors}))
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", (evt, isOverlayActive) => {
+                    const tabController = __AppController.appController.getTabControllerForWebContents(evt.sender);
+                    tabController && __store.Store.dispatch(__tabSlice.updateTabIsOverlayActive({tabId: tabController.tabId, isOverlayActive: isOverlayActive}))
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-order", (evt, tabOrder) => {
+                    const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender);
+                    windowController && windowController.reorderTabs(tabOrder)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:zoom", (evt, zoomFactor) => {
+                    __AppController.appController.setZoom(zoomFactor)
+                })
+                __notionIPC.DEPRECATED_receiveSyncMainFromRenderer.addListener("notion:get-fullscreen", evt => {
+                    const win = electron.BrowserWindow.fromWebContents(evt.sender);
+                    return win ? {value: win.isFullScreen()} : {value: false}
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-electron-app-features", evt => {
+                    const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender);
+                    return __store.getElectronAppFeatures({
+                        isShowingTabBar: !windowController || windowController.hasMultipleTabs()
+                    })
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-user-preference", (evt, key, value) => {
+                    electron_log.default.info("notion:set-user-preference", {
+                        key: key,
+                        value: value
+                    })
+                    __store.Store.dispatch(__appSlice.updatePreferences({[key]: value}))
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-app-version", evt => ({value: electron.app.getVersion()}))
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-is-running-under-arm64-translation", evt => electron.app.runningUnderARM64Translation)
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-analytics-info", async env => await h.getAnalyticsInfo())
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-app-path", evt => ({value: electron.app.getAppPath()}))
+                __notionIPC.handleEventFromRenderer.addListener("notion:cut", evt => {
+                    evt.sender.cut()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:copy", evt => {
+                    evt.sender.copy()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:paste", evt => {
+                    evt.sender.paste()
+                })
+
+                void function () {
+                    const handler = evt => p.isNotionWebContents(evt.sender)
+
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-text", evt => handler(evt) ? electron.clipboard.readText() : "")
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-html", evt => handler(evt) ? electron.clipboard.readHTML() : "")
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-rtf", evt => handler(evt) ? electron.clipboard.readRTF() : "")
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-image", evt => handler(evt) ? electron.clipboard.readImage()?.toDataURL() : null)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-bookmark", evt => handler(evt) ? electron.clipboard.readBookmark() : null)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-text", (evt, text) => handler(evt) ? electron.clipboard.writeText(text) : void 0)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-html", (evt, html) => handler(evt) ? electron.clipboard.writeHTML(html) : void 0)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-rtf", (evt, text) => handler(evt) ? electron.clipboard.writeRTF(text) : void 0)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-image", (evt, dataURL) => handler(evt) ? electron.clipboard.writeImage(electron.nativeImage.createFromDataURL(dataURL)) : void 0)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-bookmark", (evt, bookmark) => handler(evt) ? electron.clipboard.writeBookmark(bookmark.title, bookmark.url) : void 0)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:clear", evt => handler(evt) ? electron.clipboard.clear() : void 0)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:available-formats", evt => handler(evt) ? electron.clipboard.availableFormats() : [])
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:has", (evt, format) => !!handler(evt) && electron.clipboard.has(format))
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read", (evt, format) => handler(evt) ? electron.clipboard.read(format) : "")
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write", (evt, data) => handler(evt) ? electron.clipboard.write(data) : void 0)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:read-buffer", (evt, format) => handler(evt) ? new Uint8Array(electron.clipboard.readBuffer(format)) : new Uint8Array)
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:clipboard:write-buffer", (evt, format, data) => handler(evt) ? electron.clipboard.writeBuffer(format, Buffer.from(data)) : void 0)
+                }()
+
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-sidebar-state", (evt, state) => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:toggle-sidebar-expanded", evt => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.getActiveTabController().toggleSidebarInNotion()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-sidebar-open", (evt, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.getActiveTabController().setSidebarOpenInNotion(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-window-sidebar-state", (evt, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.setWindowSidebarState(evt.sender, t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-app-store-state", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.setAppStoreState(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-notion", (evt, t, r, n) => {
+                    const o = __AppController.appController.getWindowControllerForWebContents(evt.sender),
+                        a = __AppController.appController.getTabControllerForWebContents(evt.sender);
                     if (!o || !a) return;
                     let i;
                     switch (n) {
@@ -5113,118 +5307,163 @@
                             (0, u.unreachable)(n)
                     }
                     o.newTab({initialUrl: t, makeActiveTab: r, position: i})
-                })), b.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.searchForNewTab({
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", (e => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.searchForNewTab({
                         makeActiveTab: !0,
                         position: {type: "end"}
                     })
-                })), b.handleEventFromRenderer.addListener("notion:tab-clicked", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.makeTabActive(t)
-                })), b.handleEventFromRenderer.addListener("notion:show-tab-menu", ((e, t, r, n) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.showTabMenu({
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:tab-clicked", ((e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.makeTabActive(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-menu", ((e, t, r, n) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.showTabMenu({
                         tabIndex: t,
                         clientX: r,
                         clientY: n
                     })
-                })), b.handleEventFromRenderer.addListener("notion:close-tab", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.closeTab(t)
-                })), b.handleEventFromRenderer.addListener("notion:move-tab-to-new-window", ((e, t) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.openTabInNewWindow(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-start", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStartFromNotion(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-stop-from-notion", (e => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromNotion()
-                })), b.handleEventFromRenderer.addListener("notion:search-next", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchNextFromSearch(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-prev", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchPrevFromSearch(t)
-                })), b.handleEventFromRenderer.addListener("notion:search-clear", (e => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchClearFromSearch()
-                })), b.handleEventFromRenderer.addListener("notion:search-stop-from-search", (e => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromSearch()
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-close", (() => {
-                    "visible" === _.Store.getState().quickSearch.visibilityState.type && _.Store.dispatch((0, w.toggleVisibilityStateIfReady)("navigation"))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-open-result", ((e, t) => {
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:close-tab", ((e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.closeTab(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:move-tab-to-new-window", ((e, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.openTabInNewWindow(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-start", ((e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStartFromNotion(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-notion", (e => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromNotion()
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-next", ((e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchNextFromSearch(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-prev", ((e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchPrevFromSearch(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-clear", (e => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchClearFromSearch()
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-search", (e => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromSearch()
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-close", (() => {
+                    "visible" === __store.Store.getState().quickSearch.visibilityState.type && __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("navigation"))
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-result", ((e, t) => {
                     const r = (0, v.normalizeUrlProtocol)(t);
-                    r && f.appController.openURLOptionallySurfacingExistingTab(r)
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-ready", (() => {
-                    _.Store.dispatch((0, w.setReadyState)({type: "ready"}))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-not-ready", (() => {
-                    _.Store.dispatch((0, w.setReadyState)({type: "not-ready"}))
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-refresh", (() => {
-                    f.appController.quickSearchController?.reload()
-                })), b.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", (() => {
-                    f.appController.openUserSettings()
-                })), b.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getSpellcheckerLanguages() || [])), b.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", (e => f.appController.getTabControllerForWebContents(e.sender)?.getAvailableSpellcheckerLanguages() || [])), b.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerLanguages(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerEnabled(t)
-                })), b.handleEventFromRenderer.addListener("notion:replace-misspelling", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.replaceMisspelling(t)
-                })), b.handleEventFromRenderer.addListener("notion:add-to-dictionary", ((e, t) => {
-                    f.appController.getTabControllerForWebContents(e.sender)?.addToDictionary(t)
-                })), b.handleRequestFromRenderer.addListener("notion:get-substitutions", (e => {
-                    if (!s.systemPreferences.getUserDefault) return {value: []};
-                    const t = s.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
+                    r && __AppController.appController.openURLOptionallySurfacingExistingTab(r)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-ready", (() => {
+                    __store.Store.dispatch((0, __quickSearchSlice.setReadyState)({type: "ready"}))
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-not-ready", (() => {
+                    __store.Store.dispatch((0, __quickSearchSlice.setReadyState)({type: "not-ready"}))
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-refresh", (() => {
+                    __AppController.appController.quickSearchController?.reload()
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", (() => {
+                    __AppController.appController.openUserSettings()
+                }))
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", (e => __AppController.appController.getTabControllerForWebContents(e.sender)?.getSpellcheckerLanguages() || []))
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", (e => __AppController.appController.getTabControllerForWebContents(e.sender)?.getAvailableSpellcheckerLanguages() || []))
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", ((e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerLanguages(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", ((e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerEnabled(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:replace-misspelling", ((e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.replaceMisspelling(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:add-to-dictionary", ((e, t) => {
+                    __AppController.appController.getTabControllerForWebContents(e.sender)?.addToDictionary(t)
+                }))
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-substitutions", (e => {
+                    if (!electron.systemPreferences.getUserDefault) return {value: []};
+                    const t = electron.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
                     return t ? {value: t} : {value: []}
-                })), b.handleEventFromRenderer.addListener("notion:navigation-meta-click", ((e, t) => {
-                    const r = f.appController.getWindowControllerForWebContents(e.sender);
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:navigation-meta-click", ((e, t) => {
+                    const r = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     "back" === t ? r?.handleBackMetaClick() : r?.handleForwardMetaClick()
-                })), b.handleEventFromRenderer.addListener("notion:go-back", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goBack()
-                })), b.handleEventFromRenderer.addListener("notion:go-forward", (e => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goForward()
-                })), b.handleEventFromRenderer.addListener("notion:show-tab-history-menu", ((e, t, r, n) => {
-                    f.appController.getWindowControllerForWebContents(e.sender)?.showTabHistoryMenu({
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:go-back", (e => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goBack()
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:go-forward", (e => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goForward()
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-history-menu", ((e, t, r, n) => {
+                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.showTabHistoryMenu({
                         direction: t,
                         clientX: r,
                         clientY: n
                     })
-                })), b.handleEventFromRenderer.addListener("notion:create-window", ((e, t) => {
-                    f.appController.newWindow({initialUrl: t})
-                })), b.handleEventFromRenderer.addListener("notion:create-popup", ((e, t) => {
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-window", ((e, t) => {
+                    __AppController.appController.newWindow({initialUrl: t})
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-popup", ((e, t) => {
                     (0, g.createPopup)(t)
-                })), b.handleEventFromRenderer.addListener("notion:create-google-drive-picker", ((e, t) => {
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-google-drive-picker", ((e, t) => {
                     (0, m.createGoogleDrivePicker)(t)
-                })), b.handleEventFromRenderer.addListener("notion:set-window-title", ((e, t) => {
-                    const r = f.appController.getTabControllerForWebContents(e.sender);
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-window-title", ((e, t) => {
+                    const r = __AppController.appController.getTabControllerForWebContents(e.sender);
                     r && r.setPageTitle(t.title)
-                })), b.handleEventFromRenderer.addListener("notion:set-badge", ((e, t) => {
-                    if (_.Store.dispatch((0, y.updateNotificationCount)(c.toNumber(t.badgeString))), s.app.dock) return void s.app.dock.setBadge(t.badgeString);
-                    const r = s.BrowserWindow.fromWebContents(e.sender);
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-badge", ((e, t) => {
+                    if (__store.Store.dispatch((0, __appSlice.updateNotificationCount)(lodash.toNumber(t.badgeString))), electron.app.dock) return void electron.app.dock.setBadge(t.badgeString);
+                    const r = electron.BrowserWindow.fromWebContents(e.sender);
                     if (!r) return;
                     if (!r.setOverlayIcon) return;
                     if ("" === t.badgeString || null === t.badgeImageDataUrl) return void r.setOverlayIcon(null, "");
-                    const n = s.nativeImage.createFromDataURL(t.badgeImageDataUrl).toPNG(),
-                        o = s.nativeImage.createFromBuffer(n, {scaleFactor: t.devicePixelRatio});
+                    const n = electron.nativeImage.createFromDataURL(t.badgeImageDataUrl).toPNG(),
+                        o = electron.nativeImage.createFromBuffer(n, {scaleFactor: t.devicePixelRatio});
                     r.setOverlayIcon(o, `${t.badgeString} unread notifications`)
-                })), b.handleEventFromRenderer.addListener("notion:clear-browser-history", (e => {
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:clear-browser-history", (e => {
                     e.sender.clearHistory()
-                })), b.handleEventFromRenderer.addListener("notion:open-app-menu", (e => {
-                    s.Menu.getApplicationMenu()?.popup({x: 8, y: 8})
-                })), b.handleEventFromRenderer.addListener("notion:open-dev-tools", (e => {
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-app-menu", (e => {
+                    electron.Menu.getApplicationMenu()?.popup({x: 8, y: 8})
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-dev-tools", (e => {
                     e.sender.openDevTools()
-                })), b.handleEventFromRenderer.addListener("notion:download-url", ((e, t) => {
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:download-url", ((e, t) => {
                     e.sender.downloadURL(t.url)
-                })), b.handleEventFromRenderer.addListener("notion:open-external-url", ((e, t) => {
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-external-url", ((e, t) => {
                     const {url: r} = t;
-                    d.sanitizeUrlStrict(r) && s.shell.openExternal(r)
-                })), b.handleRequestFromRenderer.addListener("notion:ready", (e => Promise.resolve({value: void 0}))), b.handleEventFromRenderer.addListener("notion:alt-key-down", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
+                    d.sanitizeUrlStrict(r) && electron.shell.openExternal(r)
+                }))
+                __notionIPC.handleRequestFromRenderer.addListener("notion:ready", (e => Promise.resolve({value: void 0})))
+                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-down", (e => {
+                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     t && "win32" === process.platform && t.setShouldShowAppMenuFromAltKey(!0)
-                })), b.handleEventFromRenderer.addListener("notion:alt-key-up", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-up", (e => {
+                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     "win32" === process.platform && t && (t.toggleAppMenuPopup(), t.setShouldShowAppMenuFromAltKey(!1))
-                })), b.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", (e => {
-                    const t = f.appController.getWindowControllerForWebContents(e.sender);
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", (e => {
+                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
                     t?.setShouldShowAppMenuFromAltKey(!1)
-                })), b.handleEventFromRenderer.addListener("notion:broadcast", ((e, t) => {
-                    const r = s.BrowserWindow.fromWebContents(e.sender);
-                    r && s.BrowserWindow.getAllWindows().forEach((e => {
-                        r.id !== e.id && f.appController.getWindowControllerForWebContents(e.webContents)?.getActiveTabController()?.broadcast(t)
+                }))
+                __notionIPC.handleEventFromRenderer.addListener("notion:broadcast", ((e, t) => {
+                    const r = electron.BrowserWindow.fromWebContents(e.sender);
+                    r && electron.BrowserWindow.getAllWindows().forEach((e => {
+                        r.id !== e.id && __AppController.appController.getWindowControllerForWebContents(e.webContents)?.getActiveTabController()?.broadcast(t)
                     }))
-                })), b.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", (async (e, t) => (0, v.getIsProtocolRegistered)(t))), b.handleEventFromRenderer.addListener("notion:set-is-media-active", ((e, t) => {
-                    f.appController.updateMediaIndicator(e.sender, t)
+                }))
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", (async (e, t) => (0, v.getIsProtocolRegistered)(t)))
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-is-media-active", ((e, t) => {
+                    __AppController.appController.updateMediaIndicator(e.sender, t)
                 }))
             }
         },
@@ -5709,7 +5948,7 @@
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
-            exports.setReadyState = exports.toggleVisibilityStateIfReady = exports.quickSearchSlice = void 0;
+
             const o = __webpack_require(55869);
 
             exports.quickSearchSlice = o.createSlice({
@@ -5988,6 +6227,46 @@
         },
 
 
+        // createSelector
+        40257: function (module, exports, __webpack_require) {
+            "use strict";
+            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const reduxToolKit = __webpack_require(55869),
+                s = a(__webpack_require(6600));
+
+            exports.createSelector = reduxToolKit.createSelectorCreator(reduxToolKit.lruMemoize, {
+                equalityCheck: s.isEqual,
+                resultEqualityCheck: s.isEqual,
+                maxSize: 10
+            })
+        },
+        // selector
         55385: (module, exports, __webpack_require) => {
             "use strict";
             Object.defineProperty(exports, "__esModule", {value: !0})
@@ -5995,88 +6274,100 @@
 
             const n = __webpack_require(13984),
                 __TabColors = __webpack_require(27683),
-                a = __webpack_require(60522),
+                __tabBarSize = __webpack_require(60522),
                 __appSlice = __webpack_require(73553),
                 s = __webpack_require(78401),
                 l = __webpack_require(40257),
                 c = __webpack_require(54198);
 
-            function u(e) {
-                return e.app
+            function selectApp(state) {
+                return state.app
             }
 
-            exports.zoomFactorSelector = l.createSelector(u, (e => e.zoomFactor))
-            exports.preferenceSelector = l.createSelector(u, (e => e.preferences))
-            exports.themeSelector = l.createSelector(u, (e => e.theme))
-            exports.themeModeSelector = l.createSelector(exports.themeSelector, (e => e.mode));
+            exports.zoomFactorSelector = l.createSelector(selectApp, appState => appState.zoomFactor)
+            exports.preferenceSelector = l.createSelector(selectApp, appState => appState.preferences)
+            exports.themeSelector = l.createSelector(selectApp, appState => appState.theme)
+            exports.themeModeSelector = l.createSelector(exports.themeSelector, theme => theme.mode)
 
-            const d = l.createSelector(exports.preferenceSelector, (e => e.isVibrancyEnabled));
-            exports.targetTabBarHeightSelector = l.createSelector([exports.zoomFactorSelector, c.isShowingTabBarSelector], ((e, t) => t ? Math.ceil(a.TAB_BAR_HEIGHT_PX * e) : 0))
-            exports.backgroundColorSelector = l.createSelector([d, exports.themeModeSelector], ((e, t) => e ? "#00000000" : __TabColors.electronColors.notionBackground[t]))
-            exports.electronAppFeaturesSelector = l.createSelector([exports.preferenceSelector, exports.zoomFactorSelector, c.isShowingTabBarSelector], ((e, t, r) => {
-                if (void 0 !== r) return {
-                    ...__appSlice.ALWAYS_SET_ELECTRON_APP_FEATURES,
-                    isShowingTabBar: r,
-                    preferences: {...__appSlice.DEFAULT_PERSISTED_PREFERENCES, ...e || {}},
-                    zoomFactor: t
+            const isVibrancyEnabledSelector = l.createSelector(exports.preferenceSelector, preference => preference.isVibrancyEnabled)
+            exports.targetTabBarHeightSelector = l.createSelector([
+                exports.zoomFactorSelector,
+                c.isShowingTabBarSelector
+            ], (zoomFactor, isShowing) => isShowing ? Math.ceil(__tabBarSize.TAB_BAR_HEIGHT_PX * zoomFactor) : 0)
+            exports.backgroundColorSelector = l.createSelector([
+                isVibrancyEnabledSelector,
+                exports.themeModeSelector
+            ], (isVibrancyEnabled, themeMode) => isVibrancyEnabled ? "#00000000" : __TabColors.electronColors.notionBackground[themeMode])
+            exports.electronAppFeaturesSelector = l.createSelector([
+                exports.preferenceSelector,
+                exports.zoomFactorSelector,
+                c.isShowingTabBarSelector
+            ], (preference, zoomFactor, isShowing) => {
+                if (void 0 !== isShowing)
+                    return {
+                        ...__appSlice.ALWAYS_SET_ELECTRON_APP_FEATURES,
+                        isShowingTabBar: isShowing,
+                        preferences: {
+                            ...__appSlice.DEFAULT_PERSISTED_PREFERENCES,
+                            ...preference || {}
+                        },
+                        zoomFactor: zoomFactor
+                    }
+            })
+            exports.searchStateSelector = l.createSelector([
+                s.tabSearchingStateSelector,
+                exports.zoomFactorSelector,
+                (e, t, r) => r,
+                (e, t, r, n) => n
+            ], (tabSearching, zoomFactor, r, o) => {
+                const topbarHeight = tabSearching?.isSearchingCenterPeek ? 0 : n.getTopbarHeight("darwin" === process.platform),
+                    height = Math.ceil(80 * zoomFactor),
+                    width = Math.ceil(500 * zoomFactor);
+                return {
+                    searchBounds: {
+                        x: r - width,
+                        y: topbarHeight + o,
+                        width: width,
+                        height: height,
+                    },
+                    searchingState: tabSearching
                 }
-            }))
-            exports.searchStateSelector = l.createSelector([s.tabSearchingStateSelector, exports.zoomFactorSelector, (e, t, r) => r, (e, t, r, n) => n], ((e, t, r, o) => {
-                const a = e?.isSearchingCenterPeek ? 0 : (0, n.getTopbarHeight)("darwin" === process.platform),
-                    i = Math.ceil(80 * t), s = Math.ceil(500 * t);
-                return {searchBounds: {x: r - s, y: a + o, width: s, height: i}, searchingState: e}
-            }))
-            exports.boundsSelector = l.createSelector([d, c.isActiveTabSelector, (e, t, r) => r, (e, t, r, n) => n], ((e, t, r, n) => {
+            })
+            exports.boundsSelector = l.createSelector([
+                isVibrancyEnabledSelector,
+                c.isActiveTabSelector,
+                (e, t, r) => r,
+                (e, t, r, n) => n
+            ], (isVibrancyEnabled, isActiveTab, r, n) => {
                 if (r) return {
-                    x: e && !t ? 1e4 : 0,
-                    y: e && !t ? 1e4 : n,
+                    x: isVibrancyEnabled && !isActiveTab ? 1e4 : 0,
+                    y: isVibrancyEnabled && !isActiveTab ? 1e4 : n,
                     width: r.width || 0,
                     height: (r.height || 0) - n
                 }
-            }))
-        },
-        78401: (e, t, r) => {
-            "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.parentWindowIdSelector = t.tabSearchingStateSelector = t.tabSelector = void 0;
-            const n = r(40257);
-            t.tabSelector = (0, n.createSelector)([function (e) {
-                return e.tabs
-            }, (e, t) => t], ((e, t) => e[t])), t.tabSearchingStateSelector = (0, n.createSelector)(t.tabSelector, (e => e?.searching)), t.parentWindowIdSelector = (0, n.createSelector)(t.tabSelector, (e => e?.parentWindowControllerId))
-        },
-        40257: function (e, t, r) {
-            "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createSelector = void 0;
-            const i = r(55869), s = a(r(6600));
-            t.createSelector = (0, i.createSelectorCreator)(i.lruMemoize, {
-                equalityCheck: s.isEqual,
-                resultEqualityCheck: s.isEqual,
-                maxSize: 10
             })
         },
-        54198: function (e, t, r) {
+        // tabSelector
+        78401: (module, exports, __webpack_require) => {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const n = __webpack_require(40257);
+
+            exports.tabSelector = n.createSelector([
+                function (state) {
+                    return state.tabs
+                },
+                (state, tabId) => tabId
+            ], (tabs, id) => tabs[id])
+            exports.tabSearchingStateSelector = n.createSelector(exports.tabSelector, tab => tab?.searching)
+            exports.parentWindowIdSelector = n.createSelector(exports.tabSelector, tab => tab?.parentWindowControllerId)
+        },
+        // selector
+        54198: function (module, exports, __webpack_require) {
+            "use strict";
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                 void 0 === n && (n = r);
                 var o = Object.getOwnPropertyDescriptor(t, r);
                 o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -6087,35 +6378,51 @@
                 }), Object.defineProperty(e, n, o)
             } : function (e, t, r, n) {
                 void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+            }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
                 Object.defineProperty(e, "default", {enumerable: !0, value: t})
             } : function (e, t) {
                 e.default = t
-            }), a = this && this.__importStar || function (e) {
+            }),
+                a = this && this.__importStar || function (e) {
                 if (e && e.__esModule) return e;
                 var t = {};
                 if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
                 return o(t, e), t
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.focusChangedSelector = t.isFocusedWindowSelector = t.windowActiveTabSelector = t.isActiveTabSelector = t.isShowingTabBarSelector = t.windowSidebarStateSelector = t.parentWindowSelector = t.windowSelector = t.maxFocusSelector = void 0;
-            const i = a(r(6600)), s = r(78401), l = r(40257);
 
-            function c(e) {
-                return e.windows
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const i = a(__webpack_require(6600)),
+                s = __webpack_require(78401),
+                l = __webpack_require(40257);
+
+            function selectWindows(state) {
+                return state.windows
             }
 
-            t.maxFocusSelector = (0, l.createSelector)([c], (e => i.max(Object.values(e).map((e => e.focusOrder)) ?? 0))), t.windowSelector = (0, l.createSelector)([c, (e, t) => t], ((e, t) => t ? e[t] : void 0)), t.parentWindowSelector = (0, l.createSelector)([c, s.parentWindowIdSelector], ((e, t) => t ? e[t] : void 0)), t.windowSidebarStateSelector = (0, l.createSelector)(t.parentWindowSelector, (e => {
-                if (e) return e.sidebarState
-            })), t.isShowingTabBarSelector = (0, l.createSelector)(t.parentWindowSelector, (e => {
-                if (e) return 1 !== e.tabs.length && !Boolean(e.displayState?.isHtmlFullScreen)
-            })), t.isActiveTabSelector = (0, l.createSelector)([t.parentWindowSelector, (e, t) => t], ((e, t) => {
-                if (e) return e.activeTabId === t
-            })), t.windowActiveTabSelector = (0, l.createSelector)([t.parentWindowSelector], (e => {
-                if (e) return e.activeTabId
-            })), t.isFocusedWindowSelector = (0, l.createSelector)([t.windowSelector, t.maxFocusSelector], ((e, t) => {
-                if (e) return e.focusOrder === t
-            })), t.focusChangedSelector = (0, l.createSelector)([t.isFocusedWindowSelector, t.windowActiveTabSelector], ((e, t) => !e || void 0 !== t))
+            exports.maxFocusSelector = l.createSelector([selectWindows], windows => i.max(Object.values(windows).map(state => state.focusOrder) ?? 0))
+            exports.windowSelector = l.createSelector([selectWindows, (e, t) => t], (windows, id) => id ? windows[id] : void 0)
+            exports.parentWindowSelector = l.createSelector([selectWindows, s.parentWindowIdSelector], (windows, pid) => pid ? windows[pid] : void 0)
+            exports.windowSidebarStateSelector = l.createSelector(exports.parentWindowSelector, parentWindow => {
+                if (parentWindow) return parentWindow.sidebarState
+            })
+            exports.isShowingTabBarSelector = l.createSelector(exports.parentWindowSelector, parentWindow => {
+                if (parentWindow) return 1 !== parentWindow.tabs.length && !Boolean(parentWindow.displayState?.isHtmlFullScreen)
+            })
+            exports.isActiveTabSelector = l.createSelector([exports.parentWindowSelector, (e, t) => t], (parentWindow, id) => {
+                if (parentWindow) return parentWindow.activeTabId === id
+            })
+            exports.windowActiveTabSelector = l.createSelector([exports.parentWindowSelector], parentWindow => {
+                if (parentWindow) return parentWindow.activeTabId
+            })
+            exports.isFocusedWindowSelector = l.createSelector([exports.windowSelector, exports.maxFocusSelector], (win, maxFocus) => {
+                if (win) return win.focusOrder === maxFocus
+            })
+            exports.focusChangedSelector = l.createSelector([exports.isFocusedWindowSelector, exports.windowActiveTabSelector], (isFocusedWin, activeTab) => !isFocusedWin || void 0 !== activeTab)
         },
+
 
         // setupSystemMenu
         50833: function (module, exports, __webpack_require) {
@@ -7527,37 +7834,46 @@
         },
 
         // utils 工具类
-        43067: function (e, t, r) {
+        43067: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.rethrow = t.tap = t.asyncFilter = t.allSettledAndThrow = t.LazyPromise = t.PromiseWithState = t.concurrentAsyncIterable = t.batchAsyncIterable = t.Waitable = t.retryOnTimeout = t.requestTimeout = t.raceWithTimeout = t.deferred = t.raceSettled = t.race = t.timeoutResolve = t.timeout = t.allBatched = t.batch = t.isPromise = t.eventLoopNextTick = t.awaitAtMost = void 0;
-            const i = r(78862), s = r(66614), l = a(r(6600)), c = r(45321), u = r(80004);
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
 
-            function d(e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const i = __webpack_require(78862),
+                s = __webpack_require(66614),
+                lodash = a(__webpack_require(6600)),
+                c = __webpack_require(45321),
+                u = __webpack_require(80004);
+
+            function isPromise(e) {
                 return e && "then" in e && "function" == typeof e.then
             }
 
-            async function p(e, t, r) {
+            async function allBatched(e, t, r) {
                 const n = [];
                 if (t <= 0) throw new Error(`Invalid batch size: ${t}`);
                 let o = 0;
@@ -7569,89 +7885,108 @@
                 return n
             }
 
-            function h(e, t = c.SYSTEM_TIME_SOURCE) {
-                return new Promise((r => {
-                    t.setTimeout((() => {
-                        r()
-                    }), e)
-                }))
+            function timeout(ms, t = c.SYSTEM_TIME_SOURCE) {
+                return new Promise(resolve => {
+                    t.setTimeout(() => {
+                        resolve()
+                    }, ms)
+                })
             }
 
-            function f() {
-                let e, t;
-                const r = new Promise(((r, n) => {
-                    e = r, t = n
-                }));
-                return {resolve: e, reject: t, promise: r}
+            function deferred() {
+                let _resolve, _reject;
+                const promise = new Promise((resolve, reject) => {
+                    _resolve = resolve
+                    _reject = reject
+                })
+                return {
+                    resolve: _resolve,
+                    reject: _reject,
+                    promise: promise
+                }
             }
 
-            async function m(e, t) {
+            async function raceWithTimeout(e, t) {
                 let r;
                 const n = new Promise((t => {
                     r = setTimeout((() => {
                         r = void 0, t({result: void 0, timeout: !0})
                     }), e)
-                })), o = d(t) ? t : Promise.race(t);
+                })), o = isPromise(t) ? t : Promise.race(t);
                 return await Promise.race([n, o.then((e => ({result: e, timeout: !1}))).finally((() => {
                     r && clearTimeout(r)
                 }))])
             }
 
-            function g(e, t) {
-                return m(t, e)
+            function requestTimeout(e, t) {
+                return raceWithTimeout(t, e)
             }
 
-            t.awaitAtMost = async function (e, t, r = {}) {
-                const n = await m(t, e);
+            exports.awaitAtMost = async function (e, t, r = {}) {
+                const n = await raceWithTimeout(t, e);
                 if (n.timeout) throw r.customError?.() || new Error(`Promise failed to resolve within ${t}ms.`);
                 return n.result
-            }, t.eventLoopNextTick = function () {
+            }
+            exports.eventLoopNextTick = function () {
                 return new Promise((e => setImmediate(e)))
-            }, t.isPromise = d, t.batch = function (e, t, r) {
+            }
+            exports.isPromise = isPromise
+            exports.batch = function (e, t, r) {
                 return new Promise(((n, o) => {
                     let a = 0;
                     const i = [], s = () => {
-                        const c = l.slice(e, a, a + t);
+                        const c = lodash.slice(e, a, a + t);
                         a += t, c.length > 0 ? r(c).then((e => {
                             i.push(e), setImmediate(s)
                         })).catch(o) : n(i)
                     };
                     s()
                 }))
-            }, t.allBatched = p, t.timeout = h, t.timeoutResolve = function (e, t) {
+            }
+            exports.allBatched = allBatched
+            exports.timeout = timeout
+            exports.timeoutResolve = function (e, t) {
                 return new Promise((r => {
                     setTimeout((() => {
                         r(t)
                     }), e)
                 }))
-            }, t.race = async function (e) {
-                const t = f(), r = Promise.all(e.map((async (e, r) => {
+            }
+            exports.race = async function (e) {
+                const t = deferred(), r = Promise.all(e.map((async (e, r) => {
                     await e, t.resolve(r)
                 })));
                 return {winner: await t.promise, rest: r}
-            }, t.raceSettled = function (e) {
+            }
+            exports.raceSettled = function (e) {
                 return Promise.race(e).then((e => ({status: "fulfilled", value: e})), (e => ({
                     status: "rejected",
                     reason: e
                 })))
-            }, t.deferred = f, t.raceWithTimeout = m, t.requestTimeout = g, t.retryOnTimeout = async function e(t, r, n) {
-                const o = await g(n(), r);
+            }
+            exports.deferred = deferred
+            exports.raceWithTimeout = raceWithTimeout
+            exports.requestTimeout = requestTimeout
+            exports.retryOnTimeout = async function e(t, r, n) {
+                const o = await requestTimeout(n(), r);
                 return t <= 1 || !o.timeout ? o : e(t - 1, r, n)
-            }, t.Waitable = class {
+            }
+            exports.Waitable = class {
                 constructor(e = c.SYSTEM_TIME_SOURCE) {
-                    this.timeSource = e, this.deferredPromise = f(), this.isCompleted = !1
+                    this.timeSource = e, this.deferredPromise = deferred(), this.isCompleted = !1
                 }
 
                 async wait(e, t) {
-                    e > 0 && await h(e, this.timeSource);
+                    e > 0 && await timeout(e, this.timeSource);
                     const r = t - e;
-                    r > 0 && await Promise.race([this.deferredPromise.promise, h(r, this.timeSource)]), this.isCompleted || (this.isCompleted = !0, this.deferredPromise.resolve(void 0))
+                    r > 0 && await Promise.race([this.deferredPromise.promise, timeout(r, this.timeSource)]), this.isCompleted || (this.isCompleted = !0, this.deferredPromise.resolve(void 0))
                 }
 
                 trigger() {
                     this.isCompleted || this.deferredPromise.resolve(void 0), this.isCompleted = !0
                 }
-            }, t.batchAsyncIterable = async function* (e, t, r) {
+            }
+            exports.batchAsyncIterable = async function* (e, t, r) {
                 let n = [], o = !1;
                 for (; !o;) {
                     for (; n.length < t;) {
@@ -7666,7 +8001,8 @@
                     n = [];
                     for (const e of a) yield e
                 }
-            }, t.concurrentAsyncIterable = async function* (e, t = 1 / 0) {
+            }
+            exports.concurrentAsyncIterable = async function* (e, t = 1 / 0) {
                 let r = 0;
                 const n = new Map;
                 do {
@@ -7677,7 +8013,8 @@
                     const [o, a] = await Promise.race([...n].map((async ([e, t]) => [e, await t])));
                     a.done ? n.delete(o) : n.set(o, o.next()), yield a
                 } while (n.size > 0)
-            }, t.PromiseWithState = class {
+            }
+            exports.PromiseWithState = class {
                 constructor(e) {
                     this.wrappedPromise = e, this._state = {status: "pending"}, e.then((e => {
                         this._state = {status: "resolved", value: e}
@@ -7689,7 +8026,8 @@
                 get state() {
                     return this._state
                 }
-            }, t.LazyPromise = class {
+            }
+            exports.LazyPromise = class {
                 constructor(e) {
                     this.runTask = e, this._state = {status: "idle"}
                 }
@@ -7751,20 +8089,24 @@
                             (0, u.unreachable)(e)
                     }
                 }
-            }, t.allSettledAndThrow = async function (e) {
+            }
+            exports.allSettledAndThrow = async function (e) {
                 const t = await Promise.allSettled(e), r = [];
                 for (const e of t) {
                     if ("rejected" === e.status) throw e.reason;
                     r.push(e.value)
                 }
                 return r
-            }, t.asyncFilter = async function (e, t, r) {
-                return p(e, t, r).then((t => e.filter(((e, r) => t[r]))))
-            }, t.tap = function (e) {
+            }
+            exports.asyncFilter = async function (e, t, r) {
+                return allBatched(e, t, r).then((t => e.filter(((e, r) => t[r]))))
+            }
+            exports.tap = function (e) {
                 return async function (t) {
                     return await e(t), t
                 }
-            }, t.rethrow = function (e) {
+            }
+            exports.rethrow = function (e) {
                 return async function (t) {
                     throw await e(t), t
                 }
@@ -11531,13 +11873,18 @@
                 }
             }
         },
-        5508: (e, t) => {
+        5508: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0});
+            Object.defineProperty(exports, "__esModule", {value: !0});
 
             class r {
                 constructor() {
-                    this.stiffness = 50, this.damping = 10, this.precision = .001, this.currentValue = 0, this.endValue = 0, this.velocity = 0
+                    this.stiffness = 50
+                    this.damping = 10
+                    this.precision = 0.001
+                    this.currentValue = 0
+                    this.endValue = 0
+                    this.velocity = 0
                 }
 
                 static {
@@ -11592,12 +11939,19 @@
                 }
             }
 
-            t.default = r
+            exports.default = r
         },
-        43277: (e, t) => {
+        // 常量
+        43277: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.peekViewQueryParam = t.configureOpenInDesktopAppQueryParam = t.deepLinkOpenNewTabQueryParam = void 0, t.deepLinkOpenNewTabQueryParam = "deepLinkOpenNewTab", t.configureOpenInDesktopAppQueryParam = "configureOpenInDesktopApp", t.peekViewQueryParam = "p"
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.deepLinkOpenNewTabQueryParam = "deepLinkOpenNewTab"
+            exports.configureOpenInDesktopAppQueryParam = "configureOpenInDesktopApp"
+            exports.peekViewQueryParam = "p"
         },
+
         83704: function (module, exports, __webpack_require) {
             "use strict";
 
