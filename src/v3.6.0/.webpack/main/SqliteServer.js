@@ -1600,42 +1600,62 @@
                 return t.base * Math.pow(2, r) + u(t.minJitter, t.maxJitter)
             }, t.getRandomNumberBetweenMinMax = u
         },
-        87757: function (e, t, r) {
+
+        // SqliteConnectionWrapper
+        87757: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), i = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, s = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.SqliteConnectionWrapper = void 0;
-            const a = s(r(16928)), u = i(r(87550)), c = r(72652), l = r(54272);
-            t.SqliteConnectionWrapper = class {
-                constructor(e) {
-                    switch (this.execSqliteBatchCalls = 0, e.type) {
+
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                i = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                s = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __path = s(__webpack_require(16928)),
+                __better_sqlite3 = i(__webpack_require(87550)),
+                c = __webpack_require(72652),
+                l = __webpack_require(54272);
+
+            exports.SqliteConnectionWrapper = class {
+                constructor(options) {
+                    this.execSqliteBatchCalls = 0
+                    switch (options.type) {
                         case"on-disk":
-                            const {dbDirectory: t, debug: r, timeoutMs: n} = e, o = a.default.join(t, "notion.db");
-                            this.db = new u.default(o, {...Boolean(r) ? {verbose: console.log} : {}, ...n ? {timeout: n} : {}}), this.debug = Boolean(r);
+                            const {dbDirectory, debug, timeoutMs} = options
+                            const dbFile = __path.default.join(dbDirectory, "notion.db");
+                            this.db = new __better_sqlite3.default(dbFile, {
+                                ...Boolean(debug) ? {verbose: console.log} : {},
+                                ...timeoutMs ? {timeout: timeoutMs} : {}
+                            })
+                            this.debug = Boolean(debug);
                             break;
                         case"in-memory":
-                            this.db = new u.default(":memory:"), this.debug = !0;
+                            this.db = new __better_sqlite3.default(":memory:")
+                            this.debug = true
                             break;
                         default:
                             throw new Error("Bad type passed")
@@ -1643,26 +1663,28 @@
                 }
 
                 execSqliteBatch(e) {
-                    return this.execSqliteBatchCalls += 1, Promise.resolve(this.execSqliteBatchInternal(e))
+                    this.execSqliteBatchCalls += 1
+                    return Promise.resolve(this.execSqliteBatchInternal(e))
                 }
 
-                execSqliteBatchV2(e) {
-                    const {precondition: t, batch: r} = e;
-                    if (t) {
-                        const e = this.execSqliteBatchInternal({body: [t], onError: void 0}), [n] = e.body;
+                execSqliteBatchV2(options) {
+                    const {precondition, batch} = options;
+                    if (precondition) {
+                        const e = this.execSqliteBatchInternal({body: [precondition], onError: void 0}), [n] = e.body;
                         if ("DataOk" === n.type) {
                             const {precondition_result: e} = (0, c.getSingleRowResultAsType)(n);
                             if ("number" != typeof e) throw new Error(`precondition_result must be 0/1, instead received: ${e} (type: ${typeof e})`);
-                            if (1 === e) return this.execSqliteBatchCalls += 1, Promise.resolve(this.execSqliteBatchInternal(r))
+                            if (1 === e) return this.execSqliteBatchCalls += 1, Promise.resolve(this.execSqliteBatchInternal(batch))
                         }
-                        const o = r.body.map((() => ({type: "PreconditionFailed"})));
+                        const o = batch.body.map((() => ({type: "PreconditionFailed"})));
                         return Promise.resolve({body: o, onErrorResult: void 0})
                     }
-                    return this.execSqliteBatchCalls += 1, Promise.resolve(this.execSqliteBatchInternal(r))
+                    this.execSqliteBatchCalls += 1
+                    return Promise.resolve(this.execSqliteBatchInternal(batch))
                 }
 
-                execSqliteBatchInternal(e) {
-                    const {body: t, onError: r} = e, n = [];
+                execSqliteBatchInternal(options) {
+                    const {body: t, onError: r} = options, n = [];
                     let o = !1;
                     const i = Date.now();
                     for (const [e, r] of t.entries()) {
@@ -1696,7 +1718,7 @@
                             data: n.reader ? n.all(...o) : n.run(...o)
                         } : (n.run(...o), {type: "Ok"})
                     } catch (e) {
-                        return e instanceof u.SqliteError ? {
+                        return e instanceof __better_sqlite3.SqliteError ? {
                             type: "Error",
                             message: e.message,
                             name: e.name,
@@ -1974,9 +1996,13 @@
                 return e.body.map((e => "getData" in e ? {type: "DataOk", data: []} : {type: "Ok"}))
             }
         },
-        54272: (e, t) => {
+        54272: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.makeSqliteBatch = t.isSqliteFailedResult = t.SqliteColumnType = void 0, t.SqliteColumnType = {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            exports.SqliteColumnType = {
                 fromColumnType: {
                     Number: "INTEGER",
                     Boolean: "INTEGER",
@@ -2001,16 +2027,20 @@
                     CIDR: !0,
                     NumberArray: !0
                 },
-                getSerializer: e => "Boolean" === e ? n : t.SqliteColumnType.columnTypeNeedsJsonSerialization[e] ? r : o
-            }, t.isSqliteFailedResult = function (e) {
+                getSerializer: e => "Boolean" === e ? n : exports.SqliteColumnType.columnTypeNeedsJsonSerialization[e] ? r : o
+            }
+            exports.isSqliteFailedResult = function (e) {
                 return "Error" === e.type || "ErrorBefore" === e.type || "PreconditionFailed" === e.type || "OutOfSpace" === e.type || "SharedWorkerTimeout" === e.type
-            }, t.makeSqliteBatch = function (e) {
+            }
+            exports.makeSqliteBatch = function (e) {
                 return e
             };
+
             const r = {
                     toSqlite: e => null != e ? JSON.stringify(e) : e ?? null,
                     fromSqlite: e => "string" == typeof e ? JSON.parse(e) : e
-                }, n = {toSqlite: e => null != e ? e ? 1 : 0 : e ?? null, fromSqlite: e => null === e ? e : Boolean(e)},
+                },
+                n = {toSqlite: e => null != e ? e ? 1 : 0 : e ?? null, fromSqlite: e => null === e ? e : Boolean(e)},
                 o = {toSqlite: e => e ?? null, fromSqlite: e => e}
         },
         95788: (e, t) => {
@@ -6249,10 +6279,18 @@
             }));
             e.exports = i
         },
-        62029: (e, t, r) => {
+
+        // ws@7.4.1
+        62029: (module, exports, __webpack_require) => {
             "use strict";
-            const n = r(15530);
-            n.createWebSocketStream = r(48705), n.Server = r(37116), n.Receiver = r(43264), n.Sender = r(31208), e.exports = n
+            const __WebSocket = __webpack_require(15530);
+
+            __WebSocket.createWebSocketStream = __webpack_require(48705)
+            __WebSocket.Server = __webpack_require(37116)
+            __WebSocket.Receiver = __webpack_require(43264)
+            __WebSocket.Sender = __webpack_require(31208)
+
+            module.exports = __WebSocket
         },
         95464: (e, t, r) => {
             "use strict";
@@ -7313,142 +7351,204 @@
                 })
             })), P.prototype.addEventListener = _, P.prototype.removeEventListener = x, e.exports = P
         },
-        72931: function (e, t, r) {
+
+        // 入口
+        72931: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const o = n(r(76982)), i = n(r(47419)), s = n(r(62029)), a = r(87757),
-                u = i.default.scope("Sqlite (Child)");
-            let c = !1;
-            const l = new class {
+
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            const crypto = n(__webpack_require(76982)),
+                electron_log = n(__webpack_require(47419)),
+                __WebSocket = n(__webpack_require(62029)), // ws
+                __SqliteConnectionWrapper = __webpack_require(87757) // SqliteConnectionWrapper
+
+            const logger = electron_log.default.scope("Sqlite (Child)")
+
+            let c = false
+            const sqliteServer = new class {
                 constructor() {
-                    this.dbConnection = this.getDbConnection(), this.startWebsocketServer(), this.startHealthchecks()
+                    this.dbConnection = this.getDbConnection()
+                    this.startWebsocketServer()
+                    this.startHealthchecks()
                 }
 
                 shutdown() {
-                    this.dbConnection && this.dbConnection.close(), this.server && this.server.close()
+                    this.dbConnection && this.dbConnection.close()
+                    this.server && this.server.close()
                 }
 
                 getDbConnection() {
-                    const e = process.argv[2];
-                    return new a.SqliteConnectionWrapper({type: "on-disk", dbDirectory: e, debug: !1})
+                    const dbDirectory = process.argv[2];
+
+                    return new __SqliteConnectionWrapper.SqliteConnectionWrapper({
+                        type: "on-disk",
+                        dbDirectory: dbDirectory,
+                        debug: false
+                    })
                 }
 
                 startWebsocketServer() {
-                    const e = parseInt(process.argv[3]);
-                    this.server = new s.default.Server({
-                        port: e,
+                    const port = parseInt(process.argv[3]);
+
+                    this.server = new __WebSocket.default.Server({
+                        port: port,
                         host: "127.0.0.1"
-                    }), u.info(`Websocket listening on ${e}...`), this.setupServerListeners()
+                    })
+                    logger.info(`Websocket listening on ${port}...`)
+                    this.setupServerListeners()
                 }
 
                 setupServerListeners() {
-                    u.info(`Setting up up server listeners with auth (${process.argv[4]})...`);
-                    const e = process.argv[4];
+                    logger.info(`Setting up up server listeners with auth (${process.argv[4]})...`);
+
+                    const authToken = process.argv[4]
                     if (this.server) {
-                        this.server.on("connection", (t => {
-                            t.on("message", (async r => {
-                                const n = r.toString(), {id: i, batch: s, auth: a, precondition: u} = JSON.parse(n);
-                                if (o.default.timingSafeEqual(Buffer.from(a), Buffer.from(e))) {
-                                    const e = u ? await this.dbConnection.execSqliteBatchV2({
-                                        batch: s,
-                                        precondition: u
-                                    }) : await this.dbConnection.execSqliteBatch(s);
-                                    t.send(JSON.stringify({id: i, result: e}))
+                        this.server.on("connection", websocket => {
+                            websocket.on("message", async data => {
+                                const n = data.toString()
+                                const {id, batch, auth, precondition} = JSON.parse(n);
+                                if (crypto.default.timingSafeEqual(Buffer.from(auth), Buffer.from(authToken))) {
+                                    const result = precondition
+                                        ? await this.dbConnection.execSqliteBatchV2({
+                                            batch: batch,
+                                            precondition: precondition
+                                        })
+                                        : await this.dbConnection.execSqliteBatch(batch);
+
+                                    websocket.send(JSON.stringify({id: id, result: result}))
                                 }
-                            })), t.on("error", (e => {
-                                u.error("Connection error", e)
-                            }))
-                        })), this.server.on("close", (() => {
-                            u.info("Closing websocket server..."), c || this.startWebsocketServer()
-                        }));
-                        const t = i.default.scope("WS Server");
-                        this.server.on("error", (e => {
-                            t.error(e)
-                        })), u.info("Server up and running")
+                            })
+                            websocket.on("error", error => {
+                                logger.error("Connection error", error)
+                            })
+                        })
+                        this.server.on("close", () => {
+                            logger.info("Closing websocket server...")
+                            if (!c) {
+                                this.startWebsocketServer()
+                            }
+                        })
+
+                        const wsLogger = electron_log.default.scope("WS Server");
+                        this.server.on("error", err => {
+                            wsLogger.error(err)
+                        })
+
+                        logger.info("Server up and running")
                     }
                 }
 
                 startHealthchecks() {
-                    this.healthcheckInterval && clearInterval(this.healthcheckInterval), this.healthcheckInterval = setInterval((() => {
-                        this.dbConnection.closed && (this.dbConnection = this.getDbConnection())
-                    }), 100)
+                    if (this.healthcheckInterval) {
+                        clearInterval(this.healthcheckInterval)
+                    }
+
+                    this.healthcheckInterval = setInterval(() => {
+                        if (this.dbConnection.closed) {
+                            this.dbConnection = this.getDbConnection()
+                        }
+                    }, 100)
                 }
             };
-            process.on("SIGTERM", (() => {
-                u.info("Responding to SIGTERM and shutting down..."), l.shutdown(), c = !0, process.exit(0)
-            }))
+
+            process.on("SIGTERM", () => {
+                logger.info("Responding to SIGTERM and shutting down...")
+                sqliteServer.shutdown()
+                c = true
+                process.exit(0)
+            })
         },
+
+        // better-sqlite3
         87550: e => {
             "use strict";
             e.exports = require("better-sqlite3")
         },
+        // bufferutil
         1962: e => {
             "use strict";
             e.exports = require("bufferutil")
         },
+        // electron
         4482: e => {
             "use strict";
             e.exports = require("electron")
         },
+        // url
         16857: e => {
             "use strict";
             e.exports = require("url")
         },
+        // utf-8-validate
         26809: e => {
             "use strict";
             e.exports = require("utf-8-validate")
         },
+        // crypto
         76982: e => {
             "use strict";
             e.exports = require("crypto")
         },
+        // events
         24434: e => {
             "use strict";
             e.exports = require("events")
         },
+        // fs
         79896: e => {
             "use strict";
             e.exports = require("fs")
         },
+        // http
         58611: e => {
             "use strict";
             e.exports = require("http")
         },
+        // https
         65692: e => {
             "use strict";
             e.exports = require("https")
         },
+        // net
         69278: e => {
             "use strict";
             e.exports = require("net")
         },
+        // os
         70857: e => {
             "use strict";
             e.exports = require("os")
         },
+        // path
         16928: e => {
             "use strict";
             e.exports = require("path")
         },
+        // querystring
         83480: e => {
             "use strict";
             e.exports = require("querystring")
         },
+        // stream
         2203: e => {
             "use strict";
             e.exports = require("stream")
         },
+        // tls
         64756: e => {
             "use strict";
             e.exports = require("tls")
         },
+        // util
         39023: e => {
             "use strict";
             e.exports = require("util")
         },
+        // zlib
         43106: e => {
             "use strict";
             e.exports = require("zlib")

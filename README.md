@@ -14,6 +14,9 @@
 27683: TabColors/ElectronColors 常量
 52869: 主题颜色相关
 50019: getElectronTheme 函数
+68115: closeLastBrowserTab 函数
+31957: child_process 的 exec/execFile 函数
+
 
 21852: AppController
 26760: QuickSearchController
@@ -114,6 +117,7 @@
 39023: util
 28167: worker_threads
 
+
 80115: fse
 6354: redux toolkit
 63853/55869: redux toolkit
@@ -127,6 +131,7 @@
 6600: lodash
 44993: semver
 9245: electron-store
+51359: get-port
 ```
 
 ## 本体更新逻辑

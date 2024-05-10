@@ -848,7 +848,7 @@
 
             const electron = __webpack_require(4482),
                 electron_log = i(__webpack_require(47419)),
-                c = __webpack_require(43277),
+                c = __webpack_require(43277), // 常量
                 u = __webpack_require(83704), // zoom 常量
                 d = __webpack_require(28902),
                 lodash = a(__webpack_require(6600)),
@@ -1124,14 +1124,18 @@
                     if (!url) return;
                     const {protocol, host, pathname, search, hash} = new URL(url)
                     const searchParams = new URLSearchParams(search)
+
+                    // deepLinkOpenNewTab
                     if ("true" === searchParams.get(c.deepLinkOpenNewTabQueryParam)) {
                         searchParams.delete(c.deepLinkOpenNewTabQueryParam);
-                        const query = searchParams.toString(),
-                            o = [protocol, "//", host, pathname, query ? `?${query}` : "", hash].join("");
-                        this.openURLOptionallySurfacingExistingTab(o)
+
+                        const query = searchParams.toString()
+                        const newUrl = [protocol, "//", host, pathname, query ? `?${query}` : "", hash].join("");
+                        this.openURLOptionallySurfacingExistingTab(newUrl)
                     } else {
                         this.navigateFocusedWindowToUrl(url)
                     }
+
                     g.closeLastBrowserTab({urlContaining: pathname}).catch(e => {
                         logger.error("Error closing last browser tab", e)
                     })
@@ -3762,7 +3766,7 @@
                 }
 
                 toggleAppMenuPopup() {
-                    if (this.browserWindow.isMenuBarVisible() ) {
+                    if (this.browserWindow.isMenuBarVisible()) {
                         electron.Menu.getApplicationMenu()?.closePopup()
                     } else if (__store.Store.getState().windows[this.windowId]?.shouldShowAppMenuFromAltKey) {
                         electron.Menu.getApplicationMenu()?.popup({
@@ -3879,35 +3883,49 @@
 
 
         // getAnalyticsInfo
-        68543: function (e, t, r) {
+        68543: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getAnalyticsInfo = void 0;
-            const o = n(r(70857)), a = n(r(47419)), i = n(r(80115)), s = a.default.scope("Analytics");
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __os = n(__webpack_require(70857)),
+                electron_log = n(__webpack_require(47419)),
+                __fse = n(__webpack_require(80115))
+
+            const logger = electron_log.default.scope("Analytics")
             let l = null;
 
             async function c() {
-                return l || (l = "darwin" === process.platform ? await async function () {
-                    try {
-                        const e = await i.default.readFile("/System/Library/CoreServices/SystemVersion.plist", "utf8"),
-                            t = /<key>ProductVersion<\/key>\s*<string>([\d.]+)<\/string>/.exec(e),
-                            r = t?.[1].replace("10.16", "11");
-                        if (!r) return "Unknown";
-                        const {length: n} = r.split(".");
-                        return 1 === n ? `${r}.0.0` : 2 === n ? `${r}.0` : r
-                    } catch (e) {
-                        s.error("Error getting macOS version", e)
-                    }
-                    return "Unknown"
-                }() || "Unknown" : "win32" === process.platform ? o.default.release() : "Unknown"), l
+                if (!l) {
+                    l = "darwin" === process.platform
+                        ? await async function () {
+                        try {
+                            const e = await __fse.default.readFile("/System/Library/CoreServices/SystemVersion.plist", "utf8"),
+                                t = /<key>ProductVersion<\/key>\s*<string>([\d.]+)<\/string>/.exec(e),
+                                r = t?.[1].replace("10.16", "11");
+                            if (!r) return "Unknown";
+                            const {length} = r.split(".");
+                            return 1 === length ? `${r}.0.0` : 2 === length ? `${r}.0` : r
+                        } catch (e) {
+                            logger.error("Error getting macOS version", e)
+                        }
+                        return "Unknown"
+                    }() || "Unknown"
+                        : "win32" === process.platform
+                            ? __os.default.release()
+                            : "Unknown"
+                }
+                return l
             }
 
-            t.getAnalyticsInfo = async function () {
+            exports.getAnalyticsInfo = async function () {
                 return {
                     platform: process.platform,
-                    kernel: o.default.release(),
+                    kernel: __os.default.release(),
                     os: await c(),
                     electron: process.versions.electron,
                     node: process.versions.node,
@@ -4315,253 +4333,387 @@
 
 
         // closeLastBrowserTab
-        68115: function (e, t, r) {
+        68115: function (module, exports, __webpack_require) {
             "use strict";
             var n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.closeLastBrowserTab = void 0;
-            const o = n(r(47419)), a = r(31957), i = r(69340);
-            t.closeLastBrowserTab = async function (e) {
-                const {isClosingBrowserTabs: t} = i.Store.getState().app.preferences;
-                return !("darwin" !== process.platform || !t) && async function (e) {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron_log = n(__webpack_require(47419)),
+                __childProcess = __webpack_require(31957),
+                __store = __webpack_require(69340);
+
+            exports.closeLastBrowserTab = async function (params) {
+                const {isClosingBrowserTabs} = __store.Store.getState().app.preferences;
+                return ("darwin" === process.platform && isClosingBrowserTabs) && async function (params) {
                     try {
-                        const t = await async function () {
+                        const defaultBrowserAppId = await async function () {
                             if ("darwin" === process.platform) {
-                                const e = "defaults read com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers | sed -n -e '/LSHandlerURLScheme = https;/{x;p;d;}' -e 's/.*=[^\"]\"\\(.*\\)\";/\\1/g' -e x";
+                                const cmd = "defaults read com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers | sed -n -e '/LSHandlerURLScheme = https;/{x;p;d;}' -e 's/.*=[^\"]\"\\(.*\\)\";/\\1/g' -e x";
                                 try {
-                                    const {stdout: t} = await (0, a.exec)(e);
-                                    return t.trim()
-                                } catch (e) {
-                                    o.default.error(`Error getting default browser: ${e}`)
+                                    const {stdout} = await __childProcess.exec(cmd);
+                                    return stdout.trim()
+                                } catch (err) {
+                                    electron_log.default.error(`Error getting default browser: ${err}`)
                                 }
                             }
                             return null
                         }();
-                        if (!t) return !1;
-                        const r = `\n      tell application id "${t}"\n        if URL of active tab of window 1 contains "${e.urlContaining}" then\n            ${e.dryRun ? 'return "Hello"' : "close active tab of window 1"}\n        end if\n      end tell\n    `, {stderr: n} = await function (e) {
-                            if ("darwin" === process.platform) return (0, a.exec)(`osascript -e '${e}'`);
+                        if (!defaultBrowserAppId) {
+                            return false
+                        }
+
+                        const appleScriptCode = `\n      tell application id "${defaultBrowserAppId}"\n        if URL of active tab of window 1 contains "${params.urlContaining}" then\n            ${params.dryRun ? 'return "Hello"' : "close active tab of window 1"}\n        end if\n      end tell\n    `
+                        const {stderr} = await function (code) {
+                            if ("darwin" === process.platform) {
+                                return __childProcess.exec(`osascript -e '${code}'`);
+                            }
                             throw new Error("Not running on macOS")
-                        }(r);
-                        return !n
-                    } catch (e) {
-                        return o.default.error(`Error closing last browser tab: ${e}`), !1
+                        }(appleScriptCode);
+                        return !stderr
+                    } catch (err) {
+                        electron_log.default.error(`Error closing last browser tab: ${err}`)
+                        return false
                     }
-                }(e)
+                }(params)
             }
         },
 
         // wipeTransientCsrfCookie
-        68516: function (e, t, r) {
+        68516: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.wipeTransientCsrfCookie = void 0;
-            const s = r(4482), l = i(r(11239)), c = a(r(10454)), u = r(13387);
-            t.wipeTransientCsrfCookie = async function () {
-                const e = (0, u.getSession)().cookies, [t] = await e.get({name: "csrf"});
-                if (t && t.domain) {
-                    const r = "localhost" === t.domain ? "https://localhost:3000/" : l.default.domainBaseUrl;
-                    await e.remove(r, t.name)
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                __config = i(__webpack_require(11239)),
+                __notionIPC = a(__webpack_require(10454)),
+                __session = __webpack_require(13387);
+
+            exports.wipeTransientCsrfCookie = async function () {
+                const cookies = __session.getSession().cookies
+                const [csrfCookie] = await cookies.get({name: "csrf"})
+
+                if (csrfCookie && csrfCookie.domain) {
+                    const baseUrl = "localhost" === csrfCookie.domain
+                        ? "https://localhost:3000/"
+                        : __config.default.domainBaseUrl;
+                    await cookies.remove(baseUrl, csrfCookie.name)
                 }
-            }, c.handleEventFromRenderer.addListener("notion:clear-cookies", (() => {
-                (0, u.getSession)().clearStorageData({origin: l.default.domainBaseUrl, storages: ["cookies"]})
-            })), c.handleEventFromRenderer.addListener("notion:clear-all-cookies", (() => {
-                (0, u.getSession)().clearStorageData(), s.session.defaultSession && s.session.defaultSession.clearStorageData()
-            })), c.handleRequestFromRenderer.addListener("notion:get-cookie", (async (e, t) => {
-                const {cookies: r} = (0, u.getSession)(), [n] = await r.get({url: l.default.domainBaseUrl, name: t});
-                return {value: n && !n.httpOnly ? n.value : void 0}
-            })), c.handleEventFromRenderer.addListener("notion:set-cookie", ((e, t) => {
-                const {cookies: r} = (0, u.getSession)();
-                r.set({...t, url: l.default.domainBaseUrl, expirationDate: t.expires})
-            }))
+            }
+
+            __notionIPC.handleEventFromRenderer.addListener("notion:clear-cookies", () => {
+                __session.getSession().clearStorageData({
+                    origin: __config.default.domainBaseUrl,
+                    storages: ["cookies"]
+                })
+            })
+            __notionIPC.handleEventFromRenderer.addListener("notion:clear-all-cookies", () => {
+                __session.getSession().clearStorageData()
+                if (electron.session.defaultSession) {
+                    electron.session.defaultSession.clearStorageData()
+                }
+            })
+            __notionIPC.handleRequestFromRenderer.addListener("notion:get-cookie", async (evt, name) => {
+                const {cookies} = __session.getSession()
+                const [cookie] = await cookies.get({url: __config.default.domainBaseUrl, name: name});
+                return {
+                    value: cookie && !cookie.httpOnly ? cookie.value : void 0
+                }
+            })
+            __notionIPC.handleEventFromRenderer.addListener("notion:set-cookie", (evt, options) => {
+                const {cookies} = __session.getSession();
+                cookies.set({
+                    ...options,
+                    url: __config.default.domainBaseUrl,
+                    expirationDate: options.expires
+                })
+            })
         },
 
         // crash reporter
-        84041: function (e, t, r) {
+        84041: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0});
-            const s = r(4482), l = i(r(11239)), c = a(r(10454));
-            s.crashReporter.start({
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0});
+
+            const electron = __webpack_require(4482),
+                __config = i(__webpack_require(11239)),
+                __notionIPC = a(__webpack_require(10454));
+
+            electron.crashReporter.start({
                 productName: "Notion",
                 companyName: "Notion",
-                submitURL: `${l.default.domainBaseUrl}/server/crash-report`,
-                uploadToServer: !0,
-                extra: {desktopEnvironment: l.default.env, desktopVersion: s.app.getVersion()}
-            }), c.handleEventFromRenderer.addListener("notion:set-logger-data", ((e, t) => {
-                for (const e in t) {
-                    const r = t[e];
-                    "string" == typeof r && s.crashReporter.addExtraParameter(e, r)
+                submitURL: `${__config.default.domainBaseUrl}/server/crash-report`,
+                uploadToServer: true,
+                extra: {
+                    desktopEnvironment: __config.default.env,
+                    desktopVersion: electron.app.getVersion()
                 }
-            }))
+            })
+
+            __notionIPC.handleEventFromRenderer.addListener("notion:set-logger-data", (evt, loggerData) => {
+                for (const key in loggerData) {
+                    const value = loggerData[key]
+                    if ("string" == typeof value) {
+                        electron.crashReporter.addExtraParameter(key, value)
+                    }
+                }
+            })
         },
 
         // createGoogleDrivePicker
-        89304: function (e, t, r) {
+        89304: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createGoogleDrivePicker = void 0;
-            const s = r(4482), l = a(r(60411)), c = i(r(11239)), u = r(21852), d = a(r(10454)), p = r(13387);
-            t.createGoogleDrivePicker = function (e) {
-                const {url: t} = e, r = {x: void 0, y: void 0, width: 566, height: 350},
-                    n = s.BrowserWindow.getFocusedWindow();
-                if (n) {
-                    const [e, t] = n.getPosition(), [o, a] = n.getSize();
-                    r.width = Math.min(Math.max(r.width, .8 * o), 1051), r.height = Math.min(Math.max(r.height, .8 * a), 650), r.x = Math.round(e + o / 2 - r.width / 2), r.y = Math.round(t + a / 2 - r.height / 2)
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                l = a(__webpack_require(60411)),
+                __config = i(__webpack_require(11239)),
+                __AppController = __webpack_require(21852),
+                __notionIPC = a(__webpack_require(10454)),
+                __session = __webpack_require(13387);
+
+            exports.createGoogleDrivePicker = function (e) {
+                const {url} = e,
+                    bounds = {x: void 0, y: void 0, width: 566, height: 350},
+                    focusedWindow = electron.BrowserWindow.getFocusedWindow();
+                if (focusedWindow) {
+                    const [winX, winY] = focusedWindow.getPosition(),
+                        [width, height] = focusedWindow.getSize();
+                    bounds.width = Math.min(Math.max(bounds.width, .8 * width), 1051)
+                    bounds.height = Math.min(Math.max(bounds.height, .8 * height), 650)
+                    bounds.x = Math.round(winX + width / 2 - bounds.width / 2)
+                    bounds.y = Math.round(winY + height / 2 - bounds.height / 2)
                 }
-                if (!l.parse(c.default.domainBaseUrl).hostname) throw new Error("No base URL dmain.");
-                const o = new s.BrowserWindow({
-                    ...r,
+
+                if (!l.parse(__config.default.domainBaseUrl).hostname) {
+                    throw new Error("No base URL dmain.");
+                }
+
+                const pickerWin = new electron.BrowserWindow({
+                    ...bounds,
                     title: "",
                     webPreferences: {
                         preload: require("path").resolve(__dirname, "../renderer", "popup", "preload.js"),
-                        nodeIntegration: !1,
-                        session: s.session.fromPartition(p.electronSessionPartition),
-                        sandbox: !0
+                        nodeIntegration: false,
+                        session: electron.session.fromPartition(__session.electronSessionPartition),
+                        sandbox: true
                     }
-                }), a = (e, t) => {
-                    t && "google-drive-picker-callback" === t.type && (d.handleEventFromRenderer.removeListener("notion:post-message", a), o.removeListener("close", i), o.close(), u.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", t.file))
-                }, i = () => {
-                    d.handleEventFromRenderer.removeListener("notion:post-message", a), o.removeListener("close", i), u.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", void 0)
-                };
-                d.handleEventFromRenderer.addListener("notion:post-message", a), o.addListener("close", i), o.loadURL(t)
+                })
+
+                const messageHandler = (evt, t) => {
+                    if (t && "google-drive-picker-callback" === t.type) {
+                        __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", messageHandler)
+                        pickerWin.removeListener("close", closeHandler)
+                        pickerWin.close()
+                        __AppController.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", t.file)
+                    }
+                }
+
+                const closeHandler = () => {
+                    __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", messageHandler)
+                    pickerWin.removeListener("close", closeHandler)
+                    __AppController.appController.sendMainToAllNotionInstances("notion:google-drive-picker-callback", void 0)
+                }
+
+                __notionIPC.handleEventFromRenderer.addListener("notion:post-message", messageHandler)
+                pickerWin.addListener("close", closeHandler)
+                pickerWin.loadURL(url)
             }
         },
 
         // createPopup
-        43041: function (e, t, r) {
+        43041: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.createPopup = void 0;
-            const s = r(4482), l = a(r(60411)), c = i(r(11239)), u = r(21852), d = a(r(10454)), p = r(13387);
-            t.createPopup = function (e) {
-                const {url: t, title: r, width: n, height: o} = e, a = {x: void 0, y: void 0, width: n, height: o},
-                    i = s.BrowserWindow.getFocusedWindow();
-                if (i) {
-                    const [e, t] = i.getPosition(), [r, s] = i.getSize();
-                    a.x = Math.round(e + r / 2 - n / 2), a.y = Math.round(t + s / 2 - o / 2), a.width = n, a.height = o
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                l = a(__webpack_require(60411)),
+                __config = i(__webpack_require(11239)),
+                __AppController = __webpack_require(21852),
+                __notionIPC = a(__webpack_require(10454)),
+                __session = __webpack_require(13387);
+
+            exports.createPopup = function (e) {
+                const {url, title, width, height} = e,
+                    bounds = {x: void 0, y: void 0, width: width, height: height},
+                    focusedWindow = electron.BrowserWindow.getFocusedWindow();
+                if (focusedWindow) {
+                    const [winX, winY] = focusedWindow.getPosition(),
+                        [w, h] = focusedWindow.getSize();
+                    bounds.x = Math.round(winX + w / 2 - width / 2)
+                    bounds.y = Math.round(winY + h / 2 - height / 2)
+                    bounds.width = width
+                    bounds.height = height
                 }
-                if (!l.parse(c.default.domainBaseUrl).hostname) throw new Error("No base URL domain.");
-                const h = new s.BrowserWindow({
-                    ...a,
-                    title: r,
+
+                if (!l.parse(__config.default.domainBaseUrl).hostname) {
+                    throw new Error("No base URL domain.");
+                }
+
+                const popupWin = new electron.BrowserWindow({
+                    ...bounds,
+                    title: title,
                     webPreferences: {
                         preload: require("path").resolve(__dirname, "../renderer", "popup", "preload.js"),
-                        nodeIntegration: !1,
-                        session: s.session.fromPartition(p.electronSessionPartition),
-                        sandbox: !0
+                        nodeIntegration: false,
+                        session: electron.session.fromPartition(__session.electronSessionPartition),
+                        sandbox: true
                     }
-                }), f = (e, t) => {
-                    t && "popup-callback" === t.type && (d.handleEventFromRenderer.removeListener("notion:post-message", f), h.removeListener("close", m), h.close(), u.appController.sendMainToAllNotionInstances("notion:popup-callback", t.url))
-                }, m = () => {
-                    d.handleEventFromRenderer.removeListener("notion:post-message", f), h.removeListener("close", m), u.appController.sendMainToAllNotionInstances("notion:popup-callback", void 0)
-                };
-                d.handleEventFromRenderer.addListener("notion:post-message", f), h.addListener("close", m), h.loadURL(t)
+                })
+                const messageHandler = (e, t) => {
+                    if (t && "popup-callback" === t.type) {
+                        __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", messageHandler)
+                        popupWin.removeListener("close", closeHandler)
+                        popupWin.close()
+                        __AppController.appController.sendMainToAllNotionInstances("notion:popup-callback", t.url)
+                    }
+                }
+                const closeHandler = () => {
+                    __notionIPC.handleEventFromRenderer.removeListener("notion:post-message", messageHandler)
+                    popupWin.removeListener("close", closeHandler)
+                    __AppController.appController.sendMainToAllNotionInstances("notion:popup-callback", void 0)
+                }
+
+                __notionIPC.handleEventFromRenderer.addListener("notion:post-message", messageHandler)
+                popupWin.addListener("close", closeHandler)
+                popupWin.loadURL(url)
             }
         },
         // ensureCspFrameAncestorsParityWithNotionWebsite
-        66991: (e, t, r) => {
+        66991: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.ensureCspFrameAncestorsParityWithNotionWebsite = void 0;
-            const n = r(53375);
-            t.ensureCspFrameAncestorsParityWithNotionWebsite = function (e) {
-                const t = new n.CspParser(e.cspHeader), r = t.csp.directives["frame-ancestors"];
-                return r && (r.includes("https:") || r.includes("*")) ? (r.push(`${e.customProtocol}:`), t.csp.convertToString().trim()) : e.cspHeader
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const n = __webpack_require(53375);
+
+            exports.ensureCspFrameAncestorsParityWithNotionWebsite = function (e) {
+                const t = new n.CspParser(e.cspHeader),
+                    r = t.csp.directives["frame-ancestors"];
+                return r && (r.includes("https:") || r.includes("*"))
+                    ? (r.push(`${e.customProtocol}:`), t.csp.convertToString().trim())
+                    : e.cspHeader
             }
         },
 
         // getDebugMenu
         83789: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
                     void 0 === n && (n = r);
                     var o = Object.getOwnPropertyDescriptor(t, r);
                     o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
@@ -4612,11 +4764,12 @@
             }
 
             function webContentsCreatedHandler(env, webContent) {
-                k(webContent, true)
+                setOfflineStatus(webContent, true)
             }
 
-            async function k(webContent, simulateAirplaneMode) {
+            async function setOfflineStatus(webContent, simulateAirplaneMode) {
                 const _debugger = webContent.debugger;
+
                 if (!_debugger.isAttached()) {
                     _debugger.attach()
                 }
@@ -4645,13 +4798,13 @@
                     throw new Error("Dev tools are disabled, this should never be called!");
                 }
 
-                function e(label, args) {
+                function createCheckboxMenuItem(label, args) {
                     return {
                         label: lodash.startCase(label.replace("is", "")),
                         checked: !!__store.Store.getState().app.preferences[label],
                         type: "checkbox",
-                        click(t) {
-                            __store.Store.dispatch(__appSlice.updatePreferences({[label]: t.checked}))
+                        click(item) {
+                            __store.Store.dispatch(__appSlice.updatePreferences({[label]: item.checked}))
                         },
                         ...args
                     }
@@ -4664,42 +4817,47 @@
                             label: "Command Search",
                             submenu: [
                                 {
-                                    label: "Toggle Window Visibility", click() {
+                                    label: "Toggle Window Visibility",
+                                    click() {
                                         __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("debug-menu"))
                                     }
                                 },
                                 {
-                                    label: "Toggle DevTools", click() {
+                                    label: "Toggle DevTools",
+                                    click() {
                                         __AppController.appController.quickSearchController?.toggleDevTools()
                                     }
                                 },
                                 {
-                                    label: "Reload", click() {
+                                    label: "Reload",
+                                    click() {
                                         __AppController.appController.quickSearchController?.reload()
                                     }
                                 }
                             ]
                         },
                         {type: "separator"},
-                        e("isVibrancyEnabled"),
+                        createCheckboxMenuItem("isVibrancyEnabled"),
                         {
                             label: "New Tab Search Enabled",
                             checked: __store.Store.getState().app.preferences.isNewTabSearchEnabled,
                             type: "checkbox",
-                            click(e) {
-                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isNewTabSearchEnabled: e.checked}))
+                            click(item) {
+                                __store.Store.dispatch(__appSlice.updatePreferences({isNewTabSearchEnabled: item.checked}))
                             }
                         },
-                        e("isTabDragIntoWindowEnabled"),
+                        createCheckboxMenuItem("isTabDragIntoWindowEnabled"),
                         {type: "separator"},
                         {
                             label: "(changing will restart app) Is using https:// ",
                             checked: __store.Store.getState().app.preferences.isUsingHttps,
                             type: "checkbox",
-                            click(e) {
-                                __store.Store.dispatch((0, __appSlice.updatePreferences)({isUsingHttps: e.checked})), electron.app.relaunch(), process.nextTick((() => {
+                            click(item) {
+                                __store.Store.dispatch(__appSlice.updatePreferences({isUsingHttps: item.checked}))
+                                electron.app.relaunch()
+                                process.nextTick(() => {
                                     electron.app.quit()
-                                }))
+                                })
                             }
                         },
                         {type: "separator"},
@@ -4710,22 +4868,37 @@
                         {
                             label: "Dump window state",
                             click: () => dumpData(function () {
-                                const e = __AppController.appController.windowControllers,
-                                    t = electron.BrowserWindow.getAllWindows(),
-                                    r = e.map((e => e.browserWindow)), n = t.filter((e => !r.includes(e))), o = e => {
-                                        const t = [];
-                                        return e.isMinimized() && t.push("minimized"), e.isFullScreen() && t.push("fullscreen"), e.isFocused() && t.push("focused"), e.isVisible() || t.push("hidden"), e.isModal() && t.push("modal"), e.isAlwaysOnTop() && t.push("always-on-top"), e.isClosable() || t.push("not-closable"), e.isMovable() || t.push("not-movable"), t.join(", ")
-                                    }, a = e => ({
-                                        id: e.id,
-                                        title: e.getTitle(),
-                                        status: o(e),
-                                        url: e.webContents.getURL(),
-                                        browserViews: e.getBrowserViews().map((e => ({
-                                            url: e.webContents.getURL(),
-                                            title: e.webContents.getTitle()
-                                        })))
-                                    });
-                                return {managed: r.map(a), unmanaged: n.map(a)}
+                                const windowControllers = __AppController.appController.windowControllers,
+                                    allWindows = electron.BrowserWindow.getAllWindows(),
+                                    managedWindows = windowControllers.map(e => e.browserWindow),
+                                    unmanagedWindows = allWindows.filter(win => !managedWindows.includes(win))
+
+                                const getWindowStatus = win => {
+                                    const result = [];
+                                    win.isMinimized() && result.push("minimized")
+                                    win.isFullScreen() && result.push("fullscreen")
+                                    win.isFocused() && result.push("focused")
+                                    win.isVisible() || result.push("hidden")
+                                    win.isModal() && result.push("modal")
+                                    win.isAlwaysOnTop() && result.push("always-on-top")
+                                    win.isClosable() || result.push("not-closable")
+                                    win.isMovable() || result.push("not-movable")
+                                    return result.join(", ")
+                                }
+                                const a = win => ({
+                                    id: win.id,
+                                    title: win.getTitle(),
+                                    status: getWindowStatus(win),
+                                    url: win.webContents.getURL(),
+                                    browserViews: win.getBrowserViews().map(view => ({
+                                        url: view.webContents.getURL(),
+                                        title: view.webContents.getTitle()
+                                    }))
+                                });
+                                return {
+                                    managed: managedWindows.map(a),
+                                    unmanaged: unmanagedWindows.map(a)
+                                }
                             }(), {defaultPath: "windows.json"})
                         },
                         {type: "separator"},
@@ -4744,35 +4917,36 @@
                         {
                             label: "Open Updater Folder",
                             click() {
-                                const e = __os.default.homedir();
+                                const homedir = __os.default.homedir();
                                 if ("win32" === process.platform) {
-                                    const t = process.env.LOCALAPPDATA || __path.default.join(e, "AppData", "Local"),
-                                        r = electron.app.getName().replace(/\s/g, "").toLowerCase();
-                                    electron.shell.openPath(__path.default.join(t, `${r}-updater`))
+                                    const t = process.env.LOCALAPPDATA || __path.default.join(homedir, "AppData", "Local"),
+                                        appName = electron.app.getName().replace(/\s/g, "").toLowerCase();
+                                    electron.shell.openPath(__path.default.join(t, `${appName}-updater`))
                                 } else if ("darwin" === process.platform) {
-                                    const t = __path.default.join(e, "Library", "Caches");
-                                    electron.shell.openPath(__path.default.join(t, `${__config.default.desktopAppId}.ShipIt`))
+                                    const cacheDir = __path.default.join(homedir, "Library", "Caches");
+                                    electron.shell.openPath(__path.default.join(cacheDir, `${__config.default.desktopAppId}.ShipIt`))
                                 }
                             }
                         },
                         {
                             label: "Simulate Airplane Mode",
                             type: "checkbox",
-                            click(evt) {
+                            click(item) {
                                 !async function (checked) {
                                     if (!shouldShowDebugMenu()) {
                                         throw new Error("Dev tools are disabled, this should never be called!");
                                     }
                                     if (simulateAirplaneMode !== checked) {
                                         simulateAirplaneMode = checked;
+
                                         for (const webContent of electron.webContents.getAllWebContents()) {
-                                            await k(webContent, simulateAirplaneMode);
+                                            await setOfflineStatus(webContent, simulateAirplaneMode);
                                         }
                                         simulateAirplaneMode
                                             ? electron.app.addListener("web-contents-created", webContentsCreatedHandler)
                                             : electron.app.removeListener("web-contents-created", webContentsCreatedHandler)
                                     }
-                                }(evt.checked)
+                                }(item.checked)
                             }
                         },
                         {type: "separator"},
@@ -4781,28 +4955,54 @@
                             submenu: [
                                 {
                                     label: "Toggle DevTools",
-                                    click(e, t) {
-                                        t?.webContents.toggleDevTools()
+                                    click(item, focusedWindow) {
+                                        focusedWindow?.webContents.toggleDevTools()
                                     }
                                 },
                                 {
                                     label: "Set Vibrancy (macOS)",
-                                    submenu: [{
-                                        label: "None", click(e, t) {
-                                            t?.setVibrancy(null)
-                                        }
-                                    }, ...["titlebar", "selection", "menu", "popover", "sidebar", "header", "sheet", "window", "hud", "fullscreen-ui", "tooltip", "content", "under-window", "under-page"].map((e => ({
-                                        label: e,
-                                        click(t, r) {
-                                            r?.setVibrancy(e)
-                                        }
-                                    })))]
+                                    submenu: [
+                                        {
+                                            label: "None",
+                                            click(item, focusedWindow) {
+                                                focusedWindow?.setVibrancy(null)
+                                            }
+                                        },
+                                        ...[
+                                            "titlebar",
+                                            "selection",
+                                            "menu",
+                                            "popover",
+                                            "sidebar",
+                                            "header",
+                                            "sheet",
+                                            "window",
+                                            "hud",
+                                            "fullscreen-ui",
+                                            "tooltip",
+                                            "content",
+                                            "under-window",
+                                            "under-page"
+                                        ].map(label => ({
+                                            label: label,
+                                            click(item, focusedWindow) {
+                                                focusedWindow?.setVibrancy(label)
+                                            }
+                                        }))
+                                    ]
                                 },
                                 {
                                     label: "Set Material (Windows)",
-                                    submenu: ["auto", "none", "mica", "acrylic", "tabbed"].map(e => ({
-                                        label: e, click(t, r) {
-                                            r?.setBackgroundMaterial(e)
+                                    submenu: [
+                                        "auto",
+                                        "none",
+                                        "mica",
+                                        "acrylic",
+                                        "tabbed"
+                                    ].map(label => ({
+                                        label: label,
+                                        click(item, focusedWindow) {
+                                            focusedWindow?.setBackgroundMaterial(label)
                                         }
                                     }))
                                 },
@@ -4811,25 +5011,26 @@
                                     submenu: [
                                         {
                                             label: "Transparent",
-                                            click(e, t) {
-                                                t?.setBackgroundColor("#00000000")
+                                            click(item, focusedWindow) {
+                                                focusedWindow?.setBackgroundColor("#00000000")
                                             }
                                         },
                                         {
                                             label: "Notion Default",
-                                            click(e, t) {
-                                                const r = __store.Store.getState().app,
-                                                    n = __tabColors.electronColors.notionBackground[r.theme.mode];
-                                                t?.setBackgroundColor(n)
+                                            click(item, focusedWindow) {
+                                                const appState = __store.Store.getState().app,
+                                                    bgColor = __tabColors.electronColors.notionBackground[appState.theme.mode];
+                                                focusedWindow?.setBackgroundColor(bgColor)
                                             }
                                         }
                                     ]
                                 },
                                 {
                                     label: "Set All Backgrounds to Transparent",
-                                    click(e, t) {
-                                        const r = '\n\t\t\t\t\t\t\t\t// Get all elements on the page\n\t\t\t\t\t\t\t\tvar allElements = document.getElementsByTagName("*");\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t// Iterate through all elements and remove background properties\n\t\t\t\t\t\t\t\tfor (var i = 0; i < allElements.length; i++) {\n\t\t\t\t\t\t\t\t\t\tallElements[i].style.background = "transparent";\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t';
-                                        __AppController.appController.getFocusedWindowController()?.getActiveTabController().executeJavaScript(r), t?.webContents.executeJavaScript(r)
+                                    click(item, focusedWindow) {
+                                        const code = '\n\t\t\t\t\t\t\t\t// Get all elements on the page\n\t\t\t\t\t\t\t\tvar allElements = document.getElementsByTagName("*");\n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t// Iterate through all elements and remove background properties\n\t\t\t\t\t\t\t\tfor (var i = 0; i < allElements.length; i++) {\n\t\t\t\t\t\t\t\t\t\tallElements[i].style.background = "transparent";\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t';
+                                        __AppController.appController.getFocusedWindowController()?.getActiveTabController().executeJavaScript(code)
+                                        focusedWindow?.webContents.executeJavaScript(code)
                                     }
                                 }
                             ]
@@ -4839,23 +5040,23 @@
                             label: "Open Notion Console",
                             accelerator: "CmdOrCtrl+Shift+J",
                             click() {
-                                const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
-                                e && e.openNotionConsole()
+                                const tabController = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                tabController && tabController.openNotionConsole()
                             }
                         },
                         {
                             label: "Open Search Console",
                             click() {
-                                const e = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
-                                e && e.openSearchConsole()
+                                const tabController = __AppController.appController.getFocusedWindowController()?.getActiveTabController();
+                                tabController && tabController.openSearchConsole()
                             }
                         },
                         {
                             label: "Open Tabs Console",
                             accelerator: "CmdOrCtrl+Shift+I",
                             click() {
-                                const e = __AppController.appController.getFocusedWindowController();
-                                e && e.openTabsConsole()
+                                const windowController = __AppController.appController.getFocusedWindowController();
+                                windowController && windowController.openTabsConsole()
                             }
                         }
                     ]
@@ -4932,7 +5133,7 @@
             function setupLocalLogging() {
                 electron_log.default.transports.console.level = exports.LOG_LEVEL
                 electron_log.default.transports.file.level = exports.LOG_LEVEL
-                electron_log.default.transports.file.maxSize = 2097152
+                electron_log.default.transports.file.maxSize = 2097152 // 2Mb
                 electron_log.default.info(`App starting with version ${electron.app.getVersion()}`, {
                     system: `${process.platform} ${process.arch}`,
                     electron: process.versions.electron
@@ -5014,9 +5215,12 @@
                             : "debug"
             }()
             exports.LOG_LEVELS = ["silly", "debug", "info", "warn", "error"]
+
             exports.setupLogging = function () {
                 setupLocalLogging()
+
                 __sentry.initialize(electron.app)
+
                 process.on("uncaughtException", error => {
                     if (error.message.startsWith("net::ERR")) {
                         __ServerLogger.serverLogger.log({
@@ -5065,6 +5269,7 @@
             exports.shouldLog = shouldLog
         },
 
+
         // 入口
         64982: function (module, exports, __webpack_require) {
             "use strict";
@@ -5100,7 +5305,7 @@
                 __setupSystemMenu = __webpack_require(50833),
                 T = __webpack_require(98441),
                 __WebUpdater = __webpack_require(19628);
-            let initialUrl, C;
+            let initialUrl, webUpdater;
 
             function handleActivate() {
                 const e = __AppController.appController.getMostRecentlyFocusedWindowController();
@@ -5132,16 +5337,21 @@
             exports.handleActivate = handleActivate
 
             void async function () {
-                __logging.setupLogging()
-                T.maybeDisableHardwareAcceleration()
-                electron.app.setAsDefaultProtocolClient(__config.default.protocol)
+                // __logging.setupLogging()
+                __logging.setupLocalLogging()
 
+                T.maybeDisableHardwareAcceleration()
+
+                // 注册 notion 协议(notion://)
+                electron.app.setAsDefaultProtocolClient(__config.default.protocol)
                 if ("darwin" === process.platform) {
                     electron.app.on("open-url", (evt, url) => {
                         evt.preventDefault()
+
                         if (electron.app.isReady()) {
-                            const e = g.normalizeUrlProtocol(url);
-                            if (!__AppController.appController.rehydrateEntireAppInForeground(e)) {
+                            // notion://www.notion.so/path
+                            const _url = g.normalizeUrlProtocol(url);
+                            if (!__AppController.appController.rehydrateEntireAppInForeground(_url)) {
                                 __AppController.appController.handleProtocolUrl(g.normalizeUrlProtocol(url))
                             }
                         }
@@ -5153,21 +5363,25 @@
                             handleActivate()
                         })
                         : electron.app.quit()
+
                     initialUrl = g.findNotionProtocolUrl(process.argv)
                 }
 
                 electron.Menu.setApplicationMenu(null)
                 electron.app.setAppUserModelId(__config.default.desktopAppId)
 
+
+                // 设置定时器执行更新检查 (assetCache) 10分钟/1分钟
                 void function () {
-                    C = new __WebUpdater.WebUpdater(electron.app, __assetCache.assetCache)
+                    webUpdater = new __WebUpdater.WebUpdater(electron.app, __assetCache.assetCache)
+
                     if (!__config.default.isLocalhost || __config.default.offline) {
                         const interval = "production" === __config.default.env ? 600_000 : 60_000;
                         setInterval(async () => {
                             try {
                                 await __assetCache.assetCache.checkForUpdates()
-                            } catch (e) {
-                                const error = __logglyHelpers.convertErrorToLog(e);
+                            } catch (err) {
+                                const error = __logglyHelpers.convertErrorToLog(err);
                                 __ServerLogger.serverLogger.log({
                                     level: "error",
                                     from: "AssetCache",
@@ -5182,9 +5396,11 @@
                 await electron.app.whenReady()
                 await __debugMenu.waitForWebpack()
 
+
                 void async function () {
                     __initializeAutoUpdater.initializeAutoUpdater()
                     __setupSystemMenu.setupSystemMenu()
+
                     await __assetCache.assetCache.initialize()
                     await __setupSqliteServer.setupSqliteServer()
                     v.setupSecurity()
@@ -5459,8 +5675,8 @@
             exports.normalizeUrlProtocolWithDefault = function (e) {
                 return normalizeUrlProtocol(e) || initialBaseUrl()
             }
-            exports.findNotionProtocolUrl = function (e) {
-                return normalizeUrlProtocol(e.find((e => e.startsWith(`${__config.default.protocol}:`))))
+            exports.findNotionProtocolUrl = function (argv) {
+                return normalizeUrlProtocol(argv.find(arg => arg.startsWith(`${__config.default.protocol}:`)))
             }
         },
 
@@ -5852,52 +6068,115 @@
         },
 
         // isNavigationAllowed 设置页面导航规则
-        15425: function (e, t, r) {
+        15425: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSecurity = t.isNavigationAllowed = void 0;
-            const o = r(4482), a = n(r(47419)), i = n(r(11239)), s = r(13387), l = r(49248),
-                c = `${i.default.protocol}:`, u = i.default.domainBaseUrl, d = u.replace(/\.so$/, ".com"), p = [u, d],
-                h = new URL(u).host,
-                f = ["https://accounts.google.com", "https://app.asana.com", "https://trello.com", "https://www.evernote.com", "https://slack.com", "https://login.microsoftonline.com", "https://connect.wustl.edu"],
-                m = [".okta.com", ".onelogin.com", ".jumpcloud.com", ".slack.com"],
-                g = [/^https:\/\/www\.google\.com\/accounts\//],
-                b = [/^http(s?):\/\/[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.slack\.com\/(archives|huddle)\//];
-            if (o.app.isPackaged) b.push(/^http:\/\//); else {
-                const e = i.default.domainName.replace(/:.*/, "");
-                g.push(new RegExp(`^http://${e}`)), g.push(/^http:\/\/localhost/)
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                electron_log = n(__webpack_require(47419)),
+                __config = n(__webpack_require(11239)),
+                __session = __webpack_require(13387),
+                l = __webpack_require(49248),
+                __protocol = `${__config.default.protocol}:`, // notion:
+                domainBaseUrl = __config.default.domainBaseUrl, // https://www.notion.so
+                domainBaseUrlCom = domainBaseUrl.replace(/\.so$/, ".com"), // https://www.notion.com
+                allowedOrigins = [domainBaseUrl, domainBaseUrlCom], // ['https://www.notion.so', 'https://www.notion.com']
+                __host = new URL(domainBaseUrl).host, // www.notion.so
+                allowedOrigins2 = [
+                    "https://accounts.google.com",
+                    "https://app.asana.com",
+                    "https://trello.com",
+                    "https://www.evernote.com",
+                    "https://slack.com",
+                    "https://login.microsoftonline.com",
+                    "https://connect.wustl.edu"
+                ],
+                suffix = [
+                    ".okta.com",
+                    ".onelogin.com",
+                    ".jumpcloud.com",
+                    ".slack.com"
+                ],
+                whitelistREs = [/^https:\/\/www\.google\.com\/accounts\//],
+                blacklistREs = [/^http(s?):\/\/[A-Za-z0-9](?:[A-Za-z0-9\-]{0,61}[A-Za-z0-9])?\.slack\.com\/(archives|huddle)\//];
+
+            if (electron.app.isPackaged) {
+                // 生产
+                blacklistREs.push(/^http:\/\//);
+            } else {
+                // 本地
+                const domainName = __config.default.domainName.replace(/:.*/, "");
+                whitelistREs.push(new RegExp(`^http://${domainName}`))
+                whitelistREs.push(/^http:\/\/localhost/)
             }
 
-            function v(e) {
-                const {protocol: t, origin: r, href: n, host: o} = e;
-                if (h === o || p.includes(r)) return !0;
-                let i = !1;
-                return f.includes(r) && (i = !0), m.find((e => "https:" === t && r.endsWith(e))) && (i = !0), g.find((e => e.test(n))) && (i = !0), b.find((e => e.test(n))) && (i = !1), a.default.silly(`Navigation to ${n} is ${i ? "allowed" : "disallowed"}`), i
+            function isNavigationAllowed(url) {
+                const {protocol, origin, href, host} = url;
+
+                // host: www.notion.so
+                // allowedOrigins: ['https://www.notion.so', 'https://www.notion.com']
+                if (host === __host || allowedOrigins.includes(origin)) {
+                    return true
+                }
+
+                let isAllowed = false
+                allowedOrigins2.includes(origin) && (isAllowed = true)
+                suffix.find(_ => "https:" === protocol && origin.endsWith(_)) && (isAllowed = true)
+                whitelistREs.find(_ => _.test(href)) && (isAllowed = true)
+                blacklistREs.find(_ => _.test(href)) && (isAllowed = false)
+
+                electron_log.default.silly(`Navigation to ${href} is ${isAllowed ? "allowed" : "disallowed"}`)
+                return isAllowed
             }
 
-            t.isNavigationAllowed = v, t.setupSecurity = function () {
-                const e = o.session.fromPartition(s.electronSessionPartition);
-                e.setPermissionRequestHandler(((e, t, r, n) => {
-                    const o = n.requestingUrl, {protocol: a} = new URL(o);
-                    r(a === c)
-                })), "darwin" === process.platform && e.on("will-download", ((e, t, r) => {
-                    t.once("done", ((e, r) => {
-                        "completed" === r && (0, l.setQuarantine)(t.getSavePath())
-                    }))
-                }))
-            }, o.app.on("web-contents-created", ((e, t) => {
-                t.on("will-navigate", ((e, t, r, n) => {
-                    const a = new URL(t), {protocol: i} = a;
-                    n && !v(a) && (e.preventDefault(), "https:" !== i && "http:" !== i || o.shell.openExternal(t))
-                })), t.on("will-redirect", ((e, t, r, n) => {
-                    const o = new URL(t);
-                    n && !v(o) && e.preventDefault()
-                })), t.on("will-prevent-unload", (e => {
-                    e.preventDefault()
-                }))
-            }))
+            exports.isNavigationAllowed = isNavigationAllowed
+            exports.setupSecurity = function () {
+                // persist:notion
+                const session = electron.session.fromPartition(__session.electronSessionPartition);
+                session.setPermissionRequestHandler((webContents, permission, callback, details) => {
+                    const requestingUrl = details.requestingUrl
+                    const {protocol} = new URL(requestingUrl)
+                    callback(protocol === __protocol)
+                })
+
+                if ("darwin" === process.platform) {
+                    session.on("will-download", (evt, item, webContents) => {
+                        item.once("done", (evt, state) => {
+                            if ("completed" === state) {
+                                l.setQuarantine(item.getSavePath())
+                            }
+                        })
+                    })
+                }
+            }
+
+            electron.app.on("web-contents-created", (evt, webContents) => {
+                webContents.on("will-navigate", (evt, url, isInPlace, isMainFrame) => {
+                    const _url = new URL(url)
+                    const {protocol} = _url;
+                    if (isMainFrame && !isNavigationAllowed(_url)) {
+                        evt.preventDefault()
+
+                        if ("https:" === protocol || "http:" === protocol) {
+                            electron.shell.openExternal(url)
+                        }
+                    }
+                })
+                webContents.on("will-redirect", (evt, url, isInPlace, isMainFrame) => {
+                    const _url = new URL(url);
+                    if (isMainFrame && !isNavigationAllowed(_url)) {
+                        evt.preventDefault()
+                    }
+                })
+                webContents.on("will-prevent-unload", evt => {
+                    evt.preventDefault()
+                })
+            })
         },
 
         // sentry
@@ -5944,83 +6223,160 @@
         },
 
         // session 下载进度展示
-        13387: (e, t, r) => {
+        13387: (module, exports, __webpack_require) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSessionListeners = t.getSession = t.electronSessionPartition = void 0;
-            const n = r(4482), o = r(21852);
-            let a;
-            t.electronSessionPartition = "persist:notion", t.getSession = function () {
-                return a || (a = n.session.fromPartition(t.electronSessionPartition)), a
-            }, t.setupSessionListeners = function () {
-                !function (e) {
-                    const t = new Set;
-                    let r = 0, a = 0, i = 0;
-                    e.addListener("will-download", ((e, s, l) => {
-                        const c = o.appController.getWindowControllerForWebContents(l)?.browserWindow;
-                        t.add(s), i += s.getTotalBytes(), s.on("updated", ((e, n) => {
-                            (() => {
-                                r = a;
-                                for (const e of t) r += e.getReceivedBytes()
-                            })(), c?.setProgressBar(r / i)
-                        })), s.on("done", ((e, o) => {
-                            a += s.getTotalBytes(), t.delete(s), c?.isDestroyed() || 0 !== t.size || (c?.setProgressBar(-1), r = 0, a = 0, i = 0), "completed" === o && "darwin" === process.platform && n.app.dock.downloadFinished(s.getSavePath())
-                        }))
-                    }))
-                }(n.session.fromPartition(t.electronSessionPartition))
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = __webpack_require(4482),
+                __AppController = __webpack_require(21852);
+
+            let _session;
+            exports.electronSessionPartition = "persist:notion"
+            exports.getSession = function () {
+                if (!_session) {
+                    _session = electron.session.fromPartition(exports.electronSessionPartition)
+                }
+                return _session
+            }
+            exports.setupSessionListeners = function () {
+                !function (session) {
+                    const downloadingItems = new Set()
+                    let receivedBytes = 0, downloadedBytes = 0, totalBytes = 0;
+
+                    session.addListener("will-download", (evt, item, webContents) => {
+                        const win = __AppController.appController.getWindowControllerForWebContents(webContents)?.browserWindow;
+                        downloadingItems.add(item)
+                        totalBytes += item.getTotalBytes()
+
+                        item.on("updated", (evt, state) => {
+                            receivedBytes = downloadedBytes
+                            for (const item of downloadingItems) {
+                                receivedBytes += item.getReceivedBytes()
+                            }
+
+                            win?.setProgressBar(receivedBytes / totalBytes)
+                        })
+                        item.on("done", (evt, state) => {
+                            downloadedBytes += item.getTotalBytes()
+                            downloadingItems.delete(item)
+
+                            if (!win?.isDestroyed() && 0 === downloadingItems.size) {
+                                win?.setProgressBar(-1)
+                                receivedBytes = 0
+                                downloadedBytes = 0
+                                totalBytes = 0
+                            }
+
+                            if ("completed" === state && "darwin" === process.platform) {
+                                electron.app.dock.downloadFinished(item.getSavePath())
+                            }
+                        })
+                    })
+                }(electron.session.fromPartition(exports.electronSessionPartition))
             }
         },
 
         // setupSqliteServer
-        34516: function (e, t, r) {
+        34516: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = i(__webpack_require(76982)),
+                __path = i(__webpack_require(16928)),
+                electron = __webpack_require(4482),
+                electron_log = i(__webpack_require(47419)),
+                getPort = i(__webpack_require(51359)),
+                __notionIPC = a(__webpack_require(10454)),
+                sentry = a(__webpack_require(56116));
+
+            let authToken, sqliteProcess, serverProcessPort;
+            const logger = electron_log.default.scope("Sqlite")
+
+            exports.setupSqliteServer = async function () {
+                if (sqliteProcess) {
+                    logger.error("Tried to start SqliteServer but Sqlite child process is already running")
+                } else {
+                    authToken = crypto.default.randomBytes(20).toString("hex")
+
+                    serverProcessPort = await getPort.default({host: "127.0.0.1"})
+                    if (!serverProcessPort) {
+                        throw new Error("No process port assigned.");
                     }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setupSqliteServer = void 0;
-            const s = i(r(76982)), l = i(r(16928)), c = r(4482), u = i(r(47419)), d = i(r(51359)), p = a(r(10454)),
-                h = a(r(56116));
-            let f, m, g;
-            const b = u.default.scope("Sqlite");
-            t.setupSqliteServer = async function () {
-                m ? b.error("Tried to start SqliteServer but Sqlite child process is already running") : (f = s.default.randomBytes(20).toString("hex"), g = await (0, d.default)({host: "127.0.0.1"}), m = function () {
-                    if (!g) throw new Error("No process port assigned.");
-                    const e = c.app.getPath("userData"), t = l.default.join(__dirname, "./SqliteServer.js");
-                    return m = c.utilityProcess.fork(t, [e, g.toString(), f], {
-                        serviceName: "Sqlite Server",
-                        stdio: ["ignore", "pipe", "pipe"]
-                    }), m.on("exit", (e => {
-                        0 !== e && b.warn("Process unexpectedly closed", {code: e})
-                    })), m.stderr?.on("data", (e => {
-                        h.captureMessage(e.toString()), b.info(`stderr: ${e}`)
-                    })), m.stdout?.on("data", (e => {
-                        h.captureMessage(e.toString()), b.info(`stdout: ${e}`)
-                    })), m
-                }(), p.handleRequestFromRenderer.addListener("notion:get-sqlite-meta", (e => {
-                    if (!g) throw new Error("Port not yet assigned, should not be possible.");
-                    return {value: {serverProcessPort: g, authToken: f}}
-                })), c.app.on("before-quit", (() => {
-                    b.info("Killing child process"), m?.kill()
-                })), b.info(`Child process running on ${g}`))
+
+                    // 启动 sqlite
+                    const userDataPath = electron.app.getPath("userData")
+                    const sqliteServerPath = __path.default.join(__dirname, "./SqliteServer.js")
+
+                    sqliteProcess = electron.utilityProcess.fork(
+                        sqliteServerPath,
+                        [userDataPath, serverProcessPort.toString(), authToken],
+                        {
+                            serviceName: "Sqlite Server",
+                            stdio: ["ignore", "pipe", "pipe"]
+                        }
+                    )
+                    sqliteProcess.on("exit", code => {
+                        if (0 !== code) {
+                            logger.warn("Process unexpectedly closed", {code: code})
+                        }
+                    })
+                    sqliteProcess.stderr?.on("data", err => {
+                        sentry.captureMessage(err.toString())
+                        logger.info(`stderr: ${err}`)
+                    })
+                    sqliteProcess.stdout?.on("data", err => {
+                        sentry.captureMessage(err.toString())
+                        logger.info(`stdout: ${err}`)
+                    })
+
+
+                    __notionIPC.handleRequestFromRenderer.addListener("notion:get-sqlite-meta", e => {
+                        if (!serverProcessPort) {
+                            throw new Error("Port not yet assigned, should not be possible.");
+                        }
+                        return {
+                            value: {
+                                serverProcessPort: serverProcessPort,
+                                authToken: authToken,
+                            }
+                        }
+                    })
+                    electron.app.on("before-quit", () => {
+                        logger.info("Killing child process")
+                        sqliteProcess?.kill()
+                    })
+
+                    logger.info(`Child process running on ${serverProcessPort}`)
+                }
             }
         },
 
@@ -7869,22 +8225,38 @@
             }
         },
         // setQuarantine
-        49248: function (e, t, r) {
+        49248: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.setQuarantine = void 0;
-            const o = r(76982), a = r(4482), i = n(r(47419)), s = r(31957);
-            t.setQuarantine = async function (e) {
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = __webpack_require(76982),
+                electron = __webpack_require(4482),
+                electron_log = n(__webpack_require(47419)),
+                child_process = __webpack_require(31957);
+
+            exports.setQuarantine = async function (filepath) {
                 if ("darwin" !== process.platform) return;
-                const t = (0, o.randomUUID)().toUpperCase(),
-                    r = ["-w", "com.apple.quarantine", `0002;${Math.floor(Date.now() / 1e3).toString(16).toLowerCase()};${a.app.name};${t}`, e];
+
+                const uuid = crypto.randomUUID().toUpperCase(),
+                    args = [
+                        "-w",
+                        "com.apple.quarantine",
+                        `0002;${Math.floor(Date.now() / 1e3).toString(16).toLowerCase()};${electron.app.name};${uuid}`,
+                        filepath
+                    ];
                 try {
-                    const {stderr: e} = await (0, s.execFile)("/usr/bin/xattr", r);
-                    e && i.default.warn(`Stderr setting quarantine: ${e}`)
-                } catch (e) {
-                    i.default.warn(`Error setting quarantine: ${e}`)
+                    // xattr -w com.apple.quarantine 0002;663e05aa;Notion;uuid {path}
+                    const {stderr} = await child_process.execFile("/usr/bin/xattr", args);
+                    if (stderr) {
+                        electron_log.default.warn(`Stderr setting quarantine: ${stderr}`)
+                    }
+                } catch (err) {
+                    electron_log.default.warn(`Error setting quarantine: ${err}`)
                 }
             }
         },
@@ -11630,39 +12002,49 @@
                 return void 0 !== r && (o.miscDataString = a(r, t)), o
             }
         },
-        32289: function (e, t, r) {
+        32289: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.normalizeToHttpUrl = t.fixSchemeUrl = t.prependHttpToUrl = t.getHttpUrl = t.getSchemeUrl = t.forceConsistentEndingSlash = void 0;
-            const o = n(r(16857));
 
-            function a(e) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __url = n(__webpack_require(16857));
+
+            function forceConsistentEndingSlash(e) {
                 return e.src.endsWith("/") ? e.dest.endsWith("/") ? e.dest : `${e.dest}/` : e.dest.endsWith("/") ? e.dest.slice(0, e.dest.length - 1) : e.dest
             }
 
-            function i(e) {
-                const t = o.default.parse(e.baseUrl), r = o.default.parse(e.schemeUrl, !0);
+            function getHttpUrl(e) {
+                const t = __url.default.parse(e.baseUrl), r = __url.default.parse(e.schemeUrl, !0);
                 r.protocol = t.protocol, r.port = t.port, r.host = t.host;
-                const n = o.default.format(r);
-                return a({src: e.schemeUrl, dest: n})
+                const n = __url.default.format(r);
+                return forceConsistentEndingSlash({src: e.schemeUrl, dest: n})
             }
 
-            t.forceConsistentEndingSlash = a, t.getSchemeUrl = function (e) {
-                const t = o.default.parse(e.httpUrl, !0);
-                t.protocol = `${e.protocol}:`, t.port = e.includePort ? t.port : null, t.host = null;
-                const r = o.default.format(t);
-                return a({src: e.httpUrl, dest: r})
-            }, t.getHttpUrl = i, t.prependHttpToUrl = function (e) {
+            exports.forceConsistentEndingSlash = forceConsistentEndingSlash
+            exports.getSchemeUrl = function (options) {
+                const t = __url.default.parse(options.httpUrl, true);
+                t.protocol = `${options.protocol}:`
+                t.port = options.includePort ? t.port : null
+                t.host = null;
+                const dest = __url.default.format(t);
+                return forceConsistentEndingSlash({src: options.httpUrl, dest: dest})
+            }
+            exports.getHttpUrl = getHttpUrl
+            exports.prependHttpToUrl = function (e) {
                 const {url: t, isLocalHost: r} = e;
                 return `${r ? "http" : "https"}://${t}`
-            }, t.fixSchemeUrl = function (e) {
+            }
+            exports.fixSchemeUrl = function (e) {
                 if (!e.url.startsWith(`${e.protocol}:`)) return e.url;
-                const t = o.default.parse(e.baseUrl, !0);
-                return o.default.parse(e.url, !0).hostname === t.hostname ? e.url : e.url.replace(`${e.protocol}://*`, `${e.protocol}:/`)
-            }, t.normalizeToHttpUrl = function (e) {
-                return e.url.startsWith(e.protocol) ? i({schemeUrl: e.url, baseUrl: e.domainBaseUrl}) : e.url
+                const t = __url.default.parse(e.baseUrl, !0);
+                return __url.default.parse(e.url, !0).hostname === t.hostname ? e.url : e.url.replace(`${e.protocol}://*`, `${e.protocol}:/`)
+            }
+            exports.normalizeToHttpUrl = function (e) {
+                return e.url.startsWith(e.protocol) ? getHttpUrl({schemeUrl: e.url, baseUrl: e.domainBaseUrl}) : e.url
             }
         },
 
@@ -11953,71 +12335,95 @@
         },
 
         // 辅助函数
-        60411: function (e, t, r) {
+        60411: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.isValidUrl = t.getDomain = t.getAbsoluteUrl = t.getPublicIntegrationAuthUrl = t.getUrlParams = t.getNativeRedirectUrl = t.sluggify = t.getUrlAnalytics = t.tryUrl = t.getWorkspaceDomainFromHostname = t.removeUrlFromString = t.sanitizeUrlStrict = t.sanitizeUrl = t.allowedProtocols = t.getQueryParam = t.addQueryParams = t.removeQueryParam = t.resolve = t.replacePathname = t.setBaseUrl = t.isStrictRelativeUrl = t.isRelativeUrl = t.removeBaseUrl = t.makeUrl = t.format = t.parse = t.inferFilenameFromUrl = void 0;
-            const o = n(r(16857)), a = r(80004), i = r(65076);
 
-            function s(e, t = {}) {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __url = n(__webpack_require(16857)),
+                a = __webpack_require(80004),
+                i = __webpack_require(65076);
+
+            function parse(url, options = {}) {
                 try {
-                    return o.default.parse(e, !0, t.slashesDenoteHost)
+                    return __url.default.parse(url, true, options.slashesDenoteHost)
                 } catch (t) {
                     try {
-                        return {...o.default.parse(e), query: {}}
+                        return {...__url.default.parse(url), query: {}}
                     } catch (e) {
-                        return o.default.parse("", !0)
+                        return __url.default.parse("", true)
                     }
                 }
             }
 
-            function l(e) {
-                return o.default.format(e)
+            function format(url) {
+                return __url.default.format(url)
             }
 
-            function c(e) {
-                const t = s(e.url);
-                return t.search = null, t.query = e.query || {}, t.hash = e.hash || null, l(t)
+            function makeUrl(e) {
+                const url = parse(e.url);
+                url.search = null
+                url.query = e.query || {}
+                url.hash = e.hash || null
+                return format(url)
             }
 
-            function u(e) {
-                const t = s(e.relativeUrl), r = s(e.baseUrl);
-                return t.protocol = r.protocol, t.host = r.host, t.hostname = r.hostname, l(t)
+            function setBaseUrl(e) {
+                const t = parse(e.relativeUrl), r = parse(e.baseUrl);
+                return t.protocol = r.protocol, t.host = r.host, t.hostname = r.hostname, format(t)
             }
 
-            function d(e) {
-                const t = s(e.url);
-                return t.path = null, t.pathname = e.pathname, l(t)
+            function replacePathname(e) {
+                const t = parse(e.url);
+                return t.path = null, t.pathname = e.pathname, format(t)
             }
 
-            t.inferFilenameFromUrl = function (e) {
+            exports.inferFilenameFromUrl = function (e) {
                 try {
                     e = decodeURI(e)
                 } catch (e) {
                     if (!(e instanceof URIError)) throw e
                 }
                 return e.substring(e.lastIndexOf("/") + 1)
-            }, t.parse = s, t.format = l, t.makeUrl = c, t.removeBaseUrl = function (e) {
-                const t = s(e);
-                return t.protocol = null, t.host = null, t.hostname = null, t.slashes = !1, l(t)
-            }, t.isRelativeUrl = function (e) {
-                const t = s(e);
+            }
+            exports.parse = parse
+            exports.format = format
+            exports.makeUrl = makeUrl
+            exports.removeBaseUrl = function (url) {
+                const parsedURL = parse(url);
+                parsedURL.protocol = null
+                parsedURL.host = null
+                parsedURL.hostname = null
+                parsedURL.slashes = false
+                return format(parsedURL)
+            }
+            exports.isRelativeUrl = function (e) {
+                const t = parse(e);
                 return Boolean(!t.host && !t.hostname)
-            }, t.isStrictRelativeUrl = function (e) {
-                const t = s(e);
-                return Boolean(!t.host && !t.hostname && !t.protocol)
-            }, t.setBaseUrl = u, t.replacePathname = d, t.resolve = function (e, t) {
-                return d({url: e, pathname: t})
-            }, t.removeQueryParam = function (e, t) {
-                const r = s(e);
-                return r.search = null, delete r.query[t], l(r)
-            }, t.addQueryParams = function (e, t) {
-                const r = s(e);
-                return r.search = null, r.query = {...r.query, ...t}, l(r)
-            }, t.getQueryParam = function (e, t) {
-                return s(e).query[t]
+            }
+            exports.isStrictRelativeUrl = function (url) {
+                const parsedURL = parse(url);
+                return Boolean(!parsedURL.host && !parsedURL.hostname && !parsedURL.protocol)
+            }
+            exports.setBaseUrl = setBaseUrl
+            exports.replacePathname = replacePathname
+            exports.resolve = function (e, t) {
+                return replacePathname({url: e, pathname: t})
+            }
+            exports.removeQueryParam = function (e, t) {
+                const r = parse(e);
+                return r.search = null, delete r.query[t], format(r)
+            }
+            exports.addQueryParams = function (e, t) {
+                const r = parse(e);
+                return r.search = null, r.query = {...r.query, ...t}, format(r)
+            }
+            exports.getQueryParam = function (e, t) {
+                return parse(e).query[t]
             };
             const p = {
                 "thumpmagical.top": !0,
@@ -12034,16 +12440,16 @@
                 "clangchapshop.xyz": !0
             };
 
-            function h(e) {
+            function sanitizeUrlStrict(e) {
                 if (e) try {
                     const r = new URL(e);
                     if (p[r.host]) return;
-                    if (t.allowedProtocols.includes(r.protocol)) return r.href
+                    if (exports.allowedProtocols.includes(r.protocol)) return r.href
                 } catch {
                 }
             }
 
-            function f(e) {
+            function tryUrl(e) {
                 try {
                     return new URL(e)
                 } catch {
@@ -12051,12 +12457,13 @@
                 }
             }
 
-            t.allowedProtocols = ["http:", "https:", "mailto:", "itms-apps:", "tel:", "cron:", "x-apple.systempreferences:"], t.sanitizeUrl = function (e) {
+            exports.allowedProtocols = ["http:", "https:", "mailto:", "itms-apps:", "tel:", "cron:", "x-apple.systempreferences:"]
+            exports.sanitizeUrl = function (e) {
                 const {str: r, allowNoProtocol: n} = e;
                 if (r && "string" == typeof r) try {
-                    const e = s(r);
+                    const e = parse(r);
                     if (e.host && p[e.host]) return;
-                    if (e.protocol && e.host) return h(r);
+                    if (e.protocol && e.host) return sanitizeUrlStrict(r);
                     if (!e.protocol) {
                         try {
                             const {host: e} = new URL(`stub:${r}`);
@@ -12069,18 +12476,24 @@
                         } catch {
                         }
                     }
-                    if (e.protocol && t.allowedProtocols.includes(e.protocol) || n && !e.protocol) return r
+                    if (e.protocol && exports.allowedProtocols.includes(e.protocol) || n && !e.protocol) return r
                 } catch (e) {
                     return
                 }
-            }, t.sanitizeUrlStrict = h, t.removeUrlFromString = function (e) {
+            }
+            exports.sanitizeUrlStrict = sanitizeUrlStrict
+            exports.removeUrlFromString = function (e) {
                 return (e || "").replace(/(?:https?|ftp):\/\/[\n\S]+/g, "")
-            }, t.getWorkspaceDomainFromHostname = function ({publicDomainName: e}, t) {
+            }
+            exports.getWorkspaceDomainFromHostname = function ({publicDomainName: e}, t) {
                 if (!e || !t) return;
                 const r = Array.from(new Set([e, e.split(":")[0]]).values());
                 for (const e of r) if (t.endsWith(`.${e}`)) return t.substring(0, t.length - e.length - 1)
-            }, t.tryUrl = f;
-            const m = "none", g = {utm_source: m, utm_medium: m, utm_campaign: m, utm_term: m, utm_content: m},
+            }
+            exports.tryUrl = tryUrl
+
+            const m = "none",
+                g = {utm_source: m, utm_medium: m, utm_campaign: m, utm_term: m, utm_content: m},
                 b = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid", "gclid", "device", "targetid", "criterionid", "previous_path", "ps_partner_key", "ps_xid", "trial_source"];
 
             function v(e) {
@@ -12090,8 +12503,8 @@
                 })), t
             }
 
-            t.getUrlAnalytics = function (e, t) {
-                const r = f(e);
+            exports.getUrlAnalytics = function (e, t) {
+                const r = tryUrl(e);
                 if (!r) return;
                 const {searchParams: n} = r, o = {...v(n), pathname: r.pathname, query: r.search}, s = {...g, ...t},
                     l = {...o};
@@ -12099,30 +12512,40 @@
                     const t = s[e];
                     (0, a.isDefined)(l[e]) || (0, i.isNotDefined)(t) || (l[e] = t)
                 })), l
-            }, t.sluggify = function (e) {
+            }
+            exports.sluggify = function (e) {
                 e = e.trim().toLowerCase();
                 for (var t = 0; t < 28; t++) e = e.replace(new RegExp("àáäâèéëêìíïîòóöôùúüûñç·/_,:;".charAt(t), "g"), "aaaaeeeeiiiioooouuuunc------".charAt(t));
                 return e.replace(/[<>:"/\\|?*\x00-\x1F]| +$/g, "").replace(/\s+/g, "-").replace(/-+/g, "-")
-            }, t.getNativeRedirectUrl = function (e) {
-                const t = s(e);
+            }
+            exports.getNativeRedirectUrl = function (e) {
+                const t = parse(e);
                 if (t.pathname?.startsWith("/native")) throw new Error("Already on native redirect URL");
-                return t.pathname = `/native${t.pathname}`, l(t)
-            }, t.getUrlParams = function (e) {
-                const t = f(e);
+                return t.pathname = `/native${t.pathname}`, format(t)
+            }
+            exports.getUrlParams = function (e) {
+                const t = tryUrl(e);
                 if (t) return t.searchParams
-            }, t.getPublicIntegrationAuthUrl = function (e) {
+            }
+            exports.getPublicIntegrationAuthUrl = function (e) {
                 const {baseUrl: t, clientId: r, redirectUri: n, state: o} = e,
                     a = {client_id: r, response_type: "code", owner: "user", redirect_uri: n};
-                return o && (a.state = o), c({url: u({baseUrl: t, relativeUrl: "/v1/oauth/authorize"}), query: a})
-            }, t.getAbsoluteUrl = function (e = "", t = "") {
+                return o && (a.state = o), makeUrl({
+                    url: setBaseUrl({baseUrl: t, relativeUrl: "/v1/oauth/authorize"}),
+                    query: a
+                })
+            }
+            exports.getAbsoluteUrl = function (e = "", t = "") {
                 try {
                     return new URL(t, e).toString()
                 } catch (e) {
                     return ""
                 }
-            }, t.getDomain = function (e) {
+            }
+            exports.getDomain = function (e) {
                 return new URL(e).host.replace("www.", "")
-            }, t.isValidUrl = function (e = "") {
+            }
+            exports.isValidUrl = function (e = "") {
                 try {
                     const t = new URL(e);
                     return null !== t && t.protocol.startsWith("http")
@@ -33985,53 +34408,78 @@
                 }
             }
         },
-        51359: (e, t, r) => {
-            "use strict";
-            const n = r(69278);
 
-            class o extends Error {
-                constructor(e) {
-                    super(`${e} is locked`)
+        // get-port
+        51359: (module, exports, __webpack_require) => {
+            "use strict";
+            const net = __webpack_require(69278);
+
+            class Locked extends Error {
+                constructor(port) {
+                    super(`${port} is locked`)
                 }
             }
 
-            const a = {old: new Set, young: new Set};
-            let i;
-            const s = e => new Promise(((t, r) => {
-                const o = n.createServer();
-                o.unref(), o.on("error", r), o.listen(e, (() => {
-                    const {port: e} = o.address();
-                    o.close((() => {
-                        t(e)
-                    }))
-                }))
-            }));
-            e.exports = async e => {
-                let t;
-                e && (t = "number" == typeof e.port ? [e.port] : e.port), void 0 === i && (i = setInterval((() => {
-                    a.old = a.young, a.young = new Set
-                }), 15e3), i.unref && i.unref());
+            const lockedPorts = {
+                old: new Set,
+                young: new Set
+            };
+
+            // Lazily create interval on first use
+            let interval;
+            const getAvailablePort = options => new Promise((resolve, reject) => {
+                const server = net.createServer();
+                server.unref()
+                server.on("error", reject)
+                server.listen(options, () => {
+                    const {port} = server.address();
+                    server.close(() => {
+                        resolve(port)
+                    })
+                })
+            });
+
+            module.exports = async options => {
+                let ports
+
+                if (options) {
+                    ports = "number" == typeof options.port ? [options.port] : options.port
+                }
+
+                if (void 0 === interval) {
+                    interval = setInterval(() => {
+                        lockedPorts.old = lockedPorts.young
+                        lockedPorts.young = new Set
+                    }, 15_000)
+
+                    interval.unref && interval.unref()
+                }
+
                 for (const r of function* (e) {
                     e && (yield* e), yield 0
-                }(t)) try {
-                    let t = await s({...e, port: r});
-                    for (; a.old.has(t) || a.young.has(t);) {
-                        if (0 !== r) throw new o(r);
-                        t = await s({...e, port: r})
+                }(ports)) {
+                    try {
+                        let t = await getAvailablePort({...options, port: r});
+                        for (; lockedPorts.old.has(t) || lockedPorts.young.has(t);) {
+                            if (0 !== r) throw new Locked(r);
+                            t = await getAvailablePort({...options, port: r})
+                        }
+                        return lockedPorts.young.add(t), t
+                    } catch (e) {
+                        if (!(["EADDRINUSE", "EACCES"].includes(e.code) || e instanceof Locked)) throw e
                     }
-                    return a.young.add(t), t
-                } catch (e) {
-                    if (!(["EADDRINUSE", "EACCES"].includes(e.code) || e instanceof o)) throw e
                 }
+
                 throw new Error("No available ports found")
-            }, e.exports.makeRange = (e, t) => {
-                if (!Number.isInteger(e) || !Number.isInteger(t)) throw new TypeError("`from` and `to` must be integer numbers");
-                if (e < 1024 || e > 65535) throw new RangeError("`from` must be between 1024 and 65535");
-                if (t < 1024 || t > 65536) throw new RangeError("`to` must be between 1024 and 65536");
-                if (t < e) throw new RangeError("`to` must be greater than or equal to `from`");
+            }
+            module.exports.makeRange = (from, to) => {
+                if (!Number.isInteger(from) || !Number.isInteger(to)) throw new TypeError("`from` and `to` must be integer numbers");
+                if (from < 1024 || from > 65535) throw new RangeError("`from` must be between 1024 and 65535");
+                if (to < 1024 || to > 65536) throw new RangeError("`to` must be between 1024 and 65536");
+                if (to < from) throw new RangeError("`to` must be greater than or equal to `from`");
                 return function* (e, t) {
                     for (let r = e; r <= t; r++) yield r
-                }(e, t)
+                }(from, to)
             }
         },
         88529: e => {
