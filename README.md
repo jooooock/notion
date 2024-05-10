@@ -10,6 +10,10 @@
 
 11239: config
 68272: config
+60522: TabBarSize 常量
+27683: TabColors/ElectronColors 常量
+52869: 主题颜色相关
+50019: getElectronTheme 函数
 
 21852: AppController
 26760: QuickSearchController
@@ -59,7 +63,7 @@
 77514: handleNotionProtocol
 
 83789: getDebugMenu
-27683: TabColors
+
 
 69340: redux store
 73553: app slice

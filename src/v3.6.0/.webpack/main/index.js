@@ -1188,13 +1188,14 @@
                     })
                 }
 
-                refreshAll(e) {
+                refreshAll(includeActiveTab) {
                     const focusedWindow = electron.BrowserWindow.getFocusedWindow();
-                    if (e || !focusedWindow) {
+                    if (includeActiveTab || !focusedWindow) {
                         this.windowControllers.forEach(controller => controller.refresh({includeActiveTab: true}))
                         this.quickSearchController?.reload()
                         return
                     }
+
                     this.windowControllers.forEach(controller => {
                         controller.refresh({
                             includeActiveTab: controller.browserWindow.id !== focusedWindow.id
@@ -1255,22 +1256,23 @@
                     }
                 }
 
-                handleAppRestorationStateChange(e) {
-                    if (lodash.isEmpty(e.windows)) return;
-                    const t = Object.values(e.windows).map(t => ({
-                        windowId: t.windowId,
-                        focusOrder: t.focusOrder,
-                        displayState: t.displayState,
-                        tabs: t.tabs.map(((r, n) => {
-                            const o = e.tabs[r.tabId];
+                handleAppRestorationStateChange(restorationState) {
+                    if (lodash.isEmpty(restorationState.windows)) return;
+
+                    const t = Object.values(restorationState.windows).map(windowState => ({
+                        windowId: windowState.windowId,
+                        focusOrder: windowState.focusOrder,
+                        displayState: windowState.displayState,
+                        tabs: windowState.tabs.map((tab, idx) => {
+                            const o = restorationState.tabs[tab.tabId];
                             return {
-                                tabId: r.tabId,
+                                tabId: tab.tabId,
                                 url: o.url,
-                                parentTabId: r.parentTabId,
-                                index: n,
-                                isActive: t.activeTabId === r.tabId
+                                parentTabId: tab.parentTabId,
+                                index: idx,
+                                isActive: windowState.activeTabId === tab.tabId
                             }
-                        }))
+                        })
                     }))
                     __store.Store.dispatch(__historySlice.setAppRestorationState(t))
                 }
@@ -1290,23 +1292,49 @@
                     electron.app.quit()
                 }
 
-                handleWindowClose(e, t) {
-                    const r = 1 === this.windowControllers.length, n = this.isQuitting,
-                        o = __store.Store.getState().app.preferences, a = !1 === o.isHideLastWindowOnCloseEnabled,
-                        i = !1 === o.isQuickSearchEnabled;
-                    return electron_log.default.debug("Window close", {
+                handleWindowClose(evt, browserWindow) {
+                    const r = 1 === this.windowControllers.length,
+                        quitting = this.isQuitting,
+                        preferences = __store.Store.getState().app.preferences,
+                        isHideDisabled = false === preferences.isHideLastWindowOnCloseEnabled,
+                        i = false === preferences.isQuickSearchEnabled;
+
+                    electron_log.default.debug("Window close", {
                         lastWindow: r,
-                        isQuitting: n,
-                        isHideDisabled: a
-                    }), !(r && !n && !a || (this.windowControllers = this.windowControllers.filter((e => e.browserWindow !== t)), this.mostRecentlyFocusedWindowController?.browserWindow.id === t.id && (this.mostRecentlyFocusedWindowController = void 0), "win32" === process.platform && 0 === this.windowControllers.length && i && !n && electron.app.quit(), 0))
+                        isQuitting: quitting,
+                        isHideDisabled: isHideDisabled
+                    })
+                    if (!r || quitting) {
+                        return true
+                    }
+                    if (!isHideDisabled) {
+                        return false
+                    }
+
+                    this.windowControllers = this.windowControllers.filter(e => e.browserWindow !== browserWindow)
+                    if (this.mostRecentlyFocusedWindowController?.browserWindow.id === browserWindow.id) {
+                        this.mostRecentlyFocusedWindowController = void 0
+                    }
+                    if ("win32" === process.platform && 0 === this.windowControllers.length && i && !quitting) {
+                        electron.app.quit()
+                    }
+                    return true
                 }
 
-                getWindowAndTabControllerWithEquivalentURL(e) {
+                getWindowAndTabControllerWithEquivalentURL(url) {
                     const t = this.getMostRecentlyFocusedWindowController(),
-                        r = lodash.compact([t, ...this.windowControllers.filter((e => e !== t))]);
-                    for (const t of r) {
-                        const r = t.getTabControllerWithEquivalentUrl(e);
-                        if (r) return {windowController: t, tabController: r}
+                        r = lodash.compact([
+                            t,
+                            ...this.windowControllers.filter(e => e !== t)
+                        ]);
+                    for (const windowController of r) {
+                        const tabController = windowController.getTabControllerWithEquivalentUrl(url);
+                        if (tabController) {
+                            return {
+                                windowController: windowController,
+                                tabController: tabController
+                            }
+                        }
                     }
                 }
 
@@ -1645,8 +1673,6 @@
                 }
 
                 constructor(options) {
-                    debugger
-
                     this.tabBarOffset = 0
                     this.animating = false
                     this.tabId = options.id
@@ -1851,9 +1877,12 @@
 
                 bringToFront() {
                     this.parentWindow?.setTopBrowserView(this.notion)
-                    w.tabSearchingStateSelector(__store.Store.getState(), this.tabId)?.isSearching
-                        ? (this.parentWindow?.setTopBrowserView(this.search), this.search.webContents.focus())
-                        : this.notion.webContents.focus()
+                    if (w.tabSearchingStateSelector(__store.Store.getState(), this.tabId)?.isSearching) {
+                        this.parentWindow?.setTopBrowserView(this.search)
+                        this.search.webContents.focus()
+                    } else {
+                        this.notion.webContents.focus()
+                    }
                 }
 
                 focus() {
@@ -2019,18 +2048,20 @@
                     return file === targetFile && o === a
                 }
 
-                openSettings(e) {
-                    this.sendToNotion("notion:open-settings", e)
+                openSettings(key) {
+                    this.sendToNotion("notion:open-settings", key)
                 }
 
-                broadcast(e) {
-                    this.sendToNotion("notion:broadcast", e)
+                broadcast(payload) {
+                    this.sendToNotion("notion:broadcast", payload)
                 }
 
                 refreshForWindowsMenuBarSpacing() {
                 }
 
                 setSidebarOpenInNotion(e) {
+                    debugger
+
                     this.sendToNotion("notion:set-sidebar-open", e)
                 }
 
@@ -2058,8 +2089,8 @@
                 }
 
                 setSpellcheckerLanguages(e) {
-                    const t = this.notion.webContents.session;
-                    t.setSpellCheckerLanguages(e.filter((e => t.availableSpellCheckerLanguages.includes(e))))
+                    const session = this.notion.webContents.session;
+                    session.setSpellCheckerLanguages(e.filter(e => session.availableSpellCheckerLanguages.includes(e)))
                 }
 
                 getSpellcheckerLanguages() {
@@ -2074,66 +2105,79 @@
                     this.notion.webContents.replaceMisspelling(e)
                 }
 
-                addToDictionary(e) {
-                    this.notion.webContents.session.addWordToSpellCheckerDictionary(e)
+                addToDictionary(word) {
+                    this.notion.webContents.session.addWordToSpellCheckerDictionary(word)
                 }
 
-                handleAppCommandNavigation(e, t) {
-                    "browser-backward" === t && this.notion.webContents.canGoBack()
-                        ? this.notion.webContents.goBack()
-                        : "browser-forward" === t && this.notion.webContents.canGoForward() && this.notion.webContents.goForward()
+                handleAppCommandNavigation(evt, command) {
+                    if ("browser-backward" === command && this.notion.webContents.canGoBack()) {
+                        this.notion.webContents.goBack()
+                    } else if ("browser-forward" === command && this.notion.webContents.canGoForward()) {
+                        this.notion.webContents.goForward()
+                    }
                 }
 
-                handleSwipeNavigation(e, t) {
-                    "left" === t && this.notion.webContents.canGoBack()
-                        ? this.notion.webContents.goBack()
-                        : "right" === t && this.notion.webContents.canGoForward() && this.notion.webContents.goForward()
+                handleSwipeNavigation(evt, direction) {
+                    if ("left" === direction && this.notion.webContents.canGoBack()) {
+                        this.notion.webContents.goBack()
+                    } else if ("right" === direction && this.notion.webContents.canGoForward()) {
+                        this.notion.webContents.goForward()
+                    }
                 }
 
                 handleFullscreenEvent() {
                     this.sendToNotion("notion:full-screen-changed")
                 }
 
-                handleFoundInPage(e, t) {
-                    const r = t ? {count: t.matches, index: t.activeMatchOrdinal} : {count: 0, index: 0};
-                    this.sendToSearch("search:result", r)
+                handleFoundInPage(evt, result) {
+                    const payload = result
+                        ? {count: result.matches, index: result.activeMatchOrdinal}
+                        : {count: 0, index: 0};
+                    this.sendToSearch("search:result", payload)
                 }
 
-                handleContextMenu(e, t) {
-                    e.preventDefault()
-                    this.sendToNotion("notion:context-menu", t)
+                handleContextMenu(evt, params) {
+                    evt.preventDefault()
+                    this.sendToNotion("notion:context-menu", params)
                 }
 
                 setPageTitle(title) {
                     __store.Store.dispatch(__tabSlice.updateTabTitle({tabId: this.tabId, title: title}))
                 }
 
-                handlePageFaviconUpdated(e, t) {
+                handlePageFaviconUpdated(evt, favicons) {
                     let favicon;
-                    if (0 !== t.length) {
-                        favicon = t[0]
-                        if (favicon.endsWith("favicon-local.ico") || favicon.endsWith("favicon-dev.ico") || favicon.endsWith("favicon-stg.ico") || favicon.endsWith("favicon.ico")) {
+                    if (0 !== favicons.length) {
+                        favicon = favicons[0]
+                        if (
+                            favicon.endsWith("favicon-local.ico") ||
+                            favicon.endsWith("favicon-dev.ico") ||
+                            favicon.endsWith("favicon-stg.ico") ||
+                            favicon.endsWith("favicon.ico")
+                        ) {
                             favicon = void 0
                         }
                     }
-                    const n = __store.Store.getState().tabs[this.tabId];
-                    n?.favicon !== favicon && __store.Store.dispatch(__tabSlice.updatePageHistoryFaviconMap({
-                        tabId: this.tabId,
-                        favicon: favicon,
-                        url: n.url
-                    }))
+                    const tabState = __store.Store.getState().tabs[this.tabId];
+                    if (tabState?.favicon !== favicon) {
+                        __store.Store.dispatch(__tabSlice.updatePageHistoryFaviconMap({
+                            tabId: this.tabId,
+                            favicon: favicon,
+                            url: tabState.url
+                        }))
+                    }
                 }
 
-                executeJavaScript(e) {
-                    return this.notion.webContents.executeJavaScript(e, !0)
+                executeJavaScript(code) {
+                    return this.notion.webContents.executeJavaScript(code, true)
                 }
 
-                sendToNotion(e, ...t) {
-                    this.notion.webContents && this.notion.webContents.send(e, ...t)
+                sendToNotion(channel, ...args) {
+                    this.notion.webContents && this.notion.webContents.send(channel, ...args)
                 }
 
-                sendToSearch(e, ...t) {
-                    this.search.webContents.send(e, ...t)
+                sendToSearch(channel, ...args) {
+                    this.search.webContents.send(channel, ...args)
                 }
 
                 toggleDevTools() {
@@ -2155,32 +2199,43 @@
                     ]
                 }
 
-                subscribeToSelector(e, t) {
-                    const r = __store.subscribeToSelector(e, t);
-                    this.unsubscribeFunctions.push(r)
+                subscribeToSelector(selector, callback) {
+                    const unsubscribe = __store.subscribeToSelector(selector, callback);
+                    this.unsubscribeFunctions.push(unsubscribe)
                 }
 
                 unsubscribeAll() {
-                    this.unsubscribeFunctions.forEach(e => e())
+                    this.unsubscribeFunctions.forEach(fn => fn())
                     this.unsubscribeFunctions = []
                 }
 
-                startTabBarAnimation(e, t) {
-                    let r = Date.now();
-                    const n = new d.default;
-                    n.currentValue = e
-                    n.endValue = t
-                    this.animating = !0;
-                    const o = __store.Store.getState(),
-                        a = this.parentWindow?.getBounds();
-                    let i;
-                    const s = () => {
-                        const e = Date.now(), l = e - r;
-                        r = e, n.step(l), this.tabBarOffset = Math.ceil(n.currentValue), n.isAtRest() ? (this.animating = !1, this.tabBarOffset = t) : (clearTimeout(i), i = setTimeout(s));
-                        const c = (0, __selector.boundsSelector)(o, this.tabId, a, this.tabBarOffset);
+                startTabBarAnimation(start, end) {
+                    let now = Date.now()
+                    const n = new d.default
+                    n.currentValue = start
+                    n.endValue = end
+                    this.animating = true
+                    const rootState = __store.Store.getState(),
+                        bounds = this.parentWindow?.getBounds();
+
+                    let timer;
+                    const tick = () => {
+                        const now1 = Date.now()
+                        const duration = now1 - now
+                        now = now1
+                        n.step(duration)
+                        this.tabBarOffset = Math.ceil(n.currentValue)
+                        if (n.isAtRest()) {
+                            this.animating = false
+                            this.tabBarOffset = end
+                        } else {
+                            clearTimeout(timer)
+                            timer = setTimeout(tick)
+                        }
+                        const c = __selector.boundsSelector(rootState, this.tabId, bounds, this.tabBarOffset)
                         this.updateBounds(c)
-                    };
-                    i = setTimeout(s, 50)
+                    }
+                    timer = setTimeout(tick, 50)
                 }
 
                 updateBackgroundColor(bgColor) {
@@ -2190,9 +2245,14 @@
 
                 updateSearchState({searchingState, searchBounds}) {
                     if (this.parentWindow) {
-                        searchingState?.isSearching
-                            ? (electron.BrowserWindow.fromBrowserView(this.search) || this.parentWindow.addBrowserView(this.search), this.search.setBounds(searchBounds))
-                            : electron.BrowserWindow.fromBrowserView(this.search) === this.parentWindow && this.parentWindow.removeBrowserView(this.search)
+                        if (searchingState?.isSearching) {
+                            if (!electron.BrowserWindow.fromBrowserView(this.search)) {
+                                this.parentWindow.addBrowserView(this.search)
+                            }
+                            this.search.setBounds(searchBounds)
+                        } else if (electron.BrowserWindow.fromBrowserView(this.search) === this.parentWindow) {
+                            this.parentWindow.removeBrowserView(this.search)
+                        }
                     }
                 }
 
@@ -2204,9 +2264,13 @@
                     }
                 }
 
-                updateTabBarOffset(e) {
-                    electron_log.default.debug(`Calling updateTabBarOffset() ${e}`)
-                    this.animating || this.tabBarOffset === e || ((0, _.isActiveTabSelector)(__store.Store.getState(), this.tabId) ? this.startTabBarAnimation(this.tabBarOffset, e) : this.tabBarOffset = e)
+                updateTabBarOffset(offset) {
+                    electron_log.default.debug(`Calling updateTabBarOffset() ${offset}`)
+                    if (!this.animating && this.tabBarOffset !== offset) {
+                        _.isActiveTabSelector(__store.Store.getState(), this.tabId)
+                            ? this.startTabBarAnimation(this.tabBarOffset, offset)
+                            : this.tabBarOffset = offset
+                    }
                 }
 
                 updateSearchTheme(searchTheme) {
@@ -2681,7 +2745,7 @@
                     defaultMessage: "Close Tabs to the Right",
                     description: "Right-click menu item to close tabs to the right of the current one"
                 }
-            });
+            })
 
             class WindowController {
                 static newInstanceWithUrl(options) {
@@ -2716,121 +2780,137 @@
                                 initialTabController,
                                 initialParentTabId,
                                 displayState,
-                                showWhenLoaded: a = true
+                                showWhenLoaded = true
                             }) {
                     this.tabControllers = []
                     this.tabStateUnsubscribe = void 0
                     this.windowId = windowId
-                    this.intl = intl;
+                    this.intl = intl
 
-                    const i = WindowController.getDesiredWindowDisplayState(displayState),
-                        appState = __store.Store.getState().app,
-                        mode = appState.theme.mode,
-                        {isVibrancyEnabled} = appState.preferences,
-                        g = "win32" === process.platform ? {
+                    const desiredDisplayState = WindowController.getDesiredWindowDisplayState(displayState)
+                    const appState = __store.Store.getState().app
+                    const mode = appState.theme.mode
+                    const {isVibrancyEnabled} = appState.preferences
+                    const g = "win32" === process.platform
+                        ? {
                             titleBarStyle: "hidden",
                             titleBarOverlay: {
-                                height: (this.hasMultipleTabs() ? __tabBarSize.TAB_BAR_HEIGHT_PX : (0, c.getTopbarHeight)(!1)) * appState.zoomFactor,
+                                height: (this.hasMultipleTabs() ? __tabBarSize.TAB_BAR_HEIGHT_PX : c.getTopbarHeight(false)) * appState.zoomFactor,
                                 color: __TabColors.electronColors.titleBarOverlayBackground[mode],
                                 symbolColor: __TabColors.electronColors.enabledButtonColor[mode]
                             }
-                        } : {titleBarStyle: "hiddenInset"},
-                        b = {
-                            ...i.normalBounds,
-                            ...g,
-                            show: !1,
-                            trafficLightPosition: m.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS,
-                            autoHideMenuBar: !0,
-                            minWidth: 640,
-                            minHeight: 480,
-                            transparent: !!isVibrancyEnabled,
-                            vibrancy: isVibrancyEnabled ? "sidebar" : void 0,
-                            backgroundColor: isVibrancyEnabled ? "#00000000" : __TabColors.electronColors.notionBackground[mode]
-                        };
+                        }
+                        : {titleBarStyle: "hiddenInset"}
 
-                    this.browserWindow = new electron.BrowserWindow(b)
-                    i.isFullScreen && a && this.browserWindow.setFullScreen(!0)
-                    i.isMaximized && this.browserWindow.maximize()
-                    this.browserWindow.addListener("app-command", ((e, t) => this.handleAppCommandNavigation(e, t)))
-                    this.browserWindow.addListener("swipe", ((e, t) => this.handleSwipeNavigation(e, t)))
-                    this.browserWindow.addListener("enter-full-screen", (() => {
-                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
+                    this.browserWindow = new electron.BrowserWindow({
+                        ...desiredDisplayState.normalBounds,
+                        ...g,
+                        show: false,
+                        trafficLightPosition: m.DEFAULT_TRAFFIC_LIGHT_POSITION_WITH_TABS,
+                        autoHideMenuBar: true,
+                        minWidth: 640,
+                        minHeight: 480,
+                        transparent: !!isVibrancyEnabled,
+                        vibrancy: isVibrancyEnabled ? "sidebar" : void 0,
+                        backgroundColor: isVibrancyEnabled ? "#00000000" : __TabColors.electronColors.notionBackground[mode]
+                    })
+
+                    if (desiredDisplayState.isFullScreen && showWhenLoaded) {
+                        this.browserWindow.setFullScreen(true)
+                    }
+                    if (desiredDisplayState.isMaximized) {
+                        this.browserWindow.maximize()
+                    }
+
+                    this.browserWindow.addListener("app-command", (evt, command) => this.handleAppCommandNavigation(evt, command))
+                    this.browserWindow.addListener("swipe", (evt, direction) => this.handleSwipeNavigation(evt, direction))
+                    this.browserWindow.addListener("enter-full-screen", () => {
+                        __store.Store.dispatch(__windowSlice.updateDisplayState({
                             windowId: this.windowId,
-                            update: {isFullScreen: !0}
-                        })), this.handleFullscreenEvent()
-                    }))
-                    this.browserWindow.addListener("leave-full-screen", (() => {
-                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
+                            update: {isFullScreen: true}
+                        }))
+                        this.handleFullscreenEvent()
+                    })
+                    this.browserWindow.addListener("leave-full-screen", () => {
+                        __store.Store.dispatch(__windowSlice.updateDisplayState({
                             windowId: this.windowId,
-                            update: {isFullScreen: !1}
-                        })), this.handleFullscreenEvent()
-                    }))
-                    this.browserWindow.addListener("enter-html-full-screen", (() => {
-                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
+                            update: {isFullScreen: false}
+                        }))
+                        this.handleFullscreenEvent()
+                    })
+                    this.browserWindow.addListener("enter-html-full-screen", () => {
+                        __store.Store.dispatch(__windowSlice.updateDisplayState({
                             windowId: this.windowId,
-                            update: {isHtmlFullScreen: !0}
-                        })), this.handleFullscreenEvent()
-                    }))
-                    this.browserWindow.addListener("leave-html-full-screen", (() => {
-                        __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
+                            update: {isHtmlFullScreen: true}
+                        }))
+                        this.handleFullscreenEvent()
+                    })
+                    this.browserWindow.addListener("leave-html-full-screen", () => {
+                        __store.Store.dispatch(__windowSlice.updateDisplayState({
                             windowId: this.windowId,
-                            update: {isHtmlFullScreen: !1}
-                        })), this.handleFullscreenEvent()
-                    }))
-                    this.browserWindow.addListener("focus", (() => this.handleFocus()))
-                    this.browserWindow.addListener("move", (() => this.handleMove()))
-                    this.browserWindow.addListener("resize", (() => this.handleResize()))
-                    this.browserWindow.on("close", (e => this.handleClose(e)))
+                            update: {isHtmlFullScreen: false}
+                        }))
+                        this.handleFullscreenEvent()
+                    })
+                    this.browserWindow.addListener("focus", () => this.handleFocus())
+                    this.browserWindow.addListener("move", () => this.handleMove())
+                    this.browserWindow.addListener("resize", () => this.handleResize())
+                    this.browserWindow.on("close", evt => this.handleClose(evt))
+
                     this.tabBar = new electron.BrowserView({
                         webPreferences: {
-                            spellcheck: !1,
-                            sandbox: !0,
-                            contextIsolation: !0,
+                            spellcheck: false,
+                            sandbox: true,
+                            contextIsolation: true,
                             preload: require("path").resolve(__dirname, "../renderer", "tabs", "preload.js")
                         }
                     })
 
                     if ("darwin" === process.platform) {
-                        const e = Boolean(appState.preferences.isNewSidebarToggleEnabled),
-                            t = Math.ceil(__tabBarSize.TAB_BAR_HEIGHT_PX * appState.zoomFactor),
-                            r = Math.ceil(c.getTopbarHeight(false, e) * appState.zoomFactor);
-                        this.browserWindow.setWindowButtonPosition(m.getTrafficLightPosition(this.hasMultipleTabs() ? t : r, appState.zoomFactor))
+                        const isNewSidebarToggleEnabled = Boolean(appState.preferences.isNewSidebarToggleEnabled),
+                            tabBarHeight = Math.ceil(__tabBarSize.TAB_BAR_HEIGHT_PX * appState.zoomFactor),
+                            r = Math.ceil(c.getTopbarHeight(false, isNewSidebarToggleEnabled) * appState.zoomFactor);
+                        this.browserWindow.setWindowButtonPosition(m.getTrafficLightPosition(this.hasMultipleTabs() ? tabBarHeight : r, appState.zoomFactor))
                     }
 
                     this.tabBar.webContents.loadURL(`file://${require("path").resolve(__dirname, "..", "renderer", "tabs", "index.html")}`)
                         .then(() => {
                             this.updateState()
                         })
-                        .catch(e => {
-                            electron_log.default.error("Error loading tabs URL", e)
+                        .catch(err => {
+                            electron_log.default.error("Error loading tabs URL", err)
                         })
 
                     this.tabBar.setBackgroundColor(__TabColors.electronColors.tabBarBackground[appState.theme.mode])
                     this.browserWindow.addBrowserView(this.tabBar)
+
                     this.tabControllers.push(initialTabController)
                     this.activeTabController = initialTabController
+
                     __store.Store.dispatch(__windowSlice.initializeWindowState({
                         windowId: this.windowId,
                         initialTabId: initialTabController.tabId,
                         initialParentTabId: initialParentTabId,
-                        displayState: i,
-                        isVisible: !0
+                        displayState: desiredDisplayState,
+                        isVisible: true
                     }))
                     this.activeTabController.attachToWindow(this.windowId, this.browserWindow)
                     this.activeTabController.bringToFront()
-                    this.activeTabController.initialReadyStatePromise.then((() => {
-                        this.browserWindow.once("show", (() => {
+                    this.activeTabController.initialReadyStatePromise.then(() => {
+                        this.browserWindow.once("show", () => {
                             this.activeTabController === initialTabController && this.activeTabController.focus()
-                        })), a && this.browserWindow.show()
-                    }))
-                    this.activeTabController.initialLoadingStatePromise.catch((() => {
+                        })
+                        showWhenLoaded && this.browserWindow.show()
+                    })
+                    this.activeTabController.initialLoadingStatePromise.catch(() => {
                         this.activeTabController === initialTabController && this.handleTabLoadingError()
-                    }))
+                    })
                     this.activeTabController.bringToFront()
                     this.updateState()
-                    this.appStateUnsubscribe = __store.subscribeToSelector(__store.selectAppState, (() => this.updateState()))
-                    this.windowStateUnsubscribe = __store.subscribeToSelector((t => (0, __store.selectWindowState)(t, windowId)), (() => this.updateState()))
-                    this.prewarmTabUnsubscribe = __store.subscribeToSelector((e => (0, w.focusChangedSelector)(e, this.windowId)), (() => this.destroyPrewarmTab()))
+
+                    this.appStateUnsubscribe = __store.subscribeToSelector(__store.selectAppState, () => this.updateState())
+                    this.windowStateUnsubscribe = __store.subscribeToSelector(t => __store.selectWindowState(t, windowId), () => this.updateState())
+                    this.prewarmTabUnsubscribe = __store.subscribeToSelector(e => w.focusChangedSelector(e, this.windowId), () => this.destroyPrewarmTab())
                     this.subscribeToTabStates()
                 }
 
@@ -2838,93 +2918,134 @@
                     return this.browserWindow.isFullScreen()
                 }
 
-                async searchForNewTab(e) {
-                    const {isNewTabSearchEnabled: t} = __store.Store.getState().app.preferences;
-                    if (!t) return this.newTab(e);
-                    this.activeTabController.sendToNotion("notion:open-search-for-new-tab"), this.createPrewarmTab();
+                async searchForNewTab(options) {
+                    const {isNewTabSearchEnabled} = __store.Store.getState().app.preferences;
+                    if (!isNewTabSearchEnabled) {
+                        return this.newTab(options)
+                    }
+
+                    this.activeTabController.sendToNotion("notion:open-search-for-new-tab")
+                    this.createPrewarmTab()
                     try {
                         await this.activeTabController.executeJavaScript("__electronApi.openSearchModalForNewTab.listeners().length > 0") || electron_log.default.warn("No listeners for open-search-for-new-tab")
-                    } catch (t) {
-                        electron_log.default.warn(`Error checking for listeners for open-search-for-new-tab: ${t}`), this.newTab(e), this.destroyPrewarmTab()
+                    } catch (err) {
+                        electron_log.default.warn(`Error checking for listeners for open-search-for-new-tab: ${err}`)
+                        this.newTab(options)
+                        this.destroyPrewarmTab()
                     }
                 }
 
-                newTab(e) {
-                    const {
-                            initialUrl: t,
-                            makeActiveTab: r,
-                            position: n
-                        } = e, {isNewTabSearchEnabled: o} = __store.Store.getState().app.preferences,
-                        a = (0, b.normalizeUrlProtocolWithDefault)(t);
-                    __AppController.appController.trackAnalyticsEvent("electron_new_tab");
-                    const i = "loaded" === this.prewarmTab?.loadingState;
-                    if (o && i) return void this.activatePrewarmTab(this.prewarmTab, a);
-                    let s;
-                    switch (i || this.destroyPrewarmTab(), n.type) {
+                newTab(options) {
+                    const {initialUrl, makeActiveTab, position} = options
+                    const {isNewTabSearchEnabled} = __store.Store.getState().app.preferences
+                    const url = b.normalizeUrlProtocolWithDefault(initialUrl)
+
+                    __AppController.appController.trackAnalyticsEvent("electron_new_tab")
+
+                    const prewarmTabLoaded = "loaded" === this.prewarmTab?.loadingState;
+                    if (isNewTabSearchEnabled && prewarmTabLoaded) {
+                        this.activatePrewarmTab(this.prewarmTab, url)
+                        return
+                    }
+
+                    prewarmTabLoaded || this.destroyPrewarmTab()
+
+                    let insertionIndex;
+                    switch (position.type) {
                         case"start":
-                            s = 0;
+                            insertionIndex = 0;
                             break;
                         case"after":
-                            s = this.tabControllers.findIndex((e => e.tabId === n.parentTabId)) + 1;
+                            insertionIndex = this.tabControllers.findIndex(e => e.tabId === position.parentTabId) + 1;
                             break;
                         case"after-children":
-                            s = this.computeAfterChildrenInsertionIndex(n.parentTabId);
+                            insertionIndex = this.computeAfterChildrenInsertionIndex(position.parentTabId);
                             break;
                         default:
-                            s = this.tabControllers.length
+                            insertionIndex = this.tabControllers.length
                     }
                     this.newTabAtIndex({
-                        url: a,
-                        insertionIndex: s,
-                        makeActiveTab: r,
-                        parentTabId: "after-children" === n.type ? n.parentTabId : void 0
+                        url: url,
+                        insertionIndex: insertionIndex,
+                        makeActiveTab: makeActiveTab,
+                        parentTabId: "after-children" === position.type ? position.parentTabId : void 0
                     })
                 }
 
-                newTabAtIndex(e) {
-                    const {url: t, insertionIndex: r, makeActiveTab: n, parentTabId: o, tabId: a} = e,
-                        i = Math.min(r, this.tabControllers.length),
-                        s = __TabController.TabController.newInstance({
-                            id: a || (0, __tabSlice.createTabId)(),
-                            initialUrl: t
-                        });
-                    this.tabControllers.splice(i, 0, s), this.subscribeToTabStates(), s.attachToWindow(this.windowId, this.browserWindow), n ? (this.activeTabController.bringToFront(), this.activeTabController = s, this.activeTabController.initialReadyStatePromise.then((() => {
+                newTabAtIndex(options) {
+                    const {url, insertionIndex, makeActiveTab, parentTabId, tabId} = options
+                    const index = Math.min(insertionIndex, this.tabControllers.length)
+                    const tabController = __TabController.TabController.newInstance({
+                        id: tabId || __tabSlice.createTabId(),
+                        initialUrl: url
+                    })
+
+                    this.tabControllers.splice(index, 0, tabController)
+                    this.subscribeToTabStates()
+                    tabController.attachToWindow(this.windowId, this.browserWindow)
+                    if (makeActiveTab) {
                         this.activeTabController.bringToFront()
-                    })), this.activeTabController.initialLoadingStatePromise.catch((() => {
-                        this.activeTabController === s && this.handleTabLoadingError()
-                    }))) : this.activeTabController.bringToFront(), __store.Store.dispatch((0, __windowSlice.addTabToWindow)({
+                        this.activeTabController = tabController
+                        this.activeTabController.initialReadyStatePromise.then(() => {
+                            this.activeTabController.bringToFront()
+                        })
+                        this.activeTabController.initialLoadingStatePromise.catch(() => {
+                            this.activeTabController === tabController && this.handleTabLoadingError()
+                        })
+                    } else {
+                        this.activeTabController.bringToFront()
+                    }
+
+                    __store.Store.dispatch(__windowSlice.addTabToWindow({
                         windowId: this.windowId,
-                        tabId: s.tabId,
-                        index: i,
-                        makeActiveTab: n,
-                        parentTabId: o
+                        tabId: tabController.tabId,
+                        index: index,
+                        makeActiveTab: makeActiveTab,
+                        parentTabId: parentTabId
                     }))
                 }
 
-                computeAfterChildrenInsertionIndex(e) {
-                    const t = __store.Store.getState().windows[this.windowId]?.tabs;
-                    if (!t) return this.tabControllers.length;
-                    const r = new Set;
-                    r.add(e);
-                    const n = t.findIndex((t => t.tabId === e));
-                    if (-1 === n) return this.tabControllers.length;
-                    for (let e = n + 1; e < t.length; e++) {
-                        const n = t[e];
-                        if (!n.parentTabId || !r.has(n.parentTabId)) return e;
-                        r.add(n.tabId)
+                computeAfterChildrenInsertionIndex(tabId) {
+                    const tabs = __store.Store.getState().windows[this.windowId]?.tabs;
+                    if (!tabs) {
+                        return this.tabControllers.length;
+                    }
+
+                    const set = new Set()
+                    set.add(tabId)
+                    const tabIndex = tabs.findIndex(tab => tab.tabId === tabId)
+                    if (-1 === tabIndex) {
+                        return this.tabControllers.length;
+                    }
+                    for (let idx = tabIndex + 1; idx < tabs.length; idx++) {
+                        const targetTab = tabs[idx];
+                        if (!targetTab.parentTabId || !set.has(targetTab.parentTabId)) {
+                            return idx;
+                        }
+                        set.add(targetTab.tabId)
                     }
                     return this.tabControllers.length
                 }
 
                 openTabInNewWindow(e) {
-                    const t = this.tabControllers.findIndex((e => e === this.activeTabController));
-                    if (-1 === t) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
-                    if (e === t) {
-                        const t = e === this.tabControllers.length - 1 ? e - 1 : e + 1;
-                        this.activeTabController = this.tabControllers[t], this.activeTabController.attachToWindow(this.windowId, this.browserWindow), this.activeTabController.bringToFront()
+                    const index = this.tabControllers.findIndex(e => e === this.activeTabController)
+                    if (-1 === index) {
+                        h.throwIfNotProd("Active tab controller isn't in controller array")
+                        return
+                    }
+
+                    if (e === index) {
+                        const idx = e === this.tabControllers.length - 1 ? e - 1 : e + 1;
+                        this.activeTabController = this.tabControllers[idx]
+                        this.activeTabController.attachToWindow(this.windowId, this.browserWindow)
+                        this.activeTabController.bringToFront()
                     }
                     const r = this.tabControllers[e];
-                    r.detachFromWindow(), __AppController.appController.createWindowForTabController(r), this.tabControllers.splice(e, 1), this.subscribeToTabStates(), __store.Store.dispatch((0, __windowSlice.removeTabFromWindow)({
+                    r.detachFromWindow()
+                    __AppController.appController.createWindowForTabController(r)
+                    this.tabControllers.splice(e, 1)
+                    this.subscribeToTabStates()
+                    __store.Store.dispatch(__windowSlice.removeTabFromWindow({
                         windowId: this.windowId,
                         index: e,
                         newActiveTabId: this.activeTabController.tabId
@@ -2932,54 +3053,72 @@
                 }
 
                 reloadActiveTab() {
-                    const e = this.activeTabController;
-                    this.activeTabController.reloadAtCurrentUrl().catch((() => {
-                        this.activeTabController === e && this.handleTabLoadingError()
-                    }))
+                    const activeTabController = this.activeTabController;
+                    this.activeTabController.reloadAtCurrentUrl().catch(() => {
+                        this.activeTabController === activeTabController && this.handleTabLoadingError()
+                    })
                 }
 
-                loadUrlInActiveTab(e) {
-                    const t = this.activeTabController;
-                    this.activeTabController.loadUrl(e).catch((() => {
-                        this.activeTabController === t && this.handleTabLoadingError()
-                    }))
+                loadUrlInActiveTab(url) {
+                    const activeTabController = this.activeTabController;
+                    this.activeTabController.loadUrl(url).catch(() => {
+                        this.activeTabController === activeTabController && this.handleTabLoadingError()
+                    })
                 }
 
-                makeTabActive(e) {
-                    if (e === this.activeTabController.tabId) return;
-                    const t = this.tabControllers.find((t => t.tabId === e));
-                    if (t) {
-                        if (this.activeTabController = t, __store.Store.dispatch((0, __windowSlice.updateActiveTabId)({
+                makeTabActive(tabId) {
+                    if (tabId === this.activeTabController.tabId) return
+
+                    const tabController = this.tabControllers.find(t => t.tabId === tabId)
+                    if (tabController) {
+                        this.activeTabController = tabController
+                        __store.Store.dispatch(__windowSlice.updateActiveTabId({
                             windowId: this.windowId,
-                            activeTabId: e
-                        })), this.activeTabController.attachToWindow(this.windowId, this.browserWindow), this.activeTabController.bringToFront(), this.activeTabController.focus(), "errored" === this.activeTabController.loadingState) {
-                            const e = this.activeTabController;
-                            this.activeTabController.reloadAtCurrentUrl().catch((() => {
-                                e === this.activeTabController && this.handleTabLoadingError()
-                            }))
+                            activeTabId: tabId
+                        }))
+                        this.activeTabController.attachToWindow(this.windowId, this.browserWindow)
+                        this.activeTabController.bringToFront()
+                        this.activeTabController.focus()
+                        if ("errored" === this.activeTabController.loadingState) {
+                            const activeTabController = this.activeTabController;
+                            this.activeTabController.reloadAtCurrentUrl().catch(() => {
+                                activeTabController === this.activeTabController && this.handleTabLoadingError()
+                            })
                         }
                         this.updateState()
-                    } else (0, h.throwIfNotProd)("Cannot focus on this tab, because it was no longer in the tabControllers of the window")
+                    } else {
+                        h.throwIfNotProd("Cannot focus on this tab, because it was no longer in the tabControllers of the window")
+                    }
                 }
 
-                makeTabActiveIgnoringInvalidIndices(e) {
-                    e >= this.tabControllers.length || e < 0 || this.makeTabActive(this.tabControllers[e].tabId)
+                makeTabActiveIgnoringInvalidIndices(index) {
+                    index >= this.tabControllers.length || index < 0 || this.makeTabActive(this.tabControllers[index].tabId)
                 }
 
                 showPreviousTab() {
                     if (0 === this.tabControllers.length) return;
-                    const e = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
-                    if (-1 === e) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
-                    const t = 0 === e ? this.tabControllers.length - 1 : e - 1;
-                    this.makeTabActive(this.tabControllers[t].tabId)
+
+                    const activeControllerIdx = this.tabControllers.findIndex(e => e.tabId === this.activeTabController.tabId)
+                    if (-1 === activeControllerIdx) {
+                        h.throwIfNotProd("Active tab controller isn't in controller array")
+                        return
+                    }
+
+                    const prevIdx = 0 === activeControllerIdx ? this.tabControllers.length - 1 : activeControllerIdx - 1;
+                    this.makeTabActive(this.tabControllers[prevIdx].tabId)
                 }
 
                 showNextTab() {
                     if (0 === this.tabControllers.length) return;
-                    const e = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
-                    if (-1 === e) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
-                    const t = e === this.tabControllers.length - 1 ? 0 : e + 1;
-                    this.makeTabActive(this.tabControllers[t].tabId)
+
+                    const activeControllerIdx = this.tabControllers.findIndex(e => e.tabId === this.activeTabController.tabId)
+                    if (-1 === activeControllerIdx) {
+                        h.throwIfNotProd("Active tab controller isn't in controller array")
+                        return
+                    }
+
+                    const nextIdx = activeControllerIdx === this.tabControllers.length - 1 ? 0 : activeControllerIdx + 1;
+                    this.makeTabActive(this.tabControllers[nextIdx].tabId)
                 }
 
                 showLastTab() {
@@ -2991,169 +3130,252 @@
                 }
 
                 closeActiveTab() {
-                    const e = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
-                    -1 !== e ? this.closeTab(e) : (0, h.throwIfNotProd)("Active tab controller isn't in controller array")
+                    const activeControllerIdx = this.tabControllers.findIndex(e => e.tabId === this.activeTabController.tabId);
+                    -1 !== activeControllerIdx
+                        ? this.closeTab(activeControllerIdx)
+                        : h.throwIfNotProd("Active tab controller isn't in controller array")
                 }
 
-                closeTab(e) {
-                    if (1 === this.tabControllers.length) return void this.browserWindow.close();
-                    const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
-                    if (-1 === t) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
-                    if (e === t) {
-                        const t = e === this.tabControllers.length - 1 ? e - 1 : e + 1;
-                        this.makeTabActive(this.tabControllers[t].tabId)
-                    } else this.activeTabController.focus();
-                    const r = this.tabControllers[e], n = __store.Store.getState().tabs[r.tabId];
-                    if (this.tabControllers.splice(e, 1), this.subscribeToTabStates(), n) {
-                        const t = __store.Store.getState().windows[this.windowId].tabs[e];
-                        __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
+                closeTab(tabIdx) {
+                    if (1 === this.tabControllers.length) {
+                        this.browserWindow.close()
+                        return
+                    }
+
+                    const activeControllerIdx = this.tabControllers.findIndex(e => e.tabId === this.activeTabController.tabId)
+                    if (-1 === activeControllerIdx) {
+                        h.throwIfNotProd("Active tab controller isn't in controller array")
+                        return
+                    }
+
+                    if (tabIdx === activeControllerIdx) {
+                        const nextTabIdx = tabIdx === this.tabControllers.length - 1 ? tabIdx - 1 : tabIdx + 1;
+                        this.makeTabActive(this.tabControllers[nextTabIdx].tabId)
+                    } else {
+                        this.activeTabController.focus()
+                    }
+                    const r = this.tabControllers[tabIdx],
+                        n = __store.Store.getState().tabs[r.tabId];
+                    this.tabControllers.splice(tabIdx, 1)
+                    this.subscribeToTabStates()
+                    if (n) {
+                        const t = __store.Store.getState().windows[this.windowId].tabs[tabIdx];
+                        __store.Store.dispatch(__historySlice.insertCloseEvent({
                             type: "single-tab",
                             tabId: t.tabId,
                             parentTabId: t.parentTabId,
                             url: n.url,
-                            index: e,
+                            index: tabIdx,
                             windowId: this.windowId
                         }))
                     }
-                    __store.Store.dispatch((0, __windowSlice.removeTabFromWindow)({
+                    __store.Store.dispatch(__windowSlice.removeTabFromWindow({
                         windowId: this.windowId,
-                        index: e,
+                        index: tabIdx,
                         newActiveTabId: this.activeTabController.tabId
-                    })), r.destroy()
-                }
-
-                closeOtherTabs(e) {
-                    const t = this.tabControllers[e].tabId;
-                    this.makeTabActive(t);
-                    const r = this.tabControllers.filter((e => e !== this.activeTabController)),
-                        n = r.map((e => __store.Store.getState().tabs[e.tabId]));
-                    this.tabControllers = [this.activeTabController], this.subscribeToTabStates();
-                    const o = __store.Store.getState().windows[this.windowId].tabs;
-                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
-                        type: "multiple-tabs", tabs: n.map(((t, r) => {
-                            const n = r < e ? r : r + 1;
-                            return {
-                                tabId: o[n].tabId,
-                                url: t.url,
-                                index: n,
-                                isActive: !1,
-                                parentTabId: o[n].parentTabId
-                            }
-                        })), windowId: this.windowId
-                    })), __store.Store.dispatch((0, __windowSlice.closeAllNonActiveTabs)({windowId: this.windowId})), r.forEach((e => {
-                        e.destroy()
                     }))
+                    r.destroy()
                 }
 
-                closeTabsToRight(e) {
-                    const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
-                    if (-1 === t) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
-                    e < t && this.makeTabActive(this.tabControllers[e].tabId);
-                    const r = this.tabControllers.slice(e + 1),
-                        n = r.map((e => __store.Store.getState().tabs[e.tabId])),
-                        o = __store.Store.getState().windows[this.windowId].tabs;
-                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
-                        type: "multiple-tabs", tabs: n.map(((r, n) => {
-                            const a = n + e + 1;
+                closeOtherTabs(tabIdx) {
+                    const tabId = this.tabControllers[tabIdx].tabId;
+                    this.makeTabActive(tabId);
+
+                    const closingControllers = this.tabControllers.filter(e => e !== this.activeTabController),
+                        closingTabs = closingControllers.map(e => __store.Store.getState().tabs[e.tabId])
+                    this.tabControllers = [this.activeTabController]
+                    this.subscribeToTabStates()
+
+                    const tabs = __store.Store.getState().windows[this.windowId].tabs;
+                    __store.Store.dispatch(__historySlice.insertCloseEvent({
+                        type: "multiple-tabs",
+                        tabs: closingTabs.map((tab, idx) => {
+                            const n = idx < tabIdx ? idx : idx + 1;
                             return {
-                                tabId: o[a].tabId,
+                                tabId: tabs[n].tabId,
+                                url: tab.url,
+                                index: n,
+                                isActive: false,
+                                parentTabId: tabs[n].parentTabId
+                            }
+                        }),
+                        windowId: this.windowId
+                    }))
+                    __store.Store.dispatch(__windowSlice.closeAllNonActiveTabs({windowId: this.windowId}))
+
+                    closingControllers.forEach(controller => {
+                        controller.destroy()
+                    })
+                }
+
+                closeTabsToRight(tabIdx) {
+                    const activeControllerIdx = this.tabControllers.findIndex(e => e.tabId === this.activeTabController.tabId)
+                    if (-1 === activeControllerIdx) {
+                        h.throwIfNotProd("Active tab controller isn't in controller array")
+                        return
+                    }
+
+                    if (tabIdx < activeControllerIdx) {
+                        this.makeTabActive(this.tabControllers[tabIdx].tabId)
+                    }
+
+                    const r = this.tabControllers.slice(tabIdx + 1),
+                        n = r.map(e => __store.Store.getState().tabs[e.tabId]),
+                        tabs = __store.Store.getState().windows[this.windowId].tabs;
+                    __store.Store.dispatch(__historySlice.insertCloseEvent({
+                        type: "multiple-tabs", tabs: n.map(((r, n) => {
+                            const a = n + tabIdx + 1;
+                            return {
+                                tabId: tabs[a].tabId,
                                 url: r.url,
                                 index: a,
-                                isActive: a === t,
-                                parentTabId: o[a].parentTabId
+                                isActive: a === activeControllerIdx,
+                                parentTabId: tabs[a].parentTabId
                             }
                         })), windowId: this.windowId
-                    })), this.tabControllers = this.tabControllers.slice(0, e + 1), this.subscribeToTabStates(), __store.Store.dispatch((0, __windowSlice.sliceTabRange)({
+                    }))
+                    this.tabControllers = this.tabControllers.slice(0, tabIdx + 1)
+                    this.subscribeToTabStates()
+                    __store.Store.dispatch(__windowSlice.sliceTabRange({
                         windowId: this.windowId,
                         startIndex: 0,
-                        endIndex: e + 1
-                    })), r.forEach((e => {
-                        e.destroy()
+                        endIndex: tabIdx + 1
                     }))
+                    r.forEach(e => {
+                        e.destroy()
+                    })
                 }
 
-                closeTabsToLeft(e) {
-                    const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
-                    if (-1 === t) return void (0, h.throwIfNotProd)("Active tab controller isn't in controller array");
-                    e > t && this.makeTabActive(this.tabControllers[e].tabId);
-                    const r = this.tabControllers.slice(0, e), n = r.map((e => __store.Store.getState().tabs[e.tabId]));
-                    this.tabControllers = this.tabControllers.slice(e), this.subscribeToTabStates();
+                closeTabsToLeft(tabIdx) {
+                    const activeControllerIdx = this.tabControllers.findIndex(e => e.tabId === this.activeTabController.tabId);
+                    if (-1 === activeControllerIdx) {
+                        h.throwIfNotProd("Active tab controller isn't in controller array")
+                        return
+                    }
+
+                    if (tabIdx > activeControllerIdx) {
+                        this.makeTabActive(this.tabControllers[tabIdx].tabId);
+                    }
+
+                    const r = this.tabControllers.slice(0, tabIdx),
+                        n = r.map(e => __store.Store.getState().tabs[e.tabId]);
+                    this.tabControllers = this.tabControllers.slice(tabIdx)
+                    this.subscribeToTabStates();
                     const o = __store.Store.getState().windows[this.windowId].tabs;
-                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
+                    __store.Store.dispatch(__historySlice.insertCloseEvent({
                         type: "multiple-tabs",
                         tabs: n.map(((e, r) => ({
                             tabId: o[r].tabId,
                             url: e.url,
                             index: r,
-                            isActive: r === t,
+                            isActive: r === activeControllerIdx,
                             parentTabId: o[r].parentTabId
                         }))),
                         windowId: this.windowId
-                    })), __store.Store.dispatch((0, __windowSlice.sliceTabRange)({
+                    }))
+                    __store.Store.dispatch(__windowSlice.sliceTabRange({
                         windowId: this.windowId,
-                        startIndex: e
-                    })), r.forEach((e => {
+                        startIndex: tabIdx
+                    }))
+                    r.forEach(e => {
                         e.destroy()
-                    }))
-                }
-
-                reorderTabs(e) {
-                    const t = {};
-                    this.tabControllers.forEach((e => {
-                        t[e.tabId] = e
-                    })), this.tabControllers = e.map((e => t[e])), __store.Store.dispatch((0, __windowSlice.setTabOrder)({
-                        windowId: this.windowId,
-                        tabs: e
-                    }))
-                }
-
-                showTabMenu(e) {
-                    const {tabIndex: t, clientX: r, clientY: n} = e, o = this.tabControllers[t], a = [{
-                        label: this.intl.formatMessage(messages.tabMenuCopyLink), click: () => {
-                            o.copyHttpLinkToClipboard()
-                        }
-                    }, {
-                        label: this.intl.formatMessage(messages.tabMenuRefreshTab), click: () => {
-                            o.reloadAtCurrentUrl().catch((() => this.handleTabLoadingError()))
-                        }
-                    }, {type: "separator"}, {
-                        label: this.intl.formatMessage(messages.tabMenuDuplicateTab), click: () => {
-                            this.newTab({
-                                initialUrl: o.getUrl(),
-                                makeActiveTab: !0,
-                                position: {type: "after", parentTabId: o.tabId}
-                            })
-                        }
-                    }, {
-                        label: this.intl.formatMessage(messages.tabMenuMoveToNewWindow), click: () => {
-                            this.openTabInNewWindow(t)
-                        }, enabled: this.tabControllers.length > 1
-                    }, {type: "separator"}, {
-                        label: this.intl.formatMessage(messages.tabMenuCloseTab), click: () => {
-                            this.closeTab(t)
-                        }
-                    }, {
-                        label: this.intl.formatMessage(messages.tabMenuCloseOtherTabs), click: () => {
-                            this.closeOtherTabs(t)
-                        }, enabled: this.tabControllers.length > 1
-                    }, {
-                        label: this.intl.formatMessage(messages.tabMenuCloseTabsToLeft), click: () => {
-                            this.closeTabsToLeft(t)
-                        }, enabled: this.tabControllers.length > 1 && 0 !== t
-                    }, {
-                        label: this.intl.formatMessage(messages.tabMenuCloseTabsToRight), click: () => {
-                            this.closeTabsToRight(t)
-                        }, enabled: this.tabControllers.length > 1 && t !== this.tabControllers.length - 1
-                    }], i = __store.Store.getState().app.zoomFactor;
-                    electron.Menu.buildFromTemplate(a).popup({
-                        window: this.browserWindow,
-                        x: Math.floor(r * i),
-                        y: Math.floor(n * i)
                     })
                 }
 
-                getTabControllerForWebContents(e) {
-                    for (const t of this.tabControllers) if (t.isManagerOf(e)) return t
+                reorderTabs(tabIds) {
+                    const tabControllers = {};
+                    this.tabControllers.forEach(controller => {
+                        tabControllers[controller.tabId] = controller
+                    })
+                    this.tabControllers = tabIds.map(tabId => tabControllers[tabId])
+
+                    __store.Store.dispatch(__windowSlice.setTabOrder({
+                        windowId: this.windowId,
+                        tabs: tabIds
+                    }))
+                }
+
+                showTabMenu(options) {
+                    const {tabIndex, clientX, clientY} = options
+                    const tabController = this.tabControllers[tabIndex]
+                    const menuTemplate = [
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuCopyLink),
+                            click: () => {
+                                tabController.copyHttpLinkToClipboard()
+                            }
+                        },
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuRefreshTab),
+                            click: () => {
+                                tabController.reloadAtCurrentUrl().catch(() => this.handleTabLoadingError())
+                            }
+                        },
+                        {type: "separator"},
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuDuplicateTab),
+                            click: () => {
+                                this.newTab({
+                                    initialUrl: tabController.getUrl(),
+                                    makeActiveTab: true,
+                                    position: {
+                                        type: "after",
+                                        parentTabId: tabController.tabId
+                                    }
+                                })
+                            }
+                        },
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuMoveToNewWindow),
+                            click: () => {
+                                this.openTabInNewWindow(tabIndex)
+                            },
+                            enabled: this.tabControllers.length > 1
+                        },
+                        {type: "separator"},
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuCloseTab),
+                            click: () => {
+                                this.closeTab(tabIndex)
+                            }
+                        },
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuCloseOtherTabs),
+                            click: () => {
+                                this.closeOtherTabs(tabIndex)
+                            },
+                            enabled: this.tabControllers.length > 1
+                        },
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuCloseTabsToLeft),
+                            click: () => {
+                                this.closeTabsToLeft(tabIndex)
+                            },
+                            enabled: this.tabControllers.length > 1 && 0 !== tabIndex
+                        },
+                        {
+                            label: this.intl.formatMessage(messages.tabMenuCloseTabsToRight),
+                            click: () => {
+                                this.closeTabsToRight(tabIndex)
+                            },
+                            enabled: this.tabControllers.length > 1 && tabIndex !== this.tabControllers.length - 1
+                        }
+                    ]
+                    const zoomFactor = __store.Store.getState().app.zoomFactor;
+
+                    electron.Menu.buildFromTemplate(menuTemplate).popup({
+                        window: this.browserWindow,
+                        x: Math.floor(clientX * zoomFactor),
+                        y: Math.floor(clientY * zoomFactor)
+                    })
+                }
+
+                getTabControllerForWebContents(webContents) {
+                    for (const tabController of this.tabControllers) {
+                        if (tabController.isManagerOf(webContents)) {
+                            return tabController
+                        }
+                    }
                 }
 
                 getActiveTabController() {
@@ -3164,17 +3386,24 @@
                     return this.activeTabController.getUrl()
                 }
 
-                hasTabWithId(e) {
-                    return Boolean(this.tabControllers.find((t => t.tabId === e)))
+                hasTabWithId(tabId) {
+                    return Boolean(this.tabControllers.find(t => t.tabId === tabId))
                 }
 
-                isActiveTab(e) {
-                    return this.activeTabController.isManagerOf(e)
+                isActiveTab(webContents) {
+                    return this.activeTabController.isManagerOf(webContents)
                 }
 
-                getTabControllerWithEquivalentUrl(e) {
-                    const t = lodash.compact([this.activeTabController, ...this.tabControllers.filter((e => e !== this.activeTabController))]);
-                    for (const r of t) if (r.hasEquivalentUrl(e)) return r
+                getTabControllerWithEquivalentUrl(url) {
+                    const tabControllers = lodash.compact([
+                        this.activeTabController,
+                        ...this.tabControllers.filter(e => e !== this.activeTabController)
+                    ]);
+                    for (const tabController of tabControllers) {
+                        if (tabController.hasEquivalentUrl(url)) {
+                            return tabController
+                        }
+                    }
                 }
 
                 hasMultipleTabs() {
@@ -3187,182 +3416,245 @@
 
                 handleBackMetaClick() {
                     if (!this.activeTabController.canGoBack()) return;
-                    const e = this.activeTabController.getActiveIndex(),
-                        t = this.activeTabController.getEntryAtIndex(e - 1)?.url;
-                    t?.length && this.newTab({
-                        initialUrl: t,
-                        makeActiveTab: !1,
-                        position: {type: "after-children", parentTabId: this.activeTabController.tabId}
+
+                    const activeIndex = this.activeTabController.getActiveIndex(),
+                        backUrl = this.activeTabController.getEntryAtIndex(activeIndex - 1)?.url;
+                    backUrl?.length && this.newTab({
+                        initialUrl: backUrl,
+                        makeActiveTab: false,
+                        position: {
+                            type: "after-children",
+                            parentTabId: this.activeTabController.tabId
+                        }
                     })
                 }
 
                 handleForwardMetaClick() {
                     if (!this.activeTabController.canGoForward()) return;
-                    const e = this.activeTabController.getActiveIndex(),
-                        t = this.activeTabController.getEntryAtIndex(e + 1)?.url;
-                    t?.length && this.newTab({
-                        initialUrl: t,
-                        makeActiveTab: !1,
-                        position: {type: "after-children", parentTabId: this.activeTabController.tabId}
+
+                    const activeIndex = this.activeTabController.getActiveIndex(),
+                        forwardUrl = this.activeTabController.getEntryAtIndex(activeIndex + 1)?.url;
+                    forwardUrl?.length && this.newTab({
+                        initialUrl: forwardUrl,
+                        makeActiveTab: false,
+                        position: {
+                            type: "after-children",
+                            parentTabId: this.activeTabController.tabId
+                        }
                     })
                 }
 
-                showTabHistoryMenu(e) {
-                    const {direction: t, clientX: r, clientY: n} = e, o = this.getTabHistoryNavigationEntries(t),
-                        a = __store.Store.getState().tabs[this.activeTabController.tabId].pageHistoryFaviconMap,
-                        i = o.map((({title: e, url: r}, n) => ({
-                            icon: this.getFaviconForPageTitle(r, a),
-                            label: e,
-                            click: (e, o, a) => {
-                                if (a.metaKey) this.newTab({
-                                    initialUrl: r,
-                                    makeActiveTab: !1,
-                                    position: {type: "after-children", parentTabId: this.activeTabController.tabId}
-                                }); else {
-                                    const e = "back" === t ? -1 * (n + 1) : n + 1;
-                                    this.activeTabController.goToOffset(e)
-                                }
-                            },
-                            visible: this.isUniqueNavigationEntry({navigationEntries: o, index: n, url: r})
-                        }))), l = __store.Store.getState().app.zoomFactor;
-                    electron.Menu.buildFromTemplate(i).popup({
+                showTabHistoryMenu(options) {
+                    const {direction, clientX, clientY} = options
+                    const entries = this.getTabHistoryNavigationEntries(direction)
+                    const pageHistoryFaviconMap = __store.Store.getState().tabs[this.activeTabController.tabId].pageHistoryFaviconMap
+                    const template = entries.map(({title, url}, idx) => ({
+                        icon: this.getFaviconForPageTitle(url, pageHistoryFaviconMap),
+                        label: title,
+                        click: (item, focusedWindow, webContents) => {
+                            if (webContents.metaKey) {
+                                this.newTab({
+                                    initialUrl: url,
+                                    makeActiveTab: false,
+                                    position: {
+                                        type: "after-children",
+                                        parentTabId: this.activeTabController.tabId
+                                    }
+                                });
+                            } else {
+                                const offset = "back" === direction ? -1 * (idx + 1) : idx + 1;
+                                this.activeTabController.goToOffset(offset)
+                            }
+                        },
+                        visible: this.isUniqueNavigationEntry({
+                            navigationEntries: entries,
+                            index: idx,
+                            url: url
+                        })
+                    }))
+                    const zoomFactor = __store.Store.getState().app.zoomFactor;
+
+                    electron.Menu.buildFromTemplate(template).popup({
                         window: this.browserWindow,
-                        x: Math.floor(r * l) - 20,
-                        y: Math.floor(n * l) + 20
+                        x: Math.floor(clientX * zoomFactor) - 20,
+                        y: Math.floor(clientY * zoomFactor) + 20
                     })
                 }
 
-                isUniqueNavigationEntry({navigationEntries: e, index: t, url: r}) {
-                    const n = this.activeTabController.getActiveIndex(),
-                        o = this.activeTabController.getEntryAtIndex(n);
-                    if (null !== new URL(r).searchParams.get("pvs")) return !1;
-                    if (t === e.length - 1) return !0;
-                    let a = !0;
-                    return 0 === t && (a = r !== o?.url), a && r !== e[t + 1].url
-                }
-
-                getFaviconForPageTitle(e, t) {
-                    const r = t[e];
-                    if (r) return electron.nativeImage.createFromDataURL(r).resize({width: 16, height: 16})
-                }
-
-                getTabHistoryNavigationEntries(e) {
-                    const t = this.activeTabController.getActiveIndex(), r = [];
-                    for (let e = 0; e < this.activeTabController.getHistoryLength(); e++) {
-                        const t = this.activeTabController.getEntryAtIndex(e);
-                        t && r.push(t)
+                isUniqueNavigationEntry({navigationEntries, index, url}) {
+                    const activeIndex = this.activeTabController.getActiveIndex(),
+                        entry = this.activeTabController.getEntryAtIndex(activeIndex);
+                    if (null !== new URL(url).searchParams.get("pvs")) {
+                        return false
                     }
-                    return "back" === e ? r.slice(0, t).reverse() : r.slice(t + 1)
+                    if (index === navigationEntries.length - 1) {
+                        return true
+                    }
+                    let a = true
+                    0 === index && (a = url !== entry?.url)
+                    return a && url !== navigationEntries[index + 1].url
                 }
 
-                setRendererVisibility(e) {
-                    __store.Store.dispatch((0, __windowSlice.updateIsWindowVisible)({
+                getFaviconForPageTitle(url, pageHistoryFaviconMap) {
+                    const dataURL = pageHistoryFaviconMap[url];
+                    if (dataURL) {
+                        return electron.nativeImage.createFromDataURL(dataURL).resize({width: 16, height: 16})
+                    }
+                }
+
+                getTabHistoryNavigationEntries(directory) {
+                    const activeIndex = this.activeTabController.getActiveIndex()
+                    const entries = []
+                    for (let i = 0; i < this.activeTabController.getHistoryLength(); i++) {
+                        const entry = this.activeTabController.getEntryAtIndex(i);
+                        entry && entries.push(entry)
+                    }
+                    return "back" === directory
+                        ? entries.slice(0, activeIndex).reverse()
+                        : entries.slice(activeIndex + 1)
+                }
+
+                setRendererVisibility(isVisible) {
+                    __store.Store.dispatch(__windowSlice.updateIsWindowVisible({
                         windowId: this.windowId,
-                        isVisible: e
+                        isVisible: isVisible
                     }))
                 }
 
-                setWindowSidebarState(e, t) {
-                    this.activeTabController.isManagerOf(e) && __store.Store.dispatch((0, __windowSlice.updateWindowSidebarState)({
-                        windowId: this.windowId,
-                        sidebarState: t
-                    }))
+                setWindowSidebarState(webContents, sidebarState) {
+                    if (this.activeTabController.isManagerOf(webContents)) {
+                        __store.Store.dispatch(__windowSlice.updateWindowSidebarState({
+                            windowId: this.windowId,
+                            sidebarState: sidebarState
+                        }))
+                    }
                 }
 
                 updateState() {
-                    const e = __store.Store.getState().app, t = __store.Store.getState().windows[this.windowId],
-                        r = Boolean(e.preferences.isNewSidebarToggleEnabled),
-                        n = Math.ceil(__tabBarSize.TAB_BAR_HEIGHT_PX * e.zoomFactor),
-                        o = Math.ceil((0, c.getTopbarHeight)(!1, r) * e.zoomFactor), a = e.theme.mode;
-                    if (!t) return;
-                    if (this.backgroundColor = e.preferences.isVibrancyEnabled ? "#00000000" : __TabColors.electronColors.notionBackground[a], "win32" === process.platform) {
-                        const e = {
-                            height: this.hasMultipleTabs() ? n : o,
-                            color: __TabColors.electronColors.titleBarOverlayBackground[a],
-                            symbolColor: __TabColors.electronColors.enabledButtonColor[a]
+                    const appState = __store.Store.getState().app,
+                        windowState = __store.Store.getState().windows[this.windowId],
+                        isNewSidebarToggleEnabled = Boolean(appState.preferences.isNewSidebarToggleEnabled),
+                        tabBarHeight = Math.ceil(__tabBarSize.TAB_BAR_HEIGHT_PX * appState.zoomFactor),
+                        o = Math.ceil(c.getTopbarHeight(false, isNewSidebarToggleEnabled) * appState.zoomFactor),
+                        mode = appState.theme.mode;
+
+                    if (!windowState) return;
+
+                    this.backgroundColor = appState.preferences.isVibrancyEnabled
+                        ? "#00000000"
+                        : __TabColors.electronColors.notionBackground[mode]
+                    if ("win32" === process.platform) {
+                        const options = {
+                            height: this.hasMultipleTabs() ? tabBarHeight : o,
+                            color: __TabColors.electronColors.titleBarOverlayBackground[mode],
+                            symbolColor: __TabColors.electronColors.enabledButtonColor[mode]
                         };
-                        this.browserWindow.setTitleBarOverlay?.(e)
+                        this.browserWindow.setTitleBarOverlay?.(options)
                     }
+
                     this.tabBar.setBounds({
                         x: 0,
                         y: 0,
-                        height: n,
+                        height: tabBarHeight,
                         width: this.browserWindow.getContentBounds().width
-                    }), "darwin" === process.platform && this.browserWindow.setWindowButtonPosition((0, m.getTrafficLightPosition)(this.hasMultipleTabs() ? n : o, e.zoomFactor)), this.tabBar.webContents.setZoomFactor(e.zoomFactor), this.tabBar.setBackgroundColor(e.preferences.isVibrancyEnabled ? "#00000000" : __TabColors.electronColors.notionBackground[a]);
-                    const i = __store.Store.getState().tabs;
-                    if (!i) return;
-                    const s = i[this.activeTabController.tabId], l = s?.title;
-                    l && this.browserWindow.setTitle(l);
-                    const u = {}, d = [];
-                    this.tabControllers.forEach((e => {
-                        const t = i[e.tabId];
-                        u[e.tabId] = t ? {
-                            id: e.tabId,
-                            active: e === this.activeTabController,
-                            title: t.title,
-                            favicon: t.favicon,
-                            colors: t.tabColors,
-                            isOverlayActive: t.isOverlayActive,
-                            isMediaIndicatorActive: t.isMediaInputActive
-                        } : {id: e.tabId, active: e === this.activeTabController}, d.push(e.tabId)
-                    })), this.sendToTabBar("tabs:set-state", {
+                    })
+                    if ("darwin" === process.platform) {
+                        this.browserWindow.setWindowButtonPosition(m.getTrafficLightPosition(this.hasMultipleTabs() ? tabBarHeight : o, appState.zoomFactor))
+                    }
+                    this.tabBar.webContents.setZoomFactor(appState.zoomFactor)
+                    this.tabBar.setBackgroundColor(appState.preferences.isVibrancyEnabled ? "#00000000" : __TabColors.electronColors.notionBackground[mode]);
+
+                    const tabs = __store.Store.getState().tabs;
+                    if (!tabs) return;
+
+                    const activeTabState = tabs[this.activeTabController.tabId],
+                        title = activeTabState?.title;
+                    title && this.browserWindow.setTitle(title);
+
+                    const u = {}, tabOrder = [];
+                    this.tabControllers.forEach(tabController => {
+                        const tabState = tabs[tabController.tabId];
+                        u[tabController.tabId] = tabState
+                            ? {
+                                id: tabController.tabId,
+                                active: tabController === this.activeTabController,
+                                title: tabState.title,
+                                favicon: tabState.favicon,
+                                colors: tabState.tabColors,
+                                isOverlayActive: tabState.isOverlayActive,
+                                isMediaIndicatorActive: tabState.isMediaInputActive
+                            }
+                            : {
+                                id: tabController.tabId,
+                                active: tabController === this.activeTabController
+                            }
+                        tabOrder.push(tabController.tabId)
+                    })
+                    this.sendToTabBar("tabs:set-state", {
                         tabs: u,
-                        tabOrder: d,
+                        tabOrder: tabOrder,
                         locale: __AppController.appController.notionLocale,
-                        themeMode: e.theme.mode,
+                        themeMode: appState.theme.mode,
                         isWindows: "win32" === process.platform,
-                        isFullscreen: t.displayState.isFullScreen,
+                        isFullscreen: windowState.displayState.isFullScreen,
                         canGoBack: this.activeTabController.canGoBack(),
                         canGoForward: this.activeTabController.canGoForward(),
-                        windowSidebarState: t?.sidebarState,
-                        zoomFactor: e.zoomFactor,
-                        notificationCount: e.notificationCount,
-                        isNewSidebarToggleEnabled: Boolean(e.preferences?.isNewSidebarToggleEnabled),
-                        isNavigationHistoryEnabled: Boolean(e.preferences?.isNavigationHistoryEnabled),
-                        isTabDragIntoWindowEnabled: Boolean(e.preferences?.isTabDragIntoWindowEnabled)
-                    }), ("win32" !== process.platform || !this.browserWindow.isMenuBarVisible()) && this.browserWindow.isFocused() && this.activeTabController.focus()
+                        windowSidebarState: windowState?.sidebarState,
+                        zoomFactor: appState.zoomFactor,
+                        notificationCount: appState.notificationCount,
+                        isNewSidebarToggleEnabled: Boolean(appState.preferences?.isNewSidebarToggleEnabled),
+                        isNavigationHistoryEnabled: Boolean(appState.preferences?.isNavigationHistoryEnabled),
+                        isTabDragIntoWindowEnabled: Boolean(appState.preferences?.isTabDragIntoWindowEnabled)
+                    })
+
+                    if (("win32" !== process.platform || !this.browserWindow.isMenuBarVisible()) && this.browserWindow.isFocused()) {
+                        this.activeTabController.focus()
+                    }
                 }
 
-                refresh(e) {
-                    this.tabControllers.forEach((t => {
-                        (e.includeActiveTab || t !== this.activeTabController) && t.reloadAtCurrentUrl()
-                    }))
+                refresh(options) {
+                    this.tabControllers.forEach(tabController => {
+                        if (options.includeActiveTab || tabController !== this.activeTabController) {
+                            tabController.reloadAtCurrentUrl()
+                        }
+                    })
                 }
 
                 close() {
                     this.browserWindow.close()
                 }
 
-                sendMainToAllNotionInstances(e, ...t) {
-                    this.tabControllers.forEach((r => {
-                        r.sendToNotion(e, ...t)
-                    }))
+                sendMainToAllNotionInstances(channel, ...args) {
+                    this.tabControllers.forEach(tabController => {
+                        tabController.sendToNotion(channel, ...args)
+                    })
                 }
 
-                sendToTabBar(e, ...t) {
-                    this.tabBar.webContents.send(e, ...t)
+                sendToTabBar(channel, ...args) {
+                    this.tabBar.webContents.send(channel, ...args)
                 }
 
-                handleAppCommandNavigation(e, t) {
-                    this.activeTabController.handleAppCommandNavigation(e, t)
+                handleAppCommandNavigation(evt, command) {
+                    this.activeTabController.handleAppCommandNavigation(evt, command)
                 }
 
-                handleSwipeNavigation(e, t) {
-                    this.activeTabController.handleSwipeNavigation(e, t)
+                handleSwipeNavigation(evt, direction) {
+                    this.activeTabController.handleSwipeNavigation(evt, direction)
                 }
 
                 handleFullscreenEvent() {
-                    this.tabControllers.forEach((e => {
-                        e.handleFullscreenEvent()
-                    })), this.updateState()
+                    this.tabControllers.forEach(tabController => {
+                        tabController.handleFullscreenEvent()
+                    })
+                    this.updateState()
                 }
 
                 handleFocus() {
-                    __store.Store.dispatch((0, __windowSlice.focusWindow)({windowId: this.windowId}))
+                    __store.Store.dispatch(__windowSlice.focusWindow({windowId: this.windowId}))
                 }
 
                 handleMove() {
-                    __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
+                    __store.Store.dispatch(__windowSlice.updateDisplayState({
                         windowId: this.windowId,
                         update: {
                             normalBounds: this.browserWindow.getNormalBounds(),
@@ -3372,7 +3664,7 @@
                 }
 
                 handleResize() {
-                    __store.Store.dispatch((0, __windowSlice.updateDisplayState)({
+                    __store.Store.dispatch(__windowSlice.updateDisplayState({
                         windowId: this.windowId,
                         update: {
                             normalBounds: this.browserWindow.getNormalBounds(),
@@ -3381,24 +3673,44 @@
                     }))
                 }
 
-                handleClose(e) {
-                    if (!__AppController.appController.handleWindowClose(e, this.browserWindow)) return electron_log.default.info(`Preventing closure for window with id ${this.browserWindow.id}, hiding`), e.preventDefault(), void (this.browserWindow.isFullScreen() ? (this.browserWindow.setFullScreen(!1), this.browserWindow.once("leave-full-screen", (() => {
-                        this.browserWindow.hide()
-                    }))) : this.browserWindow.hide());
+                handleClose(evt) {
+                    if (!__AppController.appController.handleWindowClose(evt, this.browserWindow)) {
+                        electron_log.default.info(`Preventing closure for window with id ${this.browserWindow.id}, hiding`)
+                        evt.preventDefault()
+
+                        if (this.browserWindow.isFullScreen()) {
+                            this.browserWindow.setFullScreen(false)
+                            this.browserWindow.once("leave-full-screen", () => {
+                                this.browserWindow.hide()
+                            })
+                        } else {
+                            this.browserWindow.hide()
+                        }
+                        return
+                    }
+
                     electron_log.default.info(`Window with id ${this.browserWindow.id} closed`);
-                    const t = this.tabControllers.findIndex((e => e.tabId === this.activeTabController.tabId));
-                    this.browserWindow.removeAllListeners(), this.browserWindow.webContents.removeAllListeners(), this.appStateUnsubscribe(), this.windowStateUnsubscribe(), this.tabStateUnsubscribe?.(), this.prewarmTabUnsubscribe(), this.tabBar.webContents.destroy();
-                    const r = this.tabControllers.map((e => __store.Store.getState().tabs[e.tabId])),
+                    const t = this.tabControllers.findIndex(e => e.tabId === this.activeTabController.tabId)
+                    this.browserWindow.removeAllListeners()
+                    this.browserWindow.webContents.removeAllListeners()
+                    this.appStateUnsubscribe()
+                    this.windowStateUnsubscribe()
+                    this.tabStateUnsubscribe?.()
+                    this.prewarmTabUnsubscribe()
+                    this.tabBar.webContents.destroy()
+
+                    const r = this.tabControllers.map(e => __store.Store.getState().tabs[e.tabId]),
                         n = __store.Store.getState().windows[this.windowId].tabs;
-                    __store.Store.dispatch((0, __historySlice.insertCloseEvent)({
+
+                    __store.Store.dispatch(__historySlice.insertCloseEvent({
                         type: "window",
-                        tabs: r.map(((e, r) => ({
+                        tabs: r.map((e, r) => ({
                             tabId: n[r].tabId,
                             url: e.url,
                             index: r,
                             isActive: t === r,
                             parentTabId: n[r].parentTabId
-                        }))),
+                        })),
                         windowId: this.windowId,
                         displayState: {
                             normalBounds: this.browserWindow.getNormalBounds(),
@@ -3407,117 +3719,158 @@
                             isFullScreen: this.browserWindow.isFullScreen(),
                             isHtmlFullScreen: !1
                         }
-                    })), __store.Store.dispatch((0, __windowSlice.removeWindowState)({windowId: this.windowId})), this.tabControllers.forEach((e => {
+                    }))
+                    __store.Store.dispatch(__windowSlice.removeWindowState({windowId: this.windowId}))
+                    this.tabControllers.forEach(e => {
                         e.destroy()
-                    })), this.destroyPrewarmTab(), "win32" === process.platform && electron.BrowserWindow.getAllWindows().every((e => e.id === this.browserWindow.id)) && electron.app.quit()
+                    })
+                    this.destroyPrewarmTab()
+                    if ("win32" === process.platform && electron.BrowserWindow.getAllWindows().every(e => e.id === this.browserWindow.id)) {
+                        electron.app.quit()
+                    }
                 }
 
                 handleTabLoadingError() {
                     electron.dialog.showMessageBox(this.browserWindow, {
                         message: this.intl.formatMessage(messages.loadingErrorMessage),
-                        buttons: [this.intl.formatMessage(messages.loadingErrorReload), this.intl.formatMessage(messages.loadingErrorCancel)],
-                        noLink: !0
-                    }).then((e => {
-                        0 === e.response && this.activeTabController.reloadAtCurrentUrl()
-                    })).catch((e => {
-                        electron_log.default.error("error showing dialog", e)
-                    }))
+                        buttons: [
+                            this.intl.formatMessage(messages.loadingErrorReload),
+                            this.intl.formatMessage(messages.loadingErrorCancel)
+                        ],
+                        noLink: true
+                    }).then(result => {
+                        0 === result.response && this.activeTabController.reloadAtCurrentUrl()
+                    }).catch(err => {
+                        electron_log.default.error("error showing dialog", err)
+                    })
                 }
 
                 refreshForWindowsMenuBarSpacing() {
-                    this.browserWindow.isMenuBarVisible() || (this.tabControllers.forEach((e => {
-                        e.refreshForWindowsMenuBarSpacing()
-                    })), this.updateState())
+                    if (!this.browserWindow.isMenuBarVisible()) {
+                        this.tabControllers.forEach(tabController => {
+                            tabController.refreshForWindowsMenuBarSpacing()
+                        })
+                        this.updateState()
+                    }
                 }
 
-                setShouldShowAppMenuFromAltKey(e) {
-                    __store.Store.dispatch((0, __windowSlice.setShouldShowAppMenuFromAlt)({
+                setShouldShowAppMenuFromAltKey(shouldShowAppMenuFromAltKey) {
+                    __store.Store.dispatch(__windowSlice.setShouldShowAppMenuFromAlt({
                         windowId: this.windowId,
-                        shouldShowAppMenuFromAltKey: e
+                        shouldShowAppMenuFromAltKey: shouldShowAppMenuFromAltKey
                     }))
                 }
 
                 toggleAppMenuPopup() {
-                    this.browserWindow.isMenuBarVisible() ? electron.Menu.getApplicationMenu()?.closePopup() : __store.Store.getState().windows[this.windowId]?.shouldShowAppMenuFromAltKey && electron.Menu.getApplicationMenu()?.popup({
-                        x: 8,
-                        y: 8
-                    })
+                    if (this.browserWindow.isMenuBarVisible() ) {
+                        electron.Menu.getApplicationMenu()?.closePopup()
+                    } else if (__store.Store.getState().windows[this.windowId]?.shouldShowAppMenuFromAltKey) {
+                        electron.Menu.getApplicationMenu()?.popup({
+                            x: 8,
+                            y: 8
+                        })
+                    }
                 }
 
-                static getDesiredWindowDisplayState(e = void 0) {
-                    const t = __AppController.appController.getFocusedWindowController();
-                    if (t && !e) {
-                        const e = t.browserWindow, [r, n] = e.getPosition(), [o, a] = e.getSize();
+                static getDesiredWindowDisplayState(displayState = void 0) {
+                    const windowController = __AppController.appController.getFocusedWindowController();
+                    if (windowController && !displayState) {
+                        const win = windowController.browserWindow
+                        const [x, y] = win.getPosition()
+                        const [width, height] = win.getSize()
                         return {
-                            normalBounds: {x: r + 20, y: n + 20, width: o, height: a},
+                            normalBounds: {x: x + 20, y: y + 20, width: width, height: height},
                             displayBounds: WindowController.getDisplayBounds(),
-                            isFullScreen: e.isFullScreen(),
-                            isHtmlFullScreen: !1,
-                            isMaximized: e.isMaximized()
+                            isFullScreen: win.isFullScreen(),
+                            isHtmlFullScreen: false,
+                            isMaximized: win.isMaximized()
                         }
                     }
-                    const r = e || __store.Store.getState().history.lastFocusedWindowDisplayState;
+                    const r = displayState || __store.Store.getState().history.lastFocusedWindowDisplayState;
                     if (r) {
-                        const e = r.normalBounds, t = electron.screen.getAllDisplays();
-                        let n = !1;
-                        if (void 0 === e.x && void 0 === e.y) n = !0; else if (void 0 !== e.x && void 0 !== e.y) for (const r of t) {
-                            const t = r.bounds;
-                            if (e.x >= t.x && e.y >= t.y && e.x + e.width <= t.x + t.width && e.y + e.height <= t.y + t.height) {
-                                n = !0;
-                                break
+                        const normalBounds = r.normalBounds,
+                            allDisplays = electron.screen.getAllDisplays();
+                        let n = false;
+                        if (void 0 === normalBounds.x && void 0 === normalBounds.y) {
+                            n = true
+                        } else if (void 0 !== normalBounds.x && void 0 !== normalBounds.y) {
+                            for (const display of allDisplays) {
+                                const t = display.bounds;
+                                if (normalBounds.x >= t.x && normalBounds.y >= t.y && normalBounds.x + normalBounds.width <= t.x + t.width && normalBounds.y + normalBounds.height <= t.y + t.height) {
+                                    n = true
+                                    break
+                                }
                             }
                         }
-                        const o = ["width", "height", "x", "y"], a = lodash.sortBy(r.displayBounds, o),
-                            i = lodash.sortBy(t.map((e => e.bounds)), o);
-                        if (n && lodash.isEqual(i, a) && e.width > 640 && e.height > 480) return {
-                            normalBounds: e,
-                            displayBounds: WindowController.getDisplayBounds(),
-                            isFullScreen: !1,
-                            isHtmlFullScreen: !1,
-                            isMaximized: !1
+                        const o = ["width", "height", "x", "y"],
+                            a = lodash.sortBy(r.displayBounds, o),
+                            i = lodash.sortBy(allDisplays.map((e => e.bounds)), o);
+                        if (n && lodash.isEqual(i, a) && normalBounds.width > 640 && normalBounds.height > 480) {
+                            return {
+                                normalBounds: normalBounds,
+                                displayBounds: WindowController.getDisplayBounds(),
+                                isFullScreen: false,
+                                isHtmlFullScreen: false,
+                                isMaximized: false
+                            }
                         }
                     }
                     return {
                         normalBounds: {x: void 0, y: void 0, width: 1320, height: 860},
                         displayBounds: this.getDisplayBounds(),
-                        isFullScreen: !1,
-                        isHtmlFullScreen: !1,
-                        isMaximized: !1
+                        isFullScreen: false,
+                        isHtmlFullScreen: false,
+                        isMaximized: false
                     }
                 }
 
                 static getDisplayBounds() {
-                    return electron.screen.getAllDisplays().map((e => e.bounds))
+                    return electron.screen.getAllDisplays().map(display => display.bounds)
                 }
 
                 subscribeToTabStates() {
-                    this.tabStateUnsubscribe?.(), this.tabStateUnsubscribe = (0, __store.subscribeToSelector)((e => (0, __store.selectTabStates)(e, this.tabControllers.map((e => e.tabId)))), (() => this.updateState()))
+                    this.tabStateUnsubscribe?.()
+                    this.tabStateUnsubscribe = __store.subscribeToSelector(
+                        rootState => __store.selectTabStates(rootState, this.tabControllers.map(e => e.tabId)),
+                        () => this.updateState()
+                    )
                 }
 
                 createPrewarmTab() {
                     if (this.prewarmTab) return;
-                    const e = __TabController.TabController.newInstance({
-                        id: (0, __tabSlice.createTabId)(),
-                        initialUrl: `${(0, b.initialBaseUrl)()}/blank`
+
+                    const tabController = __TabController.TabController.newInstance({
+                        id: __tabSlice.createTabId(),
+                        initialUrl: `${b.initialBaseUrl()}/blank`
                     });
-                    e.initialReadyStatePromise.then((() => {
-                        this.prewarmTab = e
-                    })), e.initialLoadingStatePromise.catch((e => {
-                        electron_log.default.error("Error creating prewarm tab", e)
-                    }))
+                    tabController.initialReadyStatePromise.then(() => {
+                        this.prewarmTab = tabController
+                    })
+                    tabController.initialLoadingStatePromise.catch(err => {
+                        electron_log.default.error("Error creating prewarm tab", err)
+                    })
                 }
 
-                activatePrewarmTab(e, t) {
-                    e.navigateToUrl(t), this.tabControllers.push(e), this.subscribeToTabStates(), this.makeTabActive(e.tabId), __store.Store.dispatch((0, __windowSlice.addTabToWindow)({
+                activatePrewarmTab(tabController, url) {
+                    tabController.navigateToUrl(url)
+                    this.tabControllers.push(tabController)
+                    this.subscribeToTabStates()
+                    this.makeTabActive(tabController.tabId)
+
+                    __store.Store.dispatch(__windowSlice.addTabToWindow({
                         windowId: this.windowId,
-                        tabId: e.tabId,
+                        tabId: tabController.tabId,
                         index: this.tabControllers.length - 1,
-                        makeActiveTab: !0
-                    })), this.prewarmTab = void 0
+                        makeActiveTab: true
+                    }))
+                    this.prewarmTab = void 0
                 }
 
                 destroyPrewarmTab() {
-                    this.prewarmTab && (this.prewarmTab.destroy(), this.prewarmTab = void 0)
+                    if (this.prewarmTab) {
+                        this.prewarmTab.destroy()
+                        this.prewarmTab = void 0
+                    }
                 }
             }
 
@@ -5116,31 +5469,31 @@
             "use strict";
 
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            },
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
                 i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
+                    return e && e.__esModule ? e : {default: e}
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
@@ -5209,11 +5562,17 @@
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-colors", (evt, colors) => {
                     const tabController = __AppController.appController.getTabControllerForWebContents(evt.sender);
-                    tabController && __store.Store.dispatch(__tabSlice.updateTabColors({tabId: tabController.tabId, colors: colors}))
+                    tabController && __store.Store.dispatch(__tabSlice.updateTabColors({
+                        tabId: tabController.tabId,
+                        colors: colors
+                    }))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-is-overlay-active", (evt, isOverlayActive) => {
                     const tabController = __AppController.appController.getTabControllerForWebContents(evt.sender);
-                    tabController && __store.Store.dispatch(__tabSlice.updateTabIsOverlayActive({tabId: tabController.tabId, isOverlayActive: isOverlayActive}))
+                    tabController && __store.Store.dispatch(__tabSlice.updateTabIsOverlayActive({
+                        tabId: tabController.tabId,
+                        isOverlayActive: isOverlayActive
+                    }))
                 })
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-tab-order", (evt, tabOrder) => {
                     const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender);
@@ -5806,7 +6165,7 @@
 
 
             const a = __webpack_require(55869),
-                i = __webpack_require(50019),
+                __getElectronTheme = __webpack_require(50019),
                 __config = o(__webpack_require(11239)),
                 __openAtLogin = __webpack_require(26605),
                 __appStatePersister = __webpack_require(30506);
@@ -5849,7 +6208,7 @@
                     // 读取 appState
                     const appState = __appStatePersister.appStatePersister.get("appState", {
                         zoomFactor: 1,
-                        theme: i.getElectronTheme("light", false),
+                        theme: __getElectronTheme.getElectronTheme("light", false),
                         preferences: exports.DEFAULT_PERSISTED_PREFERENCES,
                         notificationCount: 0
                     });
@@ -6392,28 +6751,28 @@
         54198: function (module, exports, __webpack_require) {
             "use strict";
             let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }),
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
                 o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }),
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
                 a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
 
             Object.defineProperty(exports, "__esModule", {value: !0})
 
@@ -8227,137 +8586,151 @@
                 }
             })
         },
+
+        // 主题颜色相关
         52869: function (module, t, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getTemporaryHighlightColorStyle = t.getHighlightColorStyle = t.getCalloutBlockColorStyle = t.getButtonBlockColorStyle = t.getBlockColorFromUserId = t.getBlockColorStyle = t.blockColorConfiguration = t.blockColorIsBackgroundColor = t.blockColorToAccentColor = t.getBoardSelectStyle = t.CHART_COLORS = t.getSelectTokenStyle = t.getRGBFromHex = t.getHexFromRGB = t.flattenColorsByAlpha = t.findClosestThemeColor = t.findClosestSelectColor = t.findClosestColor = t.getDefaultTheme = t.commentContextBarBackground = t.commentUnderlineColorWithLevel = t.commentBackgroundWithLevel = t.interactiveAnnotationColor = t.selectColors = t.teamIconBackgroundColorConfiguration = t.blockBackgroundColors = t.blockTextColors = t.blockColors = t.getTheme = t.themeModes = t.accentColors = t.colors = t.grayscale = void 0;
-            const i = __webpack_require(33824), s = a(__webpack_require(6600)), l = __webpack_require(73720),
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
+
+            Object.defineProperty(t, "__esModule", {value: !0})
+
+
+            const i = __webpack_require(33824),
+                s = a(__webpack_require(6600)),
+                l = __webpack_require(73720),
                 c = __webpack_require(80004);
 
-            function u(e) {
-                return `rgba(55, 53, 47, ${e})`
+            function u(alpha) {
+                return `rgba(55, 53, 47, ${alpha})`
             }
 
-            function d(e) {
+            // hue 色相
+            function d(hue) {
                 return {
-                    black: (0, i.colord)({r: 15, g: 15, b: 15}),
-                    darkgray: (0, i.colord)({h: e, s: 8, l: 20}),
-                    gray: (0, i.colord)({h: e, s: 6, l: 50}),
-                    lightgray: (0, i.colord)({h: e, s: 4, l: 80}),
-                    white: (0, i.colord)({h: e, s: 2, l: 100})
+                    black: i.colord({r: 15, g: 15, b: 15}),
+                    darkgray: i.colord({h: hue, s: 8, l: 20}),
+                    gray: i.colord({h: hue, s: 6, l: 50}),
+                    lightgray: i.colord({h: hue, s: 4, l: 80}),
+                    white: i.colord({h: hue, s: 2, l: 100})
                 }
             }
 
             t.grayscale = {light: d(45), dark: d(205)};
             const p = {
-                blue: "#2383E2",
-                red: "#EB5757",
-                contentBorder: "#E4E3E2",
-                contentGrayBackground: "#F7F6F5",
-                contentPlaceholder: "#C4C4C4",
-                defaultText: "rgb(66, 66, 65)",
-                uiBlack: "#333",
-                uiExtraLightGray: "#E2E2E2",
-                uiGray: "#A5A5A5",
-                uiLightBlack: "#888",
-                uiLightBorder: "#F2F1F0",
-                uiLightGray: "#C4C4C4"
-            }, h = {
-                frontText: "#040404",
-                frontTextLight: "rgba(0,0,0,0.4)",
-                frontTextMedium: "rgba(0,0,0,0.6)",
-                frontTextDark: "#111111",
-                frontBorder: "rgba(0, 0, 0, 0.1)",
-                frontCreamBackground: "#FFFEFC",
-                frontCreamBackgroundDark: "#F9F5F1",
-                frontCreamText: "#463D34",
-                frontCreamBorder: "#D4CFCB",
-                frontBlueBackground: "#EFF3F5",
-                frontBlueBackgroundDark: "#D7E3E8",
-                frontBlueText: "#2383E2",
-                frontBlueBorder: "#B5C7D8",
-                frontPurpleBackground: "#E7E6EA",
-                frontPurpleBackgroundDark: "#D9D7DF",
-                frontPurpleText: "#382F49",
-                frontPurpleBorder: "#ACA8BD",
-                frontOrangeBackground: "#F8EDE7",
-                frontOrangeBackgroundDark: "#F2DCCF",
-                frontOrangeText: "#5B3322",
-                frontOrangeBorder: "#DEBEAC",
-                frontRed: "#eb5757",
-                frontPrimaryButtonBackground: "#E16259",
-                frontPrimaryButtonBackgroundHovered: "#CF534A",
-                frontPrimaryButtonBackgroundPressed: "#BF4D45",
-                frontPrimaryButtonBorder: "#BE5643",
-                frontRedButtonBackground: "#E16259",
-                frontRedButtonBackgroundHovered: "#CF534A",
-                frontRedButtonBackgroundPressed: "#BF4D45",
-                frontRedButtonBorder: "#BE5643",
-                frontSecondaryButtonBackground: "#FDF5F2",
-                frontSecondaryButtonBackgroundHovered: "#FBEBE8",
-                frontSecondaryButtonBackgroundPressed: "#F9E5E2",
-                frontTertiaryButtonBackground: "transparent",
-                frontTertiaryButtonBackgroundHovered: (0, i.alpha)(t.grayscale.light.darkgray, .08),
-                frontTertiaryButtonBackgroundPressed: (0, i.alpha)(t.grayscale.light.darkgray, .16),
-                frontQuaternaryButtonBackground: "#2383E2",
-                frontQuaternaryButtonBackgroundHovered: "#2383E2",
-                frontQuaternaryButtonBackgroundPressed: "#2383E2",
-                frontQuaternaryButtonBorder: "#2383E2",
-                frontMobilePhoneBackground: "#1d1d1d",
-                frontLiveDemoSidebarText: "#777",
-                frontLiveDemoSidebarLabelText: "rgba(55, 53, 47, 0.3)",
-                frontTransparent: "transparent",
-                frontBlackButtonBackground: (0, i.getCSSColor)(t.grayscale.dark.darkgray),
-                frontBlackButtonBackgroundHovered: "rgb(98, 102, 104)",
-                frontBlackButtonBackgroundPressed: "rgb(120, 123, 123)",
-                frontBlueButtonBackground: "#2383E2",
-                frontBlueButtonHoveredBackground: (0, i.darken)("#2383E2", .3),
-                frontBlueButtonPressedBackground: (0, i.darken)("#2383E2", .6)
-            }, f = {
-                regularTextColor: u(1),
-                mediumTextColor: u(.7),
-                lightTextColor: u(.4),
-                regularIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .8),
-                mediumIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .4),
-                lightIconColor: (0, i.alpha)(t.grayscale.light.darkgray, .2),
-                dividerColor: (0, i.alpha)(t.grayscale.light.darkgray, .09),
-                invertedTextColor: (0, i.alpha)("white", .9),
-                selectionColor: "rgba(35, 131, 226, 0.28)"
-            }, m = {
-                halfWhite: "rgba(255, 255, 255, 0.5)",
-                diffTextColor: p.blue,
-                diffBackground: (0, i.alpha)(p.blue, .1),
-                diffBackgroundHover: (0, i.alpha)(p.blue, .2)
-            };
+                    blue: "#2383E2",
+                    red: "#EB5757",
+                    contentBorder: "#E4E3E2",
+                    contentGrayBackground: "#F7F6F5",
+                    contentPlaceholder: "#C4C4C4",
+                    defaultText: "rgb(66, 66, 65)",
+                    uiBlack: "#333",
+                    uiExtraLightGray: "#E2E2E2",
+                    uiGray: "#A5A5A5",
+                    uiLightBlack: "#888",
+                    uiLightBorder: "#F2F1F0",
+                    uiLightGray: "#C4C4C4"
+                },
+                h = {
+                    frontText: "#040404",
+                    frontTextLight: "rgba(0,0,0,0.4)",
+                    frontTextMedium: "rgba(0,0,0,0.6)",
+                    frontTextDark: "#111111",
+                    frontBorder: "rgba(0, 0, 0, 0.1)",
+                    frontCreamBackground: "#FFFEFC",
+                    frontCreamBackgroundDark: "#F9F5F1",
+                    frontCreamText: "#463D34",
+                    frontCreamBorder: "#D4CFCB",
+                    frontBlueBackground: "#EFF3F5",
+                    frontBlueBackgroundDark: "#D7E3E8",
+                    frontBlueText: "#2383E2",
+                    frontBlueBorder: "#B5C7D8",
+                    frontPurpleBackground: "#E7E6EA",
+                    frontPurpleBackgroundDark: "#D9D7DF",
+                    frontPurpleText: "#382F49",
+                    frontPurpleBorder: "#ACA8BD",
+                    frontOrangeBackground: "#F8EDE7",
+                    frontOrangeBackgroundDark: "#F2DCCF",
+                    frontOrangeText: "#5B3322",
+                    frontOrangeBorder: "#DEBEAC",
+                    frontRed: "#eb5757",
+                    frontPrimaryButtonBackground: "#E16259",
+                    frontPrimaryButtonBackgroundHovered: "#CF534A",
+                    frontPrimaryButtonBackgroundPressed: "#BF4D45",
+                    frontPrimaryButtonBorder: "#BE5643",
+                    frontRedButtonBackground: "#E16259",
+                    frontRedButtonBackgroundHovered: "#CF534A",
+                    frontRedButtonBackgroundPressed: "#BF4D45",
+                    frontRedButtonBorder: "#BE5643",
+                    frontSecondaryButtonBackground: "#FDF5F2",
+                    frontSecondaryButtonBackgroundHovered: "#FBEBE8",
+                    frontSecondaryButtonBackgroundPressed: "#F9E5E2",
+                    frontTertiaryButtonBackground: "transparent",
+                    frontTertiaryButtonBackgroundHovered: i.alpha(t.grayscale.light.darkgray, .08),
+                    frontTertiaryButtonBackgroundPressed: i.alpha(t.grayscale.light.darkgray, .16),
+                    frontQuaternaryButtonBackground: "#2383E2",
+                    frontQuaternaryButtonBackgroundHovered: "#2383E2",
+                    frontQuaternaryButtonBackgroundPressed: "#2383E2",
+                    frontQuaternaryButtonBorder: "#2383E2",
+                    frontMobilePhoneBackground: "#1d1d1d",
+                    frontLiveDemoSidebarText: "#777",
+                    frontLiveDemoSidebarLabelText: "rgba(55, 53, 47, 0.3)",
+                    frontTransparent: "transparent",
+                    frontBlackButtonBackground: i.getCSSColor(t.grayscale.dark.darkgray),
+                    frontBlackButtonBackgroundHovered: "rgb(98, 102, 104)",
+                    frontBlackButtonBackgroundPressed: "rgb(120, 123, 123)",
+                    frontBlueButtonBackground: "#2383E2",
+                    frontBlueButtonHoveredBackground: i.darken("#2383E2", .3),
+                    frontBlueButtonPressedBackground: i.darken("#2383E2", .6)
+                },
+                f = {
+                    regularTextColor: u(1),
+                    mediumTextColor: u(.7),
+                    lightTextColor: u(.4),
+                    regularIconColor: i.alpha(t.grayscale.light.darkgray, .8),
+                    mediumIconColor: i.alpha(t.grayscale.light.darkgray, .4),
+                    lightIconColor: i.alpha(t.grayscale.light.darkgray, .2),
+                    dividerColor: i.alpha(t.grayscale.light.darkgray, .09),
+                    invertedTextColor: i.alpha("white", .9),
+                    selectionColor: "rgba(35, 131, 226, 0.28)"
+                },
+                m = {
+                    halfWhite: "rgba(255, 255, 255, 0.5)",
+                    diffTextColor: p.blue,
+                    diffBackground: i.alpha(p.blue, .1),
+                    diffBackgroundHover: i.alpha(p.blue, .2)
+                };
             t.colors = {
                 inherit: "inherit",
                 transparent: "transparent",
                 black: "black",
                 white: "white",
-                whiteWithAlpha: (e = 1) => `rgba(255, 255, 255, ${e})`,
-                blackWithAlpha: (e = 1) => `rgba(0, 0, 0, ${e})`,
-                redWithAlpha: (e = 1) => `rgba(235, 87, 87, ${e})`,
-                blueWithAlpha: (e = 1) => `rgba(35, 131, 226, ${e})`, ...p,
+                whiteWithAlpha: (alpha = 1) => `rgba(255, 255, 255, ${alpha})`,
+                blackWithAlpha: (alpha = 1) => `rgba(0, 0, 0, ${alpha})`,
+                redWithAlpha: (alpha = 1) => `rgba(235, 87, 87, ${alpha})`,
+                blueWithAlpha: (alpha = 1) => `rgba(35, 131, 226, ${alpha})`,
+                ...p,
                 EmailBaseColor: "#333333",
                 EmailBorderColor: "#EEEEEE",
                 EmailCaptionColor: "#AAAAAA",
@@ -8371,8 +8744,12 @@
                 UIDocNotificationsDarkGrayColor: "#6A6A6A",
                 UIDocNotificationsLightGrayBackground: "#F1F1F1",
                 UIDocNotificationsMediumGrayBackground: "#D7D7D7",
-                UIDocNotificationsMediumLightGrayBackground: "#E9E9E9", ...h, ...f, ...m
-            }, t.accentColors = {
+                UIDocNotificationsMediumLightGrayBackground: "#E9E9E9",
+                ...h,
+                ...f,
+                ...m,
+            }
+            t.accentColors = {
                 light: {
                     uiBlue: {
                         50: "rgba(35, 131, 226, .035)",
@@ -8539,7 +8916,8 @@
                     },
                     pageGlass: {0: "rgba(255, 255, 255, 0.8)"},
                     washGlass: {0: "rgba(249, 249, 248, 0.8)"}
-                }, dark: {
+                },
+                dark: {
                     uiBlue: {
                         50: "rgba(35, 131, 226, .035)",
                         75: "rgba(35, 131, 226, .05)",
@@ -8714,14 +9092,19 @@
                     pageGlass: {0: "rgba(25, 25, 25, 0.8)"},
                     washGlass: {0: "rgba(32, 32, 32, 0.8)"}
                 }
-            }, t.themeModes = ["light", "dark"];
-            const g = new Map;
+            }
+            t.themeModes = ["light", "dark"];
 
-            function b(e) {
-                const r = `${e.theme}`, n = g.get(r);
-                if (n) return n;
+            const _map = new Map()
+
+            function getTheme(e) {
+                const themeName = `${e.theme}`
+                const theme = _map.get(themeName);
+                if (theme) {
+                    return theme
+                }
                 {
-                    const n = function (e) {
+                    const theme = function (e) {
                         const r = {
                             mode: {light: "light", dark: "dark"},
                             invertedMode: {light: "dark", dark: "light"},
@@ -9612,37 +9995,75 @@
                                 dark: t.accentColors.dark.translucentGray[200]
                             }
                         }, n = {};
-                        for (const [t, o] of (0, c.objectEntries)(r)) n[t] = o[e.theme];
+                        for (const [key, value] of c.objectEntries(r)) {
+                            n[key] = value[e.theme]
+                        }
                         return n
                     }(e);
-                    return g.set(r, n), n
+                    _map.set(themeName, theme)
+                    return theme
                 }
             }
 
-            t.getTheme = b
-            t.blockColors = ["default", "gray", "brown", "orange", "yellow", "teal", "blue", "purple", "pink", "red", "gray_background", "brown_background", "orange_background", "yellow_background", "teal_background", "blue_background", "purple_background", "pink_background", "red_background"]
-            t.blockTextColors = t.blockColors.filter((e => -1 === e.indexOf("background")))
-            t.blockBackgroundColors = t.blockColors.filter((e => -1 !== e.indexOf("background")))
+            t.getTheme = getTheme
+            t.blockColors = [
+                "default",
+                "gray",
+                "brown",
+                "orange",
+                "yellow",
+                "teal",
+                "blue",
+                "purple",
+                "pink",
+                "red",
+                "gray_background",
+                "brown_background",
+                "orange_background",
+                "yellow_background",
+                "teal_background",
+                "blue_background",
+                "purple_background",
+                "pink_background",
+                "red_background"
+            ]
+            t.blockTextColors = t.blockColors.filter(color => -1 === color.indexOf("background"))
+            t.blockBackgroundColors = t.blockColors.filter(color => -1 !== color.indexOf("background"))
             t.teamIconBackgroundColorConfiguration = {
                 light: 100,
                 dark: 300
             }
-            t.selectColors = ["default", "gray", "brown", "orange", "yellow", "green", "blue", "purple", "pink", "red"];
+            t.selectColors = [
+                "default",
+                "gray",
+                "brown",
+                "orange",
+                "yellow",
+                "green",
+                "blue",
+                "purple",
+                "pink",
+                "red"
+            ];
 
             const v = "rgb(255, 212, 0)",
                 y = {
-                    comment: (0, i.colord)({r: 255, g: 203, b: 0}),
-                    update: (0, i.colord)({r: 35, g: 131, b: 226}),
-                    remove: (0, i.colord)({r: 120, g: 119, b: 116})
+                    comment: i.colord({r: 255, g: 203, b: 0}),
+                    update: i.colord({r: 35, g: 131, b: 226}),
+                    remove: i.colord({r: 120, g: 119, b: 116})
                 },
-                w = {comment: {light: .8, dark: .8}, update: {light: .4, dark: .6}, remove: {light: .4, dark: .6}},
+                w = {
+                    comment: {light: .8, dark: .8},
+                    update: {light: .4, dark: .6},
+                    remove: {light: .4, dark: .6}
+                },
                 _ = {
                     comment: {background: .15, underline: .4375},
                     update: {underline: .25, background: .09},
                     remove: {underline: .25, background: .09}
                 };
 
-            function k(e, t) {
+            function findClosestColor(e, t) {
                 const r = (0, c.objectKeys)(t).map((r => {
                     const n = t[r];
                     try {
@@ -9663,7 +10084,7 @@
                 return t && e.accentColors[t] || e.selectLightGray
             }
 
-            function E(e, t) {
+            function getSelectTokenStyle(e, t) {
                 const r = S(e, t);
                 return "dark" === e.mode ? {
                     textColor: "rgba(255, 255, 255, 0.805)",
@@ -9672,11 +10093,11 @@
                 } : {textColor: r[800], backgroundColor: r[100], menuBackgroundColor: r[100]}
             }
 
-            function C(e) {
+            function blockColorIsBackgroundColor(e) {
                 return e.includes("_background")
             }
 
-            function O(e, r) {
+            function getBlockColorStyle(e, r) {
                 if ("default" === e) return {color: "inherit", fill: "inherit"};
                 const n = t.blockColorToAccentColor[e];
                 if (!n) return {color: "inherit", fill: "inherit"};
@@ -9687,68 +10108,62 @@
                     light: o[t.blockColorConfiguration.text.light],
                     dark: "gray" === e ? o[t.blockColorConfiguration.text.darkGray] : o[t.blockColorConfiguration.text.dark]
                 };
-                return C(e) ? {background: "dark" === r.mode ? a.dark : a.light} : {
+                return blockColorIsBackgroundColor(e) ? {background: "dark" === r.mode ? a.dark : a.light} : {
                     color: "dark" === r.mode ? i.dark : i.light,
                     fill: "dark" === r.mode ? i.dark : i.light
                 }
             }
 
-            t.interactiveAnnotationColor = s.memoize((e => {
+            t.interactiveAnnotationColor = s.memoize(e => {
                 const {annotationType: t, type: r, selected: n, hovered: o, overlapping: a, mode: s} = e, l = y[t],
                     c = w[t][s], u = _[t][r], d = 1.25 * c, p = (o || n ? "underline" === r ? 3 : 1 : 0) + (a ? 2 : 0);
                 return (0, i.getCSSColor)(l.alpha(Math.min(c * u * (1 + p), d)))
-            }), (e => s.values(e).join("_")))
-            t.commentBackgroundWithLevel = function ({
-                                                         level: e,
-                                                         selected: r,
-                                                         hovered: n,
-                                                         newStyling: o,
-                                                         mode: a
-                                                     }) {
-                if (o) return (0, t.interactiveAnnotationColor)({
-                    annotationType: "comment",
-                    type: "background",
-                    selected: r ?? !1,
-                    hovered: n ?? !1,
-                    overlapping: e > 1,
-                    mode: a
-                });
-                const s = r ? 3 : 0, l = n ? 2 : 0, c = (1 === e ? e : 2 * Math.min(e, 2)) + s + l;
-                return (0, i.alpha)(v, Math.min(.14 * c, 1))
+            }, e => s.values(e).join("_"))
+            t.commentBackgroundWithLevel = function ({level, selected, hovered, newStyling, mode}) {
+                if (newStyling) {
+                    return t.interactiveAnnotationColor({
+                        annotationType: "comment",
+                        type: "background",
+                        selected: selected ?? !1,
+                        hovered: hovered ?? !1,
+                        overlapping: level > 1,
+                        mode: mode
+                    })
+                }
+                const s = selected ? 3 : 0,
+                    l = hovered ? 2 : 0,
+                    c = (1 === level ? level : 2 * Math.min(level, 2)) + s + l;
+                return i.alpha(v, Math.min(.14 * c, 1))
             }
-            t.commentUnderlineColorWithLevel = function ({
-                                                             level: e,
-                                                             selected: r,
-                                                             hovered: n,
-                                                             newStyling: o,
-                                                             mode: a
-                                                         }) {
-                return o ? (0, t.interactiveAnnotationColor)({
-                    annotationType: "comment",
-                    type: "underline",
-                    selected: r ?? !1,
-                    hovered: n ?? !1,
-                    overlapping: e > 1,
-                    mode: a
-                }) : v
+            t.commentUnderlineColorWithLevel = function ({level, selected, hovered, newStyling, mode}) {
+                return newStyling
+                    ? t.interactiveAnnotationColor({
+                        annotationType: "comment",
+                        type: "underline",
+                        selected: selected ?? !1,
+                        hovered: hovered ?? !1,
+                        overlapping: level > 1,
+                        mode: mode
+                    })
+                    : v
             }
-            t.commentContextBarBackground = s.memoize(((e, t) => e ? (0, i.getCSSColor)(y.comment.alpha(.8 * w.comment[t])) : "rgba(255, 212, 0, 0.8)"), ((...e) => s.values(e).join("_")))
+            t.commentContextBarBackground = s.memoize((e, t) => e ? i.getCSSColor(y.comment.alpha(.8 * w.comment[t])) : "rgba(255, 212, 0, 0.8)", (...e) => s.values(e).join("_"))
             t.getDefaultTheme = function () {
-                return b({theme: "light"})
+                return getTheme({theme: "light"})
             }
-            t.findClosestColor = k
+            t.findClosestColor = findClosestColor
             t.findClosestSelectColor = function (e) {
                 const r = {};
                 for (const e of t.selectColors) {
-                    const t = E(b({theme: "light"}), e);
+                    const t = getSelectTokenStyle(getTheme({theme: "light"}), e);
                     r[e] = t.backgroundColor
                 }
-                return k(e, r)
+                return findClosestColor(e, r)
             }
             t.findClosestThemeColor = function (e) {
-                const t = {}, r = b({theme: "light"});
+                const t = {}, r = getTheme({theme: "light"});
                 for (const [e, n] of Object.entries(r.accentColors)) for (const [r, o] of Object.entries(n)) t[`${e}:${r}`] = o;
-                const n = k(e, t), [o, a] = n.split(":");
+                const n = findClosestColor(e, t), [o, a] = n.split(":");
                 return {colorName: o, shade: parseInt(a)}
             }
             t.flattenColorsByAlpha = function (e) {
@@ -9787,7 +10202,7 @@
                     return
                 }
             }
-            t.getSelectTokenStyle = E
+            t.getSelectTokenStyle = getSelectTokenStyle
             t.CHART_COLORS = {
                 colorful: ["#2483e2", "#dea028", "#4faa79", "#9065cc", "#00a1c1", "#e17634", "#d25390", "#d44c47"],
                 white: ["#d6d6d6", "#a3a3a3", "#5e5e5e", "#303030"],
@@ -9852,7 +10267,7 @@
                 pink_background: "pink",
                 red_background: "red"
             }
-            t.blockColorIsBackgroundColor = C
+            t.blockColorIsBackgroundColor = blockColorIsBackgroundColor
             t.blockColorConfiguration = {
                 background: {
                     light: 50,
@@ -9872,17 +10287,17 @@
                     darkGray: 700
                 }
             }
-            t.getBlockColorStyle = O
+            t.getBlockColorStyle = getBlockColorStyle
             t.getBlockColorFromUserId = function (e, r) {
                 let n = 0;
                 for (let t = 0; t < e.length; t++) n += e.charCodeAt(t);
-                return n %= t.blockTextColors.length, O(t.blockTextColors[n], r).color || r.regularTextColor
+                return n %= t.blockTextColors.length, getBlockColorStyle(t.blockTextColors[n], r).color || r.regularTextColor
             }
             t.getButtonBlockColorStyle = function (e, r) {
                 if ("default" === e) return {color: "inherit", fill: "inherit"};
                 const n = t.blockColorToAccentColor[e];
                 if (!n) return {color: "inherit", fill: "inherit"};
-                const o = r.accentColors[n], a = O(e, r), i = {
+                const o = r.accentColors[n], a = getBlockColorStyle(e, r), i = {
                     lightHovered: o[t.blockColorConfiguration.background.lightHovered],
                     lightPressed: o[t.blockColorConfiguration.background.lightPressed],
                     darkHovered: o[t.blockColorConfiguration.background.darkHovered],
@@ -9893,7 +10308,7 @@
                     darkHovered: o[t.blockColorConfiguration.text.darkHovered],
                     darkPressed: o[t.blockColorConfiguration.text.darkPressed]
                 };
-                return C(e) ? {
+                return blockColorIsBackgroundColor(e) ? {
                     background: a.background,
                     hoveredBackground: "dark" === r.mode ? i.darkHovered : i.lightHovered,
                     pressedBackground: "dark" === r.mode ? i.darkPressed : i.lightPressed
@@ -9910,13 +10325,13 @@
                 if (!n) return {color: r.regularTextColor};
                 const o = r.accentColors[n], a = {light: o[50], dark: "gray_background" === e ? o[200] : o[100]},
                     i = {light: o[500], dark: "gray" === e ? o[800] : o[900]};
-                return C(e) ? {background: "dark" === r.mode ? a.dark : a.light} : {
+                return blockColorIsBackgroundColor(e) ? {background: "dark" === r.mode ? a.dark : a.light} : {
                     color: "dark" === r.mode ? i.dark : i.light,
                     fill: "dark" === r.mode ? i.dark : i.light
                 }
             }
             t.getHighlightColorStyle = function (e, t) {
-                return "default" === e ? {color: t.regularTextColor} : O(e, t)
+                return "default" === e ? {color: t.regularTextColor} : getBlockColorStyle(e, t)
             }
             t.getTemporaryHighlightColorStyle = function (e, t) {
                 return {color: e[t.mode], fill: e[t.mode]}
@@ -12060,45 +12475,53 @@
                 }
             }
         },
-        50019: function (e, t, r) {
+        // getElectronTheme 函数
+        50019: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.getElectronTheme = t.localThemeKey = void 0;
-            const i = a(r(52869));
-            t.localThemeKey = "theme", t.getElectronTheme = function (e, t) {
-                const r = (0, i.getTheme)({theme: e});
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const i = a(__webpack_require(52869));
+
+            exports.localThemeKey = "theme"
+            exports.getElectronTheme = function (themeName, usingSystemTheme) {
+                const theme = i.getTheme({theme: themeName})
                 return {
-                    mode: e,
-                    usingSystemTheme: t,
+                    mode: themeName,
+                    usingSystemTheme: usingSystemTheme,
                     colors: {white: i.default.white, blue: i.default.blue},
                     borderRadius: 4,
-                    textColor: r.regularTextColor,
-                    popoverBackgroundColor: r.popoverBackground,
-                    popoverBoxShadow: r.mediumBoxShadow,
-                    inputBoxShadow: r.inputBoxShadow,
-                    inputBackgroundColor: r.inputBackground,
-                    dividerColor: r.darkDividerColor,
-                    shadowOpacity: r.shadowOpacity
+                    textColor: theme.regularTextColor,
+                    popoverBackgroundColor: theme.popoverBackground,
+                    popoverBoxShadow: theme.mediumBoxShadow,
+                    inputBoxShadow: theme.inputBoxShadow,
+                    inputBackgroundColor: theme.inputBackground,
+                    dividerColor: theme.darkDividerColor,
+                    shadowOpacity: theme.shadowOpacity
                 }
             }
         },
