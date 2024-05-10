@@ -5289,182 +5289,206 @@
                 __notionIPC.handleEventFromRenderer.addListener("notion:set-app-store-state", (evt, t) => {
                     __AppController.appController.getTabControllerForWebContents(evt.sender)?.setAppStoreState(t)
                 })
-                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-notion", (evt, t, r, n) => {
-                    const o = __AppController.appController.getWindowControllerForWebContents(evt.sender),
-                        a = __AppController.appController.getTabControllerForWebContents(evt.sender);
-                    if (!o || !a) return;
-                    let i;
-                    switch (n) {
+                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-notion", (evt, url, makeActive, type) => {
+                    const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender)
+                    const tabController = __AppController.appController.getTabControllerForWebContents(evt.sender)
+                    if (!windowController || !tabController) return;
+
+                    let position;
+                    switch (type) {
                         case"start":
                         case"end":
-                            i = {type: n};
+                            position = {type: type};
                             break;
                         case"after":
                         case"after-children":
-                            i = {type: n, parentTabId: a.tabId};
+                            position = {type: type, parentTabId: tabController.tabId};
                             break;
                         default:
-                            (0, u.unreachable)(n)
+                            u.unreachable(type)
                     }
-                    o.newTab({initialUrl: t, makeActiveTab: r, position: i})
+                    windowController.newTab({
+                        initialUrl: url,
+                        makeActiveTab: makeActive,
+                        position: position
+                    })
                 })
-                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", (e => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.searchForNewTab({
-                        makeActiveTab: !0,
+                __notionIPC.handleEventFromRenderer.addListener("notion:new-tab-from-tab-bar", evt => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.searchForNewTab({
+                        makeActiveTab: true,
                         position: {type: "end"}
                     })
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:tab-clicked", ((e, t) => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.makeTabActive(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-menu", ((e, t, r, n) => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.showTabMenu({
-                        tabIndex: t,
-                        clientX: r,
-                        clientY: n
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:tab-clicked", (evt, tabId) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.makeTabActive(tabId)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-menu", (evt, tabIndex, clientX, clientY) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.showTabMenu({
+                        tabIndex: tabIndex,
+                        clientX: clientX,
+                        clientY: clientY
                     })
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:close-tab", ((e, t) => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.closeTab(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:move-tab-to-new-window", ((e, t) => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.openTabInNewWindow(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:search-start", ((e, t) => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStartFromNotion(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-notion", (e => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromNotion()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:search-next", ((e, t) => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchNextFromSearch(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:search-prev", ((e, t) => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchPrevFromSearch(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:search-clear", (e => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchClearFromSearch()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-search", (e => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.handleSearchStopFromSearch()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-close", (() => {
-                    "visible" === __store.Store.getState().quickSearch.visibilityState.type && __store.Store.dispatch((0, __quickSearchSlice.toggleVisibilityStateIfReady)("navigation"))
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-result", ((e, t) => {
-                    const r = (0, v.normalizeUrlProtocol)(t);
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:close-tab", (evt, tabIndex) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.closeTab(tabIndex)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:move-tab-to-new-window", (evt, t) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.openTabInNewWindow(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-start", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.handleSearchStartFromNotion(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-notion", evt => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.handleSearchStopFromNotion()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-next", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.handleSearchNextFromSearch(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-prev", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.handleSearchPrevFromSearch(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-clear", evt => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.handleSearchClearFromSearch()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:search-stop-from-search", evt => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.handleSearchStopFromSearch()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-close", () => {
+                    if ("visible" === __store.Store.getState().quickSearch.visibilityState.type) {
+                        __store.Store.dispatch(__quickSearchSlice.toggleVisibilityStateIfReady("navigation"))
+                    }
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-result", (evt, t) => {
+                    const r = v.normalizeUrlProtocol(t);
                     r && __AppController.appController.openURLOptionallySurfacingExistingTab(r)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-ready", (() => {
-                    __store.Store.dispatch((0, __quickSearchSlice.setReadyState)({type: "ready"}))
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-not-ready", (() => {
-                    __store.Store.dispatch((0, __quickSearchSlice.setReadyState)({type: "not-ready"}))
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-refresh", (() => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-ready", () => {
+                    __store.Store.dispatch(__quickSearchSlice.setReadyState({type: "ready"}))
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-not-ready", () => {
+                    __store.Store.dispatch(__quickSearchSlice.setReadyState({type: "not-ready"}))
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-refresh", () => {
                     __AppController.appController.quickSearchController?.reload()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", (() => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:quick-search-open-shortcut-settings", () => {
                     __AppController.appController.openUserSettings()
-                }))
-                __notionIPC.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", (e => __AppController.appController.getTabControllerForWebContents(e.sender)?.getSpellcheckerLanguages() || []))
-                __notionIPC.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", (e => __AppController.appController.getTabControllerForWebContents(e.sender)?.getAvailableSpellcheckerLanguages() || []))
-                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", ((e, t) => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerLanguages(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", ((e, t) => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.setSpellcheckerEnabled(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:replace-misspelling", ((e, t) => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.replaceMisspelling(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:add-to-dictionary", ((e, t) => {
-                    __AppController.appController.getTabControllerForWebContents(e.sender)?.addToDictionary(t)
-                }))
-                __notionIPC.handleRequestFromRenderer.addListener("notion:get-substitutions", (e => {
-                    if (!electron.systemPreferences.getUserDefault) return {value: []};
-                    const t = electron.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
-                    return t ? {value: t} : {value: []}
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:navigation-meta-click", ((e, t) => {
-                    const r = __AppController.appController.getWindowControllerForWebContents(e.sender);
-                    "back" === t ? r?.handleBackMetaClick() : r?.handleForwardMetaClick()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:go-back", (e => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goBack()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:go-forward", (e => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.getActiveTabController()?.goForward()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-history-menu", ((e, t, r, n) => {
-                    __AppController.appController.getWindowControllerForWebContents(e.sender)?.showTabHistoryMenu({
-                        direction: t,
-                        clientX: r,
-                        clientY: n
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-spellchecker-languages", evt => __AppController.appController.getTabControllerForWebContents(evt.sender)?.getSpellcheckerLanguages() || [])
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-available-spellchecker-languages", evt => __AppController.appController.getTabControllerForWebContents(evt.sender)?.getAvailableSpellcheckerLanguages() || [])
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-languages", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.setSpellcheckerLanguages(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-spellchecker-enabled", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.setSpellcheckerEnabled(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:replace-misspelling", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.replaceMisspelling(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:add-to-dictionary", (evt, t) => {
+                    __AppController.appController.getTabControllerForWebContents(evt.sender)?.addToDictionary(t)
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-substitutions", evt => {
+                    if (!electron.systemPreferences.getUserDefault) {
+                        return {value: []}
+                    }
+                    const value = electron.systemPreferences.getUserDefault("NSUserDictionaryReplacementItems", "array");
+                    return value ? {value: value} : {value: []}
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:navigation-meta-click", (evt, type) => {
+                    const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender);
+                    "back" === type ? windowController?.handleBackMetaClick() : windowController?.handleForwardMetaClick()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:go-back", evt => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.getActiveTabController()?.goBack()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:go-forward", evt => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.getActiveTabController()?.goForward()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:show-tab-history-menu", (evt, direction, clientX, clientY) => {
+                    __AppController.appController.getWindowControllerForWebContents(evt.sender)?.showTabHistoryMenu({
+                        direction: direction,
+                        clientX: clientX,
+                        clientY: clientY
                     })
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:create-window", ((e, t) => {
-                    __AppController.appController.newWindow({initialUrl: t})
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:create-popup", ((e, t) => {
-                    (0, g.createPopup)(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:create-google-drive-picker", ((e, t) => {
-                    (0, m.createGoogleDrivePicker)(t)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:set-window-title", ((e, t) => {
-                    const r = __AppController.appController.getTabControllerForWebContents(e.sender);
-                    r && r.setPageTitle(t.title)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:set-badge", ((e, t) => {
-                    if (__store.Store.dispatch((0, __appSlice.updateNotificationCount)(lodash.toNumber(t.badgeString))), electron.app.dock) return void electron.app.dock.setBadge(t.badgeString);
-                    const r = electron.BrowserWindow.fromWebContents(e.sender);
-                    if (!r) return;
-                    if (!r.setOverlayIcon) return;
-                    if ("" === t.badgeString || null === t.badgeImageDataUrl) return void r.setOverlayIcon(null, "");
-                    const n = electron.nativeImage.createFromDataURL(t.badgeImageDataUrl).toPNG(),
-                        o = electron.nativeImage.createFromBuffer(n, {scaleFactor: t.devicePixelRatio});
-                    r.setOverlayIcon(o, `${t.badgeString} unread notifications`)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:clear-browser-history", (e => {
-                    e.sender.clearHistory()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:open-app-menu", (e => {
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-window", (evt, url) => {
+                    __AppController.appController.newWindow({initialUrl: url})
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-popup", (evt, t) => {
+                    g.createPopup(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:create-google-drive-picker", (evt, t) => {
+                    m.createGoogleDrivePicker(t)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-window-title", (evt, options) => {
+                    const tabController = __AppController.appController.getTabControllerForWebContents(evt.sender);
+                    tabController && tabController.setPageTitle(options.title)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-badge", (evt, payload) => {
+                    __store.Store.dispatch(__appSlice.updateNotificationCount(lodash.toNumber(payload.badgeString)))
+                    if (electron.app.dock) {
+                        electron.app.dock.setBadge(payload.badgeString)
+                        return
+                    }
+                    const webContents = electron.BrowserWindow.fromWebContents(evt.sender);
+                    if (!webContents) return;
+                    if (!webContents.setOverlayIcon) return;
+                    if ("" === payload.badgeString || null === payload.badgeImageDataUrl) {
+                        webContents.setOverlayIcon(null, "")
+                        return
+                    }
+
+                    const imgBuffer = electron.nativeImage.createFromDataURL(payload.badgeImageDataUrl).toPNG()
+                    const nativeImage = electron.nativeImage.createFromBuffer(imgBuffer, {scaleFactor: payload.devicePixelRatio})
+                    webContents.setOverlayIcon(nativeImage, `${payload.badgeString} unread notifications`)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:clear-browser-history", evt => {
+                    evt.sender.clearHistory()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-app-menu", evt => {
                     electron.Menu.getApplicationMenu()?.popup({x: 8, y: 8})
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:open-dev-tools", (e => {
-                    e.sender.openDevTools()
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:download-url", ((e, t) => {
-                    e.sender.downloadURL(t.url)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:open-external-url", ((e, t) => {
-                    const {url: r} = t;
-                    d.sanitizeUrlStrict(r) && electron.shell.openExternal(r)
-                }))
-                __notionIPC.handleRequestFromRenderer.addListener("notion:ready", (e => Promise.resolve({value: void 0})))
-                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-down", (e => {
-                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
-                    t && "win32" === process.platform && t.setShouldShowAppMenuFromAltKey(!0)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-up", (e => {
-                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
-                    "win32" === process.platform && t && (t.toggleAppMenuPopup(), t.setShouldShowAppMenuFromAltKey(!1))
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", (e => {
-                    const t = __AppController.appController.getWindowControllerForWebContents(e.sender);
-                    t?.setShouldShowAppMenuFromAltKey(!1)
-                }))
-                __notionIPC.handleEventFromRenderer.addListener("notion:broadcast", ((e, t) => {
-                    const r = electron.BrowserWindow.fromWebContents(e.sender);
-                    r && electron.BrowserWindow.getAllWindows().forEach((e => {
-                        r.id !== e.id && __AppController.appController.getWindowControllerForWebContents(e.webContents)?.getActiveTabController()?.broadcast(t)
-                    }))
-                }))
-                __notionIPC.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", (async (e, t) => (0, v.getIsProtocolRegistered)(t)))
-                __notionIPC.handleEventFromRenderer.addListener("notion:set-is-media-active", ((e, t) => {
-                    __AppController.appController.updateMediaIndicator(e.sender, t)
-                }))
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-dev-tools", evt => {
+                    evt.sender.openDevTools()
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:download-url", (evt, payload) => {
+                    evt.sender.downloadURL(payload.url)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:open-external-url", (evt, payload) => {
+                    const {url} = payload;
+                    d.sanitizeUrlStrict(url) && electron.shell.openExternal(url)
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:ready", evt => Promise.resolve({value: void 0}))
+                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-down", evt => {
+                    const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender);
+                    if (windowController && "win32" === process.platform) {
+                        windowController.setShouldShowAppMenuFromAltKey(true)
+                    }
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:alt-key-up", evt => {
+                    const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender);
+                    if ("win32" === process.platform && windowController) {
+                        windowController.toggleAppMenuPopup()
+                        windowController.setShouldShowAppMenuFromAltKey(false)
+                    }
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:cancel-alt-menu-open", evt => {
+                    const windowController = __AppController.appController.getWindowControllerForWebContents(evt.sender);
+                    windowController?.setShouldShowAppMenuFromAltKey(false)
+                })
+                __notionIPC.handleEventFromRenderer.addListener("notion:broadcast", (evt, payload) => {
+                    const selfWin = electron.BrowserWindow.fromWebContents(evt.sender);
+                    selfWin && electron.BrowserWindow.getAllWindows().forEach(win => {
+                        if (selfWin.id !== win.id) {
+                            __AppController.appController.getWindowControllerForWebContents(win.webContents)?.getActiveTabController()?.broadcast(payload)
+                        }
+                    })
+                })
+                __notionIPC.handleRequestFromRenderer.addListener("notion:get-is-protocol-registered", async (evt, t) => v.getIsProtocolRegistered(t))
+                __notionIPC.handleEventFromRenderer.addListener("notion:set-is-media-active", (evt, t) => {
+                    __AppController.appController.updateMediaIndicator(evt.sender, t)
+                })
             }
         },
 
