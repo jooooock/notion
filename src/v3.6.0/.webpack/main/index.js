@@ -369,104 +369,190 @@
         },
 
         // AssetCache 类
-        87309: function (e, t, r) {
+        87309: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.AssetCache = t.assetCacheDirName = void 0;
-            const s = i(r(76982)), l = i(r(16928)), c = a(r(4482)), u = i(r(47419)), d = i(r(80115)), p = i(r(45437)),
-                h = r(4058), f = r(28902), m = a(r(6600)), g = r(21248), b = r(43067), v = a(r(60411)), y = i(r(11239)),
-                w = r(3420), _ = r(5554), k = r(13387), T = u.default.scope("AssetCache");
-            t.assetCacheDirName = "notionAssetCache-v2", t.AssetCache = class {
-                constructor(e) {
-                    this.args = e, this.queue = new h.AsyncQueue(1), this.events = new p.default, this.appActive = !0, this.lastAppStateChangeTime = 0, this.latestVersionFileName = "latestVersion.json", this.assetsJsonFileName = "assets.json", this.assetHeadersFileName = "headers.json", this.assetsDirName = "assets", this.cacheDir = l.default.join(this.args.baseDir, t.assetCacheDirName), this.latestVersionPath = l.default.join(this.cacheDir, this.latestVersionFileName)
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const crypto = i(__webpack_require(76982)),
+                __path = i(__webpack_require(16928)),
+                electron = a(__webpack_require(4482)),
+                electron_log = i(__webpack_require(47419)),
+                __fse = i(__webpack_require(80115)),
+                __events = i(__webpack_require(45437)),
+                __AsyncQueue = __webpack_require(4058),
+                f = __webpack_require(28902),
+                lodash = a(__webpack_require(6600)),
+                __logglyHelpers = __webpack_require(21248),
+                __utils = __webpack_require(43067),
+                v = a(__webpack_require(60411)),
+                __config = i(__webpack_require(11239)),
+                __ServerLogger = __webpack_require(3420),
+                __setupLogging = __webpack_require(5554),
+                __session = __webpack_require(13387)
+
+            const logger = electron_log.default.scope("AssetCache");
+
+            exports.assetCacheDirName = "notionAssetCache-v2"
+
+            exports.AssetCache = class {
+                constructor(args) {
+                    this.args = args
+                    this.queue = new __AsyncQueue.AsyncQueue(1)
+                    this.events = new __events.default
+                    this.appActive = true
+                    this.lastAppStateChangeTime = 0
+                    this.latestVersionFileName = "latestVersion.json"
+                    this.assetsJsonFileName = "assets.json"
+                    this.assetHeadersFileName = "headers.json"
+                    this.assetsDirName = "assets"
+
+                    // /Library/Application Support/Notion/notionAssetCache-v2
+                    this.cacheDir = __path.default.join(this.args.baseDir, exports.assetCacheDirName)
+
+                    // /Library/Application Support/Notion/notionAssetCache-v2/latestVersion.json
+                    this.latestVersionPath = __path.default.join(this.cacheDir, this.latestVersionFileName)
                 }
 
-                async handleRequest(e) {
-                    const t = v.parse(e.url), r = t.host, n = t.pathname || "/";
-                    if (r !== y.default.domainName) return;
+                async handleRequest(req) {
+                    const t = v.parse(req.url),
+                        host = t.host,
+                        pathname = t.pathname || "/";
+
+                    if (host !== __config.default.domainName) return;
                     if (!this.assetCacheState) return;
-                    const o = this.assetCacheState;
-                    if (o.assetsJson.proxyServerPathPrefixes.some((e => n.startsWith(e)))) return;
-                    const a = o.assetsJson.files.find((e => e.path === n));
-                    if (a) {
-                        const e = this.getAssetsDir(o.assetsJson.version), t = l.default.join(e, a.path);
-                        return (0, _.shouldLog)("silly") && T.silly("Performing file request", {
-                            absolutePath: t,
-                            urlPath: n
-                        }), {absolutePath: t, headers: this.getHeaders(a.path)}
+
+                    const assetCacheState = this.assetCacheState;
+                    if (assetCacheState.assetsJson.proxyServerPathPrefixes.some(prefix => pathname.startsWith(prefix))) return;
+
+                    const targetFile = assetCacheState.assetsJson.files.find(file => file.path === pathname)
+                    if (targetFile) {
+                        const assetsDir = this.getAssetsDir(assetCacheState.assetsJson.version)
+                        const absolutePath = __path.default.join(assetsDir, targetFile.path)
+
+                        if (__setupLogging.shouldLog("silly")) {
+                            logger.silly("Performing file request", {
+                                absolutePath: absolutePath,
+                                urlPath: pathname
+                            })
+                        }
+
+                        return {
+                            absolutePath: absolutePath,
+                            headers: this.getHeaders(targetFile.path)
+                        }
                     }
-                    if ([".js", ".json", ".css", ".woff", ".woff2", ".png", ".svg"].some((e => n.endsWith(e)))) return void w.serverLogger.rateLimitedLog({
-                        level: "error",
-                        from: "AssetCache",
-                        type: "obviouslyIncorrectPathForIndex",
-                        data: {url: n}
-                    });
-                    const i = this.getAssetsDir(o.assetsJson.version);
-                    let s = o.assetsJson.entry;
-                    if (o.assetsJson.localeHtml) {
-                        const e = c.session.fromPartition(k.electronSessionPartition).cookies, [t] = await e.get({name: "notion_locale"});
-                        let r = "en-US";
-                        t && (r = (0, f.getLocaleFromCookie)(t.value));
-                        const n = o.assetsJson.localeHtml[r];
-                        n && (s = n)
-                    }
-                    const u = o.assetsJson.files.find((e => e.path === s));
-                    if (u) {
-                        n.includes(".") && w.serverLogger.rateLimitedLog({
+
+
+                    if ([".js", ".json", ".css", ".woff", ".woff2", ".png", ".svg"].some(ext => pathname.endsWith(ext))) {
+                        __ServerLogger.serverLogger.rateLimitedLog({
                             level: "error",
                             from: "AssetCache",
-                            type: "requestReturnedAsIndexV2",
-                            data: {url: n}
-                        });
-                        const e = l.default.join(i, u.path);
-                        return (0, _.shouldLog)("silly") && T.silly("Performing file request (2)", {
-                            absolutePath: e,
-                            urlPath: n
-                        }), {absolutePath: e, headers: this.getHeaders(u.path)}
+                            type: "obviouslyIncorrectPathForIndex",
+                            data: {url: pathname}
+                        })
+                        return
                     }
-                    w.serverLogger.rateLimitedLog({
+
+                    const assetsDir = this.getAssetsDir(assetCacheState.assetsJson.version);
+                    let entryFilePath = assetCacheState.assetsJson.entry;
+                    if (assetCacheState.assetsJson.localeHtml) {
+                        const cookies = electron.session.fromPartition(__session.electronSessionPartition).cookies
+                        const [cookie] = await cookies.get({name: "notion_locale"})
+                        let locale = "en-US";
+                        if (cookie) {
+                            locale = f.getLocaleFromCookie(cookie.value)
+                        }
+                        const localeEntryFilePath = assetCacheState.assetsJson.localeHtml[locale]
+                        if (localeEntryFilePath) {
+                            entryFilePath = localeEntryFilePath
+                        }
+                    }
+
+                    const entryFile = assetCacheState.assetsJson.files.find(file => file.path === entryFilePath)
+                    if (entryFile) {
+                        if (pathname.includes(".")) {
+                            __ServerLogger.serverLogger.rateLimitedLog({
+                                level: "error",
+                                from: "AssetCache",
+                                type: "requestReturnedAsIndexV2",
+                                data: {url: pathname}
+                            })
+                        }
+
+                        const absolutePath = __path.default.join(assetsDir, entryFile.path)
+                        if (__setupLogging.shouldLog("silly")) {
+                            logger.silly("Performing file request (2)", {
+                                absolutePath: absolutePath,
+                                urlPath: pathname
+                            })
+                        }
+                        return {
+                            absolutePath: absolutePath,
+                            headers: this.getHeaders(entryFile.path)
+                        }
+                    }
+
+                    __ServerLogger.serverLogger.rateLimitedLog({
                         level: "error",
                         from: "AssetCache",
                         type: "cannotFindIndex",
-                        data: {url: n}
+                        data: {url: pathname}
                     })
                 }
 
                 initialize() {
-                    return this.ready || (this.ready = (async () => {
-                        T.debug("Latest version", {latestVersionPath: this.latestVersionPath}), this.latestVersion = await this.loadJson(this.latestVersionPath), T.debug("Current version loaded", {
-                            version: this.latestVersion?.version,
-                            hash: this.latestVersion?.hash
-                        }), await this.syncVersions(), T.debug("Current synced assets.json", {version: this.assetCacheState?.assetsJson.version}), await this.cleanOldVersions()
-                    })()), this.ready
+                    if (!this.ready) {
+                        this.ready = (async () => {
+                            logger.debug("Latest version", {latestVersionPath: this.latestVersionPath})
+                            this.latestVersion = await this.loadJson(this.latestVersionPath)
+
+                            logger.debug("Current version loaded", {
+                                version: this.latestVersion?.version,
+                                hash: this.latestVersion?.hash
+                            })
+                            await this.syncVersions()
+
+                            logger.debug("Current synced assets.json", {version: this.assetCacheState?.assetsJson.version})
+                            await this.cleanOldVersions()
+                        })()
+                    }
+                    return this.ready
                 }
 
                 async reset() {
-                    return this.queue.enqueue((async () => {
-                        this.assetCacheState = void 0, this.latestVersion = void 0, await this.cleanOldVersions()
-                    }))
+                    return this.queue.enqueue(async () => {
+                        this.assetCacheState = void 0
+                        this.latestVersion = void 0
+                        await this.cleanOldVersions()
+                    })
                 }
 
                 get version() {
@@ -474,342 +560,548 @@
                 }
 
                 async checkForUpdates() {
-                    if (0 === this.queue.getStats().queue) return T.debug("Enqueue update"), this.queue.enqueue((() => this.checkForUpdatesNow()));
-                    T.debug("Update already queued")
+                    if (0 === this.queue.getStats().queue) {
+                        logger.debug("Enqueue update")
+                        return this.queue.enqueue(() => this.checkForUpdatesNow())
+                    }
+                    logger.debug("Update already queued")
                 }
 
                 async checkForUpdatesNow() {
-                    const e = Date.now();
-                    T.debug("Checking for app.js update"), this.events.emit("checking-for-update");
-                    const t = Date.now(), r = this.assetCacheState,
-                        n = this.latestVersion && this.latestVersion.hash || r && r.assetsJson.hash || "";
-                    let o;
+                    const checkForUpdateStartTime = Date.now();
+                    logger.debug("Checking for app.js update")
+                    this.events.emit("checking-for-update")
+
+                    // 下载资源(app.js)
+                    let appJsUpdateResp
+                    const updateAssetsFetchStartTime = Date.now()
+                    const assetCacheState = this.assetCacheState
+                    const hash = this.latestVersion && this.latestVersion.hash || assetCacheState && assetCacheState.assetsJson.hash || ""
+
                     try {
-                        const e = new AbortController,
-                            t = await (0, b.raceWithTimeout)(3e4, fetch(v.resolve(this.args.baseUrl, "/api/v3/getAssetsJsonV2"), {
-                                method: "post",
-                                headers: {"content-type": "application/json"},
-                                body: JSON.stringify({hash: n}),
-                                signal: e.signal
-                            }));
-                        if (t.timeout) return T.error("Timeout: Fetch request"), void e.abort();
-                        o = t.result
-                    } catch (e) {
-                        return T.debug("no app.js update available (because offline)", {error: e}), void this.events.emit("update-not-available")
-                    }
-                    if (200 !== o.status) {
-                        const e = new Error(`${o.status}: ${o.statusText}`);
-                        return T.error(`no app update available (${o.status}: ${o.statusText})`, {data: this.createErrorDataMetrics(t)}), void this.events.emit("error", e)
-                    }
-                    this.logPerformance("updateAssetsFetch", t);
-                    const a = Date.now();
-                    let i;
-                    try {
-                        const e = await (0, b.raceWithTimeout)(3e4, o.json());
-                        if (e.timeout) return void T.error("Timeout: JSON.parse");
-                        i = e.result
-                    } catch (e) {
-                        return T.error("Failed to parse assets JSON", {
-                            error: e,
-                            data: this.createErrorDataMetrics(a)
-                        }), void this.events.emit("error", e)
-                    }
-                    this.logPerformance("updateAssetsResponseParse", a);
-                    const s = Date.now();
-                    if (!("version" in i) || this.latestVersion && this.latestVersion.version === i.version) return T.debug("No app update available (noAppUpdateAvailable2)"), void this.events.emit("update-not-available");
-                    T.debug("App update available", {version: i.version}), this.events.emit("update-available", i);
-                    const c = {}, u = this.getCacheDir(i.version), p = this.getAssetsDir(i.version),
-                        f = this.getAssetsJsonPath(i.version), m = this.getAssetHeadersPath(i.version),
-                        y = await this.directoryExists(u), w = new Set;
-                    if (!y) {
-                        try {
-                            await d.default.mkdirp(u)
-                        } catch (e) {
-                            return T.error("Failed to run fs.mkdirp", {
-                                error: e,
-                                data: this.createErrorDataMetrics(s)
-                            }), void this.events.emit("error", e)
+                        const abortController = new AbortController
+
+                        // https://www.notion.so/api/v3/getAssetsJsonV2
+                        const t = await __utils.raceWithTimeout(30_000, fetch(v.resolve(this.args.baseUrl, "/api/v3/getAssetsJsonV2"), {
+                            method: "post",
+                            headers: {"content-type": "application/json"},
+                            body: JSON.stringify({hash: hash}),
+                            signal: abortController.signal
+                        }));
+                        if (t.timeout) {
+                            logger.error("Timeout: Fetch request")
+                            abortController.abort()
+                            return
                         }
-                        if (r) {
-                            const e = r.assetsJson, t = r.assetHeaders, n = new Set(e.files.map((e => e.path))),
-                                o = i.files.filter((e => n.has(e.path))), a = this.getCacheDir(e.version),
-                                u = l.default.join(a, this.assetsDirName);
-                            for (const e of o) {
-                                const r = e.path, n = l.default.join(u, r), o = l.default.join(p, r);
-                                c[r] = t[r];
+                        appJsUpdateResp = t.result
+                    } catch (error) {
+                        logger.debug("no app.js update available (because offline)", {error: error})
+                        this.events.emit("update-not-available")
+                        return
+                    }
+
+                    if (200 !== appJsUpdateResp.status) {
+                        const error = new Error(`${appJsUpdateResp.status}: ${appJsUpdateResp.statusText}`);
+                        logger.error(`no app update available (${appJsUpdateResp.status}: ${appJsUpdateResp.statusText})`, {data: this.createErrorDataMetrics(updateAssetsFetchStartTime)})
+                        this.events.emit("error", error)
+                        return
+                    }
+                    this.logPerformance("updateAssetsFetch", updateAssetsFetchStartTime)
+
+
+                    // 解析
+                    let appJsUpdateJson
+                    const updateAssetsResponseParseStartTime = Date.now()
+                    try {
+                        const e = await __utils.raceWithTimeout(30_000, appJsUpdateResp.json())
+                        if (e.timeout) {
+                            logger.error("Timeout: JSON.parse")
+                            return
+                        }
+                        appJsUpdateJson = e.result
+                    } catch (error) {
+                        logger.error("Failed to parse assets JSON", {
+                            error: error,
+                            data: this.createErrorDataMetrics(updateAssetsResponseParseStartTime)
+                        })
+                        this.events.emit("error", error)
+                        return
+                    }
+                    this.logPerformance("updateAssetsResponseParse", updateAssetsResponseParseStartTime)
+
+
+                    // 复制可重用的文件
+                    const assetJsonStartTime = Date.now()
+                    if (!("version" in appJsUpdateJson) || this.latestVersion && this.latestVersion.version === appJsUpdateJson.version) {
+                        logger.debug("No app update available (noAppUpdateAvailable2)")
+                        this.events.emit("update-not-available")
+                        return
+                    }
+                    logger.debug("App update available", {version: appJsUpdateJson.version})
+                    this.events.emit("update-available", appJsUpdateJson)
+
+                    const headers = {}
+
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}
+                    const targetVersionDir = this.getCacheDir(appJsUpdateJson.version)
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}/assets
+                    const targetAssetsDir = this.getAssetsDir(appJsUpdateJson.version)
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}/assets.json
+                    const newVersionAssetsFile = this.getAssetsJsonPath(appJsUpdateJson.version)
+                    // /Library/Application Support/Notion/notionAssetCache-v2/{version}/headers.json
+                    const newVersionHeadersFile = this.getAssetHeadersPath(appJsUpdateJson.version)
+
+                    const versionCacheDirExist = await this.directoryExists(targetVersionDir)
+                    const w = new Set()
+                    if (!versionCacheDirExist) {
+                        try {
+                            await __fse.default.mkdirp(targetVersionDir)
+                        } catch (error) {
+                            logger.error("Failed to run fs.mkdirp", {
+                                error: error,
+                                data: this.createErrorDataMetrics(assetJsonStartTime)
+                            })
+                            this.events.emit("error", error)
+                            return
+                        }
+                        if (assetCacheState) {
+                            const assetsJson = assetCacheState.assetsJson
+                            const assetHeaders = assetCacheState.assetHeaders
+                            const assetFilePaths = new Set(assetsJson.files.map(_ => _.path))
+                            const notModifiedFiles = appJsUpdateJson.files.filter(_ => assetFilePaths.has(_.path))
+                            const currentVersionDir = this.getCacheDir(assetsJson.version)
+                            const currentAssetDir = __path.default.join(currentVersionDir, this.assetsDirName)
+
+                            // 资源文件路径不变，可直接重用的文件
+                            for (const file of notModifiedFiles) {
+                                const filePath = file.path,
+                                    src = __path.default.join(currentAssetDir, filePath),
+                                    dest = __path.default.join(targetAssetsDir, filePath);
+                                headers[filePath] = assetHeaders[filePath];
                                 try {
-                                    await d.default.copy(n, o), w.add(r)
-                                } catch (e) {
-                                    T.error("Failed to run fs.copy", {
-                                        error: e,
-                                        src: n,
-                                        dest: o,
-                                        data: this.createErrorDataMetrics(s)
+                                    await __fse.default.copy(src, dest)
+                                    w.add(filePath)
+                                } catch (error) {
+                                    logger.error("Failed to run fs.copy", {
+                                        error: error,
+                                        src: src,
+                                        dest: dest,
+                                        data: this.createErrorDataMetrics(assetJsonStartTime)
                                     })
                                 }
                             }
                         }
                     }
-                    let _ = 0, k = 0;
-                    const S = i.files.length, E = () => {
-                        const e = Date.now();
-                        (0 === k || k === S || e >= _ + 5e3) && (_ = e, this.events.emit("download-progress", {
-                            downloaded: k,
-                            total: S
-                        }))
-                    };
-                    E(), this.logPerformance("assetJson", s);
-                    const C = Date.now(), O = new h.AsyncQueue(8), M = [];
-                    await Promise.all(i.files.map((e => O.enqueue((async () => {
-                        if (w.has(e.path) && await this.verifyAsset(p, e)) return k++, void E();
-                        const t = l.default.join(p, e.path);
-                        try {
-                            const r = await this.downloadFile(v.resolve(this.args.baseUrl, e.path), t);
-                            if (c[e.path] = r, await this.verifyAsset(p, e)) k++, E(); else {
-                                const t = new Error("Invalid asset hash");
-                                t.data = {filePath: e.path}, M.push(t)
-                            }
-                        } catch (t) {
-                            t.data = {filePath: e.path}, M.push(t)
+
+                    let lastUpdateTime = 0, downloaded = 0;
+                    const totalFileCount = appJsUpdateJson.files.length
+                    const updateProgress = () => {
+                        const now = Date.now()
+                        if (0 === downloaded || downloaded === totalFileCount || now >= lastUpdateTime + 5000) {
+                            lastUpdateTime = now
+                            this.events.emit("download-progress", {
+                                downloaded: downloaded,
+                                total: totalFileCount
+                            })
                         }
-                    }))))), this.logPerformance("prepare", C);
-                    const I = Date.now();
-                    if (M.length > 0) return T.error("Found errors (downloadError)", {
-                        miscErrorString: (0, g.safelyConvertAnyToString)({errors: M.slice(0, 100)}),
-                        data: this.createErrorDataMetrics(s)
-                    }), void this.events.emit("error", M[0]);
-                    if (!await this.writeJson(m, c)) return void this.events.emit("error", new Error("Cannot write headers.json"));
-                    if (!await this.writeJson(f, i)) return void this.events.emit("error", new Error("Cannot write assets.json"));
-                    const A = {version: i.version, hash: i.hash};
-                    await this.writeJson(this.latestVersionPath, A) ? (this.latestVersion = A, T.debug("Checking for app.js update (2)"), T.info("App.js update download complete", {version: i.version}), this.events.emit("update-downloaded", i), T.info("Installing app.js update", {version: i.version}), this.events.emit("update-finished", i), this.logPerformance("download", I), this.logPerformance("checkForUpdatesNow", e)) : this.events.emit("error", new Error("Cannot write latestVersion.json"))
+                    }
+                    updateProgress()
+                    this.logPerformance("assetJson", assetJsonStartTime)
+
+                    // 准备任务队列
+                    const prepareStartTime = Date.now()
+                    const queue = new __AsyncQueue.AsyncQueue(8)
+                    const errors = []
+                    await Promise.all(appJsUpdateJson.files.map(file => queue.enqueue(async () => {
+                        if (w.has(file.path) && await this.verifyAsset(targetAssetsDir, file)) {
+                            downloaded++
+                            updateProgress()
+                            return
+                        }
+
+                        const destFilePath = __path.default.join(targetAssetsDir, file.path)
+                        try {
+                            headers[file.path] = await this.downloadFile(v.resolve(this.args.baseUrl, file.path), destFilePath)
+                            if (await this.verifyAsset(targetAssetsDir, file)) {
+                                downloaded++
+                                updateProgress()
+                            } else {
+                                const error = new Error("Invalid asset hash");
+                                error.data = {filePath: file.path}
+                                errors.push(error)
+                            }
+                        } catch (error) {
+                            error.data = {filePath: file.path}
+                            errors.push(error)
+                        }
+                    })))
+                    this.logPerformance("prepare", prepareStartTime)
+
+
+                    const downloadStartTime = Date.now();
+                    if (errors.length > 0) {
+                        logger.error("Found errors (downloadError)", {
+                            miscErrorString: __logglyHelpers.safelyConvertAnyToString({errors: errors.slice(0, 100)}),
+                            data: this.createErrorDataMetrics(assetJsonStartTime)
+                        })
+                        this.events.emit("error", errors[0])
+                        return
+                    }
+
+                    if (!await this.writeJson(newVersionHeadersFile, headers)) {
+                        this.events.emit("error", new Error("Cannot write headers.json"))
+                        return
+                    }
+                    if (!await this.writeJson(newVersionAssetsFile, appJsUpdateJson)) {
+                        this.events.emit("error", new Error("Cannot write assets.json"))
+                        return
+                    }
+                    const newLatestVersion = {
+                        version: appJsUpdateJson.version,
+                        hash: appJsUpdateJson.hash
+                    }
+                    if (await this.writeJson(this.latestVersionPath, newLatestVersion)) {
+                        this.latestVersion = newLatestVersion
+
+                        logger.debug("Checking for app.js update (2)")
+                        logger.info("App.js update download complete", {version: appJsUpdateJson.version})
+
+                        this.events.emit("update-downloaded", appJsUpdateJson)
+
+                        logger.info("Installing app.js update", {version: appJsUpdateJson.version})
+
+                        this.events.emit("update-finished", appJsUpdateJson)
+
+                        this.logPerformance("download", downloadStartTime)
+                        this.logPerformance("checkForUpdatesNow", checkForUpdateStartTime)
+                    } else {
+                        this.events.emit("error", new Error("Cannot write latestVersion.json"))
+                    }
                 }
 
-                updateAppState(e, t) {
-                    this.appActive = e, this.lastAppStateChangeTime = t
+                updateAppState(appActive, lastAppStateChangeTime) {
+                    this.appActive = appActive
+                    this.lastAppStateChangeTime = lastAppStateChangeTime
                 }
 
-                logPerformance(e, t) {
-                    if (!(0, _.shouldLog)("debug")) return;
-                    const r = Date.now();
-                    !this.appActive || t < this.lastAppStateChangeTime || T.log(`performance.${e}`, {duration: r - t})
+                logPerformance(name, start) {
+                    if (!__setupLogging.shouldLog("debug")) return;
+
+                    const now = Date.now();
+                    if (this.appActive && start >= this.lastAppStateChangeTime) {
+                        logger.log(`performance.${name}`, {duration: now - start})
+                    }
                 }
 
-                createErrorDataMetrics(e) {
-                    const t = Date.now();
-                    return !this.appActive || e < this.lastAppStateChangeTime ? {} : {duration: t - e}
+                createErrorDataMetrics(start) {
+                    const now = Date.now();
+                    return !this.appActive || start < this.lastAppStateChangeTime
+                        ? {}
+                        : {duration: now - start}
                 }
 
                 async syncVersions() {
-                    if (!this.latestVersion) return T.debug("Sync version: No last version"), void this.events.emit("update-applied");
-                    if (this.assetCacheState && this.latestVersion.version === this.assetCacheState.assetsJson.version) return T.debug("Sync version: Skipping, same version"), void this.events.emit("update-applied");
-                    const e = this.getAssetsJsonPath(this.latestVersion.version),
-                        t = this.getAssetHeadersPath(this.latestVersion.version);
-                    T.info("Sync version", {assetsJsonPath: e, headersJsonPath: t});
-                    const r = await this.loadJson(e), n = await this.loadJson(t);
-                    r && n && (this.assetCacheState = {
-                        assetsJson: r,
-                        assetHeaders: n
-                    }), this.events.emit("update-applied")
+                    if (!this.latestVersion) {
+                        logger.debug("Sync version: No last version")
+                        this.events.emit("update-applied")
+                        return
+                    }
+
+                    if (this.assetCacheState && this.latestVersion.version === this.assetCacheState.assetsJson.version) {
+                        logger.debug("Sync version: Skipping, same version")
+                        this.events.emit("update-applied")
+                        return
+                    }
+
+                    const assetsJsonPath = this.getAssetsJsonPath(this.latestVersion.version),
+                        assetHeadersPath = this.getAssetHeadersPath(this.latestVersion.version);
+                    logger.info("Sync version", {
+                        assetsJsonPath: assetsJsonPath,
+                        headersJsonPath: assetHeadersPath
+                    })
+                    const assetsJson = await this.loadJson(assetsJsonPath),
+                        assetHeaders = await this.loadJson(assetHeadersPath);
+                    if (assetsJson && assetHeaders) {
+                        this.assetCacheState = {
+                            assetsJson: assetsJson,
+                            assetHeaders: assetHeaders
+                        }
+                    }
+
+                    this.events.emit("update-applied")
                 }
 
                 isUpdateAvailable() {
-                    if (!this.latestVersion) return !1;
-                    const e = this.assetCacheState?.assetsJson;
-                    return !!e && this.latestVersion.version !== e.version
+                    if (!this.latestVersion) {
+                        return false
+                    }
+
+                    const assetsJson = this.assetCacheState?.assetsJson;
+                    return !!assetsJson && this.latestVersion.version !== assetsJson.version
                 }
 
                 async cleanOldVersions() {
-                    let e = await this.readDir(this.cacheDir);
+                    // /Library/Application Support/Notion/notionAssetCache-v2
+                    let cacheDir = await this.readDir(this.cacheDir);
                     if (this.assetCacheState && this.latestVersion) {
-                        const t = this.assetCacheState, r = this.latestVersion.version;
-                        e = e.filter((e => e !== this.latestVersionFileName && e !== t.assetsJson.version && e !== r))
+                        const assetCacheState = this.assetCacheState
+                        const latestVersionNo = this.latestVersion.version;
+
+                        cacheDir = cacheDir.filter(name =>
+                            name !== this.latestVersionFileName &&
+                            name !== assetCacheState.assetsJson.version &&
+                            name !== latestVersionNo
+                        )
                     }
-                    await Promise.all(e.map((async e => this.remove(this.getCacheDir(e)))))
+                    await Promise.all(cacheDir.map(async name => this.remove(this.getCacheDir(name))))
                 }
 
-                async verifyAsset(e, t) {
-                    const r = l.default.join(e, t.path);
-                    return await this.getFileHash(r) === t.hash
+                async verifyAsset(assetDir, file) {
+                    const absolutePath = __path.default.join(assetDir, file.path);
+                    return await this.getFileHash(absolutePath) === file.hash
                 }
 
-                getHeaders(e) {
-                    const t = this.assetCacheState;
-                    if (!t) return {};
-                    const r = t.assetHeaders[e];
-                    if (!r) return {};
-                    const n = {};
-                    for (const e in r) n[e.toLowerCase()] = r[e];
-                    const o = {}, a = t.assetsJson.headersWhitelist;
-                    for (const e of a) {
-                        const t = e.toLowerCase();
-                        n[t] && (o[t] = n[t])
+                getHeaders(path) {
+                    const assetCacheState = this.assetCacheState;
+                    if (!assetCacheState) return {};
+
+                    const assetHeader = assetCacheState.assetHeaders[path];
+                    if (!assetHeader) return {};
+
+                    const headers = {};
+                    for (const key in assetHeader) {
+                        headers[key.toLowerCase()] = assetHeader[key];
                     }
-                    return o
+
+                    const result = {}
+                    const headersWhitelist = assetCacheState.assetsJson.headersWhitelist;
+                    for (const key of headersWhitelist) {
+                        const _key = key.toLowerCase();
+                        headers[_key] && (result[_key] = headers[_key])
+                    }
+                    return result
                 }
 
-                async loadJson(e) {
+                async loadJson(absolutePath) {
                     try {
-                        return await d.default.readJSON(e)
-                    } catch (t) {
-                        T.error("Error reading and parsing JSON", {error: t, absolutePath: e})
+                        return await __fse.default.readJSON(absolutePath)
+                    } catch (error) {
+                        logger.error("Error reading and parsing JSON", {error: error, absolutePath: absolutePath})
                     }
                 }
 
-                async writeJson(e, t) {
+                async writeJson(absolutePath, content) {
                     try {
-                        return void 0 === t ? await d.default.remove(e) : await d.default.writeJSON(e, t), !0
+                        void 0 === content
+                            ? await __fse.default.remove(absolutePath)
+                            : await __fse.default.writeJSON(absolutePath, content)
+                        return true
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        return r.miscDataString = (0, g.safelyConvertAnyToString)({absolutePath: e}), w.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({absolutePath: absolutePath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToWriteFile",
-                            error: r
-                        }), !1
+                            error: error
+                        })
+                        return false
                     }
                 }
 
-                getCacheDir(e) {
-                    return l.default.join(this.cacheDir, e)
+                // /Library/Application Support/Notion/notionAssetCache-v2/{version}
+                getCacheDir(version) {
+                    return __path.default.join(this.cacheDir, version)
                 }
 
-                getAssetsDir(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetsDirName)
+                // /Library/Application Support/Notion/notionAssetCache-v2/{version}/assets
+                getAssetsDir(version) {
+                    return __path.default.join(this.getCacheDir(version), this.assetsDirName)
                 }
 
-                getAssetsJsonPath(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetsJsonFileName)
+                // /Library/Application Support/Notion/notionAssetCache-v2/{version}/assets.json
+                getAssetsJsonPath(version) {
+                    return __path.default.join(this.getCacheDir(version), this.assetsJsonFileName)
                 }
 
-                getAssetHeadersPath(e) {
-                    return l.default.join(this.getCacheDir(e), this.assetHeadersFileName)
+                // /Library/Application Support/Notion/notionAssetCache-v2/{version}/headers.json
+                getAssetHeadersPath(version) {
+                    return __path.default.join(this.getCacheDir(version), this.assetHeadersFileName)
                 }
 
-                async directoryExists(e) {
+                async directoryExists(dirPath) {
                     try {
-                        return (await d.default.stat(e)).isDirectory()
+                        return (await __fse.default.stat(dirPath)).isDirectory()
                     } catch (e) {
-                        return !1
+                        return false
                     }
                 }
 
-                async readDir(e) {
+                async readDir(dirPath) {
                     try {
-                        return await d.default.readdir(e)
+                        return await __fse.default.readdir(dirPath)
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        return r.miscDataString = (0, g.safelyConvertAnyToString)({dirPath: e}), w.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({dirPath: dirPath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToReadDir",
-                            error: r
-                        }), []
+                            error: error
+                        })
+                        return []
                     }
                 }
 
-                async remove(e) {
+                async remove(dirOrFilePath) {
                     try {
-                        await d.default.remove(e)
+                        await __fse.default.remove(dirOrFilePath)
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        r.miscDataString = (0, g.safelyConvertAnyToString)({dirOrFilePath: e}), w.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({dirOrFilePath: dirOrFilePath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToRemoveDir",
-                            error: r
+                            error: error
                         })
                     }
                 }
 
-                async getFileHash(e) {
+                async getFileHash(filepath) {
                     try {
-                        const t = d.default.createReadStream(e), r = s.default.createHash("md5");
-                        return t.on("data", (e => r.update(e))), await new Promise(((e, n) => {
-                            t.on("error", (function (e) {
-                                n(e)
-                            })), t.on("end", (function () {
-                                e(r.digest("hex"))
-                            }))
-                        }))
+                        const readStream = __fse.default.createReadStream(filepath)
+                        const hash = crypto.default.createHash("md5")
+
+                        readStream.on("data", e => hash.update(e))
+
+                        return await new Promise((resolve, reject) => {
+                            readStream.on("error", function (e) {
+                                reject(e)
+                            })
+                            readStream.on("end", function () {
+                                resolve(hash.digest("hex"))
+                            })
+                        })
                     } catch (t) {
-                        const r = (0, g.convertErrorToLog)(t);
-                        r.miscDataString = (0, g.safelyConvertAnyToString)({filePath: e}), w.serverLogger.log({
+                        const error = __logglyHelpers.convertErrorToLog(t);
+                        error.miscDataString = __logglyHelpers.safelyConvertAnyToString({filePath: filepath})
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "AssetCache",
                             type: "failedToGetFileHash",
-                            error: r
+                            error: error
                         })
                     }
                 }
 
-                async downloadFile(e, t) {
-                    await d.default.mkdirp(l.default.parse(t).dir), this.session = this.session || c.session.fromPartition(k.electronSessionPartition);
-                    const r = c.default.net.request({url: e, session: this.session}),
-                        n = d.default.createWriteStream(t), o = {};
-                    return r.on("response", (function (e) {
-                        const {statusCode: t, statusMessage: a} = e;
-                        if (e.once("error", m.identity), (t < 200 || t > 299) && 304 !== t) {
-                            const e = new Error(`Response code ${t} (${a})`);
-                            r.emit("error", e)
+                async downloadFile(url, dest) {
+                    await __fse.default.mkdirp(__path.default.parse(dest).dir)
+                    this.session = this.session || electron.session.fromPartition(__session.electronSessionPartition)
+
+                    const clientRequest = electron.default.net.request({url: url, session: this.session})
+                    const writeStream = __fse.default.createWriteStream(dest)
+                    const headers = {}
+
+                    clientRequest.on("response", function (response) {
+                        const {statusCode, statusMessage} = response;
+                        response.once("error", lodash.identity)
+
+                        if ((statusCode < 200 || statusCode > 299) && 304 !== statusCode) {
+                            const error = new Error(`Response code ${statusCode} (${statusMessage})`);
+                            clientRequest.emit("error", error)
                         } else {
-                            for (const [t, r] of Object.entries(e.headers)) "string" == typeof r ? o[t] = r : Array.isArray(r) && r.length > 0 && (o[t] = r.join(", "));
-                            e.pipe(n)
+                            for (const [headerName, headerValue] of Object.entries(response.headers)) {
+                                if ("string" == typeof headerValue) {
+                                    headers[headerName] = headerValue
+                                } else if (Array.isArray(headerValue) && headerValue.length > 0) {
+                                    headers[headerName] = headerValue.join(", ")
+                                }
+                            }
+                            response.pipe(writeStream)
                         }
-                    })), new Promise(((e, t) => {
-                        r.on("error", t), n.on("error", t), n.on("finish", (() => e(o))), r.end()
-                    }))
+                    })
+
+                    return new Promise((resolve, reject) => {
+                        clientRequest.on("error", reject)
+                        writeStream.on("error", reject)
+                        writeStream.on("finish", () => resolve(headers))
+                        clientRequest.end()
+                    })
                 }
             }
         },
         // assetCache 实例
-        94774: function (e, t, r) {
+        94774: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            }, i = this && this.__importDefault || function (e) {
-                return e && e.__esModule ? e : {default: e}
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.assetCache = void 0;
-            const s = i(r(4482)), l = r(37318), c = i(r(11239)), u = r(21852), d = r(87309), p = a(r(10454));
-            t.assetCache = new d.AssetCache({
-                baseUrl: c.default.domainBaseUrl,
-                baseDir: s.default.app.getPath("userData"),
-                tempDir: s.default.app.getPath("temp")
-            }), t.assetCache.events.addListener("error", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-error", (0, l.cleanObjectForSerialization)(e))
-            })), t.assetCache.events.addListener("checking-for-update", (() => {
-                u.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
-            })), t.assetCache.events.addListener("update-available", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-available", e)
-            })), t.assetCache.events.addListener("update-not-available", (() => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-not-available")
-            })), t.assetCache.events.addListener("download-progress", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-progress", e)
-            })), t.assetCache.events.addListener("update-downloaded", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-ready", e)
-            })), t.assetCache.events.addListener("update-finished", (e => {
-                u.appController.sendMainToAllNotionInstances("notion:app-update-finished", e)
-            })), p.handleEventFromRenderer.addListener("notion:check-for-app-updates", (() => {
-                t.assetCache.checkForUpdates()
-            }))
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                },
+                i = this && this.__importDefault || function (e) {
+                    return e && e.__esModule ? e : {default: e}
+                };
+
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const electron = i(__webpack_require(4482)),
+                __cleanObjectForSerialization = __webpack_require(37318),
+                __config = i(__webpack_require(11239)),
+                __AppController = __webpack_require(21852),
+                __AssetCache = __webpack_require(87309),
+                __notionIPC = a(__webpack_require(10454));
+
+            exports.assetCache = new __AssetCache.AssetCache({
+                baseUrl: __config.default.domainBaseUrl, // https://www.notion.so
+                baseDir: electron.default.app.getPath("userData"),
+                tempDir: electron.default.app.getPath("temp")
+            })
+
+            exports.assetCache.events.addListener("error", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-error", __cleanObjectForSerialization.cleanObjectForSerialization(e))
+            })
+            exports.assetCache.events.addListener("checking-for-update", () => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:checking-for-app-update")
+            })
+            exports.assetCache.events.addListener("update-available", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-available", e)
+            })
+            exports.assetCache.events.addListener("update-not-available", () => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-not-available")
+            })
+            exports.assetCache.events.addListener("download-progress", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-progress", e)
+            })
+            exports.assetCache.events.addListener("update-downloaded", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-ready", e)
+            })
+            exports.assetCache.events.addListener("update-finished", e => {
+                __AppController.appController.sendMainToAllNotionInstances("notion:app-update-finished", e)
+            })
+
+            __notionIPC.handleEventFromRenderer.addListener("notion:check-for-app-updates", () => {
+                exports.assetCache.checkForUpdates()
+            })
         },
 
 
@@ -5406,7 +5698,12 @@
                     v.setupSecurity()
                     __session.setupSessionListeners()
                     __setupRendererListeners.setupRendererListeners()
-                    __store.Store.getState().app.preferences.isUsingHttps || __handleNotionProtocol.handleNotionProtocol()
+
+                    if (!__store.Store.getState().app.preferences.isUsingHttps) {
+                        // 不使用 https 的话，需要用 AssetCache 代理 notion: 静态资源文件
+                        __handleNotionProtocol.handleNotionProtocol()
+                    }
+
                     handleActivate()
                     await d.wipeTransientCsrfCookie()
                     __AppController.appController.onAppReady()
@@ -5448,104 +5745,194 @@
         },
 
         // handleNotionProtocol
-        77514: function (e, t, r) {
+        77514: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__importDefault || function (e) {
+
+            let n = this && this.__importDefault || function (e) {
                 return e && e.__esModule ? e : {default: e}
             };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.handleNotionProtocol = void 0;
-            const o = r(57075), a = n(r(16857)), i = r(4482), s = n(r(47419)), l = n(r(80115)), c = r(21248),
-                u = r(32289), d = n(r(11239)), p = r(3420), h = r(94774), f = r(66991), m = r(83789), g = r(13387);
 
-            async function b(e) {
-                if ((0, m.shouldSimulateAirplaneMode)()) return new Response("App is simulating airplane mode", {status: 0});
-                const t = a.default.parse(e.url);
-                if (r = t, !("local" === d.default.env ? r.hostname?.endsWith("local.notion.so") || r.host?.endsWith(d.default.domainName) || r.host?.endsWith(d.default.domainName.split(":")[0]) : Boolean(r.host?.endsWith(d.default.domainName)))) return new Response("Invalid proxy URL", {status: 0});
-                var r;
-                const n = a.default.parse(d.default.domainBaseUrl),
-                    o = {...t, protocol: n.protocol, port: n.port, host: void 0},
-                    i = (0, u.forceConsistentEndingSlash)({src: e.url, dest: a.default.format(o)}),
-                    s = e.headers.get("origin");
-                return s && s.startsWith(d.default.protocol) && e.headers.set("origin", s.replace(d.default.protocol, "https")), (0, g.getSession)().fetch(i, {
-                    headers: e.headers,
-                    body: e.body,
-                    method: e.method,
-                    mode: e.mode,
-                    credentials: e.credentials,
-                    redirect: e.redirect,
-                    cache: e.cache,
-                    referrer: e.referrer,
-                    referrerPolicy: e.referrerPolicy,
-                    integrity: e.integrity,
-                    keepalive: e.keepalive,
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __stream = __webpack_require(57075),
+                __url = n(__webpack_require(16857)),
+                electron = __webpack_require(4482),
+                electron_log = n(__webpack_require(47419)),
+                __fse = n(__webpack_require(80115)),
+                __logglyHelpers = __webpack_require(21248),
+                u = __webpack_require(32289),
+                __config = n(__webpack_require(11239)),
+                __ServerLogger = __webpack_require(3420),
+                __assetCache = __webpack_require(94774),
+                f = __webpack_require(66991),
+                __getDebugMenu = __webpack_require(83789),
+                __session = __webpack_require(13387);
+
+            async function b(req) {
+                if (__getDebugMenu.shouldSimulateAirplaneMode()) {
+                    return new Response("App is simulating airplane mode", {status: 0});
+                }
+
+                const parsedUrl = __url.default.parse(req.url);
+                let reqUrl = parsedUrl
+                if ("local" === __config.default.env
+                    ? Boolean(reqUrl.host?.endsWith(__config.default.domainName))
+                    : reqUrl.hostname?.endsWith("local.notion.so") || reqUrl.host?.endsWith(__config.default.domainName) || reqUrl.host?.endsWith(__config.default.domainName.split(":")[0])
+                ) {
+                    return new Response("Invalid proxy URL", {status: 0});
+                }
+
+
+                const n = __url.default.parse(__config.default.domainBaseUrl),
+                    o = {...parsedUrl, protocol: n.protocol, port: n.port, host: void 0},
+                    i = u.forceConsistentEndingSlash({src: req.url, dest: __url.default.format(o)}),
+                    s = req.headers.get("origin");
+                if (s && s.startsWith(__config.default.protocol)) {
+                    req.headers.set("origin", s.replace(__config.default.protocol, "https"))
+                }
+                return  __session.getSession().fetch(i, {
+                    headers: req.headers,
+                    body: req.body,
+                    method: req.method,
+                    mode: req.mode,
+                    credentials: req.credentials,
+                    redirect: req.redirect,
+                    cache: req.cache,
+                    referrer: req.referrer,
+                    referrerPolicy: req.referrerPolicy,
+                    integrity: req.integrity,
+                    keepalive: req.keepalive,
                     duplex: "half"
                 })
             }
 
-            i.protocol.registerSchemesAsPrivileged([{
-                scheme: d.default.protocol,
-                privileges: {standard: !0, secure: !0, allowServiceWorkers: !0, supportFetchAPI: !0, corsEnabled: !0}
-            }]), t.handleNotionProtocol = function () {
-                const {webRequest: e, protocol: t} = (0, g.getSession)();
-                !function (e) {
-                    const t = {urls: [`${d.default.protocol}://*/*`]};
-                    e.onBeforeRequest(t, ((e, t) => {
-                        const r = e.frame;
-                        r && r.top !== r ? t({cancel: !0}) : t({})
-                    }))
-                }(e), function (e) {
-                    e.onHeadersReceived(((e, t) => {
-                        if (e.responseHeaders && "subFrame" === e.resourceType) {
-                            const r = e.responseHeaders["content-security-policy"];
-                            if (r) return t({
+            electron.protocol.registerSchemesAsPrivileged([
+                {
+                    scheme: __config.default.protocol,
+                    privileges: {
+                        standard: true,
+                        secure: true,
+                        allowServiceWorkers: true,
+                        supportFetchAPI: true,
+                        corsEnabled: true
+                    }
+                }
+            ])
+
+            exports.handleNotionProtocol = function () {
+                const {webRequest, protocol} = __session.getSession();
+
+                const filter = {
+                    urls: [`${__config.default.protocol}://*/*`]
+                }
+                webRequest.onBeforeRequest(filter, (details, callback) => {
+                    const frame = details.frame;
+                    frame && frame.top !== frame
+                        ? callback({cancel: true})
+                        : callback({})
+                })
+                webRequest.onHeadersReceived((details, callback) => {
+                    if (details.responseHeaders && "subFrame" === details.resourceType) {
+                        const csp = details.responseHeaders["content-security-policy"];
+                        if (csp) {
+                            return callback({
                                 responseHeaders: {
-                                    ...e.responseHeaders,
-                                    "content-security-policy": r.map((e => (0, f.ensureCspFrameAncestorsParityWithNotionWebsite)({
+                                    ...details.responseHeaders,
+                                    "content-security-policy": csp.map(e => f.ensureCspFrameAncestorsParityWithNotionWebsite({
                                         cspHeader: e,
-                                        customProtocol: d.default.protocol
-                                    })))
+                                        customProtocol: __config.default.protocol
+                                    }))
                                 }
                             })
                         }
-                        t({})
-                    }))
-                }(e), function (e) {
-                    e.onBeforeSendHeaders({urls: ["<all_urls>"]}, ((e, t) => {
-                        "subFrame" === e.resourceType && e.frame?.parent && e.frame.parent === e.frame.top && !e.requestHeaders.Referer && (e.requestHeaders.Referer = `${d.default.domainBaseUrl}/`);
-                        const r = e.url.toLowerCase();
-                        ["https://file.notion.so/", "https://file-dev.notion.so/", "https://file-stg.notion.so/", "http://file-local.notion.so:3000/"].some((e => r.startsWith(e))) ? (0, g.getSession)().cookies.get({
+                    }
+                    callback({})
+                })
+                webRequest.onBeforeSendHeaders({urls: ["<all_urls>"]}, (details, callback) => {
+                    if (
+                        "subFrame" === details.resourceType &&
+                        details.frame?.parent &&
+                        details.frame.parent === details.frame.top &&
+                        !details.requestHeaders.Referer
+                    ) {
+                        details.requestHeaders.Referer = `${__config.default.domainBaseUrl}/`
+                    }
+                    const requestUrl = details.url.toLowerCase();
+                    if ([
+                        "https://file.notion.so/",
+                        "https://file-dev.notion.so/",
+                        "https://file-stg.notion.so/",
+                        "http://file-local.notion.so:3000/"
+                    ].some(prefix => requestUrl.startsWith(prefix))) {
+                        __session.getSession().cookies.get({
                             domain: ".notion.so",
                             name: "file_token"
-                        }).then((r => {
-                            0 !== r.length && (e.requestHeaders.Cookie ? e.requestHeaders.Cookie.includes("file_token") || (e.requestHeaders.Cookie = `${e.requestHeaders.Cookie}; file_token=${r[0].value}`) : e.requestHeaders.Cookie = "file_token=${cookies[0].value}"), t({requestHeaders: e.requestHeaders})
-                        })).catch((r => {
-                            s.default.error("Failed to retrieve file_token from cookies"), t({requestHeaders: e.requestHeaders})
-                        })) : t({requestHeaders: e.requestHeaders})
-                    }))
-                }(e), t.handle(d.default.protocol, (async e => {
-                    if (d.default.isLocalhost && !d.default.offline) return b(e);
+                        }).then(cookies => {
+                            if (0 !== cookies.length) {
+                                if (details.requestHeaders.Cookie) {
+                                    if (!details.requestHeaders.Cookie.includes("file_token")) {
+                                        details.requestHeaders.Cookie = `${details.requestHeaders.Cookie}; file_token=${cookies[0].value}`
+                                    }
+                                } else {
+                                    details.requestHeaders.Cookie = `file_token=${cookies[0].value}`
+                                }
+                            }
+                            callback({requestHeaders: details.requestHeaders})
+                        }).catch(err => {
+                            electron_log.default.error("Failed to retrieve file_token from cookies")
+                            callback({requestHeaders: details.requestHeaders})
+                        })
+                    } else {
+                        callback({requestHeaders: details.requestHeaders})
+                    }
+                })
+
+                protocol.handle(__config.default.protocol, async request => {
+                    // debugger
+
+                    if (__config.default.isLocalhost && !__config.default.offline) {
+                        return b(request)
+                    }
+
                     try {
-                        const t = await h.assetCache.handleRequest(e);
-                        if (t) try {
-                            const e = l.default.createReadStream(t.absolutePath), r = o.Readable.toWeb(e),
-                                n = function (e, t) {
-                                    const r = new Headers(e), n = t.split("?")[0];
-                                    return r.has("content-type") || (n.endsWith(".css") ? r.set("content-type", "text/css; charset=UTF-8") : n.endsWith(".html") ? r.set("content-type", "text/html; charset=UTF-8") : n.endsWith(".js") ? r.set("content-type", "text/javascript; charset=UTF-8") : n.endsWith(".svg") && r.set("content-type", "image/svg+xml")), r
-                                }(t.headers, t.absolutePath);
-                            return new Response(r, {headers: n})
-                        } catch (e) {
-                            s.default.error(`Failed to read cached file: ${t.absolutePath}`)
+                        const result = await __assetCache.assetCache.handleRequest(request)
+                        if (result) {
+                            try {
+                                const readStream = __fse.default.createReadStream(result.absolutePath)
+                                const body = __stream.Readable.toWeb(readStream)
+                                const headers = function (headers, absolutePath) {
+                                    const _headers = new Headers(headers)
+                                    const filePath = absolutePath.split("?")[0]
+
+                                    if (!_headers.has("content-type")) {
+                                        filePath.endsWith(".css")
+                                            ? _headers.set("content-type", "text/css; charset=UTF-8")
+                                            : filePath.endsWith(".html")
+                                                ? _headers.set("content-type", "text/html; charset=UTF-8")
+                                                : filePath.endsWith(".js")
+                                                    ? _headers.set("content-type", "text/javascript; charset=UTF-8")
+                                                    : filePath.endsWith(".svg") && _headers.set("content-type", "image/svg+xml")
+                                    }
+                                    return _headers
+                                }(result.headers, result.absolutePath)
+
+                                return new Response(body, {headers: headers})
+                            } catch (err) {
+                                electron_log.default.error(`Failed to read cached file: ${result.absolutePath}`)
+                            }
                         }
-                        return b(e)
-                    } catch (e) {
-                        return p.serverLogger.log({
+                        return b(request)
+                    } catch (err) {
+                        __ServerLogger.serverLogger.log({
                             level: "error",
                             from: "schemeHandler",
                             type: "requestHandlerError",
-                            error: (0, c.convertErrorToLog)(e)
-                        }), new Response("Something went wrong.", {status: 500})
+                            error: __logglyHelpers.convertErrorToLog(err)
+                        })
+                        return new Response("Something went wrong.", {status: 500})
                     }
-                }))
+                })
             }
         },
         // open at login
@@ -8425,44 +8812,59 @@
         },
 
         // AsyncQueue
-        4058: function (e, t, r) {
+        4058: function (module, exports, __webpack_require) {
             "use strict";
-            var n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
-                void 0 === n && (n = r);
-                var o = Object.getOwnPropertyDescriptor(t, r);
-                o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
-                    enumerable: !0,
-                    get: function () {
-                        return t[r]
-                    }
-                }), Object.defineProperty(e, n, o)
-            } : function (e, t, r, n) {
-                void 0 === n && (n = r), e[n] = t[r]
-            }), o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
-                Object.defineProperty(e, "default", {enumerable: !0, value: t})
-            } : function (e, t) {
-                e.default = t
-            }), a = this && this.__importStar || function (e) {
-                if (e && e.__esModule) return e;
-                var t = {};
-                if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
-                return o(t, e), t
-            };
-            Object.defineProperty(t, "__esModule", {value: !0}), t.mutatePromiseIntoAsyncQueuePromise = t.AsyncQueue = void 0;
-            const i = a(r(43067));
+            let n = this && this.__createBinding || (Object.create ? function (e, t, r, n) {
+                    void 0 === n && (n = r);
+                    var o = Object.getOwnPropertyDescriptor(t, r);
+                    o && !("get" in o ? !t.__esModule : o.writable || o.configurable) || (o = {
+                        enumerable: !0,
+                        get: function () {
+                            return t[r]
+                        }
+                    }), Object.defineProperty(e, n, o)
+                } : function (e, t, r, n) {
+                    void 0 === n && (n = r), e[n] = t[r]
+                }),
+                o = this && this.__setModuleDefault || (Object.create ? function (e, t) {
+                    Object.defineProperty(e, "default", {enumerable: !0, value: t})
+                } : function (e, t) {
+                    e.default = t
+                }),
+                a = this && this.__importStar || function (e) {
+                    if (e && e.__esModule) return e;
+                    var t = {};
+                    if (null != e) for (var r in e) "default" !== r && Object.prototype.hasOwnProperty.call(e, r) && n(t, e, r);
+                    return o(t, e), t
+                };
 
-            class s {
-                static async map(e, t, r) {
-                    const n = new s(e);
-                    return await Promise.all(t.map(((e, t, o) => n.enqueue((() => r(e, t, o))))))
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+
+            const __utils = a(__webpack_require(43067));
+
+            class AsyncQueue {
+                static async map(parallel, items, fn) {
+                    const queue = new AsyncQueue(parallel)
+                    return await Promise.all(items.map((item, idx, array) => queue.enqueue(() => fn(item, idx, array))))
                 }
 
-                constructor(e) {
-                    this.parallel = e, this.queue = [], this.waitingList = [], this.running = [], this.afterFlushes = [], this.afterClogs = [], this.waiting = !1
+                constructor(parallel) {
+                    this.parallel = parallel
+                    this.queue = []
+                    this.waitingList = []
+                    this.running = []
+                    this.afterFlushes = []
+                    this.afterClogs = []
+                    this.waiting = false
                 }
 
                 getStats() {
-                    return {running: this.running.length, queue: this.queue.length, waitingList: this.queue.length}
+                    return {
+                        running: this.running.length,
+                        queue: this.queue.length,
+                        waitingList: this.queue.length
+                    }
                 }
 
                 isEmpty() {
@@ -8473,41 +8875,61 @@
                     return this.waiting
                 }
 
-                setParallelism(e) {
-                    this.parallel = e, this.flush()
+                setParallelism(parallel) {
+                    this.parallel = parallel
+                    this.flush()
                 }
 
                 getParallelism() {
                     return this.parallel
                 }
 
-                enqueue(e) {
-                    const t = i.deferred(), r = () => e().then(t.resolve).catch((e => {
-                        t.reject(e)
-                    }));
-                    return this.waiting ? this.waitingList.push({
-                        deferred: t,
-                        action: r
-                    }) : this.queue.push({deferred: t, action: r}), this.flush(), l({
-                        promise: t.promise,
-                        canCancel: () => this.queue.some((e => e.deferred === t)) || this.waitingList.some((e => e.deferred === t)),
+                enqueue(task) {
+                    const deferred = __utils.deferred()
+                    const action = () => task().then(deferred.resolve).catch(err => {
+                        deferred.reject(err)
+                    })
+
+                    this.waiting
+                        ? this.waitingList.push({
+                            deferred: deferred,
+                            action: action
+                        })
+                        : this.queue.push({
+                            deferred: deferred,
+                            action: action
+                        })
+                    this.flush()
+
+                    return mutatePromiseIntoAsyncQueuePromise({
+                        promise: deferred.promise,
+                        canCancel: () => this.queue.some(_ => _.deferred === deferred) || this.waitingList.some(_ => _.deferred === deferred),
                         cancel: e => {
-                            const r = this.queue.findIndex((e => e.deferred === t));
-                            return r >= 0 ? (this.queue.splice(r, 1), void t.reject(e)) : this.waitingList.findIndex((e => e.deferred === t)) >= 0 ? (this.waitingList.splice(r, 1), void t.reject(e)) : void 0
+                            const idx = this.queue.findIndex(_ => _.deferred === deferred)
+                            return idx >= 0
+                                ? (this.queue.splice(idx, 1), void deferred.reject(e))
+                                : this.waitingList.findIndex((e => e.deferred === deferred)) >= 0
+                                    ? (this.waitingList.splice(idx, 1), void deferred.reject(e))
+                                    : void 0
                         }
                     })
                 }
 
                 wait() {
-                    this.waiting = !0;
-                    for (let e = 0; e < this.queue.length; e++) this.waitingList.push(this.queue[e]);
+                    this.waiting = true
+                    for (let i = 0; i < this.queue.length; i++) {
+                        this.waitingList.push(this.queue[i])
+                    }
                     this.queue.length = 0
                 }
 
                 resume() {
-                    this.waiting = !1;
-                    for (let e = 0; e < this.waitingList.length; e++) this.queue.push(this.waitingList[e]);
-                    this.waitingList.length = 0, this.flush()
+                    this.waiting = false
+                    for (let i = 0; i < this.waitingList.length; i++) {
+                        this.queue.push(this.waitingList[i])
+                    }
+                    this.waitingList.length = 0
+                    this.flush()
                 }
 
                 async* mapAsyncIterable(e, t) {
@@ -8529,63 +8951,100 @@
                     }
                 }
 
-                wrap(e) {
-                    return (...t) => this.enqueue((() => e(...t)))
+                wrap(taskFn) {
+                    return (...args) => this.enqueue(() => taskFn(...args))
                 }
 
-                enqueueImmediate(e) {
-                    const t = e(), r = i.deferred();
-                    return t.then(r.resolve).catch(r.reject), this.queue.push({
-                        action: () => t,
-                        deferred: r
-                    }), this.flush(), t
+                enqueueImmediate(task) {
+                    const promise = task()
+                    const deferred = __utils.deferred()
+
+                    promise.then(deferred.resolve).catch(deferred.reject)
+
+                    this.queue.push({
+                        action: () => promise,
+                        deferred: deferred
+                    })
+                    this.flush()
+                    return promise
                 }
 
                 flush() {
                     if (0 === this.queue.length) {
                         if (0 === this.running.length && 0 === this.waitingList.length) {
-                            for (const e of this.afterFlushes) e.resolve(null);
+                            for (const e of this.afterFlushes) {
+                                e.resolve(null)
+                            }
                             this.afterFlushes = []
                         }
                         if (this.running.length < this.parallel) {
-                            for (const e of this.afterClogs) e.resolve(null);
+                            for (const e of this.afterClogs) {
+                                e.resolve(null)
+                            }
                             this.afterClogs = []
                         }
                         return
                     }
+
                     if (this.running.length >= this.parallel) return;
-                    const e = this.queue.splice(0, this.parallel - this.running.length);
-                    for (const t of e) this.running.push(t);
-                    for (const t of e) t.action().then((() => {
-                        this.running.splice(this.running.indexOf(t), 1), this.flush()
-                    }))
+
+                    const tasks = this.queue.splice(0, this.parallel - this.running.length)
+                    for (const task of tasks) {
+                        this.running.push(task)
+                    }
+                    for (const task of tasks) {
+                        task.action().then(() => {
+                            this.running.splice(this.running.indexOf(task), 1)
+                            this.flush()
+                        })
+                    }
                 }
 
                 afterFlush() {
-                    const e = i.deferred();
-                    return this.afterFlushes.push(e), this.flush(), e.promise
+                    const deferred = __utils.deferred()
+                    this.afterFlushes.push(deferred)
+                    this.flush()
+                    return deferred.promise
                 }
 
                 afterClog() {
-                    const e = i.deferred();
-                    return this.afterClogs.push(e), this.flush(), e.promise
+                    const deferred = __utils.deferred()
+                    this.afterClogs.push(deferred)
+                    this.flush()
+                    return deferred.promise
                 }
 
                 cancel() {
-                    const e = this.running, t = this.queue, r = this.waitingList;
-                    this.running = [], this.queue = [], this.waitingList = [];
-                    for (const t of e) t.deferred.reject(new Error("CanceledTask."));
-                    for (const e of t) e.deferred.reject(new Error("CanceledTask."));
-                    for (const e of r) e.deferred.reject(new Error("CanceledTask."))
+                    const running = this.running,
+                        queue = this.queue,
+                        waitingList = this.waitingList;
+
+                    this.running = []
+                    this.queue = []
+                    this.waitingList = []
+
+                    for (const t of running) {
+                        t.deferred.reject(new Error("CanceledTask."))
+                    }
+                    for (const e of queue) {
+                        e.deferred.reject(new Error("CanceledTask."));
+                    }
+                    for (const e of waitingList) {
+                        e.deferred.reject(new Error("CanceledTask."))
+                    }
                 }
             }
 
-            function l(e) {
-                const {promise: t, canCancel: r, cancel: n} = e, o = t;
-                return o.canCancel = r, o.cancel = n, o
+            function mutatePromiseIntoAsyncQueuePromise({promise, canCancel, cancel}) {
+                // const {promise, canCancel, cancel} = e
+                const _promise = promise
+                _promise.canCancel = canCancel
+                _promise.cancel = cancel
+                return _promise
             }
 
-            t.AsyncQueue = s, t.mutatePromiseIntoAsyncQueuePromise = l
+            exports.AsyncQueue = AsyncQueue
+            exports.mutatePromiseIntoAsyncQueuePromise = mutatePromiseIntoAsyncQueuePromise
         },
 
         // utils 工具类
@@ -12700,9 +13159,11 @@
         },
 
         // events
-        45437: (e, t) => {
+        45437: (module, exports) => {
             "use strict";
-            Object.defineProperty(t, "__esModule", {value: !0}), t.default = class {
+            Object.defineProperty(exports, "__esModule", {value: !0})
+
+            exports.default = class {
                 constructor() {
                     this.listeners = {}
                 }
